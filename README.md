@@ -115,11 +115,11 @@ you can switch off) and the optional one-time FFmpeg download.
 
 ## See it in action
 
-| An AI agent edits a video through MCP | Editing by hand |
+| Per-letter text animations & word-art | A short edit rendered by the engine |
 |---|---|
-| <img src="assets/demo-agent.gif" alt="Claude builds a vertical video in Kadr through MCP while the timeline updates live" width="100%"> | <img src="assets/demo-editing.gif" alt="Splitting clips, dropping a transition and adding a text template on the Kadr timeline" width="100%"> |
+| <img src="assets/demo-agent.gif" alt="Per-letter text animations and word-art rendered by the Kadr engine" width="100%"> | <img src="assets/demo-editing.gif" alt="A short edit rendered by Kadr: transitions, filters, text and stickers" width="100%"> |
 | **Offline auto captions with word highlight** | **68 original transitions, rendered by the engine** |
-| <img src="assets/demo-captions.gif" alt="Auto captions generated with Whisper, highlighting each word as it is spoken" width="100%"> | <img src="assets/contact-sheet-transitions.png" alt="A contact sheet of Kadr transitions rendered with preview.contact_sheet" width="100%"> |
+| <img src="assets/demo-captions.gif" alt="Speech made with tts.speak, captioned by captions.auto (local Whisper) with word highlighting" width="100%"> | <img src="assets/contact-sheet-transitions.png" alt="A contact sheet of Kadr transitions rendered with preview.contact_sheet" width="100%"> |
 
 ## Features
 
