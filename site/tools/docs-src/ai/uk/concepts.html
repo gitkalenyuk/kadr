@@ -1,0 +1,131 @@
+<!--meta {"title":"Концепції","nav":"Концепції","order":210,"description":"Правила, які має знати агент: проєкти, доріжки, сегменти й матеріали, час у мікросекундах, порядок композитингу, магнітна основна доріжка, зв’язані кліпи, переходи, ключові кадри й згладжування, координати, одиниці гучності, ідентифікатори та скасування.","group":"Посібники"} -->
+<p class="lead">Kadr моделює таймлайн у стилі CapCut. Ці правила пояснюють, що з ним роблять команди — прочитайте їх один раз, і більшість несподіванок зникне. Кожне правило також прописане в описах команд, яких воно стосується.</p>
+
+<h2 id="objects">Проєкти, матеріали, доріжки, сегменти</h2>
+<table>
+  <thead><tr><th>Об’єкт</th><th>Id</th><th>Що це</th></tr></thead>
+  <tbody>
+    <tr><td>Проєкт</td><td><code>prj_…</code></td><td>Один монтаж: полотно (співвідношення, ширина, висота, fps, тло), налаштування, матеріали, доріжки, маркери, обкладинка. Зберігається як <code>%APPDATA%\Kadr\projects\prj_…\project.json</code> з папкою <code>cache\</code>.</td></tr>
+    <tr><td>Матеріал</td><td><code>mat_…</code></td><td>Медіафайл, який використовує проєкт — імпортований (<code class="cmd">media.import</code>) або створений (<code class="cmd">media.generate</code>, <code class="cmd">tts.speak</code>, <code class="cmd">sfx.add</code>, стікери). Тип <code>video</code>, <code>photo</code> або <code>audio</code>; у фото <code>duration_us</code> дорівнює 0. Проєкти посилаються на файли, а не копіюють їх.</td></tr>
+    <tr><td>Доріжка</td><td><code>trk_…</code></td><td>Рядок таймлайну з типом: <code>main_video</code> (рівно одна), <code>video_overlay</code>, <code>text</code>, <code>sticker</code>, <code>effect</code>, <code>filter</code>, <code>adjustment</code>, <code>audio</code>. Порожні доріжки, крім основної, зникають.</td></tr>
+    <tr><td>Сегмент</td><td><code>seg_…</code></td><td>Кліп на доріжці: <strong>цільовий</strong> діапазон на таймлайні та, для медіакліпів, <strong>вихідний</strong> діапазон усередині матеріалу, плюс усі властивості (трансформація, непрозорість, гучність, швидкість, фільтр, ефекти, анімації, ключові кадри, стиль тексту…).</td></tr>
+    <tr><td>Маркер</td><td><code>mrk_…</code></td><td>Підписаний момент на лінійці; краї кліпів до нього прилипають.</td></tr>
+    <tr><td>Завдання</td><td><code>exp_…</code>, <code>cap_…</code>, <code>aij_…</code></td><td>Фонові експорти, завдання субтитрів/транскрипції й розумних інструментів. Живуть у пам’яті до перезапуску Kadr.</td></tr>
+  </tbody>
+</table>
+<p>Ідентифікатори непрозорі: беріть їх із результатів і з <code class="cmd">timeline.get</code>; ніколи не складайте самі. Id сегментів зберігаються в <code class="cmd">project.duplicate</code>, тож відомі вам id оригіналу працюють і в копії.</p>
+
+<h2 id="time">Час</h2>
+<ul>
+  <li>Усі моменти й тривалості — <strong>цілі мікросекунди</strong> (мкс); назви параметрів закінчуються на <code>_us</code>. 1 с = <code>1000000</code>; один кадр при 30 fps = <code>33333</code>; при 25 fps = <code>40000</code>.</li>
+  <li>Час на таймлайні абсолютний (від 0). Час <strong>ключових кадрів</strong> — відносно початку їхнього сегмента. Слова <strong>транскрипту</strong> зберігаються у вихідному часі й проєктуються на таймлайн командою <code class="cmd">transcript.get</code>.</li>
+  <li>Пропущений <code>at_us</code> зазвичай означає «у позиції курсора» — кожен проєкт має власний курсор (<code class="cmd">playback.seek</code>, <code>playhead_us</code> у <code class="cmd">timeline.get</code>). Агентам краще передавати час явно.</li>
+</ul>
+
+<h2 id="compositing">Порядок доріжок — це порядок композитингу</h2>
+<p>Доріжки малюються знизу вгору: доріжка з <code>layer</code> 0 (<code>project.tracks[0]</code>, зазвичай основна) малюється першою, кожен вищий шар — поверх. <code class="cmd">timeline.get</code> перелічує доріжки так, як їх показує таймлайн — згори донизу — з <code>layer</code> кожної:</p>
+<pre><code class="lang-text">tracks (timeline.get)     layer
+sticker                   3      drawn last, on top
+text                      2
+video_overlay             1
+main_video                0      drawn first
+audio                     4…     not drawn</code></pre>
+<ul>
+  <li><strong>Сегменти фільтрів, ефектів і коригувальних шарів</strong> на окремих доріжках змінюють <em>усе, що під ними</em>, у своєму часовому діапазоні. Фільтр, застосований до кліпу (<code class="cmd">filter.apply</code>, <code class="cmd">effect.apply</code>), змінює лише цей кліп.</li>
+  <li><strong>Нові доріжки</strong> з’являються, як у CapCut: доріжки накладання — над основною й іншими накладаннями; доріжки тексту, стікерів, ефектів, фільтрів і коригування — над усіма візуальними; аудіодоріжки — під наявними аудіо. Тож фільтр, доданий <em>після</em> тексту, лежить над ним і фарбує й текст — додавайте фільтри раніше або застосовуйте <code class="cmd">filter.apply</code> до кліпів.</li>
+  <li><code>hidden</code>-доріжки не малюються, <code>muted</code> — не звучать, <code>locked</code> — відхиляють правки з <code>conflict</code> (<code class="cmd">timeline.track.set</code>).</li>
+</ul>
+
+<h2 id="magnet">Магнітна основна доріжка</h2>
+<ul>
+  <li>З увімкненим <code>main_track_magnet</code> (типово) кліпи на основній доріжці завжди стоять упритул від 0 — проміжків не буває. Додавання без <code>at_us</code> дописує в кінець; з <code>at_us</code> — вставляє на <em>найближчу</em> межу кліпів і зсуває наступні вправо. Видалення, обрізання та зміна швидкості теж зсувають решту.</li>
+  <li><strong>Не боріться з магнітом.</strong> Щоб поставити кліп на основну доріжку в точний момент, будуйте послідовність по порядку (пакет додавань із <code>duration_us</code>) або вимкніть магніт через <code class="cmd">timeline.settings.set</code>. Для вільного розміщення беріть доріжку накладання (<code>new_track</code>).</li>
+  <li>На інших доріжках кліп починається рівно в <code>at_us</code>; якщо місце зайняте, просто над доріжкою створюється нова.</li>
+  <li><strong>Прилипання</strong> (<code>auto_snapping</code>) притягує переміщені й обрізані краї до інших країв, курсора, маркерів або 0 у межах 100 мс. Передавайте <code>snap: false</code> у <code class="cmd">timeline.segment.move</code> чи <code class="cmd">timeline.segment.trim</code> для точних позицій — маркери біту тут класична пастка.</li>
+</ul>
+
+<h2 id="segments">Діапазони сегмента і швидкість</h2>
+<ul>
+  <li><code>start_us</code>/<code>duration_us</code> — де кліп стоїть на таймлайні; <code>source_start_us</code>/<code>source_duration_us</code> — яку частину матеріалу він грає. При швидкості <em>s</em> <code>source_duration = duration × s</code>.</li>
+  <li>Відео й аудіо не можуть бути довшими за матеріал (краї зупиняються на кінці медіа, результат повідомляє <code>clamped: true</code>). Фото, текст, стікери, ефекти й фільтри розтягуються вільно.</li>
+  <li>Типова довжина: весь матеріал для відео/аудіо, 5 с для фото, 3 с для тексту, стікерів, ефектів, фільтрів і коригувальних шарів, 2 с для ручної репліки субтитрів.</li>
+  <li>Відеокліпи зберігають власний звук, доки не виконати <code class="cmd">audio.extract</code> або <code class="cmd">audio.separate</code>.</li>
+</ul>
+
+<h2 id="linked">Зв’язані кліпи</h2>
+<p>Кліпи зі спільним <code>link_group</code> (<code>lnk_…</code>) переміщуються, обрізаються, ріжуться й видаляються разом, поки ввімкнено <code>linkage</code> (типово). Зв’язки створюють <code class="cmd">audio.extract</code> / <code class="cmd">audio.separate</code> (відео + його звук) і <code class="cmd">tts.from_text</code> (текст + його озвучка). <code class="cmd">timeline.get</code> показує <code>link_group</code> у кожного кліпу. Щоб редагувати одну сторону окремо, вимкніть зв’язування через <code class="cmd">timeline.settings.set</code>.</p>
+
+<h2 id="transitions">Переходи</h2>
+<ul>
+  <li>Перехід зберігається на <strong>лівому</strong> кліпі склейки (<code>transition_out</code>) і грає через склейку в наступний кліп на тій самій відеодоріжці. <code class="cmd">transition.set</code> приймає id <em>лівого</em> кліпу.</li>
+  <li>Два кліпи мають торкатися (з точністю до пів кадру) — інакше <code>conflict</code>. Обидва мають бути щонайменше 0,2 с; тривалість обмежується половиною коротшого кліпу (<code>clamped: true</code>).</li>
+  <li>Переходи не змінюють довжину таймлайну: склейки лишаються на місці, тож таймінг озвучки й музики не зсувається.</li>
+  <li><code class="cmd">transition.apply_all</code> ставить один перехід на кожну склейку доріжки. Напрямки й м’якість — це опції (<code>direction</code>, <code>softness</code>), що зберігаються в типі, наприклад <code>bars_stagger?direction=up</code>.</li>
+</ul>
+
+<h2 id="keyframes">Ключові кадри і згладжування</h2>
+<ul>
+  <li>Анімовані властивості: <code>transform.x</code>, <code>transform.y</code>, <code>transform.scale</code>, <code>transform.rotation</code>, <code>opacity</code>, <code>volume</code>, <code>adjust.*</code> і <code>filter.intensity</code>.</li>
+  <li>Маючи два чи більше ключових кадри, властивість інтерполюється між ними; до першого й після останнього вона <strong>тримає</strong> їхнє значення. Значення ключових кадрів <em>замінюють</em> статичну властивість.</li>
+  <li><code>time_us</code> — відносно початку сегмента. Ключовий кадр у межах пів кадру від наявного оновлює його, а не додає новий.</li>
+  <li>Згладжування інтервалу визначає його <strong>лівий</strong> ключовий кадр: <code>linear</code> (типово) або кубічні <code>ease_in</code>, <code>ease_out</code>, <code>ease_in_out</code>. Ставте згладжування на перший кадр руху.</li>
+  <li>Поки властивість має ключові кадри, <code class="cmd">segment.set_transform</code>, <code class="cmd">segment.set_opacity</code>, <code class="cmd">segment.set_volume</code> і <code class="cmd">segment.set_adjust</code> записують ключовий кадр <em>у позиції курсора</em>, а не змінюють статичне значення (див. <code>result.keyframed</code>). Користуйтеся <code class="cmd">keyframe.add</code> з явним часом або спершу <code class="cmd">keyframe.clear</code>.</li>
+</ul>
+<p>Повільне наближення з плавним стартом і перевірка інтерпольованого значення на 1-й секунді:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_b41d7e0c9a35 --property transform.scale --time_us 0 --value 1 --easing ease_in_out
+kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_b41d7e0c9a35 --property transform.scale --time_us 4s --value 1.2
+kadrctl run segment.get --project_id prj_3c8e1f0a7b62 --segment_id seg_b41d7e0c9a35 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_b41d7e0c9a35", "property": "transform.scale", "time_us": 0, "value": 1, "easing": "ease_in_out"}}
+{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_b41d7e0c9a35", "property": "transform.scale", "time_us": 4000000, "value": 1.2}}
+{"name": "segment_get", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_b41d7e0c9a35", "time_us": 1000000}}</code></pre></div>
+<pre><code class="lang-json">"evaluated": { "transform": { "x": 0, "y": 0, "scale": 1.0125, "rotation": 0 }, "opacity": 1, … }</code></pre>
+<p>На 1-й секунді — чверть шляху — кубічне ease-in-out пройшло лише 6,25% руху, тож масштаб 1.0125; з <code>linear</code> було б 1.05.</p>
+<h2 id="coordinates">Трансформація і координати</h2>
+<ul>
+  <li><code>x</code> і <code>y</code> зсувають центр кліпу в <strong>частках полотна</strong>: 0 — по центру, ±1 — центр на краю (одиниця — половина ширини чи висоти полотна). <strong>+X — праворуч, +Y — донизу.</strong> Діапазон −2…2.</li>
+  <li><code>scale</code> 1 — кліп <em>вписаний</em> у полотно (з полями, якщо форми різні). Щоб заповнити полотно 16:9 кадрами 4:3, потрібно приблизно 1.33; кадрами 9:16 — приблизно 3.16. Кліп тієї ж форми, що й полотно, при масштабі <em>s</em> можна зсунути вбік на <em>s</em> − 1, перш ніж з’явиться край.</li>
+  <li><code>rotation</code> — у градусах за годинниковою стрілкою (−360…360). Віддзеркалення — <code>flip_h</code>/<code>flip_v</code>.</li>
+  <li>Стікери стартують із масштабом 0.3; розмір тексту 15 — типовий у CapCut (обведення, тінь і плашка — 0–1).</li>
+  <li>Щоб <em>виміряти</em>, використовуйте <code class="cmd">preview.layout</code>: рамки в пікселях полотна для кожного видимого кліпу в заданий момент.</li>
+</ul>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run segment.set_transform --project_id prj_3c8e1f0a7b62 --segment_id seg_0f6b2d8e4c91 --y 0.6 --scale 0.8
+kadrctl run preview.layout --project_id prj_3c8e1f0a7b62 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "segment_set_transform", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_0f6b2d8e4c91", "y": 0.6, "scale": 0.8}}
+{"name": "preview_layout", "arguments": {"project_id": "prj_3c8e1f0a7b62", "time_us": 1000000}}</code></pre></div>
+<h2 id="audio-units">Гучність: децибели і лінійне підсилення</h2>
+<table>
+  <thead><tr><th>Де</th><th>Одиниця</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">segment.set_volume</code> <code>volume_db</code></td><td>Децибели відносно оригіналу: 0 — без змін, −6 ≈ удвічі тихіше, −60 — тиша (низ повзунка), максимум +20.</td></tr>
+    <tr><td><code>volume</code> у сегментах і властивість ключових кадрів <code>volume</code></td><td>Лінійне підсилення: 1 = 0 дБ, 0.5 ≈ −6 дБ, 0 — тиша, максимум 10. <code>gain = 10^(dB/20)</code>.</td></tr>
+    <tr><td><code class="cmd">audio.loudness</code></td><td>LUFS (<code>integrated_lufs</code>, <code>effective_lufs</code> з урахуванням гучності кліпу), істинний пік у dBFS.</td></tr>
+    <tr><td><code class="cmd">segment.set_fade</code></td><td><code>fade_in_us</code>/<code>fade_out_us</code> у мікросекундах.</td></tr>
+  </tbody>
+</table>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run segment.set_volume --project_id prj_3c8e1f0a7b62 --segment_id seg_92d4f6a1c7e3 --volume_db -12
+kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_92d4f6a1c7e3 --property volume --time_us 6s --value 0.25
+kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_92d4f6a1c7e3 --property volume --time_us 8s --value 0</code></pre><pre data-lang="mcp"><code>{"name": "segment_set_volume", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_92d4f6a1c7e3", "volume_db": -12}}
+{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_92d4f6a1c7e3", "property": "volume", "time_us": 6000000, "value": 0.25}}
+{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_92d4f6a1c7e3", "property": "volume", "time_us": 8000000, "value": 0}}</code></pre></div>
+<p>Перший виклик задає статичні −12 дБ (підсилення 0.25); далі два ключові кадри тримають 0.25 до 6 с і згасають до тиші на 8 с.</p>
+
+<h2 id="results">Де в результатах з’являються нові id</h2>
+<table>
+  <thead><tr><th>Команда</th><th>Новий id у полі</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">project.create</code>, <code class="cmd">project.duplicate</code></td><td><code>id</code></td></tr>
+    <tr><td><code class="cmd">media.import</code></td><td><code>materials[].id</code> (файли, що вже є в проєкті, — у <code>duplicates[].material_id</code>)</td></tr>
+    <tr><td><code class="cmd">timeline.segment.add</code></td><td><code>segment.id</code> (і <code>track_id</code>)</td></tr>
+    <tr><td><code class="cmd">text.add</code>, <code class="cmd">sticker.add</code>, <code class="cmd">effect.add</code>, <code class="cmd">filter.add</code>, <code class="cmd">adjustment.add</code>, <code class="cmd">captions.add</code></td><td><code>segment_id</code></td></tr>
+    <tr><td><code class="cmd">media.generate</code></td><td><code>material_id</code>; з <code>add_to_timeline</code> ще й <code>segment_id</code></td></tr>
+    <tr><td><code class="cmd">tts.speak</code>, <code class="cmd">sfx.add</code></td><td><code>segment_id</code>, <code>material_id</code></td></tr>
+    <tr><td><code class="cmd">timeline.segment.split</code></td><td><code>left.id</code> (зберігає початковий id), <code>right.id</code></td></tr>
+    <tr><td><code class="cmd">ai.remove_silence</code>, <code class="cmd">ai.split_scenes</code></td><td><code>segment_ids</code> — шматки, що лишилися, по порядку</td></tr>
+    <tr><td><code class="cmd">captions.auto</code>, <code class="cmd">transcript.transcribe</code>, <code class="cmd">export.start</code></td><td><code>job_id</code>; id реплік субтитрів беріть із <code class="cmd">captions.list</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="undo">Скасування, історія та області дії</h2>
+<ul>
+  <li><strong>Проєктні команди</strong> (їх 135) приймають <code>project_id</code>, редагують робочу копію і зберігаються як один крок скасування кожна — або один крок на пакет. Команда, що нічого не змінила, кроку не створює. Історія спільна для редактора й усіх клієнтів; <code class="cmd">edit.history</code> показує назви наступних скасування/повтору.</li>
+  <li><strong>Глобальні команди</strong> не належать історії одного проєкту: список/створення/дублювання/видалення проєктів, бібліотека, пресети, завдання експорту, <code class="cmd">captions.auto</code> і <code class="cmd">transcript.transcribe</code> (завдання; репліки, які вони створюють, — один крок скасування), інструменти, оновлення, <code class="cmd">ui.toast</code>, <code class="cmd">ui.library_tab</code>. Вони не можуть входити в пакет.</li>
+  <li>Не скасовуються: експорт, транскрипти (це дані аналізу — <code class="cmd">transcript.clear</code> видаляє транскрипт), <code class="cmd">project.rename</code>, <code class="cmd">project.delete</code>, створення проксі й команди <code>ui.*</code> (вони змінюють лише те, що показує вікно).</li>
+</ul>

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "fx_sunset_gradient",
+    "name": "Sunset",
+    "file": "textfx-fx_sunset_gradient.webp"
+  },
+  {
+    "id": "fx_gold_metal",
+    "name": "Gold",
+    "file": "textfx-fx_gold_metal.webp"
+  },
+  {
+    "id": "fx_chrome",
+    "name": "Chrome",
+    "file": "textfx-fx_chrome.webp"
+  },
+  {
+    "id": "fx_neon_outline",
+    "name": "Neon outline",
+    "file": "textfx-fx_neon_outline.webp"
+  },
+  {
+    "id": "fx_neon_pink",
+    "name": "Neon pink",
+    "file": "textfx-fx_neon_pink.webp"
+  },
+  {
+    "id": "fx_fire",
+    "name": "Fire",
+    "file": "textfx-fx_fire.webp"
+  },
+  {
+    "id": "fx_ice",
+    "name": "Ice",
+    "file": "textfx-fx_ice.webp"
+  },
+  {
+    "id": "fx_3d_extrude",
+    "name": "3D block",
+    "file": "textfx-fx_3d_extrude.webp"
+  },
+  {
+    "id": "fx_retro_sunset_3d",
+    "name": "Retro 3D",
+    "file": "textfx-fx_retro_sunset_3d.webp"
+  },
+  {
+    "id": "fx_glitch_double",
+    "name": "Glitch double",
+    "file": "textfx-fx_glitch_double.webp"
+  },
+  {
+    "id": "fx_sticker_cut",
+    "name": "Sticker cut",
+    "file": "textfx-fx_sticker_cut.webp"
+  },
+  {
+    "id": "fx_comic",
+    "name": "Comic",
+    "file": "textfx-fx_comic.webp"
+  }
+]

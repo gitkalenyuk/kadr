@@ -1,0 +1,63 @@
+<!--meta {"title":"Довідник команд","nav":"Вступ","order":900,"description":"Як влаштовано довідник усіх 177 команд Kadr: категорії, що містить кожен запис, як читати назви команд і ті самі дані через API, OpenAPI та llms-full.txt.","group":"Довідник команд"} -->
+<p class="lead">Довідник команд описує всі 177 команд — той самий текст, який агент отримує як описи інструментів MCP, згенерований із реєстру самого рушія. Описи команд англійською в обох мовних версіях.</p>
+<p><a href="{{root}}{{lang_root}}docs/ai/reference/index.html"><strong>Відкрити повний довідник команд →</strong></a></p>
+
+<h2 id="entry">Що містить кожен запис</h2>
+<ul>
+  <li><strong>Назва й заголовок</strong> — назва команди з крапками (<code>timeline.segment.split</code>), назва інструмента MCP (<code>timeline_segment_split</code>) і короткий заголовок.</li>
+  <li><strong>Опис</strong> — що робить команда, як вона відтворює поведінку CapCut, граничні випадки та помилки, які може повернути.</li>
+  <li><strong>Параметри</strong> — назва, тип, обов’язковість, типове значення, допустимі значення чи діапазон і одиниця. Кожен параметр <code>*_us</code> — ціле число мікросекунд.</li>
+  <li><strong>Результат</strong> — структура відповіді.</li>
+  <li><strong>Позначки</strong> — скасовується чи лише читає, проєктна чи глобальна, місце в інтерфейсі й гаряча клавіша.</li>
+  <li><strong>Приклади</strong> — готові JSON-аргументи, кожен перевірено за схемою параметрів.</li>
+</ul>
+
+<h2 id="categories">Категорії</h2>
+<table>
+  <thead><tr><th>Категорія</th><th>Команд</th><th>Що всередині</th></tr></thead>
+  <tbody>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/adjustment.html">Adjustment</a></td><td>7</td><td>Корекція кольору, HSL, криві й автопокращення кліпів.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/animation.html">Animation</a></td><td>2</td><td>Анімації In, Out, Combo і Loop для кліпів, стікерів і тексту.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/app.html">App</a></td><td>1</td><td>Версія, шляхи й відомості про збірку.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/audio.html">Audio</a></td><td>12</td><td>Пошук долей, відокремлення звуку, гучність, голосові ефекти, звукові ефекти й синтез мовлення (локальний і ElevenLabs).</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/audio-properties.html">Audio properties</a></td><td>3</td><td>Гучність у дБ, наростання й згасання, шумозаглушення, нормалізація гучності й голосовий ефект кліпу.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/captions.html">Captions</a></td><td>16</td><td>Автосубтитри з Whisper, редагування реплік, стилі, імпорт/експорт і завдання субтитрів.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/edit.html">Edit</a></td><td>6</td><td>Скасування, повтор, історія та буфер обміну.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/effects.html">Effects</a></td><td>5</td><td>Відеоефекти на доріжках ефектів або на окремих кліпах, з параметрами.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/export.html">Export</a></td><td>6</td><td>Завдання експорту: запуск, стан, оцінка, список, скасування, показ у папці.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/filters.html">Filters</a></td><td>4</td><td>Кольорові фільтри на доріжках фільтрів чи кліпах і коригувальні шари.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/keyframes.html">Keyframes</a></td><td>4</td><td>Додавання, перегляд, видалення й очищення ключових кадрів зі згладжуванням.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/library.html">Library</a></td><td>2</td><td>Вбудовані переходи, ефекти, фільтри, анімації, шрифти, стікери, стилі, пресети й звуки.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/media.html">Media</a></td><td>9</td><td>Імпорт, перегляд, генерація, перейменування, перепідключення й проксі медіафайлів.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/playback.html">Playback</a></td><td>9</td><td>Відтворення, пауза, перемотування й покадровий крок — а також рендер кадрів, контактних аркушів і компонування на полотні.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/presets.html">Presets</a></td><td>6</td><td>Збереження й застосування пресетів «Мого набору» між проєктами.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/projects.html">Projects</a></td><td>8</td><td>Створення, перегляд, дублювання, перейменування й видалення проєктів; полотно й обкладинка.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/smart-tools.html">Smart tools</a></td><td>8</td><td>Автокадрування, пошук і розрізання сцен, вирізання тиші, видалення фону, завдання.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/speed.html">Speed</a></td><td>2</td><td>Стала швидкість і криві швидкості.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/stickers.html">Stickers</a></td><td>1</td><td>Розміщення вбудованих стікерів.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/text.html">Text</a></td><td>8</td><td>Текст, шаблони, ефекти word art, анімації літер; застарілі імпорт/експорт SRT.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/timeline.html">Timeline</a></td><td>23</td><td>Кліпи й доріжки: додавання, переміщення, обрізання, розрізання, видалення, дублювання, стоп-кадр, заміна, реверс; маркери; налаштування; timeline.get.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/tools.html">Tools</a></td><td>4</td><td>Стан FFmpeg, завантаження і власна папка.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/transcript.html">Transcript</a></td><td>7</td><td>Розпізнавання мови й монтаж через редагування тексту: видалення слів, паразитів, пауз.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/transitions.html">Transitions</a></td><td>4</td><td>Встановлення, перегляд, видалення переходів і застосування до всіх склейок.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/updates.html">Updates</a></td><td>6</td><td>Перевірка, завантаження й встановлення оновлень; налаштування оновлень.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/video.html">Video</a></td><td>1</td><td>Очищення відео: знешумлення і прибирання мерехтіння.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/video-properties.html">Video properties</a></td><td>9</td><td>Трансформація, непрозорість, змішування, кадрування, маска, хромакей, тло й скидання кліпу; segment.get.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/window.html">Window</a></td><td>4</td><td>Керування тим, що показує відкрите вікно: проєкт, виділення, вкладка бібліотеки, сповіщення.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="namespaces">Як читати назви команд</h2>
+<p>Частина до першої крапки — простір імен, тобто об’єкт, з яким працює команда: <code>project.</code>, <code>media.</code>, <code>timeline.</code> (кліпи, доріжки, маркери), <code>segment.</code> (властивості одного кліпу), <code>keyframe.</code>, <code>animation.</code>, <code>text.</code>, <code>captions.</code>, <code>transcript.</code>, <code>audio.</code>, <code>tts.</code>, <code>sfx.</code>, <code>effect.</code>, <code>filter.</code>, <code>adjustment.</code>, <code>transition.</code>, <code>library.</code>, <code>preview.</code>, <code>playback.</code>, <code>export.</code>, <code>ai.</code> (розумні інструменти), <code>presets.</code>, <code>edit.</code>, <code>clipboard.</code>, <code>ui.</code>, <code>tools.</code>, <code>update.</code>, <code>app.</code>. Дієслова послідовні: <code>add</code> створює новий сегмент, <code>apply</code> змінює наявний кліп, <code>set</code>/<code>set_*</code> замінює значення, <code>get</code>/<code>list</code> лише читають.</p>
+
+<h2 id="other-formats">Той самий довідник в інших формах</h2>
+<table>
+  <thead><tr><th>Джерело</th><th>Коли використовувати</th></tr></thead>
+  <tbody>
+    <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>Ви в терміналі.</td></tr>
+    <tr><td><code>GET /api/v1/commands</code>, <code>GET /api/v1/commands/{name}</code></td><td>Потрібна точна специфікація запущеного рушія (з JSON Schema).</td></tr>
+    <tr><td><code>http://127.0.0.1:7777/docs</code></td><td>Потрібен довідник встановленої версії в браузері.</td></tr>
+    <tr><td><a href="{{root}}openapi.json"><code>openapi.json</code></a></td><td>Ви генеруєте клієнти чи описи інструментів для function calling.</td></tr>
+    <tr><td><a href="{{root}}llms-full.txt"><code>llms-full.txt</code></a></td><td>Потрібні всі специфікації команд плюс ці посібники одним Markdown-файлом для контексту моделі.</td></tr>
+  </tbody>
+</table>

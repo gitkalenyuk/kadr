@@ -1,0 +1,131 @@
+<!--meta {"title":"Concepts","nav":"Concepts","order":210,"description":"The rules an agent needs: projects, tracks, segments and materials, microsecond time, compositing order, the magnetic main track, linked clips, transitions, keyframes and easing, coordinates, volume units, ids and undo.","group":"Guides"} -->
+<p class="lead">Kadr models a CapCut-style timeline. These rules explain what the commands do to it — read them once and most surprises disappear. Every rule here is also written into the descriptions of the commands it affects.</p>
+
+<h2 id="objects">Projects, materials, tracks, segments</h2>
+<table>
+  <thead><tr><th>Object</th><th>Id</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td>Project</td><td><code>prj_…</code></td><td>One edit: canvas (ratio, width, height, fps, background), settings, materials, tracks, markers, cover. Stored as <code>%APPDATA%\Kadr\projects\prj_…\project.json</code> with a <code>cache\</code> folder.</td></tr>
+    <tr><td>Material</td><td><code>mat_…</code></td><td>A media file the project uses — imported (<code class="cmd">media.import</code>) or created (<code class="cmd">media.generate</code>, <code class="cmd">tts.speak</code>, <code class="cmd">sfx.add</code>, stickers). Type <code>video</code>, <code>photo</code> or <code>audio</code>; photos have <code>duration_us</code> 0. Projects link to files, never copy them.</td></tr>
+    <tr><td>Track</td><td><code>trk_…</code></td><td>A row of the timeline with a type: <code>main_video</code> (exactly one), <code>video_overlay</code>, <code>text</code>, <code>sticker</code>, <code>effect</code>, <code>filter</code>, <code>adjustment</code>, <code>audio</code>. Empty tracks other than the main track disappear.</td></tr>
+    <tr><td>Segment</td><td><code>seg_…</code></td><td>A clip on a track: a <strong>target</strong> range on the timeline and, for media clips, a <strong>source</strong> range inside its material, plus all its properties (transform, opacity, volume, speed, filter, effects, animations, keyframes, text style…).</td></tr>
+    <tr><td>Marker</td><td><code>mrk_…</code></td><td>A labelled time on the ruler; clip edges snap to it.</td></tr>
+    <tr><td>Jobs</td><td><code>exp_…</code>, <code>cap_…</code>, <code>aij_…</code></td><td>Background exports, caption/transcription jobs and smart-tool jobs. They live in memory until Kadr restarts.</td></tr>
+  </tbody>
+</table>
+<p>Ids are opaque: read them from results and from <code class="cmd">timeline.get</code>; never build them. Segment ids survive <code class="cmd">project.duplicate</code>, so ids you know from the original also work in the copy.</p>
+
+<h2 id="time">Time</h2>
+<ul>
+  <li>All times and durations are <strong>integer microseconds</strong> (µs); parameter names end in <code>_us</code>. 1 s = <code>1000000</code>; one frame at 30 fps = <code>33333</code>; at 25 fps = <code>40000</code>.</li>
+  <li>Timeline times are absolute (from 0). <strong>Keyframe</strong> times are relative to the start of their segment. <strong>Transcript</strong> words are stored in source time and mapped to the timeline by <code class="cmd">transcript.get</code>.</li>
+  <li>Omitted <code>at_us</code> usually means “at the playhead” — each project has its own playhead (<code class="cmd">playback.seek</code>, <code>playhead_us</code> in <code class="cmd">timeline.get</code>). Agents should pass explicit times.</li>
+</ul>
+
+<h2 id="compositing">Track order is compositing order</h2>
+<p>Tracks are drawn bottom-up: the track with <code>layer</code> 0 (<code>project.tracks[0]</code>, normally the main track) is drawn first, each higher layer on top. <code class="cmd">timeline.get</code> lists tracks the way the timeline shows them — top to bottom — with each track’s <code>layer</code>:</p>
+<pre><code class="lang-text">tracks (timeline.get)     layer
+sticker                   3      drawn last, on top
+text                      2
+video_overlay             1
+main_video                0      drawn first
+audio                     4…     not drawn</code></pre>
+<ul>
+  <li><strong>Filter, effect and adjustment segments</strong> on their own tracks change <em>everything below them</em> for their time range. A filter applied to a clip (<code class="cmd">filter.apply</code>, <code class="cmd">effect.apply</code>) changes only that clip.</li>
+  <li><strong>New tracks</strong> follow CapCut: overlay tracks go above the main and overlay tracks; text, sticker, effect, filter and adjustment tracks go on top of all visual tracks; audio tracks below the existing audio tracks. So a filter added <em>after</em> text sits above it and colours the text too — add filters first, or use <code class="cmd">filter.apply</code> on clips.</li>
+  <li><code>hidden</code> tracks are not drawn, <code>muted</code> tracks are not heard, <code>locked</code> tracks reject edits with <code>conflict</code> (<code class="cmd">timeline.track.set</code>).</li>
+</ul>
+
+<h2 id="magnet">The magnetic main track</h2>
+<ul>
+  <li>With <code>main_track_magnet</code> on (default), clips on the main track always sit back to back from 0 — there are never gaps. Adding without <code>at_us</code> appends; adding with <code>at_us</code> inserts at the clip boundary <em>nearest</em> to it and ripples later clips right. Deleting, trimming and speed changes ripple too.</li>
+  <li><strong>Don’t fight the magnet.</strong> To place a clip at an exact time on the main track, build the sequence in order (batch of appends with <code>duration_us</code>), or turn the magnet off with <code class="cmd">timeline.settings.set</code>. For free placement use an overlay track (<code>new_track</code>).</li>
+  <li>On other tracks a clip starts exactly at <code>at_us</code>; if that spot is taken, a new track is created directly above.</li>
+  <li><strong>Snapping</strong> (<code>auto_snapping</code>) pulls moved and trimmed edges to other edges, the playhead, markers or 0 within 100 ms. Pass <code>snap: false</code> to <code class="cmd">timeline.segment.move</code> or <code class="cmd">timeline.segment.trim</code> for exact positions — beat markers are a classic trap.</li>
+</ul>
+
+<h2 id="segments">Segment ranges and speed</h2>
+<ul>
+  <li><code>start_us</code>/<code>duration_us</code> is where the clip sits on the timeline; <code>source_start_us</code>/<code>source_duration_us</code> is the part of the material it plays. At speed <em>s</em>, <code>source_duration = duration × s</code>.</li>
+  <li>Video and audio cannot be longer than their material (edges stop at the media end, results report <code>clamped: true</code>). Photos, text, stickers, effects and filters stretch freely.</li>
+  <li>Default lengths: whole material for video/audio, 5 s for photos, 3 s for text, stickers, effects, filters and adjustment layers, 2 s for a manual caption.</li>
+  <li>Video clips keep their own sound until <code class="cmd">audio.extract</code> or <code class="cmd">audio.separate</code>.</li>
+</ul>
+
+<h2 id="linked">Linked clips</h2>
+<p>Clips that share a <code>link_group</code> (<code>lnk_…</code>) move, trim, split and delete together while <code>linkage</code> is on (default). Links are created by <code class="cmd">audio.extract</code> / <code class="cmd">audio.separate</code> (video + its sound) and <code class="cmd">tts.from_text</code> (text + its speech). <code class="cmd">timeline.get</code> shows <code>link_group</code> on each clip. Turn linkage off with <code class="cmd">timeline.settings.set</code> to edit one side alone.</p>
+
+<h2 id="transitions">Transitions</h2>
+<ul>
+  <li>A transition is stored on the <strong>left</strong> clip of a cut (<code>transition_out</code>) and plays across the cut into the next clip on the same video track. <code class="cmd">transition.set</code> takes the <em>left</em> clip’s id.</li>
+  <li>The two clips must touch (within half a frame) — otherwise <code>conflict</code>. Both must be at least 0.2 s long; the duration is clamped to half of the shorter clip (<code>clamped: true</code>).</li>
+  <li>Transitions do not change the timeline length: cuts stay where they are, so narration and music timing are unaffected.</li>
+  <li><code class="cmd">transition.apply_all</code> sets one transition on every cut of a track. Directional and soft variants are options (<code>direction</code>, <code>softness</code>) stored in the type, e.g. <code>bars_stagger?direction=up</code>.</li>
+</ul>
+
+<h2 id="keyframes">Keyframes and easing</h2>
+<ul>
+  <li>Animatable properties: <code>transform.x</code>, <code>transform.y</code>, <code>transform.scale</code>, <code>transform.rotation</code>, <code>opacity</code>, <code>volume</code>, <code>adjust.*</code> and <code>filter.intensity</code>.</li>
+  <li>With two or more keyframes a property is interpolated between them; before the first and after the last it <strong>holds</strong> that value. Keyframe values <em>replace</em> the static property.</li>
+  <li><code>time_us</code> is relative to the segment start. A keyframe within half a frame of an existing one updates it instead of adding another.</li>
+  <li>The <strong>left</strong> keyframe of each interval decides the easing: <code>linear</code> (default), or cubic <code>ease_in</code>, <code>ease_out</code>, <code>ease_in_out</code>. Put the easing on the first keyframe of a move.</li>
+  <li>While a property has keyframes, <code class="cmd">segment.set_transform</code>, <code class="cmd">segment.set_opacity</code>, <code class="cmd">segment.set_volume</code> and <code class="cmd">segment.set_adjust</code> write a keyframe <em>at the playhead</em> instead of changing the static value (listed in <code>result.keyframed</code>). Use <code class="cmd">keyframe.add</code> with explicit times, or <code class="cmd">keyframe.clear</code> first.</li>
+</ul>
+<p>A slow push-in with an eased start, then a check of the interpolated value at 1 s:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_b41d7e0c9a35 --property transform.scale --time_us 0 --value 1 --easing ease_in_out
+kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_b41d7e0c9a35 --property transform.scale --time_us 4s --value 1.2
+kadrctl run segment.get --project_id prj_3c8e1f0a7b62 --segment_id seg_b41d7e0c9a35 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_b41d7e0c9a35", "property": "transform.scale", "time_us": 0, "value": 1, "easing": "ease_in_out"}}
+{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_b41d7e0c9a35", "property": "transform.scale", "time_us": 4000000, "value": 1.2}}
+{"name": "segment_get", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_b41d7e0c9a35", "time_us": 1000000}}</code></pre></div>
+<pre><code class="lang-json">"evaluated": { "transform": { "x": 0, "y": 0, "scale": 1.0125, "rotation": 0 }, "opacity": 1, … }</code></pre>
+<p>At 1 s — a quarter of the way — the cubic ease-in-out has covered only 6.25% of the move, so the scale is 1.0125; a <code>linear</code> keyframe would give 1.05.</p>
+<h2 id="coordinates">Transform and coordinates</h2>
+<ul>
+  <li><code>x</code> and <code>y</code> move the clip’s centre in <strong>canvas fractions</strong>: 0 = centred, ±1 = centre on an edge (one unit is half the canvas width or height). <strong>+X is right, +Y is down.</strong> Range −2…2.</li>
+  <li><code>scale</code> 1 = the clip <em>fits inside</em> the canvas (letterboxed if the shapes differ). To fill a 16:9 canvas with 4:3 footage you need about 1.33; with 9:16 footage about 3.16. A clip at scale <em>s</em> that has the canvas’s shape can move sideways by <em>s</em> − 1 before an edge shows.</li>
+  <li><code>rotation</code> is in degrees, clockwise (−360…360). Flips are <code>flip_h</code>/<code>flip_v</code>.</li>
+  <li>Stickers start at scale 0.3; text size 15 is CapCut’s default (stroke, shadow and box values are 0–1).</li>
+  <li>To <em>measure</em>, use <code class="cmd">preview.layout</code>: boxes in canvas pixels for every visible clip at a time.</li>
+</ul>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run segment.set_transform --project_id prj_3c8e1f0a7b62 --segment_id seg_0f6b2d8e4c91 --y 0.6 --scale 0.8
+kadrctl run preview.layout --project_id prj_3c8e1f0a7b62 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "segment_set_transform", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_0f6b2d8e4c91", "y": 0.6, "scale": 0.8}}
+{"name": "preview_layout", "arguments": {"project_id": "prj_3c8e1f0a7b62", "time_us": 1000000}}</code></pre></div>
+<h2 id="audio-units">Volume: decibels and linear gain</h2>
+<table>
+  <thead><tr><th>Where</th><th>Unit</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">segment.set_volume</code> <code>volume_db</code></td><td>Decibels relative to the original: 0 = unchanged, −6 ≈ half as loud, −60 = muted (bottom of the slider), max +20.</td></tr>
+    <tr><td><code>volume</code> in segments, and the <code>volume</code> keyframe property</td><td>Linear gain: 1 = 0 dB, 0.5 ≈ −6 dB, 0 = silent, max 10. <code>gain = 10^(dB/20)</code>.</td></tr>
+    <tr><td><code class="cmd">audio.loudness</code></td><td>LUFS (<code>integrated_lufs</code>, <code>effective_lufs</code> including the clip’s volume), true peak in dBFS.</td></tr>
+    <tr><td><code class="cmd">segment.set_fade</code></td><td><code>fade_in_us</code>/<code>fade_out_us</code> in microseconds.</td></tr>
+  </tbody>
+</table>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run segment.set_volume --project_id prj_3c8e1f0a7b62 --segment_id seg_92d4f6a1c7e3 --volume_db -12
+kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_92d4f6a1c7e3 --property volume --time_us 6s --value 0.25
+kadrctl run keyframe.add --project_id prj_3c8e1f0a7b62 --segment_id seg_92d4f6a1c7e3 --property volume --time_us 8s --value 0</code></pre><pre data-lang="mcp"><code>{"name": "segment_set_volume", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_92d4f6a1c7e3", "volume_db": -12}}
+{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_92d4f6a1c7e3", "property": "volume", "time_us": 6000000, "value": 0.25}}
+{"name": "keyframe_add", "arguments": {"project_id": "prj_3c8e1f0a7b62", "segment_id": "seg_92d4f6a1c7e3", "property": "volume", "time_us": 8000000, "value": 0}}</code></pre></div>
+<p>The first call sets a static −12 dB (gain 0.25); the two keyframes then hold 0.25 until 6 s and fade to silence at 8 s.</p>
+
+<h2 id="results">Where new ids appear in results</h2>
+<table>
+  <thead><tr><th>Command</th><th>New id at</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">project.create</code>, <code class="cmd">project.duplicate</code></td><td><code>id</code></td></tr>
+    <tr><td><code class="cmd">media.import</code></td><td><code>materials[].id</code> (files already in the project are in <code>duplicates[].material_id</code>)</td></tr>
+    <tr><td><code class="cmd">timeline.segment.add</code></td><td><code>segment.id</code> (and <code>track_id</code>)</td></tr>
+    <tr><td><code class="cmd">text.add</code>, <code class="cmd">sticker.add</code>, <code class="cmd">effect.add</code>, <code class="cmd">filter.add</code>, <code class="cmd">adjustment.add</code>, <code class="cmd">captions.add</code></td><td><code>segment_id</code></td></tr>
+    <tr><td><code class="cmd">media.generate</code></td><td><code>material_id</code>; with <code>add_to_timeline</code> also <code>segment_id</code></td></tr>
+    <tr><td><code class="cmd">tts.speak</code>, <code class="cmd">sfx.add</code></td><td><code>segment_id</code>, <code>material_id</code></td></tr>
+    <tr><td><code class="cmd">timeline.segment.split</code></td><td><code>left.id</code> (keeps the original id), <code>right.id</code></td></tr>
+    <tr><td><code class="cmd">ai.remove_silence</code>, <code class="cmd">ai.split_scenes</code></td><td><code>segment_ids</code> — the remaining pieces in order</td></tr>
+    <tr><td><code class="cmd">captions.auto</code>, <code class="cmd">transcript.transcribe</code>, <code class="cmd">export.start</code></td><td><code>job_id</code>; caption cue ids come from <code class="cmd">captions.list</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="undo">Undo, history and scopes</h2>
+<ul>
+  <li><strong>Project commands</strong> (135 of them) take <code>project_id</code>, edit a working copy, and are saved as one undo step each — or one step per batch. A command that changes nothing creates no step. History is shared by the editor and every client; <code class="cmd">edit.history</code> shows the next undo/redo labels.</li>
+  <li><strong>Global commands</strong> do not belong to one project’s history: projects list/create/duplicate/delete, library, presets, export jobs, <code class="cmd">captions.auto</code> and <code class="cmd">transcript.transcribe</code> (jobs; the cues they create are one undo step), tools, updates, <code class="cmd">ui.toast</code>, <code class="cmd">ui.library_tab</code>. They cannot be part of a batch.</li>
+  <li>Not undoable: exports, transcripts (analysis data — <code class="cmd">transcript.clear</code> removes one), <code class="cmd">project.rename</code>, <code class="cmd">project.delete</code>, proxy creation and the <code>ui.*</code> commands (they change only what the window shows).</li>
+</ul>

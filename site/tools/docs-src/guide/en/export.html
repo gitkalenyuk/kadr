@@ -1,0 +1,51 @@
+<!--meta {"title":"Export","nav":"Export","order":130,"description":"Save your finished video from Kadr: resolution, quality, H.264 or HEVC, frame rate, GPU encoding, audio-only and GIF exports, and where the files go.","group":"Finishing"} -->
+<p class="lead">Exporting turns your project into a video file you can upload or share. The defaults suit almost every platform, so in most cases you just click <strong>Export</strong>.</p>
+
+<figure><img src="{{root}}assets/img/guide/export.webp" alt="The Export window: cover preview, name, export folder, video settings for resolution, bit rate, codec, format and frame rate, Audio and GIF switches, estimated size and the Export button" width="792" height="569" loading="lazy"><figcaption>The Export window. The estimated file size updates as you change the settings.</figcaption></figure>
+
+<h2 id="quick">Export in three clicks</h2>
+<ol class="steps">
+  <li><h3 id="open">Open the Export window</h3><p>Click <strong>Export</strong> in the top-right corner of the editor, or press <kbd>Ctrl</kbd>+<kbd>E</kbd>.</p></li>
+  <li><h3 id="check">Check the name and folder</h3><p><strong>Name</strong> is the file name; <strong>Export to</strong> is the folder — by default <code>Videos\Kadr</code> in your user folder. To save elsewhere, type another folder path. The line <em>Saved as …</em> shows the final file name.</p></li>
+  <li><h3 id="go">Click Export</h3><p>Progress and the time left are shown. Click <strong>Hide</strong> to keep editing while the export runs in the background — a message appears when it is finished.</p></li>
+</ol>
+<p>When it is done, click <strong>Open folder</strong> to see the file in File Explorer, <strong>Export again</strong> to make another version, or <strong>Close</strong>. If a file with the same name already exists, Kadr adds “ (1)”, “ (2)”… instead of overwriting it.</p>
+
+<h2 id="video-settings">Video settings</h2>
+<table>
+  <thead><tr><th>Setting</th><th>Options</th><th>Advice</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Resolution</strong></td><td>480p, 720p, 1080p, 2K, 4K</td><td>1080p is right for social media. Choose 4K only if your footage is 4K. The exact pixel size for your project's shape is shown next to it.</td></tr>
+    <tr><td><strong>Bit rate</strong></td><td>Lower, Recommended, Higher, Customize</td><td>Higher means better quality and bigger files. <em>Customize</em> lets you type a value in Mbps.</td></tr>
+    <tr><td><strong>Codec</strong></td><td>H.264, HEVC</td><td>H.264 plays everywhere. HEVC (H.265) gives smaller files at the same quality but older devices may not play it.</td></tr>
+    <tr><td><strong>Format</strong></td><td>mp4, mov</td><td>mp4 is the universal choice.</td></tr>
+    <tr><td><strong>Frame rate</strong></td><td>24, 25, 30, 50, 60 fps</td><td>Keep the project's frame rate unless a platform asks for something else.</td></tr>
+  </tbody>
+</table>
+
+<h3 id="presets">Good settings for popular platforms</h3>
+<table>
+  <thead><tr><th>Platform</th><th>Project ratio</th><th>Export</th></tr></thead>
+  <tbody>
+    <tr><td>TikTok, Instagram Reels, YouTube Shorts</td><td>9:16</td><td>1080p, Recommended, H.264, mp4, 30 fps</td></tr>
+    <tr><td>YouTube</td><td>16:9</td><td>1080p or 4K, Recommended or Higher, H.264, mp4</td></tr>
+    <tr><td>Instagram feed post</td><td>1:1</td><td>1080p, Recommended, H.264, mp4</td></tr>
+    <tr><td>Messengers (Telegram, WhatsApp)</td><td>any</td><td>720p, Lower — small and quick to send</td></tr>
+  </tbody>
+</table>
+
+<h2 id="gpu">Fast export with your graphics card</h2>
+<p>If your computer has an NVIDIA, Intel or AMD graphics chip with a video encoder (NVENC, Quick Sync or AMF), Kadr uses it automatically — exports are then several times faster. Next to <strong>Codec</strong> the window shows which encoder will be used, for example <em>GPU · h264_nvenc</em>. Without a suitable graphics chip, Kadr uses the processor; the result looks the same, it just takes longer.</p>
+
+<h2 id="audio-gif">Audio-only and GIF</h2>
+<p>Three switches choose what to export — you can turn on more than one at a time:</p>
+<ul>
+  <li><strong>Video</strong> — the normal video file.</li>
+  <li><strong>Audio</strong> — the soundtrack as <strong>MP3</strong>, <strong>WAV</strong>, <strong>AAC</strong> or <strong>FLAC</strong>. With Video on, it is saved as an extra file; switch Video off to export the sound only — for example a podcast episode.</li>
+  <li><strong>GIF</strong> — an animated GIF (up to 720 pixels, 15 frames per second, no sound) for chats and websites. Keep GIFs short: they get big quickly.</li>
+</ul>
+
+<h2 id="where">Where the files go</h2>
+<p>Unless you type another folder, exports are saved in <code>C:\Users\&lt;you&gt;\Videos\Kadr</code>. Missing folders are created automatically. The export uses your original media at full quality — proxies and the preview quality setting don't affect it.</p>
+
+<div class="callout tip"><p>Need several versions — vertical and horizontal, or a short excerpt only? An <a href="{{root}}{{lang_root}}docs/ai/index.html">AI assistant</a> can export a time range or a batch of variants for you with <code class="cmd">export.start</code>.</p></div>

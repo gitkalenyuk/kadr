@@ -1,0 +1,88 @@
+<!--meta {"title":"Kadr для ШІ-агентів","nav":"Огляд","order":10,"description":"Що ШІ-агент може робити в Kadr, як влаштована модель редактора, як під’єднатися через MCP, REST або CLI і як Kadr береже ваш комп’ютер.","group":"Початок"} -->
+<p class="lead">Kadr — це десктопний відеоредактор у стилі CapCut, у якому кожна кнопка, повзунок і пункт меню — задокументована <em>команда</em>. ШІ-агент виконує ті самі 170+ команд через MCP, локальний REST API або CLI <code>kadrctl</code>, а людина бачить кожну правку наживо у вікні редактора, зі спільною історією скасування.</p>
+
+<div class="cards">
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/claude-code.html"><b>Швидкий старт: Claude Code</b><span>Одна команда — і Kadr під’єднано; перші запити, які варто спробувати.</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/claude-desktop.html"><b>Claude Desktop</b><span>Фрагмент конфігурації на чотири рядки.</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/recipes.html"><b>Рецепти</b><span>Десять наскрізних сценаріїв, кожен виклик перевірено на справжньому рушії.</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/reference-intro.html"><b>Довідник команд</b><span>Кожна команда з параметрами, одиницями, типовими значеннями й прикладами.</span></a>
+</div>
+
+<h2 id="what-agents-can-do">Що може агент</h2>
+<table>
+  <thead><tr><th>Сфера</th><th>Що робить агент</th><th>Приклади команд</th></tr></thead>
+  <tbody>
+    <tr><td>Збирання</td><td>Імпортує файли й папки, ставить кліпи на магнітну основну доріжку та доріжки накладання, обрізає, ріже, переміщує, дублює, робить стоп-кадри, змінює швидкість</td><td><code class="cmd">media.import</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">timeline.segment.trim</code></td></tr>
+    <tr><td>Вигляд</td><td>68 переходів, 70 фільтрів, 56 ефектів, корекція кольору з HSL і кривими, маски, хромакей, 136 анімацій кліпів, ключові кадри зі згладжуванням</td><td><code class="cmd">transition.set</code>, <code class="cmd">filter.add</code>, <code class="cmd">keyframe.add</code></td></tr>
+    <tr><td>Текст і субтитри</td><td>46 текстових шаблонів, 22 ефекти word art, 39 анімацій літер; офлайн-субтитри Whisper приблизно 100 мовами з 15 стилями; монтаж відео через редагування транскрипту</td><td><code class="cmd">text.add</code>, <code class="cmd">captions.auto</code>, <code class="cmd">transcript.remove_fillers</code></td></tr>
+    <tr><td>Звук</td><td>Гучність у дБ, наростання й згасання, 25 голосових ефектів, шумозаглушення, нормалізація гучності, пошук долей, 47 синтезованих звукових ефектів, синтез мови локальними голосами або ElevenLabs</td><td><code class="cmd">segment.set_volume</code>, <code class="cmd">audio.detect_beats</code>, <code class="cmd">tts.speak</code></td></tr>
+    <tr><td>Розумні інструменти</td><td>Автокадрування під будь-яке співвідношення, пошук і розрізання сцен, вирізання тиші, видалення фону</td><td><code class="cmd">ai.auto_reframe</code>, <code class="cmd">ai.remove_silence</code></td></tr>
+    <tr><td>Генерація</td><td>Градієнти, текстури, відліки, сітки й тестові таблиці, що рендеряться локально — без стокових відео</td><td><code class="cmd">media.generate</code></td></tr>
+    <tr><td>Зір</td><td>Рендер будь-якого кадру, контактний аркуш усього монтажу або рамка кожного кліпу на полотні; MCP повертає картинки як зображення</td><td><code class="cmd">preview.frame</code>, <code class="cmd">preview.contact_sheet</code>, <code class="cmd">preview.layout</code></td></tr>
+    <tr><td>Видача</td><td>MP4/MOV у H.264 або HEVC до 4K (з апаратними кодерами GPU, якщо є), GIF, лише звук, субтитри SRT/VTT</td><td><code class="cmd">export.start</code>, <code class="cmd">captions.export</code></td></tr>
+    <tr><td>Показати людині</td><td>Відкрити проєкт у вікні, виділити кліп, перемкнути вкладку бібліотеки, показати сповіщення</td><td><code class="cmd">ui.open_project</code>, <code class="cmd">ui.toast</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="three-ways-in">Три способи під’єднатися</h2>
+<p>Усі три ведуть до того самого рушія — відкритого редактора (<code>Kadr.exe</code>) або «безголового» <code>kadr-server.exe</code> — за адресою <code>http://127.0.0.1:7777</code> і виконують ті самі команди.</p>
+<table>
+  <thead><tr><th>Інтерфейс</th><th>Для чого найкраще</th><th>Як називаються команди</th></tr></thead>
+  <tbody>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/mcp.html">MCP</a> (<code>kadr-mcp.exe</code>)</td><td>Claude Code, Claude Desktop та інші застосунки з агентами. Сам запускає рушій, якщо Kadr не відкритий; повертає кадри як зображення.</td><td>Крапки стають підкресленнями: <code>timeline_segment_split</code>; плюс <code>kadr_batch</code></td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/rest.html">REST</a></td><td>Власні скрипти й сервіси будь-якою мовою; події через WebSocket.</td><td><code>POST /api/v1/commands/timeline.segment.split</code></td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/cli.html">CLI</a> (<code>kadrctl.exe</code>)</td><td>Термінали, скрипти оболонки, швидкі перевірки; розуміє час на кшталт <code>2.5s</code>.</td><td><code>kadrctl run timeline.segment.split --at_us 2.5s …</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="mental-model">Модель редактора</h2>
+<pre><code class="lang-text">project          prj_…   полотно, налаштування, курсор
+├─ materials[]   mat_…   імпортовані чи згенеровані файли (у фото тривалість 0)
+├─ tracks[]      trk_…   tracks[0] малюється першою, найнижче
+│  ├─ main_video         магнітна: кліпи впритул, без проміжків
+│  ├─ video_overlay · text · sticker · effect · filter · adjustment
+│  └─ audio
+│     └─ segments[]  seg_…  діапазон на таймлайні + діапазон у матеріалі
+└─ markers[]     mrk_…</code></pre>
+<ul>
+  <li><strong>Час — ціле число мікросекунд</strong> усюди: 1 с = <code>1000000</code>. Параметри з часом закінчуються на <code>_us</code>.</li>
+  <li><strong>Ідентифікатори — непрозорі рядки</strong> з префіксом типу (<code>prj_</code>, <code>trk_</code>, <code>seg_</code>, <code>mat_</code>, <code>exp_</code>…). Беріть їх із результатів; ніколи не вигадуйте.</li>
+  <li><strong>Команди бувають проєктні</strong> (приймають <code>project_id</code>, зберігаються й скасовуються) <strong>або глобальні</strong> (список проєктів, бібліотека, завдання експорту, налаштування).</li>
+  <li><strong>Кожну правку можна скасувати</strong> через <code class="cmd">edit.undo</code>; пакет правок — один крок скасування; правки з інтерфейсу й від агентів мають спільну історію.</li>
+</ul>
+<p>Усі правила — магніт, зв’язані кліпи, переходи, ключові кадри, координати, одиниці — у розділі <a href="{{root}}{{lang_root}}docs/ai/concepts.html">Концепції</a>.</p>
+
+<h2 id="first-calls">Перші п’ять викликів</h2>
+<p>Повний монтаж: створити вертикальний проєкт, згенерувати тло, додати титр, подивитися, експортувати. Кожна вкладка показує ті самі виклики; вкладка MCP — це те, що надсилає агент.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Моє перше відео", "ratio": "9:16"}}
+{"name": "media_generate", "arguments": {"project_id": "prj_74f3bf737c17", "preset_id": "sunset_gradient", "duration_us": 5000000, "add_to_timeline": true}}
+{"name": "text_add", "arguments": {"project_id": "prj_74f3bf737c17", "text": "Привіт від агента", "template_id": "title_bold", "at_us": 0, "duration_us": 3000000}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_74f3bf737c17", "time_us": 1000000, "width": 540}}
+{"name": "export_start", "arguments": {"project_id": "prj_74f3bf737c17", "resolution": "1080p"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Моє перше відео" --ratio 9:16
+kadrctl run media.generate --project_id prj_74f3bf737c17 --preset_id sunset_gradient --duration_us 5s --add_to_timeline
+kadrctl run text.add --project_id prj_74f3bf737c17 --text "Привіт від агента" --template_id title_bold --at_us 0 --duration_us 3s
+kadrctl run preview.frame --project_id prj_74f3bf737c17 --time_us 1s --width 540
+kadrctl run export.start --project_id prj_74f3bf737c17 --resolution 1080p</code></pre><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/commands/project.create -H "Authorization: Bearer $KADR_TOKEN" -d '{"name":"Моє перше відео","ratio":"9:16"}'
+curl -s http://127.0.0.1:7777/api/v1/commands/media.generate -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","preset_id":"sunset_gradient","duration_us":5000000,"add_to_timeline":true}'
+curl -s http://127.0.0.1:7777/api/v1/commands/text.add -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","text":"Привіт від агента","template_id":"title_bold","at_us":0,"duration_us":3000000}'
+curl -s http://127.0.0.1:7777/api/v1/commands/preview.frame -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","time_us":1000000,"width":540}'
+curl -s http://127.0.0.1:7777/api/v1/commands/export.start -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","resolution":"1080p"}'</code></pre></div>
+<p>Експорт іде у фоні; <code class="cmd">export.status</code> з отриманим <code>job_id</code> показує прогрес, доки <code>state</code> не стане <code>done</code>. Без <code>path</code> відео зберігаються в <code>%USERPROFILE%\Videos\Kadr</code>.</p>
+
+<h2 id="safety">Безпека і приватність</h2>
+<ul>
+  <li><strong>Лише локально.</strong> API слухає на <code>127.0.0.1</code>; запити, адресовані будь-якому іншому імені хоста, отримують <code>403 forbidden</code> (захист від DNS rebinding), а браузери можуть під’єднуватися лише з локальних origin.</li>
+  <li><strong>Токен.</strong> Кожен запит, крім перевірки стану й документації, потребує токена з <code>%APPDATA%\Kadr\api-token</code>. <code>kadr-mcp</code> і <code>kadrctl</code> читають його самі. Бережіть його, як пароль: він дає повний контроль над вашими проєктами.</li>
+  <li><strong>Усе можна скасувати</strong> — крім видалення цілого проєкту, яке MCP позначає як руйнівне, тож клієнти перепитують. Імпортовані медіафайли ніколи не змінюються й не видаляються.</li>
+  <li><strong>Kadr нічого не вивантажує.</strong> Команди читають і записують файли на вашому ПК за шляхами, які ви вказуєте. Мережевий трафік — лише необов’язковий: голоси ElevenLabs (текст, який ви синтезуєте), перевірка оновлень і одноразове завантаження FFmpeg. Кадри й дані потрапляють до вашого ШІ-провайдера лише тоді, коли агент просить їх через інструменти, які ви дозволили.</li>
+</ul>
+
+<h2 id="machine-readable">Машинозчитувані файли</h2>
+<table>
+  <thead><tr><th>Файл</th><th>Що це</th></tr></thead>
+  <tbody>
+    <tr><td><a href="{{root}}llms.txt"><code>llms.txt</code></a></td><td>Покажчик цієї документації для LLM (формат llmstxt.org, англійською).</td></tr>
+    <tr><td><a href="{{root}}llms-full.txt"><code>llms-full.txt</code></a></td><td>Уся документація для ШІ в Markdown плюс повна специфікація кожної команди — можна вставити в контекст моделі.</td></tr>
+    <tr><td><a href="{{root}}openapi.json"><code>openapi.json</code></a></td><td>Опис OpenAPI 3.1 усіх команд. Запущений Kadr віддає власну копію за адресою <code>/api/v1/openapi.json</code> і HTML-довідник за <code>/docs</code>.</td></tr>
+  </tbody>
+</table>

@@ -1,0 +1,60 @@
+<!--meta {"title":"Налаштування й оновлення","nav":"Налаштування й оновлення","order":150,"description":"Налаштування Kadr: автоматичні оновлення й бета-канал, FFmpeg, відомості про API, портативний режим і видалення програми.","group":"Довідка"} -->
+<p class="lead">Налаштувань у Kadr небагато — більшість рішень ухвалюється там, де ви працюєте. Вікно Settings відповідає за оновлення, FFmpeg і відомості про вашу інсталяцію.</p>
+
+<h2 id="open">Як відкрити Settings</h2>
+<ul>
+  <li>На головному екрані: <strong>Settings</strong> ліворуч унизу.</li>
+  <li>У редакторі: <strong>Menu → Settings…</strong> або <strong>Menu → Check for updates…</strong> — одразу до оновлень.</li>
+</ul>
+<p>Вікно має чотири розділи: <strong>About</strong>, <strong>Updates</strong>, <strong>FFmpeg</strong> і <strong>API &amp; automation</strong>.</p>
+
+<h2 id="about">About — про програму</h2>
+<p>Показує <strong>Version</strong> — версію Kadr (з позначкою <em>Beta</em> чи <em>Portable</em>, якщо це так), збірку, платформу й версію FFmpeg. Особливо корисні два рядки:</p>
+<ul>
+  <li><strong>Data folder</strong> — папка даних, де зберігаються ваші проєкти, налаштування й пресети. Кнопка копіювання копіює шлях.</li>
+  <li><strong>Program</strong> — де встановлено сам Kadr.</li>
+</ul>
+<p>Нижче — посилання на сайт, нотатки до релізів, ліцензію та сторонні ліцензії. Повідомляючи про проблему, вказуйте версію звідси.</p>
+
+<h2 id="updates">Updates — оновлення</h2>
+<figure><img src="{{root}}assets/img/guide/settings-updates.webp" alt="Settings, розділ Updates: поточна версія, кнопка Check now, перемикач Automatic checks і вибір Channel" width="852" height="340" loading="lazy"><figcaption>Settings → Updates.</figcaption></figure>
+<p>Kadr уміє оновлюватися сам. Після запуску він у фоні перевіряє GitHub — не частіше ніж раз на день і нічого не сповільнюючи. Коли нова версія готова, на кнопці <strong>Menu</strong> (і на <strong>Settings</strong> на головному екрані) з’являється крапка, а пункт меню змінюється на <strong>Update available…</strong>.</p>
+<ol class="steps">
+  <li><h3 id="update-read">Подивіться, що нового</h3><p>Відкрийте <strong>Settings → Updates</strong>. Там показано нову версію з датою, розміром і нотатками до релізу. <strong>Check now</strong> перевіряє негайно.</p></li>
+  <li><h3 id="update-download">Завантажте</h3><p>Натисніть <strong>Download &amp; install</strong>. Смуга прогресу показує завантаження. Потім Kadr перевіряє цифровий підпис і контрольну суму файлу — оновлення, що не пройшло перевірку, ніколи не встановлюється.</p></li>
+  <li><h3 id="update-install">Встановіть</h3><p>Натисніть <strong>Install &amp; restart</strong> і підтвердьте. Kadr закриється, встановить нову версію й запуститься знову. Проєкти вже збережено; зупиниться лише експорт, якщо він саме триває, — тож дочекайтеся його завершення. <strong>Later</strong> відкладає встановлення.</p></li>
+</ol>
+<ul>
+  <li><strong>Skip this version</strong> — приховати конкретне оновлення до виходу новішого (<strong>Don't skip</strong> скасовує це).</li>
+  <li><strong>Automatic checks</strong> — вимкніть, якщо волієте перевіряти вручну.</li>
+  <li><strong>Channel</strong> — <em>Stable releases</em> (стабільні) або <em>Beta (includes pre-releases)</em>, щоб отримувати нові функції раніше. Поки Kadr у публічній беті, бета-збірки за замовчуванням використовують канал Beta.</li>
+</ul>
+
+<h2 id="ffmpeg">FFmpeg</h2>
+<figure><img src="{{root}}assets/img/guide/settings-ffmpeg-missing.webp" alt="Settings, розділ FFmpeg із попередженням, що FFmpeg не встановлено, кнопкою Download FFmpeg, полем Use my FFmpeg і папкою завантаження" width="852" height="470" loading="lazy"><figcaption>Settings → FFmpeg, коли FFmpeg бракує.</figcaption></figure>
+<p>Kadr потрібен FFmpeg для імпорту, перегляду й експорту. Цей розділ показує, чи його знайдено і де:</p>
+<ul>
+  <li><strong>Download FFmpeg (~100 MB)</strong> — завантажує FFmpeg у власну папку інструментів Kadr (<code>%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin</code>). Після встановлення кнопка пропонує <strong>Download again</strong>.</li>
+  <li><strong>Choose folder…</strong> або <strong>Use my FFmpeg</strong> — використати FFmpeg, який у вас уже є: оберіть або введіть папку з <code>ffmpeg.exe</code> і <code>ffprobe.exe</code> та натисніть <strong>Use folder</strong>. <strong>Forget</strong> скасовує цей вибір.</li>
+</ul>
+<p>Коли FFmpeg знайдено, рядок стану показує його версію та джерело: <em>Downloaded by Kadr</em> (завантажив Kadr), <em>Folder you chose</em> (обрана вами папка), <em>Next to Kadr</em> (поруч із Kadr) або <em>System PATH</em>. FFmpeg — вільна програма під ліцензією GPL; це окремий продукт, не частина Kadr.</p>
+
+<h2 id="api">API &amp; automation</h2>
+<p>Усе, що ви клацаєте в Kadr, можуть робити й скрипти та ШІ-асистенти. Тут показано локальну <strong>API address</strong> (<code>http://127.0.0.1:7777</code>), посилання на вбудовану <strong>Documentation</strong>, <strong>Token file</strong> — файл токена, що захищає API, — і готові до копіювання налаштування для під’єднання Claude Desktop та Claude Code. API доступний лише на вашому комп’ютері. Для монтажу все це не потрібне, але якщо цікаво — читайте <a href="{{root}}{{lang_root}}docs/ai/index.html">документацію для ШІ</a>.</p>
+
+<h2 id="portable">Портативний режим</h2>
+<p>Портативний архів (<code>Kadr-X.Y.Z-windows-x64-portable.zip</code>) працює без встановлення — з будь-якої папки чи флешки. Розпакуйте його й запустіть <code>Kadr.exe</code>.</p>
+<ul>
+  <li>Файл <code>portable.txt</code> поруч із <code>Kadr.exe</code> позначає копію як портативну; у Settings видно позначку <em>Portable</em>.</li>
+  <li>Проєкти й налаштування зберігаються в папці <code>data</code> поруч із <code>Kadr.exe</code>, тож «подорожують» разом із програмою. Щоб переконатися, гляньте <strong>Settings → About → Data folder</strong>.</li>
+  <li>Портативна копія повідомляє про нову версію, але не встановлює її. Завантажте новий архів і розпакуйте його поверх старої папки, зберігши папку <code>data</code>.</li>
+  <li>Портативній версії так само потрібні Microsoft Edge WebView2 Runtime (є у Windows 11) і FFmpeg.</li>
+</ul>
+
+<h2 id="uninstall">Видалення</h2>
+<p>Відкрийте у Windows <strong>Параметри → Програми → Інстальовані програми</strong> (Settings → Apps → Installed apps), знайдіть <strong>Kadr</strong> і оберіть <strong>Видалити</strong>. Деінсталятор поставить два запитання:</p>
+<ul>
+  <li><em>Також видалити мої проєкти та налаштування?</em> — відповідайте <strong>Ні</strong>, щоб зберегти їх для майбутнього встановлення;</li>
+  <li><em>Також видалити інструменти, які завантажив Kadr (наприклад, FFmpeg)?</em></li>
+</ul>
+<p>Ваші оригінальні медіафайли ніколи не зачіпаються. Щоб прибрати портативну копію, просто видаліть її папку.</p>

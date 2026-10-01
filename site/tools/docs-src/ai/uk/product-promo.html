@@ -1,0 +1,123 @@
+<!--meta {"title":"Промо продукту з word art і закадровим голосом","nav":"Промо продукту","order":360,"description":"Зберіть 9-секундне промо продукту зі згенерованих фонів, фото продукту, заголовків word art з анімацією літер, стікерів, звукових ефектів і синтезованого закадрового голосу, а потім експортуйте його в MP4 і GIF.","group":"Рецепти","summary":"Згенеровані фони, фото продукту, металеві й неонові заголовки, цінник, «вжухи» і закадровий голос — у MP4 і GIF.","time":"~3 хв","needs":"Фото продукту (найкраще — PNG із прозорістю)","commands":["media.generate","transition.set","timeline.segment.add","animation.set","text.add","text.apply_effect","text.set_glyph_animation","sticker.add","sfx.add","tts.speak","export.start"]} -->
+<p class="lead">Результат — 9-секундне промо 16:9 у трьох сценах: неоновий заголовок на рухомій сітці, продукт, що падає в кадр поруч із золотим заголовком, і ціна з плашкою «Limited». На склейках — «вжухи» і дзвіночок, закадровий текст читає локальний голос, а на виході — MP4 і зациклений GIF, без жодного стокового відео.</p>
+<ul>
+  <li><strong>Час:</strong> ~3 хв</li>
+  <li><strong>Що потрібно:</strong> Фото продукту (найкраще — PNG із прозорістю)</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">media.generate</code>, <code class="cmd">transition.set</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">animation.set</code>, <code class="cmd">text.add</code>, <code class="cmd">text.apply_effect</code>, <code class="cmd">text.set_glyph_animation</code>, <code class="cmd">sticker.add</code>, <code class="cmd">sfx.add</code>, <code class="cmd">tts.speak</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Зроби в Kadr 9-секундне промо 16:9 для моїх навушників Aurora X1 з фото C:\Users\you\Pictures\aurora-x1.png. Три сцени по 3 секунди на згенерованих фонах: neon_floor, далі candy_flow, далі midnight_glow, з переходом flash_zoom, а потім cube_turn_left. Сцена 1: «NEW DROP» великим неоново-рожевим word art, літери «вистрибують». З 3-ї секунди — продукт на окремій доріжці праворуч на 60% розміру, падає з відскоком і потім м’яко пливе. Сцена 2: «Aurora X1» золотим металом ліворуч, поява «перемішуванням» літер. Сцена 3: «$129» шаблоном price_tag плюс стікер tag_limited, що вистрибує. Додай швидкий «вжух» перед першою склейкою, дзвіночок на 6 с і «поп», коли з’являється стікер. Закадровий голос з 0,3 с: «Meet Aurora X1. Thirty hours of battery, zero cables. Now just one twenty-nine.» Покажи контактний аркуш, потім експортуй 1080p MP4 і GIF.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="backgrounds">Згенеруйте три фони</h3>
+<p><code class="cmd">media.generate</code> рендерить фони локально і з <code>add_to_timeline</code> кладе їх на основну доріжку. Без <code>at_us</code> кожен дописується після попереднього. <code>neon_floor</code> і <code>candy_flow</code> — рухомі MP4; <code>midnight_glow</code> — статичний PNG, і його <code>duration_us</code> задає, скільки він буде на екрані. Рендер іде в розмірі полотна, 1920×1080.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Aurora X1 promo" --ratio 16:9
+kadrctl run media.generate --project_id prj_acdc53cc560a --preset_id neon_floor --duration_us 3s --add_to_timeline --at_us 0
+kadrctl run media.generate --project_id prj_acdc53cc560a --preset_id candy_flow --duration_us 3s --add_to_timeline
+kadrctl run media.generate --project_id prj_acdc53cc560a --preset_id midnight_glow --duration_us 3s --add_to_timeline</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Aurora X1 promo", "ratio": "16:9"}}
+{"name": "media_generate", "arguments": {"project_id": "prj_acdc53cc560a", "preset_id": "neon_floor", "duration_us": 3000000, "add_to_timeline": true, "at_us": 0}}
+{"name": "media_generate", "arguments": {"project_id": "prj_acdc53cc560a", "preset_id": "candy_flow", "duration_us": 3000000, "add_to_timeline": true}}
+{"name": "media_generate", "arguments": {"project_id": "prj_acdc53cc560a", "preset_id": "midnight_glow", "duration_us": 3000000, "add_to_timeline": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="transitions">Переходи між сценами</h3>
+<p>Перехід належить кліпу <em>ліворуч</em> від склейки. Обидва — одним пакетом, <code>promo-transitions.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "transition.set", "args": {"segment_id": "seg_d77ee3f2cada", "type": "flash_zoom", "duration_us": 400000}},
+  {"command": "transition.set", "args": {"segment_id": "seg_20256820e08e", "type": "cube_turn_left", "duration_us": 600000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_acdc53cc560a promo-transitions.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_acdc53cc560a", "calls": [
+  {"command": "transition.set", "args": {"segment_id": "seg_d77ee3f2cada", "type": "flash_zoom", "duration_us": 400000}},
+  {"command": "transition.set", "args": {"segment_id": "seg_20256820e08e", "type": "cube_turn_left", "duration_us": 600000}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="product">Додайте продукт</h3>
+<p>Фото лягає на окрему доріжку накладання (<code>new_track</code>) з 3 до 9 с, зсувається праворуч і зменшується до 60% через <code class="cmd">segment.set_transform</code>, а потім анімується через <code class="cmd">animation.set</code>. Анімація In грає один раз на початку; Loop повторюється весь кліп; їх можна поєднувати.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run media.import --project_id prj_acdc53cc560a --paths "[\"C:/Users/you/Pictures/aurora-x1.png\"]"
+kadrctl run timeline.segment.add --project_id prj_acdc53cc560a --material_id mat_c0b66ca4c71e --at_us 3s --duration_us 6s --new_track
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_485f2665d091 --x 0.45 --scale 0.6
+kadrctl run animation.set --project_id prj_acdc53cc560a --segment_id seg_485f2665d091 --kind in --id in_drop_bounce --duration_us 0.7s
+kadrctl run animation.set --project_id prj_acdc53cc560a --segment_id seg_485f2665d091 --kind loop --id loop_float --duration_us 2s</code></pre><pre data-lang="mcp"><code>{"name": "media_import", "arguments": {"project_id": "prj_acdc53cc560a", "paths": ["C:/Users/you/Pictures/aurora-x1.png"]}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_acdc53cc560a", "material_id": "mat_c0b66ca4c71e", "at_us": 3000000, "duration_us": 6000000, "new_track": true}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_485f2665d091", "x": 0.45, "scale": 0.6}}
+{"name": "animation_set", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_485f2665d091", "kind": "in", "id": "in_drop_bounce", "duration_us": 700000}}
+{"name": "animation_set", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_485f2665d091", "kind": "loop", "id": "loop_float", "duration_us": 2000000}}</code></pre></div>
+</li>
+<li>
+<h3 id="headlines">Заголовки word art</h3>
+<p><code class="cmd">text.add</code> створює кожен заголовок; об’єкт <code>style</code> задає розмір і жирність (це JSON, тому <code>--%</code>). <code class="cmd">text.apply_effect</code> застосовує пресет word art: <code>fx_neon_pink</code> додає рожевий контур і світіння, <code>fx_gold_metal</code> — металевий градієнт із контуром і тінню; будь-яке значення пресета потім можна змінити через <code class="cmd">text.update</code>. <code class="cmd">text.set_glyph_animation</code> анімує літери.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run text.add --project_id prj_acdc53cc560a --text "NEW DROP" --at_us 0 --duration_us 3s --style "{\"size\":30,\"bold\":true}"
+kadrctl run text.apply_effect --project_id prj_acdc53cc560a --segment_id seg_fe621f2a7d99 --effect_id fx_neon_pink
+kadrctl run text.set_glyph_animation --project_id prj_acdc53cc560a --segment_id seg_fe621f2a7d99 --kind in --id in_letter_pop --duration_us 0.8s
+kadrctl --% run text.add --project_id prj_acdc53cc560a --text "Aurora X1" --at_us 3s --duration_us 3s --style "{\"size\":26,\"bold\":true}"
+kadrctl run text.apply_effect --project_id prj_acdc53cc560a --segment_id seg_209bec01faf4 --effect_id fx_gold_metal
+kadrctl run text.set_glyph_animation --project_id prj_acdc53cc560a --segment_id seg_209bec01faf4 --kind in --id in_scramble --duration_us 0.9s
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_209bec01faf4 --x -0.4</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_acdc53cc560a", "text": "NEW DROP", "at_us": 0, "duration_us": 3000000, "style": {"size": 30, "bold": true}}}
+{"name": "text_apply_effect", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_fe621f2a7d99", "effect_id": "fx_neon_pink"}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_fe621f2a7d99", "kind": "in", "id": "in_letter_pop", "duration_us": 800000}}
+{"name": "text_add", "arguments": {"project_id": "prj_acdc53cc560a", "text": "Aurora X1", "at_us": 3000000, "duration_us": 3000000, "style": {"size": 26, "bold": true}}}
+{"name": "text_apply_effect", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_209bec01faf4", "effect_id": "fx_gold_metal"}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_209bec01faf4", "kind": "in", "id": "in_scramble", "duration_us": 900000}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_209bec01faf4", "x": -0.4}}</code></pre></div>
+</li>
+<li>
+<h3 id="price">Ціна і стікер</h3>
+<p>Текстовий шаблон <code>price_tag</code> дає ціні готовий вигляд, а <code class="cmd">text.update</code> збільшує її. <code class="cmd">sticker.add</code> ставить вбудований стікер (типово на 30% полотна), який потім переміщуємо над ціною й анімуємо появою «поп».</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_acdc53cc560a --text '$129' --template_id price_tag --at_us 6s --duration_us 3s
+kadrctl run text.update --project_id prj_acdc53cc560a --segment_id seg_c1a659f012cb --size 22
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_c1a659f012cb --x -0.4
+kadrctl run sticker.add --project_id prj_acdc53cc560a --sticker_id tag_limited --at_us 6.3s --duration_us 2.7s
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_15df3c4d2dc0 --x -0.4 --y -0.55 --scale 0.25
+kadrctl run animation.set --project_id prj_acdc53cc560a --segment_id seg_15df3c4d2dc0 --kind in --id in_pop</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_acdc53cc560a", "text": "$129", "template_id": "price_tag", "at_us": 6000000, "duration_us": 3000000}}
+{"name": "text_update", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_c1a659f012cb", "size": 22}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_c1a659f012cb", "x": -0.4}}
+{"name": "sticker_add", "arguments": {"project_id": "prj_acdc53cc560a", "sticker_id": "tag_limited", "at_us": 6300000, "duration_us": 2700000}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_15df3c4d2dc0", "x": -0.4, "y": -0.55, "scale": 0.25}}
+{"name": "animation_set", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_15df3c4d2dc0", "kind": "in", "id": "in_pop"}}</code></pre></div>
+<div class="callout warn"><p>У PowerShell <code>$</code> усередині подвійних лапок починає змінну, тож <code>"$129"</code> перетворюється на порожній рядок. Беріть текст із <code>$</code> в одинарні лапки, як вище. У командному рядку (cmd) — подвійні лапки. У викликах MCP і REST такої проблеми немає.</p></div>
+</li>
+<li>
+<h3 id="sound">Звукові ефекти й закадровий голос</h3>
+<p><code class="cmd">sfx.add</code> ставить один із власних синтезованих звукових ефектів Kadr; «вжух», що має припасти на склейку, починається трохи раніше. <code class="cmd">tts.speak</code> читає текст голосом, встановленим на вашому ПК (Windows SAPI або eSpeak NG; <code>en-US</code> вибирає англійський голос), вирівнює його приблизно до −16 LUFS і кладе на окрему аудіодоріжку.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run sfx.add --project_id prj_acdc53cc560a --sfx_id whoosh_fast --at_us 2.8s
+kadrctl run sfx.add --project_id prj_acdc53cc560a --sfx_id ding --at_us 6s
+kadrctl run sfx.add --project_id prj_acdc53cc560a --sfx_id pop_bubble --at_us 6.3s
+kadrctl run tts.speak --project_id prj_acdc53cc560a --text "Meet Aurora X1. Thirty hours of battery, zero cables. Now just one twenty-nine." --voice en-US --at_us 0.3s</code></pre><pre data-lang="mcp"><code>{"name": "sfx_add", "arguments": {"project_id": "prj_acdc53cc560a", "sfx_id": "whoosh_fast", "at_us": 2800000}}
+{"name": "sfx_add", "arguments": {"project_id": "prj_acdc53cc560a", "sfx_id": "ding", "at_us": 6000000}}
+{"name": "sfx_add", "arguments": {"project_id": "prj_acdc53cc560a", "sfx_id": "pop_bubble", "at_us": 6300000}}
+{"name": "tts_speak", "arguments": {"project_id": "prj_acdc53cc560a", "text": "Meet Aurora X1. Thirty hours of battery, zero cables. Now just one twenty-nine.", "voice": "en-US", "at_us": 300000}}</code></pre></div>
+<p>З голосом <code>sapi:Microsoft Zira Desktop</code> закадровий текст триває 7,25 с, тож вміщається. <code class="cmd">tts.voices</code> показує всі доступні голоси — зокрема голоси ElevenLabs після <code class="cmd">tts.set_api_key</code> (див. <a href="{{root}}{{lang_root}}docs/ai/documentary-archive-footage.html">рецепт документалки</a>).</p>
+</li>
+<li>
+<h3 id="export">Перевірте й експортуйте MP4 і GIF</h3>
+<p>Експорт у GIF обмежений 15 кадр/с і 720 px по довшій стороні, зациклюється без кінця й не має звуку. Експорти виконуються по черзі; другий чекає в стані <code>queued</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_acdc53cc560a --count 6 --columns 3 --tile_width 320
+kadrctl run export.start --project_id prj_acdc53cc560a --resolution 1080p --path C:/Users/you/Videos/Kadr/aurora-x1-promo.mp4
+kadrctl run export.start --project_id prj_acdc53cc560a --gif --path C:/Users/you/Videos/Kadr/aurora-x1-promo.gif</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_acdc53cc560a", "count": 6, "columns": 3, "tile_width": 320}}
+{"name": "export_start", "arguments": {"project_id": "prj_acdc53cc560a", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/aurora-x1-promo.mp4"}}
+{"name": "export_start", "arguments": {"project_id": "prj_acdc53cc560a", "gif": true, "path": "C:/Users/you/Videos/Kadr/aurora-x1-promo.gif"}}</code></pre></div>
+<figure><img src="{{root}}assets/img/ai/promo-contact-sheet.webp" alt="Контактний аркуш промо: неоновий NEW DROP на сітці, продукт поруч із золотим заголовком Aurora X1, далі ціна 129 доларів із плашкою Limited" width="976" height="372" loading="lazy"><figcaption>Контактний аркуш, на який агент дивиться перед експортом, — плитка 3 ловить заголовок посеред «перемішування». Зображення продукту — замінник.</figcaption></figure>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<ul>
+  <li><strong>Фото продукту з фоном.</strong> <code class="cmd">ai.remove_background</code> вирізає продукт локально, якщо встановлено <code>rembg</code> або <code>onnxruntime</code> з моделлю матування — спершу перевірте через <code class="cmd">ai.capabilities</code>.</li>
+  <li><strong>Озвучити заголовок.</strong> <code class="cmd">tts.from_text</code> читає текстовий кліп і зв’язує з ним мову; з <code>sync_duration</code> довжина тексту підганяється під мову.</li>
+  <li><strong>Вертикальна реклама.</strong> Візьміть 9:16 і розташуйте елементи один над одним: продукт на <code>y</code> −0.3, заголовок на <code>y</code> 0.45.</li>
+  <li><strong>Повторне використання стилю.</strong> <code class="cmd">presets.save</code> з <code>kind</code> <code>text_style</code> зберігає неоновий заголовок у «Мій набір»; <code class="cmd">presets.apply</code> застосовує його до будь-якого тексту в будь-якому проєкті.</li>
+  <li><strong>Відлік на початку.</strong> Пресет <code>countdown_3</code> у <code class="cmd">media.generate</code> додає інтро «3-2-1».</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li><code class="cmd">library.list</code> з <code>kind</code> <code>text_effect</code> показує пресети word art, <code>text_animation</code> — анімації літер, <code>sticker</code> — стікери, <code>sound_effect</code> — звуки. У кожного елемента є URL <code>thumbnail</code>, який відкривається з токеном.</li>
+  <li>Для коротшого GIF додайте <code>range_end_us</code> (наприклад, 3000000), щоб експортувати лише першу сцену.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

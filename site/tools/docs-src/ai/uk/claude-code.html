@@ -1,0 +1,78 @@
+<!--meta {"title":"Швидкий старт: Claude Code","nav":"Claude Code","order":20,"description":"Під’єднайте Claude Code до Kadr однією командою, перевірте з’єднання, заздалегідь дозвольте інструменти й спробуйте перші запити.","group":"Початок"} -->
+<p class="lead">Одна команда реєструє MCP-сервер Kadr у Claude Code для всіх проєктів на вашому ПК. Після цього просто опишіть потрібне відео — Claude змонтує його в Kadr, перевірить себе за відрендереними кадрами, а будь-яку зміну можна скасувати.</p>
+
+<h2 id="before">Перш ніж почати</h2>
+<ul>
+  <li><strong>Kadr встановлено.</strong> Інсталятор кладе <code>kadr-mcp.exe</code> у <code>%LOCALAPPDATA%\Programs\Kadr\</code> поруч із <code>Kadr.exe</code> і <code>kadr-server.exe</code>. У Kadr розділ <strong>Налаштування → API &amp; automation</strong> показує точний шлях і готову команду.</li>
+  <li><strong>Claude Code встановлено</strong>, і <code>claude</code> запускається у вашому терміналі.</li>
+  <li><strong>Kadr не обов’язково має бути запущений.</strong> Якщо ні редактор, ні сервер не відповідають, <code>kadr-mcp</code> сам запускає «безголовий» <code>kadr-server.exe</code> (приблизно за 2 секунди). Щоб <em>бачити</em> правки, відкрийте Kadr до першого виклику — див. примітку нижче.</li>
+</ul>
+
+<h2 id="add">1. Додайте сервер</h2>
+<p>Зареєструйте Kadr один раз для свого облікового запису (<code>--scope user</code>), щоб він був доступний у будь-якій папці. Усе після <code>--</code> — це команда, яку запускає Claude Code.</p>
+<div class="code-tabs"><pre data-lang="cmd"><code>claude mcp add --scope user kadr -- "%LOCALAPPDATA%\Programs\Kadr\kadr-mcp.exe"</code></pre><pre data-lang="powershell"><code>claude mcp add --scope user kadr -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code></pre></div>
+<p>Якщо ви лишили в інсталяторі опцію <em>Додати kadrctl і kadr-mcp до PATH</em>, працює й коротка форма: <code>claude mcp add --scope user kadr -- kadr-mcp</code>.</p>
+
+<h2 id="check">2. Перевірте з’єднання</h2>
+<pre><code class="lang-powershell">claude mcp list
+claude mcp get kadr</code></pre>
+<p><code>kadr</code> має бути в списку як під’єднаний. Усередині сесії <code>/mcp</code> показує сервер, його 178 інструментів (по одному на команду плюс <code>kadr_batch</code>) і дає змогу перепід’єднатися після збою.</p>
+
+<h2 id="permissions">3. Заздалегідь дозвольте інструменти (необов’язково)</h2>
+<p>Claude Code питає дозволу перед використанням інструмента. Щоб прибрати ці запити для Kadr, дозвольте весь сервер у <code>.claude/settings.json</code> (один проєкт) або <code>~/.claude/settings.json</code> (усюди):</p>
+<pre><code class="lang-json">{
+  "permissions": {
+    "allow": ["mcp__kadr"]
+  }
+}</code></pre>
+<p>Хочете суворіше? Дозвольте лише інструменти читання, наприклад <code>"mcp__kadr__project_list"</code>, <code>"mcp__kadr__timeline_get"</code>, <code>"mcp__kadr__preview_frame"</code> і <code>"mcp__kadr__preview_contact_sheet"</code>, а правки підтверджуйте по одній. Утім, будь-яку правку однаково можна скасувати.</p>
+
+<h2 id="first-prompts">4. Перші запити, які варто спробувати</h2>
+<p>Спершу відкрийте Kadr, щоб бачити процес, запустіть <code>claude</code> у будь-якій папці й спробуйте:</p>
+<blockquote><p>Покажи мої проєкти в Kadr і коротко опиши таймлайн найновішого.</p></blockquote>
+<blockquote><p>Створи в Kadr проєкт 9:16 «MCP test», згенеруй 5-секундне тло aurora_flow, додай титр «Працює!» шаблоном title_bold, відкрий проєкт у вікні Kadr і покажи кадр на першій секунді.</p></blockquote>
+<blockquote><p>Імпортуй C:\Users\you\Videos\clip.mp4 у «MCP test», постав після тла, додай субтитри з підсвіткою слів і покажи контактний аркуш усього відео.</p></blockquote>
+<blockquote><p>Одним пакетом постав перехід mix на 0,4 с на кожну склейку, потім експортуй 1080p у C:\Users\you\Videos\Kadr\mcp-test.mp4 і скажи, коли буде готово.</p></blockquote>
+<blockquote><p>Скасуй дві останні зміни в «MCP test».</p></blockquote>
+<p>Повніші сценарії з кожним викликом — у <a href="{{root}}{{lang_root}}docs/ai/recipes.html">рецептах</a>.</p>
+
+<div class="callout warn"><p><strong>Щоб дивитися наживо, потрібен рушій редактора.</strong> Якщо під час першого виклику Claude Kadr був закритий, <code>kadr-mcp</code> запустив «безголовий» <code>kadr-server.exe</code>, і той працює й після завершення чату. Якщо потім відкрити Kadr, вікно не зможе зайняти порт 7777 і не показуватиме правок агента. Завершіть <code>kadr-server.exe</code> (Диспетчер завдань → Подробиці) перед відкриттям Kadr, а потім виконайте <code>/mcp</code>, щоб перепід’єднатися.</p></div>
+
+<h2 id="project-scope">Спільне налаштування для репозиторію</h2>
+<p>Для папки, яка завжди працює з Kadr, закомітьте <code>.mcp.json</code> у її корінь. Claude Code один раз питає кожну людину, перш ніж завантажити сервер рівня проєкту. Якщо <code>kadr-mcp</code> є в <code>PATH</code>, файл однаковий для всіх:</p>
+<pre><code class="lang-json">{
+  "mcpServers": {
+    "kadr": { "type": "stdio", "command": "kadr-mcp", "args": [] }
+  }
+}</code></pre>
+<p>Кілька рядків у <code>CLAUDE.md</code> цієї папки позбавлять агента багатьох здогадок:</p>
+<pre><code class="lang-markdown">## Монтаж відео
+- Монтуй через MCP-сервер kadr. Час — цілі мікросекунди (1 с = 1000000).
+- Спершу читай стан (timeline_get), пов’язані правки застосовуй одним kadr_batch, потім перевіряй через preview_frame або preview_contact_sheet.
+- Показуй роботу: на початку виклич ui_open_project; експортуй через export_start і опитуй export_status.
+- Медіа лежать у ./footage; експорт — у ./exports.</code></pre>
+
+<h2 id="custom-engine">Інший порт або папка даних</h2>
+<p>Щоб керувати окремим рушієм (наприклад, тестовим <code>kadr-server.exe</code> на порту 7790 із власними проєктами), передайте змінні середовища під час додавання сервера:</p>
+<pre><code class="lang-powershell">claude mcp add --scope user --env KADR_ADDR=127.0.0.1:7790 --env KADR_DATA_DIR=D:\kadr-automation kadr-test -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code></pre>
+<p>Видалити сервер: <code>claude mcp remove kadr --scope user</code>.</p>
+
+<h2 id="tips">Поради для Claude Code</h2>
+<ul>
+  <li><strong>Великі результати.</strong> Claude Code типово обмежує результат інструмента приблизно 25 000 токенів (<code>MAX_MCP_OUTPUT_TOKENS</code> піднімає ліміт). Віддавайте перевагу <code>timeline_get</code> замість <code>project_get</code>, передавайте <code>include_words: false</code> у <code>captions_list</code> і тримайте плитки контактного аркуша невеликими (240–320 px).</li>
+  <li><strong>Довгі завдання.</strong> Субтитри, транскрипція й експорт ідуть у фоні. Просити <code>wait: true</code> нормально для кількох хвилин медіа; для довших завдань попросіть Claude опитувати <code>captions_status</code> (з <code>wait_s</code>) або <code>export_status</code>.</li>
+  <li><strong>Повільний перший запуск.</strong> Якщо сервер не встигає, поки стартує рушій, збільште <code>MCP_TIMEOUT</code> (у мілісекундах) під час запуску Claude Code.</li>
+  <li><strong>Файли.</strong> Шляхи — на тому ПК, де працює Kadr. Власні файлові інструменти Claude Code і Kadr бачать той самий диск, тож Claude може записати пакетний файл чи SRT і передати шлях у Kadr.</li>
+</ul>
+
+<h2 id="troubleshooting">Усунення проблем</h2>
+<table>
+  <thead><tr><th>Симптом</th><th>Що робити</th></tr></thead>
+  <tbody>
+    <tr><td><code>claude mcp list</code> показує kadr із помилкою</td><td>Перевірте шлях: <code>Test-Path "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code>. Беріть у лапки шляхи з пробілами.</td></tr>
+    <tr><td><code>Kadr engine did not start … within 10 s</code></td><td><code>kadr-server.exe</code> має лежати поруч із <code>kadr-mcp.exe</code>. Запустіть Kadr самі, потім <code>/mcp</code> → перепід’єднатися.</td></tr>
+    <tr><td><code>unauthorized: missing or invalid API token</code></td><td>Застарілий <code>KADR_TOKEN</code> або інший <code>KADR_DATA_DIR</code> у середовищі сервера. Приберіть їх або додайте сервер наново.</td></tr>
+    <tr><td>Правки не з’являються у відкритому вікні</td><td>Порт 7777 зайняв «безголовий» <code>kadr-server.exe</code> — див. попередження вище.</td></tr>
+    <tr><td><code>not_available</code> від субтитрів чи видалення фону</td><td>Бракує необов’язкового локального компонента. Попросіть Claude виконати <code>captions_asr_status</code> або <code>ai_capabilities</code>; <code>hint</code> підкаже, що встановити.</td></tr>
+  </tbody>
+</table>

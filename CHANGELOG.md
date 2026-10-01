@@ -5,7 +5,30 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 [Semantic Versioning](https://semver.org/). Versions with a suffix such as `-beta.1` are pre-releases and are
 delivered through the **Beta** update channel.
 
-## [0.1.0-beta.1] - Unreleased
+## [0.1.0-beta.2] - 2026-10-01
+
+Second public beta. If you have 0.1.0-beta.1 installed, Kadr offers this update automatically (Settings → Updates).
+
+### New
+
+- **Voices settings** (Settings → Voices): paste an ElevenLabs API key to use natural cloud voices — including
+  Ukrainian — for text to speech. The key stays on your computer and is sent only to ElevenLabs.
+- **ElevenLabs text to speech** through the API as well: `tts.set_api_key`, then `tts.speak` / `tts.from_text` with
+  voices named `elevenlabs:<voice_id>`.
+- **Watch an AI agent work:** new `ui.open_project`, `ui.select`, `ui.library_tab` and `ui.toast` commands let an agent
+  show what it is doing in the open window.
+- **The editor takes over from the background engine:** if an AI client started a headless `kadr-server` (via
+  `kadr-mcp`), opening Kadr now takes over the API port, so the agent's edits appear live in the window.
+- `kadr-mcp` starts the engine on demand when Kadr is not running.
+- Web mode deep link: `?project=<id>` opens a project directly.
+
+### Fixed
+
+- `kadrctl batch` accepts JSON files saved with a UTF-8 byte-order mark (Notepad / PowerShell).
+- The portable build keeps its data in a `data` folder next to `Kadr.exe`.
+- OpenAPI operations now carry `x-scope`, `x-read-only` and `x-undoable`.
+
+## [0.1.0-beta.1] - 2026-10-01
 
 The first public beta of Kadr. Kadr is a CapCut-style desktop video editor for Windows where every action is also an
 API command, available over REST, MCP (for AI agents), the `kadrctl` CLI and WebSocket events.

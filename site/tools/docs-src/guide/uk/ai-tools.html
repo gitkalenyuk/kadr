@@ -1,0 +1,66 @@
+<!--meta {"title":"ШІ-інструменти","nav":"ШІ-інструменти","order":120,"description":"Розумні інструменти Kadr працюють на вашому комп’ютері: видалення фону без хромакею, поділ відео на сцени, вирізання тиші й автокадрування горизонтального відео під вертикальні формати.","group":"Творчість"} -->
+<p class="lead">Розумні інструменти беруть на себе нудну роботу: знаходять зміну сцен, вирізають тишу, стежать за об’єктом під час зміни формату й вирізають людей із фону. Усі вони працюють на вашому комп’ютері — нічого не завантажується в мережу.</p>
+
+<h2 id="where">Де їх шукати</h2>
+<div class="grid-2">
+  <div>
+    <ul>
+      <li>Меню <strong>Smart tools</strong> на панелі інструментів над таймлайном: Split scenes (поділ на сцени), Remove silence (вирізати тишу), Auto reframe (автокадрування), Separate audio (відокремити звук), Auto captions (автосубтитри).</li>
+      <li><strong>Контекстне меню</strong> кліпу показує розумні інструменти, доречні саме для нього.</li>
+      <li>Інспектор: <strong>Video → Smart tools</strong> (з додатковими параметрами) і <strong>Video → Remove BG</strong>.</li>
+    </ul>
+    <p>Спершу виділіть кліп — якщо інструмент не підходить, меню підкаже «Select a clip» або «Not for this clip». Довші завдання повідомляють про старт і працюють у фоні; кожен результат — <strong>один крок скасування</strong>, тож <kbd>Ctrl</kbd>+<kbd>Z</kbd> поверне все як було.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/smart-menu.webp" alt="Відкрите меню Smart tools над панеллю інструментів: Split scenes, Remove silence, Auto reframe, Separate audio, Auto captions" width="520" height="238" loading="lazy"><figcaption>Меню Smart tools.</figcaption></figure>
+</div>
+
+<h2 id="remove-background">Видалення фону</h2>
+<p>Вирізає людей або головний об’єкт із відео чи фото — без зеленого фону. Крізь вирізане місце видно нижні доріжки або тло полотна.</p>
+<ol>
+  <li>Виділіть кліп і відкрийте в інспекторі <strong>Video → Remove BG</strong>.</li>
+  <li>Увімкніть <strong>Auto removal</strong>. Смуга прогресу покаже «Finding the subject» (пошук об’єкта), відсоток і час, що лишився. Можна далі монтувати; <strong>Cancel</strong> зупиняє процес.</li>
+  <li>Коли все готово, об’єкт вирізано. <strong>Redo</strong> обчислює все заново (наприклад, після встановлення кращої моделі); вимкнення перемикача повертає фон.</li>
+</ol>
+<figure><img src="{{root}}assets/img/guide/remove-bg.webp" alt="Сторінка Remove BG із перемикачем Auto removal, приміткою про локальну модель і перемикачем Chroma key" width="342" height="250" loading="lazy"><figcaption>Video → Remove BG. Якщо знімали на зеленому фоні, скористайтеся нижче розділом <strong>Chroma key</strong>.</figcaption></figure>
+<h3 id="remove-background-requirements">Що потрібно</h3>
+<p>Видалення фону працює на безкоштовному Python-пакеті <em>rembg</em>. Налаштування — одноразове:</p>
+<ol class="steps">
+  <li><strong>Встановіть Python</strong><p>Встановіть Python 3 із <a href="https://www.python.org/downloads/">python.org</a> і поставте позначку <strong>Add python.exe to PATH</strong> (якщо ви вже налаштували <a href="{{root}}{{lang_root}}docs/guide/captions.html#requirements">автосубтитри</a>, Python у вас є).</p></li>
+  <li><strong>Встановіть rembg</strong><p>Відкрийте PowerShell і виконайте:</p><pre><code class="lang-powershell">pip install rembg onnxruntime</code></pre><p>Під час першого видалення фону rembg один раз завантажить свою модель; далі все працює офлайн.</p></li>
+  <li><strong>Перевірте в Kadr</strong><p>Відкрийте <strong>Video → Remove BG</strong>. Якщо там написано <em>Auto removal is not available on this computer</em>, поруч пояснено, чого бракує; виправте це й натисніть <strong>Check again</strong> (або перезапустіть Kadr).</p></li>
+</ol>
+<div class="callout note"><p>Для досвідчених: замість rembg Kadr може використати <em>onnxruntime</em> з будь-якою ONNX-моделлю маскування (U²-Net, IS-Net, MODNet…), збереженою як <code>models\matting.onnx</code> у папці даних Kadr. На довгих чи 4K-кліпах видалення займає час — тим часом можна монтувати далі.</p></div>
+
+<h2 id="split-scenes">Поділ на сцени</h2>
+<p>Маєте довге відео з кількох планів — трейлер, запис екрана зі склейками, збірку? <strong>Split scenes</strong> знаходить кожну зміну плану й розрізає там кліп, щоб плани можна було видаляти чи переставляти.</p>
+<ul>
+  <li>Швидко: виділіть відеокліп і оберіть <strong>Smart tools → Split scenes</strong>.</li>
+  <li>З параметрами: <strong>Video → Smart tools → Split scenes</strong>. Збільште <strong>Sensitivity</strong> (чутливість), щоб ловити м’якші переходи, зменште — якщо Kadr ріже надто часто.</li>
+</ul>
+
+<h2 id="remove-silence">Вирізання тиші</h2>
+<p>Ідеально для розмовних відео, уроків і подкастів. Виділіть відео- чи аудіокліп із мовленням і оберіть <strong>Smart tools → Remove silence</strong>. Kadr виріже кожну паузу, довшу за пів секунди, і закриє проміжки; повідомлення скаже, скільки пауз і секунд прибрано.</p>
+<p>Для точнішого контролю — прибрати «е-е» чи задати довжину пауз — скористайтеся <a href="{{root}}{{lang_root}}docs/guide/captions.html#transcript">вкладкою Transcript</a>.</p>
+
+<h2 id="auto-reframe">Автокадрування</h2>
+<div class="grid-2">
+  <div>
+    <p>Перетворює горизонтальне відео на вертикальне (чи квадратне), <em>не втрачаючи об’єкта</em>: Kadr стежить за людиною чи головною дією й плавно рухає кадр ключовими кадрами.</p>
+    <ul>
+      <li>Швидко: виділіть відео- чи фотокліп, відкрийте <strong>Smart tools → Auto reframe</strong> і оберіть 9:16, 1:1, 4:3, 3:4 або 16:9. Проєкт теж перейде на цей формат.</li>
+      <li>З параметрами: <strong>Video → Smart tools → Auto reframe…</strong> дає обрати <strong>Ratio</strong> (формат), <strong>Smoothness</strong> (плавність руху «камери») і чи перемикати <strong>Canvas</strong> (полотно); потім натисніть <strong>Reframe</strong>.</li>
+    </ul>
+    <p>Після цього ключові кадри положення можна підправити, як і будь-які інші <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">ключові кадри</a>.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/smart-tools.webp" alt="Video → Smart tools з розділами Auto reframe, Split scenes із повзунком чутливості та Remove silence" width="342" height="450" loading="lazy"><figcaption>Video → Smart tools.</figcaption></figure>
+</div>
+
+<h2 id="more-smart">Інші розумні функції</h2>
+<ul>
+  <li><strong>Автосубтитри</strong> й <strong>монтаж за транскриптом</strong> з офлайн-Whisper — <a href="{{root}}{{lang_root}}docs/guide/captions.html">Субтитри й транскрипт</a>.</li>
+  <li><strong>Відокремлення звуку</strong> — <a href="{{root}}{{lang_root}}docs/guide/audio.html#separate">Аудіо</a>.</li>
+  <li><strong>Auto adjust</strong> для кольору — <a href="{{root}}{{lang_root}}docs/guide/effects.html#basic">Корекція кольору</a>.</li>
+  <li><strong>Reduce image noise</strong>, <strong>Remove flicker</strong> (Video → Basic) і <strong>Reduce noise</strong> для звуку (Audio → Basic).</li>
+</ul>
+
+<div class="callout tip"><p><strong>Доручіть керування ШІ-асистентові.</strong> Усе описане вище — і весь редактор — може виконувати Claude чи інший ШІ-асистент: «виріж тишу, додай субтитри з підсвічуванням слів і експортуй вертикальну версію». Ви бачите кожен крок у вікні. Почніть із <a href="{{root}}{{lang_root}}docs/ai/index.html">документації для ШІ</a>.</p></div>

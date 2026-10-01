@@ -1,0 +1,104 @@
+<!--meta {"title":"One project, three formats","nav":"Three formats","order":370,"description":"Turn a finished 16:9 edit into 9:16 and 1:1 versions — reframed or with a blurred fill — fix titles that no longer fit, and queue all three exports.","group":"Recipes","summary":"A finished 16:9 edit becomes 16:9, 9:16 and 1:1 videos, reframed or blur-filled, with titles that fit each frame, all exported in one go.","time":"~2 min","needs":"A finished 16:9 Kadr project (for example from the beat-cut recipe)","commands":["project.duplicate","project.set_canvas","ai.auto_reframe","segment.set_background","preview.layout","text.update","export.estimate","export.start","export.list"]} -->
+<p class="lead">You get three exports of the same edit: the original 16:9 for YouTube, a 9:16 version for TikTok, Reels and Shorts where every shot follows its subject, and a 1:1 version for feeds that shows the whole picture over a blurred fill. The original project stays as it is.</p>
+<ul>
+  <li><strong>Time:</strong> ~2 min</li>
+  <li><strong>You need:</strong> A finished 16:9 Kadr project (for example from the beat-cut recipe)</li>
+  <li><strong>Main commands:</strong> <code class="cmd">project.duplicate</code>, <code class="cmd">project.set_canvas</code>, <code class="cmd">ai.auto_reframe</code>, <code class="cmd">segment.set_background</code>, <code class="cmd">preview.layout</code>, <code class="cmd">text.update</code>, <code class="cmd">export.estimate</code>, <code class="cmd">export.start</code>, <code class="cmd">export.list</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Take my Kadr project "Night drive" (16:9) and make two more versions as separate copies. "Night drive 9x16": switch to 9:16 and auto-reframe every main-track clip so it follows the subject, with smooth camera motion. "Night drive 1x1": switch to 1:1 and keep the full picture with a blurred background behind it. In each copy, check with preview_layout that the title fits inside the frame and make it smaller if it doesn't. Then export all three at 1080p to C:\Users\you\Videos\Kadr\night-drive\ and tell me when they're done.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="find">Find the project</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.list --query "Night drive"</code></pre><pre data-lang="mcp"><code>{"name": "project_list", "arguments": {"query": "Night drive"}}</code></pre></div>
+<p>The original is <code>prj_408e1a6dfbd6</code>: eight shots cut to the beat, a filter, an effect, music and a title.</p>
+</li>
+<li>
+<h3 id="vertical">Make the 9:16 copy and reframe it</h3>
+<p><code class="cmd">project.duplicate</code> makes an independent copy (media files are shared, not copied). Segment ids stay the same in the copy, so the ids you already know still work. <code class="cmd">project.set_canvas</code> switches the frame to 1080×1920.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.duplicate --project_id prj_408e1a6dfbd6 --name "Night drive 9x16"
+kadrctl run project.set_canvas --project_id prj_b050d0c2e585 --ratio 9:16</code></pre><pre data-lang="mcp"><code>{"name": "project_duplicate", "arguments": {"project_id": "prj_408e1a6dfbd6", "name": "Night drive 9x16"}}
+{"name": "project_set_canvas", "arguments": {"project_id": "prj_b050d0c2e585", "ratio": "9:16"}}</code></pre></div>
+<p>Then <code class="cmd">ai.auto_reframe</code> runs on every main-track shot in one batch (<code>reframe-9x16.json</code>). <code>smoothing</code> 0.7 makes the virtual camera move calmly.</p>
+<pre><code class="lang-json">[
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_896a3c69fde1", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4dd4dd6ff8a2", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_2b7e19c04d5a", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_c81f3e60a97b", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_5e0a94d2c1f8", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_e7b2063d9a14", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_19c4f7a2e08d", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a3d58e1b6c27", "ratio": "9:16", "smoothing": 0.7}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_b050d0c2e585 reframe-9x16.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_b050d0c2e585", "calls": [
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_896a3c69fde1", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4dd4dd6ff8a2", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_2b7e19c04d5a", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_c81f3e60a97b", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_5e0a94d2c1f8", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_e7b2063d9a14", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_19c4f7a2e08d", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a3d58e1b6c27", "ratio": "9:16", "smoothing": 0.7}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="fit-title">Make the title fit</h3>
+<p>A title sized for a wide frame can be too wide for a narrow one. <code class="cmd">preview.layout</code> returns each text box in canvas pixels; the box fits when <code>x</code> ≥ 0 and <code>x + w</code> ≤ <code>canvas_width</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_b050d0c2e585 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_b050d0c2e585", "time_us": 1000000}}</code></pre></div>
+<pre><code class="lang-text">canvas_width 1080
+text  x -66   w 1212     too wide: sticks out 66 px on each side</code></pre>
+<p>The <code>cinematic</code> template uses size 18; size 12 fits:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.update --project_id prj_b050d0c2e585 --segment_id seg_546525632ffb --size 12
+kadrctl run preview.layout --project_id prj_b050d0c2e585 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "text_update", "arguments": {"project_id": "prj_b050d0c2e585", "segment_id": "seg_546525632ffb", "size": 12}}
+{"name": "preview_layout", "arguments": {"project_id": "prj_b050d0c2e585", "time_us": 1000000}}</code></pre></div>
+<pre><code class="lang-text">text  x 135   w 810      fits, with 135 px margins</code></pre>
+</li>
+<li>
+<h3 id="square">Make the 1:1 copy with a blurred fill</h3>
+<p>On a square canvas the 16:9 shots fit the width and leave space above and below. <code class="cmd">segment.set_background</code> with <code>apply_to_all</code> fills it on every main-track clip with a blurred, zoomed copy of the clip itself.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.duplicate --project_id prj_408e1a6dfbd6 --name "Night drive 1x1"
+kadrctl run project.set_canvas --project_id prj_4d5e818c84de --ratio 1:1
+kadrctl run segment.set_background --project_id prj_4d5e818c84de --segment_id seg_896a3c69fde1 --type blur --blur 0.75 --apply_to_all</code></pre><pre data-lang="mcp"><code>{"name": "project_duplicate", "arguments": {"project_id": "prj_408e1a6dfbd6", "name": "Night drive 1x1"}}
+{"name": "project_set_canvas", "arguments": {"project_id": "prj_4d5e818c84de", "ratio": "1:1"}}
+{"name": "segment_set_background", "arguments": {"project_id": "prj_4d5e818c84de", "segment_id": "seg_896a3c69fde1", "type": "blur", "blur": 0.75, "apply_to_all": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="estimate">Estimate the files</h3>
+<p><code class="cmd">export.estimate</code> takes the same parameters as an export and returns the output size, frame count and file size without rendering anything.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.estimate --project_id prj_4d5e818c84de --resolution 1080p</code></pre><pre data-lang="mcp"><code>{"name": "export_estimate", "arguments": {"project_id": "prj_4d5e818c84de", "resolution": "1080p"}}</code></pre></div>
+</li>
+<li>
+<h3 id="export">Queue the three exports</h3>
+<p>Exports run one at a time: the first starts right away and the others wait in state <code>queued</code>. 1080p means the shorter side is 1080 px, so each export gets the right shape. Missing folders are created.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_408e1a6dfbd6 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive/night-drive-16x9.mp4
+kadrctl run export.start --project_id prj_b050d0c2e585 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive/night-drive-9x16.mp4
+kadrctl run export.start --project_id prj_4d5e818c84de --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive/night-drive-1x1.mp4
+kadrctl run export.list</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_408e1a6dfbd6", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive/night-drive-16x9.mp4"}}
+{"name": "export_start", "arguments": {"project_id": "prj_b050d0c2e585", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive/night-drive-9x16.mp4"}}
+{"name": "export_start", "arguments": {"project_id": "prj_4d5e818c84de", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive/night-drive-1x1.mp4"}}
+{"name": "export_list", "arguments": {}}</code></pre></div>
+<p>Follow the jobs with <code class="cmd">export.status</code>, or listen for <code>export.progress</code> and <code>export.done</code> on the <a href="{{root}}{{lang_root}}docs/ai/rest.html#events">event stream</a>.</p>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>Captions in narrow frames.</strong> Re-split captions for the narrow frame with <code class="cmd">captions.relayout</code>, for example <code>max_words</code> 3.</li>
+  <li><strong>Different grades per copy.</strong> The copies are independent: <code class="cmd">filter.apply</code> or <code class="cmd">segment.set_adjust</code> in one does not touch the others.</li>
+  <li><strong>Photo slideshows.</strong> <code class="cmd">ai.auto_reframe</code> replaces existing position and scale keyframes. For a Ken Burns slideshow use the blurred fill instead so the moves stay.</li>
+  <li><strong>Other sizes.</strong> <code class="cmd">project.set_canvas</code> also offers 4:3, 3:4, 21:9, 2.35:1, 2:1, 1.85:1 and 5.8-inch.</li>
+  <li><strong>Smaller files.</strong> <code>codec</code> <code>hevc</code> gives files about 30% smaller at the same quality; <code>bitrate</code> <code>lower</code> trades quality for size.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>Positions are fractions of the canvas, so stickers and text keep their relative place after a ratio change — but check them with <code class="cmd">preview.layout</code> or <code class="cmd">preview.contact_sheet</code>.</li>
+  <li><code class="cmd">export.list</code> shows every job since Kadr started; jobs are forgotten on restart.</li>
+  <li>Delete a copy with <code class="cmd">project.delete</code>; imported media files are never deleted.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

@@ -1,0 +1,90 @@
+<!--meta {"title":"Talking-head cleanup to a vertical short","nav":"Talking-head cleanup","order":330,"description":"Clean up a talking-head recording: denoise and level the voice, cut silences, filler words and long pauses, add captions, and reframe to 9:16 for a short.","group":"Recipes","summary":"A raw talking-head take becomes a tight 9:16 short with clean audio, no silences or “um”s, and captions.","time":"~2 min","needs":"A talking-head video (landscape is fine)","commands":["segment.set_audio","segment.set_video_cleanup","ai.auto_reframe","ai.remove_silence","transcript.transcribe","transcript.remove_fillers","transcript.remove_pauses","captions.from_transcript","export.start"]} -->
+<p class="lead">You get a vertical short made from a raw talking-head take. Background noise is reduced, the voice is levelled, dead air is cut, every “um” and “uh” is gone, and captions show three words at a time. In our test a 26.8 s take became a 15.9 s short.</p>
+<ul>
+  <li><strong>Time:</strong> ~2 min</li>
+  <li><strong>You need:</strong> A talking-head video (landscape is fine)</li>
+  <li><strong>Main commands:</strong> <code class="cmd">segment.set_audio</code>, <code class="cmd">segment.set_video_cleanup</code>, <code class="cmd">ai.auto_reframe</code>, <code class="cmd">ai.remove_silence</code>, <code class="cmd">transcript.transcribe</code>, <code class="cmd">transcript.remove_fillers</code>, <code class="cmd">transcript.remove_pauses</code>, <code class="cmd">captions.from_transcript</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Clean up my talking-head video C:\Users\you\Videos\tips-take3.mp4 in Kadr and turn it into a vertical short. Reduce background noise and normalise the loudness, lightly denoise the picture, and reframe it to 9:16 following me. Cut silences longer than 0.7 s, then transcribe it in English and remove filler words and any pauses over 0.6 s that are left. Show me which fillers you found before cutting them. Add captions with the cap_pill_active style, 3 words at a time. Show me a frame, then export 1080p to C:\Users\you\Videos\Kadr\tips-short.mp4.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="import">Create, import and place the take</h3>
+<p>Start with a 16:9 project; the reframe step switches the canvas to 9:16.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Tips short" --ratio 16:9
+kadrctl --% run media.import --project_id prj_ed95831b1bf0 --paths "[\"C:/Users/you/Videos/tips-take3.mp4\"]"
+kadrctl run timeline.segment.add --project_id prj_ed95831b1bf0 --material_id mat_745ea2a4d7e6</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Tips short", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_ed95831b1bf0", "paths": ["C:/Users/you/Videos/tips-take3.mp4"]}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_ed95831b1bf0", "material_id": "mat_745ea2a4d7e6"}}</code></pre></div>
+</li>
+<li>
+<h3 id="clean">Clean the sound and the picture first</h3>
+<p>Set these before cutting: every piece made by a later cut keeps its clip’s settings, so you set them once. <code class="cmd">segment.set_audio</code> turns on noise reduction and loudness normalisation; <code class="cmd">segment.set_video_cleanup</code> applies light denoising (0–1) while the video is decoded.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run segment.set_audio --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --reduce_noise --normalize_loudness
+kadrctl run segment.set_video_cleanup --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --denoise 0.3</code></pre><pre data-lang="mcp"><code>{"name": "segment_set_audio", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "reduce_noise": true, "normalize_loudness": true}}
+{"name": "segment_set_video_cleanup", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "denoise": 0.3}}</code></pre></div>
+</li>
+<li>
+<h3 id="reframe">Reframe to 9:16</h3>
+<p><code class="cmd">ai.auto_reframe</code> with <code>set_canvas</code> switches the project to 9:16 and animates the framing to follow the speaker. Running it before the cuts means one call covers the whole take.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ai.auto_reframe --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --ratio 9:16 --set_canvas</code></pre><pre data-lang="mcp"><code>{"name": "ai_auto_reframe", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "ratio": "9:16", "set_canvas": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="silence">Cut the silences</h3>
+<p><code class="cmd">ai.remove_silence</code> measures the audio level and cuts every stretch quieter than −40 dBFS that lasts longer than 0.7 s, keeps 120 ms of padding on each side so words are not clipped, and closes the gaps. The result lists what was removed and the ids of the remaining pieces (<code>segment_ids</code>).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ai.remove_silence --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --threshold_db -40 --min_silence_us 0.7s --padding_us 120ms</code></pre><pre data-lang="mcp"><code>{"name": "ai_remove_silence", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "threshold_db": -40, "min_silence_us": 700000, "padding_us": 120000}}</code></pre></div>
+</li>
+<li>
+<h3 id="transcribe">Transcribe</h3>
+<p><code class="cmd">transcript.transcribe</code> runs Whisper locally and stores every word with its timing on the material. Kadr maps the words onto the pieces left after the cuts, so the transcript always matches the timeline. Without <code>segment_id</code> it transcribes every audible clip.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transcript.transcribe --project_id prj_ed95831b1bf0 --language en --wait</code></pre><pre data-lang="mcp"><code>{"name": "transcript_transcribe", "arguments": {"project_id": "prj_ed95831b1bf0", "language": "en", "wait": true}}</code></pre></div>
+<pre><code class="lang-text">Hi everyone. Um, today I want to show you three quick editing tips. Uh, the first one is simple,
+cut your pauses. The second one is, um, add captions to every video. And the third is to keep it
+short and punchy. Thanks for watching.</code></pre>
+</li>
+<li>
+<h3 id="fillers">Remove filler words</h3>
+<p><code class="cmd">transcript.remove_fillers</code> with <code>preview</code> only reports what it found (here <em>Um,</em> <em>Uh,</em> and <em>um,</em>). Without <code>preview</code> it cuts them, and the rest of the timeline moves up to close each gap.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transcript.remove_fillers --project_id prj_ed95831b1bf0 --preview
+kadrctl run transcript.remove_fillers --project_id prj_ed95831b1bf0</code></pre><pre data-lang="mcp"><code>{"name": "transcript_remove_fillers", "arguments": {"project_id": "prj_ed95831b1bf0", "preview": true}}
+{"name": "transcript_remove_fillers", "arguments": {"project_id": "prj_ed95831b1bf0"}}</code></pre></div>
+</li>
+<li>
+<h3 id="pauses">Tighten the remaining pauses</h3>
+<p><code class="cmd">transcript.remove_pauses</code> works from word timings rather than the audio level: every gap between words longer than 0.6 s is shortened to 0.25 s. After <code class="cmd">ai.remove_silence</code> it catches pauses filled with breaths or room noise. In our clean test recording there was nothing left to remove.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transcript.remove_pauses --project_id prj_ed95831b1bf0 --min_pause_us 0.6s --keep_us 250ms</code></pre><pre data-lang="mcp"><code>{"name": "transcript_remove_pauses", "arguments": {"project_id": "prj_ed95831b1bf0", "min_pause_us": 600000, "keep_us": 250000}}</code></pre></div>
+</li>
+<li>
+<h3 id="captions">Captions from the transcript</h3>
+<p>The transcript already exists, so <code class="cmd">captions.from_transcript</code> creates the cues without running speech recognition again.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.from_transcript --project_id prj_ed95831b1bf0 --style_id cap_pill_active --max_words 3</code></pre><pre data-lang="mcp"><code>{"name": "captions_from_transcript", "arguments": {"project_id": "prj_ed95831b1bf0", "style_id": "cap_pill_active", "max_words": 3}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Check and export</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_ed95831b1bf0 --time_us 2s --width 360
+kadrctl run export.start --project_id prj_ed95831b1bf0 --resolution 1080p --path C:/Users/you/Videos/Kadr/tips-short.mp4</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_ed95831b1bf0", "time_us": 2000000, "width": 360}}
+{"name": "export_start", "arguments": {"project_id": "prj_ed95831b1bf0", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/tips-short.mp4"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>Cut a phrase by its text.</strong> <code class="cmd">transcript.delete_text</code> with <code>text</code> “thanks for watching” finds the words in the transcript and cuts them out of the video; captions follow the cut.</li>
+  <li><strong>Your own fillers.</strong> <code class="cmd">transcript.remove_fillers</code> accepts extra <code>words</code> such as <code>["okay", "right so"]</code>. It has built-in lists for English, Ukrainian and Russian.</li>
+  <li><strong>Keep it 16:9.</strong> Skip the reframe step for YouTube.</li>
+  <li><strong>Audio only.</strong> Export the cleaned voice for a podcast feed: <code class="cmd">export.start</code> with <code>audio_only</code> and <code>audio_format</code> <code>mp3</code>.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>In a noisy room raise <code>threshold_db</code> to −30 so the hum counts as silence; in a very quiet room lower it to −50.</li>
+  <li>Use <code>preview</code> on <code class="cmd">transcript.remove_fillers</code> and <code class="cmd">transcript.remove_pauses</code> first. Every cut can be undone, but checking the list is quicker.</li>
+  <li>Transcripts belong to the media, not the timeline. After further edits <code class="cmd">captions.from_transcript</code> rebuilds the captions without transcribing again.</li>
+  <li>Names spelled wrong? Pass <code>prompt</code> “Kadr, Kyiv, Olena” to <code class="cmd">transcript.transcribe</code> (add <code>force</code> to redo an existing transcript).</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

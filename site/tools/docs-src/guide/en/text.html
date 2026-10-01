@@ -1,0 +1,87 @@
+<!--meta {"title":"Text & titles","nav":"Text & titles","order":70,"description":"Add titles and text in Kadr: templates, fonts and colours, outlines, shadows and glow, word-art effects, curved text and letter-by-letter animations.","group":"Creating"} -->
+<p class="lead">Titles, lower thirds, labels and call-outs are all text clips. Start from a template or plain text, then style and animate it in the inspector.</p>
+
+<figure><img src="{{root}}assets/img/guide/text.webp" alt="The Text tab with template cards such as Bold title, Neon and Comic pop, a selected title in the player, and the Text inspector with font, size, style and colour" width="1280" height="428" loading="lazy"><figcaption>Text templates on the left, the selected title in the player, its settings on the right.</figcaption></figure>
+
+<h2 id="add">Add text</h2>
+<ol class="steps">
+  <li>
+    <h3 id="add-playhead">Move the playhead</h3>
+    <p>New text starts at the playhead, so first put the playhead where the text should appear.</p>
+  </li>
+  <li>
+    <h3 id="add-pick">Pick a template</h3>
+    <p>Open the <strong>Text</strong> tab. Under <strong>Templates</strong>, the <strong>Default</strong> category has plain white text; the other categories — Trending, Basic, Title, Caption, Fancy, Social, Lower third, Neon and Animated — have ready-made looks. Click a card to see its name and description.</p>
+  </li>
+  <li>
+    <h3 id="add-place">Add it</h3>
+    <p>Click <strong>+</strong> on the card or double-click it, or drag it onto the timeline. A text clip appears on a text track (3 seconds long for plain text) and is selected, ready to edit.</p>
+  </li>
+</ol>
+
+<h2 id="edit-words">Change the words</h2>
+<p>With the text clip selected, the inspector shows the <strong>Text</strong> tab. Type your words into the large box at the top of <strong>Basic</strong>; press <kbd>Enter</kbd> for a new line. The change is applied when you click elsewhere.</p>
+<p>To change the length of the text on screen, drag the edges of its clip on the timeline. To place it, drag it in the <a href="{{root}}{{lang_root}}docs/guide/player.html#on-canvas">player</a>.</p>
+
+<h2 id="style">Font, size and colour</h2>
+<p>The <strong>Font</strong> section of <strong>Text → Basic</strong> contains:</p>
+<ul>
+  <li><strong>Font</strong> — Kadr's built-in fonts plus every font installed on your computer. Cyrillic and other alphabets fall back to a matching system font automatically.</li>
+  <li><strong>Size</strong>, <strong>Bold</strong>, <strong>Italic</strong>, <strong>Underline</strong> and left / centre / right alignment.</li>
+  <li><strong>Case</strong> — <em>Aa</em> (as typed), <em>AB</em> (capitals), <em>ab</em> (lower case), <em>Ab Cd</em> (title case). Your original words are kept, so you can switch back.</li>
+  <li><strong>Color</strong> — a swatch or the colour picker.</li>
+  <li><strong>Character</strong> and <strong>Line</strong> — the spacing between letters and between lines.</li>
+</ul>
+
+<h2 id="decorations">Outline, background, shadow and glow</h2>
+<p>Below the font settings are sections you switch on with their toggle. Each has its own colour and sliders:</p>
+<table>
+  <thead><tr><th>Section</th><th>What it adds</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Stroke</strong></td><td>An outline around the letters — makes text readable on busy footage.</td></tr>
+    <tr><td><strong>Extra outline</strong></td><td>Second and further outlines for a sticker-like look.</td></tr>
+    <tr><td><strong>Background</strong></td><td>A box behind the text, with opacity and rounded corners.</td></tr>
+    <tr><td><strong>Shadow</strong></td><td>A drop shadow with opacity, blur, distance and angle.</td></tr>
+    <tr><td><strong>Glow</strong></td><td>A soft light around the letters (intensity and radius).</td></tr>
+    <tr><td><strong>Gradient fill</strong></td><td>Letters filled with 2–4 colours, as a straight (linear) or round (radial) gradient, at any angle.</td></tr>
+    <tr><td><strong>3D extrude</strong></td><td>Solid 3D depth behind the letters, with colour, depth and angle.</td></tr>
+    <tr id="curve"><td><strong>Curve</strong></td><td>Bends the line of text into an arc — <strong>Bend</strong> above zero curves it up, below zero down.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="word-art">Word art (text effects)</h2>
+<div class="grid-2">
+  <div>
+    <p>Text effects are complete looks — gradients, metal, glow, 3D, outlines, retro — in one click.</p>
+    <ul>
+      <li><strong>For new text:</strong> in the <strong>Text</strong> tab, switch from <strong>Templates</strong> to <strong>Text effects</strong> and add a card. You get text in that style.</li>
+      <li><strong>For existing text:</strong> select it and open <strong>Text → Effects</strong> in the inspector. Pick a card, or <strong>None</strong> to remove the effect.</li>
+    </ul>
+    <p>An effect simply fills in the Basic settings (gradient, glow, outlines, 3D), so you can fine-tune it there afterwards.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/text-effects.webp" alt="The Text effects grid with Sunset, Candy, Gold, Neon outline, 3D block, Glitch double and Sticker cut" width="640" height="536" loading="lazy"><figcaption>Text effects in the library.</figcaption></figure>
+</div>
+
+<h2 id="animate">Letter-by-letter animation</h2>
+<div class="grid-2">
+  <figure><img src="{{root}}assets/img/guide/text-animate.webp" alt="The Animate panel with In, Out and Loop tabs and animations such as Typewriter, Letter rise, Karaoke sweep and Word pop" width="342" height="536" loading="lazy"><figcaption>Text → Animate.</figcaption></figure>
+  <div>
+    <p>Open <strong>Text → Animate</strong>. Animations here move the letters and words <em>inside</em> the text:</p>
+    <ul>
+      <li><strong>In</strong> — how the text appears: Typewriter, Letter rise, Letter drop, Karaoke sweep, Random spell, Word pop and more.</li>
+      <li><strong>Out</strong> — how it disappears.</li>
+      <li><strong>Loop</strong> — a movement that repeats while the text is visible, such as a wave or a pulse.</li>
+    </ul>
+    <p>Click a card to apply it, then set its <strong>Duration</strong> (or <strong>Period</strong> for loops) below the grid. <strong>None</strong> removes it.</p>
+    <p>These combine with the clip animations of the <strong>Animation</strong> tab (In, Out, Combo, Loop), which move the whole text clip — fades, slides, zooms, bounces.</p>
+  </div>
+</div>
+
+<h2 id="more">More text options</h2>
+<ul>
+  <li><strong>Text → Transform</strong> — exact position, scale, rotation and blending of the text.</li>
+  <li><strong>Text → Speech</strong> — reads the text aloud with a computer voice and places the speech under it. See <a href="{{root}}{{lang_root}}docs/guide/audio.html#tts">Text to speech</a>.</li>
+  <li><strong>Save to My kit</strong> — the bookmark button next to the sub-tabs saves the style so you can apply it to other texts in any project. See <a href="{{root}}{{lang_root}}docs/guide/effects.html#my-kit">My kit</a>.</li>
+  <li>For subtitles that follow speech, use <a href="{{root}}{{lang_root}}docs/guide/captions.html">Captions</a> instead of typing them by hand.</li>
+</ul>
+<div class="callout tip"><p>Keep important text inside the safe area: turn on <a href="{{root}}{{lang_root}}docs/guide/player.html#safe-zones">safe zones</a> in the player, especially for vertical videos.</p></div>

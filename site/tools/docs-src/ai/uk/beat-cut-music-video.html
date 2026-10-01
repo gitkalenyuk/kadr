@@ -1,0 +1,140 @@
+<!--meta {"title":"Кліп, змонтований під біт","nav":"Монтаж під біт","order":320,"description":"Знайдіть долі пісні, поріжте кліпи точно по них одним атомарним пакетом, додайте спалахи на склейках, кольоровий фільтр, punch-zoom на дропі й титр.","group":"Рецепти","summary":"Kadr знаходить долі у вашій пісні, і кожна склейка припадає на одну з них — зі спалахами, кольоровим грейдом і punch-zoom на дропі.","time":"~2 хв","needs":"Пісня і папка кліпів","commands":["audio.detect_beats","timeline.segment.add","timeline.segment.trim","segment.set_volume","transition.apply_all","filter.add","effect.add","text.add","export.start"]} -->
+<p class="lead">Результат — кліп, у якому кожна склейка припадає на долю, з білим спалахом на кожній склейці, бірюзово-помаранчевим грейдом поверх усього, punch-zoom на дропі та титром на першому такті. Долі шукаються на вашому ПК, а весь список склейок застосовується одним кроком скасування.</p>
+<ul>
+  <li><strong>Час:</strong> ~2 хв</li>
+  <li><strong>Що потрібно:</strong> Пісня і папка кліпів</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">audio.detect_beats</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">timeline.segment.trim</code>, <code class="cmd">segment.set_volume</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">filter.add</code>, <code class="cmd">effect.add</code>, <code class="cmd">text.add</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Зроби в Kadr кліп 16:9 з C:\Users\you\Music\night-drive.mp3 і кліпів у C:\Users\you\Videos\drive. Знайди долі й додай маркери біту. Перші 16 секунд міняй кліп на кожному такті (кожна 8-ма доля — приблизно 2 секунди при цьому темпі), по колу, а на другому колі бери пізнішу частину кожного кліпу. Вимкни власний звук кліпів, обріж пісню там, де закінчується відео, зі згасанням 1,5 с, постав короткий білий спалах на кожну склейку, загрейдь усе фільтром teal_orange на 80%, додай punch_zoom на один такт з 8-ї секунди і титр «NIGHT DRIVE» шаблоном cinematic на перші 3 секунди. Покажи контактний аркуш, потім експортуй 1080p.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="create-import">Створіть проєкт та імпортуйте медіа</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Night drive" --ratio 16:9
+kadrctl --% run media.import --project_id prj_408e1a6dfbd6 --paths "[\"C:/Users/you/Music/night-drive.mp3\",\"C:/Users/you/Videos/drive\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Night drive", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_408e1a6dfbd6", "paths": ["C:/Users/you/Music/night-drive.mp3", "C:/Users/you/Videos/drive"]}}</code></pre></div>
+<p>Пісня стає матеріалом <code>mat_971f6c60fb07</code>; чотири кліпи — <code>mat_757801976c94</code>, <code>mat_eb4ddf31388d</code>, <code>mat_f5b1e7278a6f</code> і <code>mat_434577267af4</code>.</p>
+</li>
+<li>
+<h3 id="song">Покладіть пісню на таймлайн</h3>
+<p>Аудіо ніколи не потрапляє на основну доріжку: воно лягає на аудіодоріжку, тут — з 0 с.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_408e1a6dfbd6 --material_id mat_971f6c60fb07 --at_us 0</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "material_id": "mat_971f6c60fb07", "at_us": 0}}</code></pre></div>
+</li>
+<li>
+<h3 id="beats">Знайдіть долі</h3>
+<p><code class="cmd">audio.detect_beats</code> аналізує пісню на вашому ПК і повертає кожну атаку як час на <em>таймлайні</em> в мікросекундах, а також приблизний темп. <code>add_markers</code> ще й ставить маркер «Beat» на лінійці, тож кліпи, які ви потім тягнете в редакторі, прилипають до музики.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run audio.detect_beats --project_id prj_408e1a6dfbd6 --segment_id seg_a685cca02d34 --sensitivity 0.5 --add_markers</code></pre><pre data-lang="mcp"><code>{"name": "audio_detect_beats", "arguments": {"project_id": "prj_408e1a6dfbd6", "segment_id": "seg_a685cca02d34", "sensitivity": 0.5, "add_markers": true}}</code></pre></div>
+<pre><code class="lang-json">{
+  "segment_id": "seg_a685cca02d34",
+  "count": 120,
+  "bpm": 119.8,
+  "markers_added": 120,
+  "beats_us": [0, 252517, 501769, 720907, 1000998, 1248435, 1501678, 1750567, 2001270, …]
+}</code></pre>
+<p>Скорочено. У цьому треку хай-хет звучить на кожну восьму, тож атаки йдуть приблизно кожні 0,25 с при 120 BPM; один такт 4/4 — це 8 атак. Кожен 8-й елемент дає точки склейок 0, 2001270, 4001088, 6001270, 8001088, 10001270, 12001088, 14001270 і 16001088 мкс.</p>
+</li>
+<li>
+<h3 id="cut">Поріжте кліпи по долях одним пакетом</h3>
+<p>Кожен кадр додається з <code>duration_us</code>, що дорівнює відстані між двома точками склейки. Кліпи, дописані в кінець магнітної основної доріжки, стоять впритул, тож кожна склейка точно на долі. На другому колі <code>source_start_us</code> починає кожен кліп з 3-ї секунди, тож кадри не повторюються. Збережіть як <code>beat-cut.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 0, "duration_us": 2001270}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 0, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 3000000, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 3000000, "duration_us": 1999818}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_408e1a6dfbd6 beat-cut.json --dry-run
+kadrctl batch prj_408e1a6dfbd6 beat-cut.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_408e1a6dfbd6", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 0, "duration_us": 2001270}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 0, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 3000000, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 3000000, "duration_us": 1999818}}
+]}}</code></pre></div>
+<p>Пробний запуск (dry run) спершу перевіряє план — наприклад, падає, якщо шматок просить більше відео, ніж є в кліпі, — і нічого не змінює. Справжній запуск додає всі вісім кадрів одним кроком скасування.</p>
+</li>
+<li>
+<h3 id="audio">Вимкніть звук кліпів і підженіть пісню</h3>
+<p>Ще один пакет: вимкніть власний звук кожного кадру, обріжте пісню там, де закінчується відео (16001088 мкс), через <code class="cmd">timeline.segment.trim</code> і додайте згасання. <code>snap</code> <code>false</code> ставить край рівно туди, а не прилипає до найближчого маркера біту. Збережіть як <code>beat-audio.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_896a3c69fde1", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4dd4dd6ff8a2", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_2b7e19c04d5a", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_c81f3e60a97b", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_5e0a94d2c1f8", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_e7b2063d9a14", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_19c4f7a2e08d", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a3d58e1b6c27", "volume_db": -60}},
+  {"command": "timeline.segment.trim", "args": {"segment_id": "seg_a685cca02d34", "edge": "right", "to_us": 16001088, "snap": false}},
+  {"command": "segment.set_fade", "args": {"segment_id": "seg_a685cca02d34", "fade_out_us": 1500000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_408e1a6dfbd6 beat-audio.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_408e1a6dfbd6", "calls": [
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_896a3c69fde1", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4dd4dd6ff8a2", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_2b7e19c04d5a", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_c81f3e60a97b", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_5e0a94d2c1f8", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_e7b2063d9a14", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_19c4f7a2e08d", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a3d58e1b6c27", "volume_db": -60}},
+  {"command": "timeline.segment.trim", "args": {"segment_id": "seg_a685cca02d34", "edge": "right", "to_us": 16001088, "snap": false}},
+  {"command": "segment.set_fade", "args": {"segment_id": "seg_a685cca02d34", "fade_out_us": 1500000}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="flash">Спалах на кожній склейці</h3>
+<p>Короткий перехід не зсуває склейку з долі. <code class="cmd">transition.apply_all</code> ставить його на всі сім склейок.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_408e1a6dfbd6 --type white_flash --duration_us 160ms</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_408e1a6dfbd6", "type": "white_flash", "duration_us": 160000}}</code></pre></div>
+</li>
+<li>
+<h3 id="grade">Грейд, дроп і титр</h3>
+<p><code class="cmd">filter.add</code> кладе фільтр на окрему доріжку, тож він фарбує все, що під ним, на всю свою довжину. <code class="cmd">effect.add</code> ставить <code>punch_zoom</code> на п’ятий такт — з 8001088 мкс на один такт. <code class="cmd">text.add</code> із шаблоном <code>cinematic</code> додає титр на текстову доріжку.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run filter.add --project_id prj_408e1a6dfbd6 --filter_id teal_orange --at_us 0 --duration_us 16001088 --intensity 0.8
+kadrctl run effect.add --project_id prj_408e1a6dfbd6 --effect_id punch_zoom --at_us 8001088 --duration_us 2000182
+kadrctl run text.add --project_id prj_408e1a6dfbd6 --text "NIGHT DRIVE" --template_id cinematic --at_us 0 --duration_us 3s</code></pre><pre data-lang="mcp"><code>{"name": "filter_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "filter_id": "teal_orange", "at_us": 0, "duration_us": 16001088, "intensity": 0.8}}
+{"name": "effect_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "effect_id": "punch_zoom", "at_us": 8001088, "duration_us": 2000182}}
+{"name": "text_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "text": "NIGHT DRIVE", "template_id": "cinematic", "at_us": 0, "duration_us": 3000000}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Перевірте й експортуйте</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_408e1a6dfbd6 --count 8 --columns 4 --tile_width 240
+kadrctl run export.start --project_id prj_408e1a6dfbd6 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive.mp4
+kadrctl run export.status --job_id exp_51d0a7c3e9b2</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_408e1a6dfbd6", "count": 8, "columns": 4, "tile_width": 240}}
+{"name": "export_start", "arguments": {"project_id": "prj_408e1a6dfbd6", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_51d0a7c3e9b2"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<h3 id="split-one-clip">Один довгий кліп, розрізаний на кожній долі</h3>
+<p><code class="cmd">timeline.segment.split</code> не потребує <code>segment_id</code>, якщо передати лише <code>at_us</code>: він ріже той кліп основної доріжки, що опинився під цим часом. Пакет розрізів, по одному на точку склейки, ділить один довгий дубль на шматки завдовжки в такт, які потім можна видаляти, реверсувати чи прискорювати поодинці.</p>
+<pre><code class="lang-json">[
+  { "command": "timeline.segment.split", "args": { "at_us": 2001270 } },
+  { "command": "timeline.segment.split", "args": { "at_us": 4001088 } },
+  { "command": "timeline.segment.split", "args": { "at_us": 6001270 } }
+]</code></pre>
+<h3 id="more-ideas">Інші ідеї</h3>
+<ul>
+  <li><strong>Частіші склейки.</strong> Беріть кожну 4-ту атаку (склейка на кожну долю) для приспіву і кожну 8-му для куплету.</li>
+  <li><strong>Інший стиль склейок.</strong> Спробуйте переходи <code>flash_zoom</code>, <code>glitch</code>, <code>whip_pan</code> чи <code>zoom_blur_through</code>, а для дропу — ефекти <code>rgb_pulse</code> або <code>hard_shake</code>. <code class="cmd">library.list</code> з <code>kind</code> <code>transition</code> чи <code>effect</code> покаже всі.</li>
+  <li><strong>Вертикальна версія.</strong> Див. <a href="{{root}}{{lang_root}}docs/ai/batch-export-variants.html">Один проєкт — три формати</a>.</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li><code>sensitivity</code> — від 0 до 1: 0.7–0.9 для насиченої перкусії, 0.2–0.4, щоб лишити тільки сильні удари. <code>strengths</code> дає силу кожної долі (0–1) — так легше відрізнити сильні долі від слабких.</li>
+  <li>Час доль — це вже час на таймлайні (позицію та швидкість пісні враховано), тож його можна одразу підставляти в <code>at_us</code> і <code>duration_us</code>.</li>
+  <li><code class="cmd">audio.detect_beats</code> записується як крок скасування навіть без <code>add_markers</code>; це нешкідливо.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

@@ -1,0 +1,140 @@
+<!--meta {"title":"Photo slideshow with Ken Burns motion","nav":"Photo slideshow","order":340,"description":"Turn a folder of photos into a slideshow with slow Ken Burns zoom and pan (keyframes with cubic easing), cross-dissolves, music with fades and an animated title.","group":"Recipes","summary":"A folder of photos becomes a slideshow with slow zoom-and-pan on every photo, dissolves, music and an animated title.","time":"~2 min","needs":"A folder of photos and a music track","commands":["media.import","timeline.segment.add","keyframe.add","transition.apply_all","segment.set_fade","text.add","text.set_glyph_animation","preview.layout","export.start"]} -->
+<p class="lead">You get a 16:9 slideshow where every photo slowly zooms and drifts, alternating between zooming in and zooming out. Photos blend with 0.8 s dissolves, the music fades in and out, and the title rises in letter by letter.</p>
+<ul>
+  <li><strong>Time:</strong> ~2 min</li>
+  <li><strong>You need:</strong> A folder of photos and a music track</li>
+  <li><strong>Main commands:</strong> <code class="cmd">media.import</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">keyframe.add</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">segment.set_fade</code>, <code class="cmd">text.add</code>, <code class="cmd">text.set_glyph_animation</code>, <code class="cmd">preview.layout</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Make a 16:9 slideshow in Kadr from the photos in C:\Users\you\Pictures\summer, 4 seconds per photo. Give every photo a slow Ken Burns move: alternate zooming in from 110% to 125% and zooming out from 125% to 110%, with a gentle sideways drift and ease-in-out, and make sure no black edges ever show. Use 0.8 s mix transitions between all photos. Put C:\Users\you\Music\warm.mp3 under the whole slideshow with a 1 s fade-in and a 2 s fade-out. Add the title "Summer 2026" from 0.3 s to 3.5 s with the title_bold template, letters rising in and fading out. Show me frames at 0.1 s and 3 s, then export 1080p.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="import">Create and import</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Summer slideshow" --ratio 16:9
+kadrctl --% run media.import --project_id prj_ea391e038f3f --paths "[\"C:/Users/you/Pictures/summer\",\"C:/Users/you/Music/warm.mp3\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Summer slideshow", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_ea391e038f3f", "paths": ["C:/Users/you/Pictures/summer", "C:/Users/you/Music/warm.mp3"]}}</code></pre></div>
+<p>Photos are imported with <code>duration_us</code> 0: a photo can be stretched to any length on the timeline.</p>
+</li>
+<li>
+<h3 id="place">Place the photos, 4 seconds each</h3>
+<p>One <code class="cmd">timeline.segment.add</code> per photo, all in one batch (<code>slides.json</code>). <code>duration_us</code> sets each photo’s length (the default for photos is 5 s).</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_35640c6ac4cf", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_0d53e39cc91a", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_6cf1f65ad462", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_c41da8217be6", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_bd01c3e803d1", "duration_us": 4000000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_ea391e038f3f slides.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_ea391e038f3f", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_35640c6ac4cf", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_0d53e39cc91a", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_6cf1f65ad462", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_c41da8217be6", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_bd01c3e803d1", "duration_us": 4000000}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="ken-burns">Add the Ken Burns moves</h3>
+<p>Each photo gets four keyframes: <code>transform.scale</code> and <code>transform.x</code> at the clip’s start (<code>time_us</code> 0) and end (4000000). <code class="cmd">keyframe.add</code> times are <em>relative to the clip start</em>, so the same numbers work for every photo. The easing sits on the first keyframe of each pair: it shapes the motion <em>from</em> that keyframe to the next (cubic <code>ease_in_out</code>). Photos 1, 3 and 5 zoom in; 2 and 4 zoom out. Save as <code>ken-burns.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 4000000, "value": 0.05}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_ea391e038f3f ken-burns.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_ea391e038f3f", "calls": [
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 4000000, "value": 0.05}}
+]}}</code></pre></div>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.list --project_id prj_ea391e038f3f --segment_id seg_f81fd1e725f2</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_list", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_f81fd1e725f2"}}</code></pre></div>
+<div class="callout tip"><p><strong>No black edges.</strong> <code>transform.x</code> is measured in half canvas widths (±1 puts the clip’s centre on the edge), and <code>scale</code> 1 means the photo fits the canvas. For a photo with the canvas’s shape, at scale <em>s</em> it can move sideways by at most <em>s</em> − 1 before an edge shows: at 1.1 that is 0.1, so a drift of ±0.05 is safe. Photos of another shape (3:2, 4:3) fit by height at scale 1 and leave side bars — multiply the scales by the cover factor (about 1.19 for 3:2 and 1.33 for 4:3 on a 16:9 canvas), or fill the bars with <code class="cmd">segment.set_background</code>.</p></div>
+</li>
+<li>
+<h3 id="dissolves">Dissolve between photos</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_ea391e038f3f --type mix --duration_us 0.8s</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_ea391e038f3f", "type": "mix", "duration_us": 800000}}</code></pre></div>
+</li>
+<li>
+<h3 id="music">Add the music</h3>
+<p>The slideshow is 20 s long, so the song is added at 0 s and limited to 20 s, then given fades:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_ea391e038f3f --material_id mat_306a084087e3 --at_us 0 --duration_us 20s
+kadrctl run segment.set_fade --project_id prj_ea391e038f3f --segment_id seg_a1ac3ece258d --fade_in_us 1s --fade_out_us 2s</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_ea391e038f3f", "material_id": "mat_306a084087e3", "at_us": 0, "duration_us": 20000000}}
+{"name": "segment_set_fade", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_a1ac3ece258d", "fade_in_us": 1000000, "fade_out_us": 2000000}}</code></pre></div>
+</li>
+<li>
+<h3 id="title">Add an animated title</h3>
+<p><code class="cmd">text.add</code> with a template gives the base look. <code class="cmd">text.set_glyph_animation</code> animates individual letters: <code>in_letter_rise</code> brings them up one after another, <code>out_letter_fade</code> fades them out at the end.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_ea391e038f3f --text "Summer 2026" --template_id title_bold --at_us 0.3s --duration_us 3.2s
+kadrctl run text.set_glyph_animation --project_id prj_ea391e038f3f --segment_id seg_cebc6c4db938 --kind in --id in_letter_rise --duration_us 1.2s
+kadrctl run text.set_glyph_animation --project_id prj_ea391e038f3f --segment_id seg_cebc6c4db938 --kind out --id out_letter_fade --duration_us 0.6s</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_ea391e038f3f", "text": "Summer 2026", "template_id": "title_bold", "at_us": 300000, "duration_us": 3200000}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_cebc6c4db938", "kind": "in", "id": "in_letter_rise", "duration_us": 1200000}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_cebc6c4db938", "kind": "out", "id": "out_letter_fade", "duration_us": 600000}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Check and export</h3>
+<p>Two frames show the start and the middle of the first move; <code class="cmd">preview.layout</code> confirms the photo’s box still covers the whole 1920×1080 canvas (<code>x</code> ≤ 0, <code>x + w</code> ≥ 1920).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_ea391e038f3f --time_us 0.1s --width 960
+kadrctl run preview.frame --project_id prj_ea391e038f3f --time_us 3s --width 960
+kadrctl run preview.layout --project_id prj_ea391e038f3f --time_us 3s
+kadrctl run export.start --project_id prj_ea391e038f3f --resolution 1080p --path C:/Users/you/Videos/Kadr/summer-slideshow.mp4</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_ea391e038f3f", "time_us": 100000, "width": 960}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_ea391e038f3f", "time_us": 3000000, "width": 960}}
+{"name": "preview_layout", "arguments": {"project_id": "prj_ea391e038f3f", "time_us": 3000000}}
+{"name": "export_start", "arguments": {"project_id": "prj_ea391e038f3f", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/summer-slideshow.mp4"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>Ready-made motion.</strong> For a quicker result without keyframes, use the <code>combo_ken_burns_in</code> and <code>combo_ken_burns_out</code> clip animations with <code class="cmd">animation.set</code> (<code>kind</code> <code>combo</code>).</li>
+  <li><strong>Other transitions.</strong> Try <code>luma_fade</code>, <code>light_leak</code>, <code>film_burn_warm</code> or <code>photo_drop</code>.</li>
+  <li><strong>Other title looks.</strong> Word-art effects such as <code>fx_gold_metal</code> or <code>fx_sunset_gradient</code> (<code class="cmd">text.apply_effect</code>), and letter animations such as <code>in_typewriter</code> or <code>in_word_blur</code>; <code class="cmd">library.list</code> with <code>kind</code> <code>text_animation</code> lists all of them.</li>
+  <li><strong>Vertical slideshow.</strong> On a 9:16 canvas landscape photos fit the width; fill the space with <code class="cmd">segment.set_background</code> (<code>type</code> <code>blur</code>, <code>apply_to_all</code>).</li>
+  <li><strong>One grade for every photo.</strong> <code class="cmd">filter.add</code> over the whole slideshow, for example <code>golden</code> at 60%.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>To fit the slides to the song, divide the song’s <code>duration_us</code> by the number of photos and use that as each photo’s <code>duration_us</code>.</li>
+  <li>Keyframes stay attached to the photo when you later trim or move it.</li>
+  <li>While a property has keyframes, <code class="cmd">segment.set_transform</code> writes a keyframe at the playhead instead of changing the static value — use <code class="cmd">keyframe.add</code> with an explicit <code>time_us</code> to edit a move.</li>
+  <li><code class="cmd">segment.get</code> with <code>time_us</code> shows the interpolated scale and position at any moment.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

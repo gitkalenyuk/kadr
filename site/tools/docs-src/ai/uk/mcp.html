@@ -1,0 +1,70 @@
+<!--meta {"title":"Інструменти MCP","nav":"Інструменти MCP","order":110,"description":"Як команди Kadr виглядають як інструменти MCP: назви, анотації, kadr_batch для атомарних правок, зображення з інструментів перегляду, помилки й тайм-аути.","group":"Інтерфейси"} -->
+<p class="lead"><code>kadr-mcp.exe</code> перетворює кожну команду Kadr на інструмент MCP з повною документацією команди й додає ще один інструмент — <code>kadr_batch</code>. Виклики пересилаються в запущений рушій, тож правки з’являються наживо в редакторі й потрапляють у ту саму історію скасування.</p>
+<div class="callout tip"><p>Налаштовуєте клієнт? Див. <a href="{{root}}{{lang_root}}docs/ai/claude-code.html">Claude Code</a>, <a href="{{root}}{{lang_root}}docs/ai/claude-desktop.html">Claude Desktop</a> або <a href="{{root}}{{lang_root}}docs/ai/other-mcp-clients.html">інші MCP-клієнти</a>. Ця сторінка пояснює, що отримує агент після під’єднання.</p></div>
+
+<h2 id="naming">Назви інструментів і аргументи</h2>
+<p>Багато клієнтів не приймають крапок у назвах інструментів, тож крапки стають підкресленнями. Аргументи — рівно параметри команди; проєктні команди потребують <code>project_id</code>.</p>
+<table>
+  <thead><tr><th>Команда</th><th>Інструмент MCP</th><th>Типові аргументи</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">project.create</code></td><td><code>project_create</code></td><td><code>{"name": "Trip", "ratio": "9:16"}</code></td></tr>
+    <tr><td><code class="cmd">timeline.segment.split</code></td><td><code>timeline_segment_split</code></td><td><code>{"project_id": "prj_…", "segment_id": "seg_…", "at_us": 2500000}</code></td></tr>
+    <tr><td><code class="cmd">captions.auto</code></td><td><code>captions_auto</code></td><td><code>{"project_id": "prj_…", "language": "uk", "wait": true}</code></td></tr>
+    <tr><td><code class="cmd">preview.frame</code></td><td><code>preview_frame</code></td><td><code>{"project_id": "prj_…", "time_us": 1000000, "width": 960}</code></td></tr>
+    <tr><td><code class="cmd">edit.undo</code></td><td><code>edit_undo</code></td><td><code>{"project_id": "prj_…"}</code></td></tr>
+  </tbody>
+</table>
+<p>У цій документації вкладка <strong>MCP</strong> блоку коду показує параметри запиту <code>tools/call</code>: <code>{"name": "&lt;tool&gt;", "arguments": {…}}</code>. Кожен рядок — один виклик.</p>
+
+<h2 id="descriptions">Що кожен інструмент повідомляє моделі</h2>
+<ul>
+  <li><strong>Опис</strong> — що робить команда, як вона поводиться порівняно з CapCut, граничні випадки, далі місце в інтерфейсі та гаряча клавіша, «Undoable with edit.undo.» для правок і рядок <code>Returns:</code> з описом результату.</li>
+  <li><strong>Схема входу</strong> — JSON Schema з типами, переліками, діапазонами, типовими значеннями й описом кожного параметра; одиниці прописано явно («Unit: microseconds»).</li>
+  <li><strong>Анотації</strong> — <code>readOnlyHint</code> на запитах на кшталт <code>timeline_get</code>, <code>preview_frame</code> чи <code>library_list</code>; <code>destructiveHint</code> на <code>project_delete</code>, тож обережні клієнти перепитують.</li>
+</ul>
+<p>Ідентифікатори бібліотеки (переходи, ефекти, фільтри, анімації, шрифти, стікери, стилі субтитрів, пресети генерації, звукові ефекти…) слід знаходити через <code>library_list</code> і <code>library_get</code>, а не вгадувати.</p>
+
+<h2 id="kadr-batch">kadr_batch — кілька правок, один крок скасування</h2>
+<p><code>kadr_batch</code> виконує список проєктних команд по черзі як <strong>один атомарний крок</strong>: або всі виклики вдаються і проєкт зберігається один раз з одним записом скасування «Batch (N actions)», або нічого не змінюється. Виклики використовують назви команд <em>із крапками</em>, а <code>project_id</code> підставляється в кожен виклик. <code>dry_run: true</code> проганяє весь список на копії й повертає результати без збереження.</p>
+<pre><code class="lang-json">[
+  {"command": "transition.set", "args": {"segment_id": "seg_8f2a61c04b9e", "type": "whip_pan", "duration_us": 300000}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_1d93b7e5a0c2", "volume_db": -12}},
+  {"command": "text.add", "args": {"text": "Day one", "template_id": "title_bold", "at_us": 0, "duration_us": 2000000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_5c1e7a9d3b20", "calls": [
+  {"command": "transition.set", "args": {"segment_id": "seg_8f2a61c04b9e", "type": "whip_pan", "duration_us": 300000}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_1d93b7e5a0c2", "volume_db": -12}},
+  {"command": "text.add", "args": {"text": "Day one", "template_id": "title_bold", "at_us": 0, "duration_us": 2000000}}
+]}}</code></pre><pre data-lang="kadrctl"><code>kadrctl batch prj_5c1e7a9d3b20 demo-batch.json</code></pre><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/projects/prj_5c1e7a9d3b20/batch -H "Authorization: Bearer $KADR_TOKEN" \
+  -d '{"dry_run":false,"calls":[{"command":"transition.set","args":{"segment_id":"seg_8f2a61c04b9e","type":"whip_pan","duration_us":300000}},{"command":"segment.set_volume","args":{"segment_id":"seg_1d93b7e5a0c2","volume_db":-12}},{"command":"text.add","args":{"text":"Day one","template_id":"title_bold","at_us":0,"duration_us":2000000}}]}'</code></pre></div>
+<p>Результат містить по одному запису на виклик у тому самому порядку: <code>{"results": [ … ], "dry_run": false}</code>.</p>
+<ul>
+  <li><strong>Без посилань між викликами.</strong> Аргументи фіксуються до запуску пакета, тож виклик не може використати ідентифікатор, створений попереднім викликом того самого пакета. Спершу створіть об’єкти, прочитайте їхні id, а потім пакетом робіть наступні правки.</li>
+  <li><strong>Лише проєктні команди.</strong> Глобальні команди (наприклад, <code>export.start</code>, <code>project.create</code>, <code>library.list</code>) та <code>edit.undo</code>/<code>edit.redo</code> відхиляються: <code>call 0: export.start is not a project command and cannot be batched</code> (нумерація викликів з 0).</li>
+  <li><strong>Помилки під час виконання</strong> повертають власну помилку команди, що впала (з її підказкою); робоча копія відкидається.</li>
+  <li><strong>Побічні ефекти поза проєктом</strong> (згенеровані медіафайли, файли мовлення в кеші) не відкочуються ні невдалим пакетом, ні пробним запуском — це просто файли.</li>
+</ul>
+
+<h2 id="images">Зображення, які бачить модель</h2>
+<p>Результати з полем <code>png_base64</code> повертаються як блок MCP <strong>image</strong> плюс текстовий блок з рештою полів. Так працюють <code>preview_frame</code> (один скомпонований кадр — рівно як в експорті) і <code>preview_contact_sheet</code> (сітка кадрів по всьому монтажу з <code>times_us</code> для кожної плитки). Для вимірювань використовуйте <code>preview_layout</code>: він повертає рамку кожного видимого кліпу, тексту й стікера в пікселях полотна. Див. <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Перевірка результату</a>.</p>
+
+<h2 id="errors">Помилки</h2>
+<p>Невдалий виклик — це результат інструмента з <code>"isError": true</code>, текст якого — помилка рушія у форматі JSON:</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "segment_set_volume", "arguments": {"project_id": "prj_5c1e7a9d3b20", "segment_id": "seg_nope", "volume_db": -6}}</code></pre></div>
+<pre><code class="lang-json">Error: {
+  "code": "not_found",
+  "message": "segment \"seg_nope\" not found",
+  "hint": "Call project.get (tracks[].segments[].id) or timeline.get to list valid segment ids.",
+  "field": "segment_id"
+}</code></pre>
+<p>Читайте <code>hint</code>: він пояснює, як виправити виклик. Коди перелічено в <a href="{{root}}{{lang_root}}docs/ai/rest.html#errors">REST API → Помилки</a>; <code>not_available</code> означає, що на цьому ПК бракує необов’язкового локального компонента (Whisper, моделі матування, рушія мовлення, FFmpeg).</p>
+
+<h2 id="timeouts">Довгі завдання</h2>
+<ul>
+  <li>Міст чекає на виклик до <strong>5 хвилин</strong>. Субтитри, транскрипція, видалення фону й експорт — фонові завдання: викликайте їх без <code>wait</code> і опитуйте <code>captions_status</code> (підтримує довге опитування через <code>wait_s</code>), <code>ai_jobs</code> або <code>export_status</code>.</li>
+  <li><code>export_start</code> завжди повертається одразу з <code>job_id</code>; експорти виконуються по одному, а зайві завдання чекають у стані <code>queued</code>.</li>
+</ul>
+
+<h2 id="engine">Пошук рушія і автозапуск</h2>
+<p>Міст під’єднується до <code>KADR_ADDR</code> (типово <code>127.0.0.1:7777</code>) з токеном із <code>KADR_TOKEN</code> або з папки даних. Якщо ніхто не відповідає, він запускає <code>kadr-server.exe</code> зі своєї папки й чекає до 10 секунд. Цей «безголовий» рушій працює й після виходу клієнта, тож наступні сесії стартують миттєво; завершіть його в Диспетчері завдань перед відкриттям редактора, якщо хочете бачити правки наживо.</p>
+<p>Список інструментів береться із запущеного рушія, тож завжди відповідає встановленій версії. На <code>initialize</code> сервер також надсилає короткі інструкції: проєкти містять доріжки, доріжки — сегменти, час у мікросекундах, спершу читати стан, для багатокрокових правок — <code>kadr_batch</code>, після візуальних правок дивитися <code>preview_frame</code>, дотримуватися підказок у помилках.</p>

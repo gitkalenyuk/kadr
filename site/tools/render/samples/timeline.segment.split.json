@@ -1,0 +1,58 @@
+{
+  "command": "timeline.segment.split",
+  "request": {
+    "project_id": "prj_971d3c1f9aaa",
+    "segment_id": "seg_87e122acbaf6",
+    "at_us": 2500000
+  },
+  "response": {
+    "ok": true,
+    "result": {
+      "track_id": "trk_8a5e5fcf9e4f",
+      "left": {
+        "id": "seg_87e122acbaf6",
+        "material_id": "mat_3cff524a4df7",
+        "source": {
+          "start_us": 0,
+          "duration_us": 2500000
+        },
+        "target": {
+          "start_us": 0,
+          "duration_us": 2500000
+        },
+        "speed": 1,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "rotation": 0
+        },
+        "opacity": 1,
+        "animations": {},
+        "volume": 1
+      },
+      "right": {
+        "id": "seg_6ea618353c46",
+        "material_id": "mat_3cff524a4df7",
+        "source": {
+          "start_us": 2500000,
+          "duration_us": 3500000
+        },
+        "target": {
+          "start_us": 2500000,
+          "duration_us": 3500000
+        },
+        "speed": 1,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "rotation": 0
+        },
+        "opacity": 1,
+        "animations": {},
+        "volume": 1
+      }
+    }
+  }
+}

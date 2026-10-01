@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/ai/best-practices.html" data-alt-uk="../../uk/docs/ai/best-practices.html" data-section="ai">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Best practices and pitfalls — Kadr</title>
+<meta name="description" content="How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/best-practices.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Best practices and pitfalls — Kadr">
+<meta property="og:description" content="How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Best practices and pitfalls — Kadr">
+<meta name="twitter:description" content="How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-ai page-best-practices" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/">For humans</a>
+      <a href="../../docs/ai/" aria-current="page">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/ai/best-practices.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/ai/best-practices.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../#download"><svg aria-hidden="true"><use href="#i-download"/></svg><span class="label-long">Download</span><span class="sr-only">Download Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">Best practices</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai" aria-current="true"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/ai/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/ai/claude-code.html"><span>Claude Code</span></a></li><li><a href="../../docs/ai/claude-desktop.html"><span>Claude Desktop</span></a></li><li><a href="../../docs/ai/other-mcp-clients.html"><span>Other MCP clients</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Interfaces</p><ul><li><a href="../../docs/ai/mcp.html"><span>MCP tools</span></a></li><li><a href="../../docs/ai/rest.html"><span>REST API</span></a></li><li><a href="../../docs/ai/cli.html"><span>CLI (kadrctl)</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Guides</p><ul><li><a href="../../docs/ai/concepts.html"><span>Concepts</span></a></li><li><a href="../../docs/ai/working-visibly.html"><span>Working visibly</span></a></li><li><a href="../../docs/ai/verifying.html"><span>Verifying results</span></a></li><li><a href="../../docs/ai/best-practices.html" aria-current="page"><span>Best practices</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Recipes</p><ul><li><a href="../../docs/ai/recipes.html"><span>All recipes</span></a></li><li><a href="../../docs/ai/vertical-tiktok.html"><span>Vertical TikTok</span></a></li><li><a href="../../docs/ai/beat-cut-music-video.html"><span>Cut to the beat</span></a></li><li><a href="../../docs/ai/talking-head-cleanup.html"><span>Talking-head cleanup</span></a></li><li><a href="../../docs/ai/photo-slideshow.html"><span>Photo slideshow</span></a></li><li><a href="../../docs/ai/podcast-audiogram.html"><span>Podcast audiogram</span></a></li><li><a href="../../docs/ai/product-promo.html"><span>Product promo</span></a></li><li><a href="../../docs/ai/batch-export-variants.html"><span>Three formats</span></a></li><li><a href="../../docs/ai/ai-review-loop.html"><span>Review loop</span></a></li><li><a href="../../docs/ai/translate-and-reburn-captions.html"><span>Translate captions</span></a></li><li><a href="../../docs/ai/documentary-archive-footage.html"><span>Archive documentary</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Command reference</p><ul><li><a href="../../docs/ai/reference-intro.html"><span>Introduction</span></a></li><li><a href="../../docs/ai/reference/index.html"><span>All commands</span><span class="count">177</span></a></li><li><a href="../../docs/ai/reference/adjustment.html"><span>Adjustment</span><span class="count">7</span></a></li><li><a href="../../docs/ai/reference/animation.html"><span>Animation</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/app.html"><span>App</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/audio.html"><span>Audio</span><span class="count">12</span></a></li><li><a href="../../docs/ai/reference/audio-properties.html"><span>Audio properties</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/captions.html"><span>Captions</span><span class="count">16</span></a></li><li><a href="../../docs/ai/reference/edit.html"><span>Edit</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/effects.html"><span>Effects</span><span class="count">5</span></a></li><li><a href="../../docs/ai/reference/export.html"><span>Export</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/filters.html"><span>Filters</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/keyframes.html"><span>Keyframes</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/library.html"><span>Library</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/media.html"><span>Media</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/playback.html"><span>Playback</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/presets.html"><span>Presets</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/projects.html"><span>Projects</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/smart-tools.html"><span>Smart tools</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/speed.html"><span>Speed</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/stickers.html"><span>Stickers</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/text.html"><span>Text</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/timeline.html"><span>Timeline</span><span class="count">23</span></a></li><li><a href="../../docs/ai/reference/tools.html"><span>Tools</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/transcript.html"><span>Transcript</span><span class="count">7</span></a></li><li><a href="../../docs/ai/reference/transitions.html"><span>Transitions</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/updates.html"><span>Updates</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/video.html"><span>Video</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/video-properties.html"><span>Video properties</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/window.html"><span>Window</span><span class="count">4</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><span aria-current="page">Best practices</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI agents</span><span class="pe-group">Guides</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 min read</span></p><h1>Best practices and pitfalls</h1></header><p class="lead">Kadr’s commands are forgiving — every edit can be undone — but an agent that works in the right order gets better videos with fewer calls. These are the habits that matter most, and the traps that catch agents most often.</p>
+
+<h2 id="read-first">Read before you write<a class="anchor" href="#read-first" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>Start every session with <a class="cmd-link" href="../../docs/ai/reference/projects.html#project.list"><code>project.list</code></a> or <a class="cmd-link" href="../../docs/ai/reference/projects.html#project.get"><code>project.get</code></a>/<a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.get"><code>timeline.get</code></a>. Take ids from results — never construct or guess them.</li>
+  <li>Find library ids with <a class="cmd-link" href="../../docs/ai/reference/library.html#library.list"><code>library.list</code></a> (<code>kind</code>: <code>transition</code>, <code>effect</code>, <code>filter</code>, <code>animation</code>, <code>text_template</code>, <code>text_effect</code>, <code>text_animation</code>, <code>caption_style</code>, <code>sticker</code>, <code>font</code>, <code>generated</code>, <code>sound_effect</code>, <code>voice_effect</code>) and check unknown parameters with <code>kadrctl describe</code> or the reference.</li>
+  <li><strong>Re-read after edits that create or remove clips:</strong> splits, <a class="cmd-link" href="../../docs/ai/reference/smart-tools.html#ai.remove_silence"><code>ai.remove_silence</code></a>, <a class="cmd-link" href="../../docs/ai/reference/smart-tools.html#ai.split_scenes"><code>ai.split_scenes</code></a>, transcript cuts and magnet ripples change ids and times. Results usually list the new ids (<code>segment_ids</code>, <code>left</code>/<code>right</code>); otherwise call <a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.get"><code>timeline.get</code></a> again.</li>
+</ul>
+
+<h2 id="batch">Plan, then batch<a class="anchor" href="#batch" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>Group related edits into one <code>kadr_batch</code> (MCP), <code>POST /projects/{id}/batch</code> (REST) or <code>kadrctl batch</code>: they apply atomically, as one undo step, and the person watching sees one clean change.</li>
+  <li>Use <code>dry_run</code> to validate a big plan — it runs every call on a copy and reports the first failure without saving.</li>
+  <li>Work in phases: create things (and read their ids) → batch the follow-up edits. A batch cannot reference ids created inside the same batch.</li>
+  <li>Global commands (exports, captions jobs, project create/duplicate/delete, library, presets) cannot be batched.</li>
+</ul>
+
+<h2 id="errors">Follow the error hints<a class="anchor" href="#errors" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Errors carry <code>code</code>, <code>message</code>, <code>hint</code> and often <code>field</code>. The hint is written for agents — it names the command that lists valid values or explains the rule that was broken:</p>
+<div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Code examples"><button type="button" role="tab" id="ct675-0" aria-controls="ct675-0p" aria-selected="true" data-tab="mcp">MCP</button><button type="button" role="tab" id="ct675-1" aria-controls="ct675-1p" aria-selected="false" tabindex="-1" data-tab="kadrctl">kadrctl</button></div><div class="ct-panel on" role="tabpanel" id="ct675-0p" aria-labelledby="ct675-0" data-tab="mcp" data-label="MCP"><div class="code-wrap"><pre class="code lang-mcp"><code><span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;transition_set&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_c0d7a4e19b5f&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;segment_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;seg_f8a1d3c6e204&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mix&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct675-1p" aria-labelledby="ct675-1" data-tab="kadrctl" data-label="kadrctl"><div class="code-wrap"><pre class="code lang-kadrctl"><code><span class="tok-k">kadrctl</span> run transition.set <span class="tok-p">--project_id</span> prj_c0d7a4e19b5f <span class="tok-p">--segment_id</span> seg_f8a1d3c6e204 <span class="tok-p">--type</span> mix</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div></div></div>
+<div class="code-wrap"><pre class="code lang-text"><code>error [conflict]: segment seg_f8a1d3c6e204 is the last clip on its track; a transition needs a following clip
+hint: Transitions sit between two touching clips on the same track: pass the LEFT clip of the pair (the one that ends where the next one starts).</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<div class="table-scroll"><table>
+  <thead><tr><th>Error</th><th>Usual cause</th><th>What to do</th></tr></thead>
+  <tbody>
+    <tr><td><code>not_found</code> + <code>field</code></td><td>A stale or invented id</td><td>Re-read with <a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.get"><code>timeline.get</code></a> / <a class="cmd-link" href="../../docs/ai/reference/library.html#library.list"><code>library.list</code></a></td></tr>
+    <tr><td><code>invalid_argument</code></td><td>Wrong enum value, out-of-range number, seconds instead of µs</td><td>The message lists the allowed values; convert times to µs</td></tr>
+    <tr><td><code>conflict</code></td><td>Locked track, clips that don’t touch (transitions), overlapping caption times</td><td>Unlock, move clips together, adjust neighbours first</td></tr>
+    <tr><td><code>not_available</code> (HTTP 503)</td><td>A missing local component</td><td>See <a href="#capabilities">below</a>; tell the person what to install</td></tr>
+    <tr><td>Result has <code>clamped: true</code></td><td>The request was limited (media end, half-clip transition, minimum length)</td><td>Read the actual values in the result</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="long-jobs">Long jobs: wait or poll<a class="anchor" href="#long-jobs" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Background jobs:</strong> <a class="cmd-link" href="../../docs/ai/reference/captions.html#captions.auto"><code>captions.auto</code></a>, <a class="cmd-link" href="../../docs/ai/reference/transcript.html#transcript.transcribe"><code>transcript.transcribe</code></a>, <a class="cmd-link" href="../../docs/ai/reference/smart-tools.html#ai.remove_background"><code>ai.remove_background</code></a>, <a class="cmd-link" href="../../docs/ai/reference/export.html#export.start"><code>export.start</code></a>. They return a <code>job_id</code> immediately.</li>
+  <li><code>wait: true</code> (captions, transcription, background removal) blocks until done — fine for a few minutes of media, but MCP and <code>kadrctl</code> give up after 5 minutes.</li>
+  <li>For longer media, start without <code>wait</code> and long-poll <a class="cmd-link" href="../../docs/ai/reference/captions.html#captions.status"><code>captions.status</code></a> with <code>wait_s</code> (up to 600 s per call); poll <a class="cmd-link" href="../../docs/ai/reference/export.html#export.status"><code>export.status</code></a> every 1–2 s; or listen to <code>captions.done</code>/<code>export.done</code> events.</li>
+  <li>The first Whisper run loads the model and is slower. Exports run one at a time; extra jobs are <code>queued</code>. Jobs are forgotten when Kadr restarts.</li>
+</ul>
+<div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Code examples"><button type="button" role="tab" id="ct676-0" aria-controls="ct676-0p" aria-selected="true" data-tab="kadrctl">kadrctl</button><button type="button" role="tab" id="ct676-1" aria-controls="ct676-1p" aria-selected="false" tabindex="-1" data-tab="mcp">MCP</button></div><div class="ct-panel on" role="tabpanel" id="ct676-0p" aria-labelledby="ct676-0" data-tab="kadrctl" data-label="kadrctl"><div class="code-wrap"><pre class="code lang-kadrctl"><code><span class="tok-k">kadrctl</span> run captions.auto <span class="tok-p">--project_id</span> prj_c0d7a4e19b5f <span class="tok-p">--language</span> en <span class="tok-p">--style_id</span> cap_clean
+<span class="tok-k">kadrctl</span> run captions.status <span class="tok-p">--project_id</span> prj_c0d7a4e19b5f <span class="tok-p">--job_id</span> cap_7e4b1a9d2c05 <span class="tok-p">--wait_s</span> 120</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct676-1p" aria-labelledby="ct676-1" data-tab="mcp" data-label="MCP"><div class="code-wrap"><pre class="code lang-mcp"><code><span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;captions_auto&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_c0d7a4e19b5f&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;language&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;en&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;style_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;cap_clean&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;captions_status&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_c0d7a4e19b5f&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;job_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;cap_7e4b1a9d2c05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;wait_s&quot;</span><span class="tok-o">:</span> <span class="tok-n">120</span><span class="tok-o">}</span><span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div></div></div>
+<h2 id="capabilities">Check optional components first<a class="anchor" href="#capabilities" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Feature</th><th>Needs</th><th>Check with</th></tr></thead>
+  <tbody>
+    <tr><td>Import, preview, export (everything)</td><td>FFmpeg</td><td><a class="cmd-link" href="../../docs/ai/reference/tools.html#tools.status"><code>tools.status</code></a> (<a class="cmd-link" href="../../docs/ai/reference/tools.html#tools.install_ffmpeg"><code>tools.install_ffmpeg</code></a> downloads it)</td></tr>
+    <tr><td>Captions, transcripts, filler/pause removal</td><td>Python + faster-whisper + a model</td><td><a class="cmd-link" href="../../docs/ai/reference/captions.html#captions.asr_status"><code>captions.asr_status</code></a></td></tr>
+    <tr><td>Background removal</td><td><code>rembg</code> or <code>onnxruntime</code> + a matting model</td><td><a class="cmd-link" href="../../docs/ai/reference/smart-tools.html#ai.capabilities"><code>ai.capabilities</code></a></td></tr>
+    <tr><td>Text-to-speech</td><td>Windows SAPI voices, eSpeak NG, or an ElevenLabs key</td><td><a class="cmd-link" href="../../docs/ai/reference/audio.html#tts.voices"><code>tts.voices</code></a> (<code>providers</code> says why one is missing)</td></tr>
+  </tbody>
+</table></div>
+<p>If something is missing, the <code>hint</code> says how to install it. Kadr never downloads models by itself; tell the person what to install instead of retrying.</p>
+
+<h2 id="timeline-traps">Timeline traps<a class="anchor" href="#timeline-traps" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Don’t fight the magnet.</strong> On the main track <code>at_us</code> snaps to the nearest clip boundary and everything ripples. Build sequences in order, use overlay tracks for free placement, or switch the magnet off with <a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.settings.set"><code>timeline.settings.set</code></a>.</li>
+  <li><strong>Exact positions need <code>snap: false</code></strong> on <a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.segment.move"><code>timeline.segment.move</code></a> and <a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.segment.trim"><code>timeline.segment.trim</code></a> — otherwise an edge within 100 ms of a marker, the playhead or another edge jumps to it.</li>
+  <li><strong>Keyframed properties:</strong> once a property has keyframes, <code>segment.set_*</code> writes a keyframe at the playhead. Edit animated values with <a class="cmd-link" href="../../docs/ai/reference/keyframes.html#keyframe.add"><code>keyframe.add</code></a> at explicit times.</li>
+  <li><strong>Transitions</strong> go on the left clip and need clips that touch; durations are capped at half the shorter clip.</li>
+  <li><strong>Filters and effects on tracks</strong> affect everything below them — including text if the text track is lower. Add them before titles, or apply them to clips.</li>
+  <li><strong>Units:</strong> times in µs; <code>volume_db</code> in dB but <code>volume</code> keyframes linear; positions in canvas fractions with +Y down; scale 1 = fit, not fill.</li>
+</ul>
+
+<h2 id="files">Files and paths<a class="anchor" href="#files" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>Paths are absolute and refer to the PC where Kadr runs. In JSON use forward slashes (<code>C:/Users/you/Videos</code>) or doubled backslashes.</li>
+  <li>A folder in <a class="cmd-link" href="../../docs/ai/reference/media.html#media.import"><code>media.import</code></a> imports the media files directly inside it (not subfolders, up to 500); files already in the project are reported as <code>duplicates</code>.</li>
+  <li>Exports never overwrite unless <code>overwrite</code> is true — read the final <code>path</code> from the result. Without <code>path</code> they go to <code>%USERPROFILE%\Videos\Kadr\&lt;project name&gt;.mp4</code>.</li>
+</ul>
+
+<h2 id="small-results">Keep results small<a class="anchor" href="#small-results" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><a class="cmd-link" href="../../docs/ai/reference/timeline.html#timeline.get"><code>timeline.get</code></a> instead of <a class="cmd-link" href="../../docs/ai/reference/projects.html#project.get"><code>project.get</code></a> for orientation; <a class="cmd-link" href="../../docs/ai/reference/video-properties.html#segment.get"><code>segment.get</code></a> for one clip in depth.</li>
+  <li><code>include_words: false</code> on <a class="cmd-link" href="../../docs/ai/reference/captions.html#captions.list"><code>captions.list</code></a>; <code>include_words: false</code> on <a class="cmd-link" href="../../docs/ai/reference/transcript.html#transcript.get"><code>transcript.get</code></a> when you only need text.</li>
+  <li>Contact sheets of 8–12 tiles at 240–320 px; single frames at 960 px only when reading small text.</li>
+</ul>
+
+<h2 id="people">Respect the person<a class="anchor" href="#people" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>Open the project in the window (<a class="cmd-link" href="../../docs/ai/reference/window.html#ui.open_project"><code>ui.open_project</code></a>) and narrate phases with <a class="cmd-link" href="../../docs/ai/reference/window.html#ui.toast"><code>ui.toast</code></a> — see <a href="../../docs/ai/working-visibly.html">Working visibly</a>.</li>
+  <li>Make variants with <a class="cmd-link" href="../../docs/ai/reference/projects.html#project.duplicate"><code>project.duplicate</code></a> instead of overwriting a finished edit; never <a class="cmd-link" href="../../docs/ai/reference/projects.html#project.delete"><code>project.delete</code></a> without asking.</li>
+  <li>Don’t put the API token or cloud keys into prompts, files or logs; <a class="cmd-link" href="../../docs/ai/reference/audio.html#tts.set_api_key"><code>tts.set_api_key</code></a> stores keys locally and never returns them.</li>
+  <li>Finish with a short report: what changed, where the export is, what you could not verify.</li>
+</ul>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/ai/verifying.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Verifying results</b></a><a class="pager-next" href="../../docs/ai/recipes.html" rel="next"><span>Next</span><b>All recipes<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#read-first">Read before you write</a></li><li class="lvl-2"><a href="#batch">Plan, then batch</a></li><li class="lvl-2"><a href="#errors">Follow the error hints</a></li><li class="lvl-2"><a href="#long-jobs">Long jobs: wait or poll</a></li><li class="lvl-2"><a href="#capabilities">Check optional components first</a></li><li class="lvl-2"><a href="#timeline-traps">Timeline traps</a></li><li class="lvl-2"><a href="#files">Files and paths</a></li><li class="lvl-2"><a href="#small-results">Keep results small</a></li><li class="lvl-2"><a href="#people">Respect the person</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#download">Download</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr/issues">Report a bug</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

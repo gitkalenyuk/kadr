@@ -1,0 +1,81 @@
+<!--meta {"title":"Аудіо","nav":"Аудіо","order":100,"description":"Як додати музику й звукові ефекти, налаштувати гучність і згасання, змінити голос, прибрати шум, відокремити звук від відео й створити закадровий голос через озвучення тексту — зокрема голосами ElevenLabs.","group":"Творчість"} -->
+<p class="lead">Добрий звук робить відео. У Kadr можна додати музику й звукові ефекти, вирівняти гучність, почистити голос і навіть створити закадровий голос із тексту.</p>
+
+<figure><img src="{{root}}assets/img/guide/audio.webp" alt="Вкладка Audio з категоріями звукових ефектів і списком звуків та базові налаштування виділеного кліпу з озвученням: гучність, наростання, згасання, вирівнювання гучності й зменшення шуму" width="1280" height="428" loading="lazy"><figcaption>Звукові ефекти ліворуч; налаштування виділеного аудіокліпу праворуч.</figcaption></figure>
+
+<h2 id="music">Музика та інше аудіо</h2>
+<p>Вбудованої музичної бібліотеки в Kadr немає — використовуйте власні треки. <a href="{{root}}{{lang_root}}docs/guide/import-media.html">Імпортуйте</a> MP3, WAV, M4A, FLAC чи інші аудіофайли на вкладці <strong>Media</strong>, потім натисніть <strong>+</strong> на картці або перетягніть її на таймлайн. Аудіо лягає на власну доріжку під відео, і його можна переміщувати, обрізати й розрізати, як будь-який кліп.</p>
+<div class="callout warn"><p>Використовуйте лише музику, на яку маєте права. YouTube та інші платформи можуть вимкнути звук або заблокувати відео з піснями, захищеними авторським правом.</p></div>
+
+<h2 id="basic">Гучність і згасання</h2>
+<p>Виділіть аудіокліп — або відеокліп і його вкладку <strong>Audio</strong> — щоб побачити <strong>Basic</strong>:</p>
+<ul>
+  <li><strong>Volume</strong> — гучність у децибелах (дБ): 0 дБ — початковий рівень, −6 дБ — приблизно вдвічі тихіше, аж до −∞ (тиша); до +20 дБ — щоб підсилити тихий запис. Ромб поруч дає змогу <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">анімувати гучність</a>, наприклад приглушити музику, коли хтось говорить.</li>
+  <li><strong>Fade in</strong> / <strong>Fade out</strong> — плавне наростання на початку та згасання в кінці, у секундах.</li>
+  <li><strong>Normalize loudness</strong> — вирівнює гучність кліпу до рівня, зручного для соцмереж і YouTube.</li>
+  <li><strong>Reduce noise</strong> — прибирає рівномірний фоновий шум: шипіння, гудіння, вітер.</li>
+</ul>
+<p>Кнопка з круговою стрілкою скидає ці налаштування. Щоб вимкнути звук цілої доріжки, натисніть динамік на її початку.</p>
+
+<h2 id="voice-changer">Зміна голосу</h2>
+<div class="grid-2">
+  <div>
+    <p>Змініть звучання голосу одним із 25 ефектів — Chipmunk («бурундук»), Deep (низький), Monster, Robot, Whisper (шепіт), Echo, Reverb, Underwater (під водою), Megaphone, Lo-fi та інші.</p>
+    <ul>
+      <li>Виділіть кліп і відкрийте <strong>Voice changer</strong> в інспекторі (для відеокліпу — всередині вкладки <strong>Audio</strong>). Клацніть ефект; <strong>None</strong> вимикає його.</li>
+      <li>Або відкрийте в бібліотеці <strong>Audio → Voice effects</strong>, виділіть кліп на таймлайні й натисніть <strong>+</strong> на ефекті.</li>
+    </ul>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/voice-changer.webp" alt="Сітка Voice changer з ефектами Character (Chipmunk, Deep, Robot) і Space (Echo, Reverb)" width="342" height="536" loading="lazy"><figcaption>Voice changer.</figcaption></figure>
+</div>
+
+<h2 id="separate">Відокремити звук від відео</h2>
+<p>Відеокліп несе власний звук. Щоб працювати зі звуком окремо — інакше обрізати, перемістити чи замінити, — виділіть відео й натисніть <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> або оберіть <strong>Smart tools → Separate audio</strong>. Звук стане окремим аудіокліпом, пов’язаним із відео, тож вони рухатимуться разом, поки ввімкнено <a href="{{root}}{{lang_root}}docs/guide/timeline.html#magnet">Linkage</a>.</p>
+<p>У контекстному меню відеокліпу є також <strong>Extract audio</strong>: звук переїжджає в новий аудіокліп, а власний звук відео вимикається.</p>
+
+<h2 id="sound-effects">Звукові ефекти</h2>
+<p>Відкрийте вкладку <strong>Audio</strong> бібліотеки — першим показано <strong>Sound effects</strong>. Тут 47 оригінальних звуків — свисти, «попи», удари, клацання інтерфейсу, нарощування, магія, камера, відліки, мультяшні звуки й атмосфера, — розкладених кнопками-категоріями вгорі. Усі синтезовані самим Kadr і вільні для використання будь-де.</p>
+<ul>
+  <li><strong>Прослухати:</strong> клацніть звук або затримайте на ньому мишу на мить.</li>
+  <li><strong>Додати:</strong> <strong>+</strong> ставить звук у позицію курсора відтворення, або перетягніть його в потрібне місце таймлайна — «вжух» точно на переході творить дива.</li>
+</ul>
+
+<h2 id="tts">Озвучення тексту (закадровий голос)</h2>
+<div class="grid-2">
+  <figure><img src="{{root}}assets/img/guide/tts.webp" alt="Панель Text to speech із полем тексту, списком голосів Microsoft Zira Desktop, повзунком швидкості й кнопкою Add to timeline" width="424" height="490" loading="lazy"><figcaption>Audio → Text to speech.</figcaption></figure>
+  <div>
+    <ol>
+      <li>Відкрийте в бібліотеці <strong>Audio → Text to speech</strong>.</li>
+      <li>Введіть або вставте текст (до 5000 символів).</li>
+      <li>Оберіть голос у <strong>Voice</strong> і швидкість у <strong>Speed</strong> (від 0.5× до 2×).</li>
+      <li>Натисніть <strong>Add to timeline</strong>. Озвучення ляже у позицію курсора відтворення на вільну аудіодоріжку.</li>
+    </ol>
+    <p>Уже маєте текстовий кліп? Виділіть його — панель запропонує <strong>Read this clip aloud</strong> (зачитати цей кліп), а з позначкою <strong>Fit the text clip to the speech length</strong> текст буде на екрані рівно стільки, скільки його вимовляють. Те саме є в інспекторі: <strong>Text → Speech</strong>.</p>
+    <p>Гучність озвучення вирівнюється, тож воно гармонійно звучить поруч з іншим аудіо. Потім його можна <a href="{{root}}{{lang_root}}docs/guide/captions.html">автоматично субтитрувати</a>.</p>
+  </div>
+</div>
+
+<h3 id="voices">Які голоси доступні</h3>
+<ul>
+  <li><strong>Голоси Windows</strong> — вбудовані у Windows і працюють повністю офлайн. Щоб додати мови, відкрийте у Windows <strong>Параметри → Час і мова → Мовлення</strong> (Settings → Time &amp; language → Speech), додайте голоси й натисніть у Kadr стрілку оновлення поруч із <strong>Voice</strong>.</li>
+  <li><strong>eSpeak NG</strong> — безкоштовний синтезатор мовлення для приблизно 130 мов, зокрема української. Якщо його встановити, голоси з’являться автоматично.</li>
+  <li><strong>ElevenLabs</strong> — дуже природні хмарні голоси багатьма мовами, якщо у вас є обліковий запис ElevenLabs. Див. нижче.</li>
+</ul>
+
+<h3 id="elevenlabs">Голоси ElevenLabs</h3>
+<p>ElevenLabs — онлайн-сервіс, тому потрібен API-ключ із вашого облікового запису ElevenLabs (у профілі, розділ API keys; ключ починається з <code>sk_</code>). Kadr зберігає ключ лише на вашому комп’ютері.</p>
+<ol class="steps"><li>Відкрийте <strong>Settings → Voices</strong> (на головному екрані — Settings, у редакторі — <strong>Menu → Settings…</strong>).</li><li>Вставте ключ у поле <strong>ElevenLabs API key</strong> і натисніть <strong>Save</strong>. Kadr одразу скаже, чи працює ключ і скільки голосів він відкрив.</li></ol>
+<p>Інші способи, без відкриття налаштувань:</p>
+<p><strong>Спосіб А — файл із ключем (без команд).</strong> Відкрийте в Kadr <strong>Settings → About</strong> і скопіюйте шлях <strong>Data folder</strong>. У цій папці створіть текстовий файл із назвою рівно <code>elevenlabs.key</code> (стежте, щоб Windows не дописав <code>.txt</code>), вставте в нього ключ єдиним рядком і збережіть.</p>
+<p><strong>Спосіб Б — одна команда.</strong> Якщо під час встановлення ви залишили опцію <em>Додати kadrctl і kadr-mcp до PATH</em>, відкрийте PowerShell і виконайте (зі своїм ключем):</p>
+<pre><code class="lang-powershell">kadrctl run tts.set_api_key --provider elevenlabs --api_key sk_your_key_here</code></pre>
+<p>У відповіді буде сказано, чи працює ключ і скільки голосів він відкрив.</p>
+<p>Потім в <strong>Audio → Text to speech</strong> натисніть стрілку оновлення поруч із <strong>Voice</strong>. Голоси ElevenLabs з’являться окремою групою у списку, а також у <strong>Text → Speech</strong>.</p>
+<div class="callout note"><p>З голосом ElevenLabs текст, який ви озвучуєте, надсилається до ElevenLabs і витрачає кредити вашого облікового запису. Голоси Windows та eSpeak ніколи не залишають ваш комп’ютер. Щоб прибрати ключ, натисніть <strong>Remove</strong> у <strong>Settings → Voices</strong> (або видаліть файл <code>elevenlabs.key</code>).</p></div>
+
+<h2 id="more-audio">Інші інструменти звуку</h2>
+<ul>
+  <li><strong>Швидкість</strong> — аудіокліпи мають вкладку <strong>Speed</strong> з опцією <em>Keep pitch</em>; див. <a href="{{root}}{{lang_root}}docs/guide/timeline.html#speed">Швидкість</a>.</li>
+  <li><strong>Вирізання тиші</strong> — прибирає тихі місця з мовлення; див. <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-silence">ШІ-інструменти</a>.</li>
+  <li><strong>Визначення бітів</strong> і <strong>вимірювач гучності</strong> існують як команди (<code class="cmd">audio.detect_beats</code> ставить маркер на кожен біт пісні, <code class="cmd">audio.loudness</code> вимірює LUFS), але кнопок для них ще немає — попросіть <a href="{{root}}{{lang_root}}docs/ai/index.html">ШІ-асистента</a> їх виконати, а потім ріжте по маркерах самі.</li>
+</ul>

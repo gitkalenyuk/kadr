@@ -1,0 +1,103 @@
+<!--meta {"title":"Субтитри й транскрипт","nav":"Субтитри й транскрипт","order":80,"description":"Автоматичні субтитри з офлайн-розпізнаванням мовлення Whisper, стилі з підсвічуванням слів, редагування реплік, імпорт і експорт SRT та монтаж відео через редагування транскрипту.","group":"Творчість"} -->
+<p class="lead">Kadr може прослухати відео й написати субтитри замість вас — на вашому комп’ютері, нічого нікуди не завантажуючи. Далі субтитри можна перестилізувати, виправити слова, зберегти у файл SRT або навіть змонтувати відео, видаляючи слова з його транскрипту.</p>
+
+<h2 id="requirements">Що потрібно</h2>
+<p>Розпізнавання мовлення працює на <strong>Whisper</strong> (через безкоштовний пакет <em>faster-whisper</em>), якому потрібен Python. Налаштувати це треба один раз:</p>
+<ol class="steps">
+  <li>
+    <h3 id="install-python">Встановіть Python</h3>
+    <p>Завантажте Python 3.9 або новіший із <a href="https://www.python.org/downloads/">python.org</a> і запустіть інсталятор. На першому екрані поставте позначку <strong>Add python.exe to PATH</strong>.</p>
+  </li>
+  <li>
+    <h3 id="install-whisper">Встановіть faster-whisper</h3>
+    <p>Відкрийте <strong>PowerShell</strong> (меню «Пуск» → введіть «PowerShell») і виконайте:</p>
+    <pre><code class="lang-powershell">pip install faster-whisper</code></pre>
+  </li>
+  <li>
+    <h3 id="download-model">Один раз завантажте модель мовлення</h3>
+    <p>У тому ж PowerShell виконайте рядок нижче — він завантажить рекомендовану модель <em>small</em> (близько 500 МБ). Лише для цього кроку потрібен інтернет.</p>
+    <pre><code class="lang-powershell">python -c "from faster_whisper import WhisperModel; WhisperModel('small')"</code></pre>
+  </li>
+  <li>
+    <h3 id="check">Перевірте в Kadr</h3>
+    <p>Відкрийте <strong>Captions → Auto captions</strong>. Якщо там досі написано <em>Speech recognition is not set up</em>, натисніть <strong>Check again</strong> (або перезапустіть Kadr). Коли все працює, панель повідомляє, що розпізнавання йде офлайн через Whisper на процесорі чи відеокарті NVIDIA.</p>
+  </li>
+</ol>
+<div class="callout tip"><p>Відеокарта NVIDIA пришвидшує розпізнавання в кілька разів. Без неї обирайте модель <em>small</em> або <em>base</em>. Якщо Kadr бере не той Python, див. <a href="{{root}}{{lang_root}}docs/guide/troubleshooting.html#captions-not-available">Проблеми та запитання</a>.</p></div>
+
+<h2 id="auto">Автоматичні субтитри</h2>
+<div class="grid-2">
+  <figure><img src="{{root}}assets/img/guide/captions-auto.webp" alt="Панель Auto captions із вибором мови, моделі й стилю та кнопкою Generate" width="424" height="440" loading="lazy"><figcaption>Captions → Auto captions.</figcaption></figure>
+  <div>
+    <ol>
+      <li>Відкрийте вкладку <strong>Captions</strong>; ліворуч уже обрано <strong>Auto captions</strong>.</li>
+      <li><strong>Language used in video</strong> — залиште <em>Detect automatically</em> (визначити автоматично) або оберіть мову: їх близько сотні, зокрема українська та англійська. З явно вказаною мовою точність трохи вища.</li>
+      <li><strong>Model</strong> — <em>tiny</em> найшвидша, <em>small</em> — збалансована (за замовчуванням), <em>medium</em> і <em>large-v3</em> найточніші, але без відеокарти повільні. Незавантажені моделі в списку неактивні.</li>
+      <li><strong>Style</strong> — вигляд субтитрів (його можна змінити й пізніше).</li>
+      <li>Залиште позначку <strong>Replace existing captions</strong>, щоб почати з чистого аркуша, і натисніть <strong>Generate</strong>.</li>
+    </ol>
+    <p>Смуга прогресу показує кожен етап (видобування звуку, завантаження моделі, розпізнавання). Тим часом можна далі монтувати або скасувати кнопкою <strong>×</strong>. Субтитри з’являються на окремій доріжці <em>Captions</em>, із таймінгом кожного слова.</p>
+  </div>
+</div>
+<p>Автосубтитри прослуховують усі кліпи зі звуком на таймлайні. Та сама команда є в меню <strong>Smart tools</strong> на панелі інструментів; якщо там виділено відео- чи аудіокліп, субтитри створюються лише для нього.</p>
+
+<h2 id="edit">Виправлення субтитрів</h2>
+<figure><img src="{{root}}assets/img/guide/captions-edit.webp" alt="Список Edit captions із трьома репліками та часом їх початку й кінця поруч із плеєром, що показує виділену репліку" width="1258" height="536" loading="lazy"><figcaption>Captions → Edit captions. Підсвічено репліку під курсором відтворення.</figcaption></figure>
+<p>Оберіть ліворуч <strong>Edit captions</strong>. Кожну репліку подано з часом початку й кінця. Клацніть у текст, щоб виправити його:</p>
+<table>
+  <thead><tr><th>Клавіша / кнопка</th><th>Дія</th></tr></thead>
+  <tbody>
+    <tr><td><kbd>Enter</kbd></td><td>Розділяє репліку на дві в місці текстового курсора.</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>Новий рядок у тій самій репліці.</td></tr>
+    <tr><td><kbd>Backspace</kbd> на самому початку</td><td>Об’єднує репліку з попередньою.</td></tr>
+    <tr><td><kbd>Delete</kbd> у самому кінці</td><td>Об’єднує її з наступною.</td></tr>
+    <tr><td>Клік по часу</td><td>Переносить курсор відтворення до цієї репліки.</td></tr>
+    <tr><td><strong>‹ ›</strong> біля часу</td><td>Зсуває початок або кінець на 0,1 с.</td></tr>
+    <tr><td><strong>« »</strong> угорі</td><td>Зсуває <em>всі</em> субтитри на 0,1 с раніше чи пізніше — коли все трохи не в такт.</td></tr>
+    <tr><td><strong>+</strong> угорі</td><td>Додає нову репліку в позиції курсора відтворення.</td></tr>
+    <tr><td>Кошик</td><td>Видаляє репліку.</td></tr>
+  </tbody>
+</table>
+<p>Субтитри — це текстові кліпи, тож їх також можна переміщувати й обрізати на таймлайні, а окрему репліку стилізувати в <a href="{{root}}{{lang_root}}docs/guide/text.html">інспекторі тексту</a>.</p>
+
+<h2 id="styles">Стилі субтитрів і підсвічування слів</h2>
+<div class="grid-2">
+  <div>
+    <p>Оберіть ліворуч <strong>Styles</strong> і клацніть стиль — він застосується до <strong>всіх</strong> субтитрів. Кнопки-фільтри розкладають 15 стилів на групи: Trending, Basic, Word highlight, Social і Boxed.</p>
+    <p>Стилі з позначкою <em>word</em> підсвічують кожне слово в момент, коли його вимовляють, — популярний у TikTok і Reels «караоке»-ефект. Це можливо, бо автосубтитри знають таймінг кожного слова.</p>
+    <p>Щоб налаштувати підсвічування, виділіть репліку на таймлайні й відкрийте <strong>Text → Animate</strong> в інспекторі. У розділі <strong>Caption highlight</strong> оберіть <em>Colour</em>, <em>Box</em>, <em>Grow</em>, <em>Underline</em> чи <em>Karaoke</em> і колір підсвічування.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/captions-styles.webp" alt="Стилі субтитрів: Clean, Spotlight word, Karaoke bar, Pop word, Dark box і Light box" width="424" height="536" loading="lazy"><figcaption>Captions → Styles.</figcaption></figure>
+</div>
+
+<h2 id="files">Імпорт і експорт файлів субтитрів</h2>
+<div class="grid-2">
+  <div>
+    <p><strong>Upload file</strong> імпортує наявні субтитри: введіть повний шлях до файлу, оберіть стиль, за потреби — <strong>Offset</strong> (зсув у секундах), поставте позначку <strong>Replace the current captions</strong>, якщо треба замінити поточні, і натисніть <strong>Import</strong>. Підтримуються SubRip <code>.srt</code>, WebVTT <code>.vtt</code>, Advanced SubStation <code>.ass</code>/<code>.ssa</code> і тексти пісень <code>.lrc</code> (пословні мітки LRC перетворюються на караоке-таймінг).</p>
+    <p><strong>Download</strong> зберігає субтитри у форматі SubRip (<code>.srt</code>), WebVTT (<code>.vtt</code>), простого тексту (<code>.txt</code>) або <code>.lrc</code>. Вкажіть, куди зберегти, і натисніть <strong>Save</strong> — або <strong>Copy text</strong>, щоб вставити деінде. Завантажте SRT на YouTube — і глядачі зможуть вмикати й вимикати субтитри.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/captions-upload.webp" alt="Панель Upload file з полем шляху до файлу, стилем, зсувом і кнопкою Import" width="424" height="380" loading="lazy"><figcaption>Captions → Upload file.</figcaption></figure>
+</div>
+
+<h2 id="transcript">Монтаж відео через редагування тексту</h2>
+<div class="grid-2">
+  <figure><img src="{{root}}assets/img/guide/transcript.webp" alt="Вкладка Transcript із текстом мовлення кліпу, позначкою паузи 1.0 s і кнопками Fillers, Captions та Remove pauses" width="424" height="430" loading="lazy"><figcaption>Вкладка Transcript. Слово під курсором відтворення підсвічено.</figcaption></figure>
+  <div>
+    <p>Вкладка <strong>Transcript</strong> показує все, що звучить у відео, як текст. Видалення слів тут вирізає їх із відео — найпростіший спосіб почистити інтерв’ю, влоги й подкасти.</p>
+    <ol>
+      <li>Відкрийте вкладку <strong>Transcript</strong>. Якщо кліпи ще не мають транскрипту, оберіть <strong>Spoken language</strong> (мову мовлення) і натисніть <strong>Transcribe</strong>. (Кліпи з автосубтитрами вже розшифровані.)</li>
+      <li>Клацніть слово, щоб перейти до нього у відео.</li>
+      <li>Протягніть по словах або клацніть одне й <kbd>Shift</kbd>+клацніть інше, щоб виділити фрагмент.</li>
+      <li>Натисніть <kbd>Delete</kbd> (або кнопку <strong>Delete</strong>, що з’явиться) — відео й субтитри обріжуться відповідно. <kbd>Esc</kbd> знімає виділення.</li>
+    </ol>
+  </div>
+</div>
+<h3 id="fillers-pauses">Прибрати слова-паразити й паузи</h3>
+<ul>
+  <li><strong>Fillers</strong> — вирізає вагання на кшталт «е-е», «ем», «м-м», «ну», а також «типу», «коротше», «значить», коли вони вжиті як паразити. Розпізнаються українська, англійська й російська. Число на кнопці — скільки їх знайдено; у тексті вони підкреслені пунктиром.</li>
+  <li><strong>Remove pauses</strong> — скорочує кожну паузу, довшу за вказане число секунд, до 0,3 с. Паузи позначено маленькими сірими мітками між словами.</li>
+  <li><strong>Captions</strong> — створює субтитри з транскрипту без повторного розпізнавання.</li>
+</ul>
+<p>Кожна з цих дій — один крок, який скасовується через <kbd>Ctrl</kbd>+<kbd>Z</kbd>. Бліді слова — ті, у яких розпізнавач не впевнений; їх варто перевірити.</p>
+
+<div class="callout note"><p><strong>Приватність закладено в основу.</strong> Розпізнавання повністю відбувається на вашому комп’ютері; звук нікуди не надсилається. Kadr ніколи не завантажує моделі сам — лише команда з кроку 3 вище.</p></div>

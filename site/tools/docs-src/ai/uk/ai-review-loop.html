@@ -1,0 +1,96 @@
+<!--meta {"title":"Claude перевіряє й виправляє власний монтаж","nav":"Цикл перевірки","order":380,"description":"Попросіть Claude подивитися на відрендерене відео через контактні аркуші та кадри, виміряти проблеми через preview.layout, виправити їх, підтвердити виправлення й скасувати все, що стало гірше.","group":"Рецепти","summary":"Claude рендерить ваш монтаж, помічає чорні краї та обрізані титри, вимірює їх, виправляє, перевіряє результат і скасовує все, що виглядає гірше.","time":"~1 хв","needs":"Будь-який проєкт Kadr","commands":["preview.contact_sheet","preview.layout","preview.frame","keyframe.list","keyframe.add","segment.set_transform","edit.undo","edit.history"]} -->
+<p class="lead">Результат — монтаж, перевірений «на око», а не просто зібраний. Claude рендерить відео, дивиться на кадри, вимірює те, що виглядає не так, виправляє, рендерить знову для підтвердження і скасовує будь-яку зміну, що погіршила результат. Використовуйте після будь-якого іншого рецепта або для проєкту, змонтованого вручну.</p>
+<ul>
+  <li><strong>Час:</strong> ~1 хв</li>
+  <li><strong>Що потрібно:</strong> Будь-який проєкт Kadr</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">preview.contact_sheet</code>, <code class="cmd">preview.layout</code>, <code class="cmd">preview.frame</code>, <code class="cmd">keyframe.list</code>, <code class="cmd">keyframe.add</code>, <code class="cmd">segment.set_transform</code>, <code class="cmd">edit.undo</code>, <code class="cmd">edit.history</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Перевір мій проєкт Kadr «Summer recap» перед експортом. Відрендер контактний аркуш усього відео й пошукай чорні краї чи смуги, текст, обрізаний рамкою кадру, текст, що перекриває інший текст чи стікери, і чорні кадри між кліпами. Усе підозріле виміряй через preview_layout і подивися саме цей кадр через preview_frame. Виправ знайдене, після кожного виправлення відрендер кадр ще раз для підтвердження і скасуй усе, що не стало кращим. Потім дай короткий список змін.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="overview">Охопіть увесь монтаж одним поглядом</h3>
+<div class="callout note"><p>Через MCP <code>preview_contact_sheet</code> і <code>preview_frame</code> повертаються як зображення, тож Claude справді бачить результат. Через <code>kadrctl</code> чи REST ви отримуєте той самий PNG у base64 в полі <code>png_base64</code> або JPEG з <a href="{{root}}{{lang_root}}docs/ai/rest.html#binary">ендпоінта кадру</a>.</p></div>
+<p><code class="cmd">preview.contact_sheet</code> рендерить рівномірно розподілені кадри в одну сітку рендерером експорту. <code>times_us</code> у результаті — час кожної плитки, тож будь-яку знахідку легко знайти знову.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.list --query "Summer recap"
+kadrctl run preview.contact_sheet --project_id prj_b8d196d1dd0b --count 8 --columns 4 --tile_width 240</code></pre><pre data-lang="mcp"><code>{"name": "project_list", "arguments": {"query": "Summer recap"}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_b8d196d1dd0b", "count": 8, "columns": 4, "tile_width": 240}}</code></pre></div>
+<p>У цьому проєкті плитки з першого кліпу показують тонку чорну смугу вздовж правого краю, а титр «Summer 2026» обрізаний унизу кадру.</p>
+</li>
+<li>
+<h3 id="measure">Виміряйте проблему</h3>
+<p><code class="cmd">preview.layout</code> дає точну рамку кожного видимого кліпу й тексту в заданий момент, у пікселях полотна (тут 1920×1080):</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_b8d196d1dd0b --time_us 0.3s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000}}</code></pre></div>
+<pre><code class="lang-text">photo  seg_f04569603fd9  x -58    y 0      right 1863  bottom 1080
+text   seg_7f6cd623c899  x 693    y 1010   right 1228  bottom 1096</code></pre>
+<p>Фото закінчується на x = 1863, тож праворуч лишається 57 px чорного. Титр закінчується на y = 1096 — на 16 px нижче низу кадру.</p>
+</li>
+<li>
+<h3 id="cause">Знайдіть причину</h3>
+<p><code class="cmd">keyframe.list</code> показує рух Кена Бернса на фото: він починається з масштабу 1.0 при зсуві x = −0.06. При масштабі 1 фото рівно заповнює кадр, тож будь-який зсув убік відкриває край — фото можна зсунути щонайбільше на <em>масштаб</em> − 1.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.list --project_id prj_b8d196d1dd0b --segment_id seg_f04569603fd9 --property transform</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_list", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_f04569603fd9", "property": "transform"}}</code></pre></div>
+</li>
+<li>
+<h3 id="fix">Виправте обидві проблеми</h3>
+<p><code class="cmd">keyframe.add</code> у момент наявного ключового кадру оновлює його, тож рух тепер починається зі 112%. <code class="cmd">segment.set_transform</code> піднімає титр до y = 0.6 (+1 поставило б його центр на нижній край; +Y — донизу).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.add --project_id prj_b8d196d1dd0b --segment_id seg_f04569603fd9 --property transform.scale --time_us 0 --value 1.12
+kadrctl run segment.set_transform --project_id prj_b8d196d1dd0b --segment_id seg_7f6cd623c899 --y 0.6</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_add", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_f04569603fd9", "property": "transform.scale", "time_us": 0, "value": 1.12}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_7f6cd623c899", "y": 0.6}}</code></pre></div>
+</li>
+<li>
+<h3 id="confirm">Підтвердьте виправлення</h3>
+<p>Той самий момент — виміряно й відрендерено знову:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_b8d196d1dd0b --time_us 0.3s
+kadrctl run preview.frame --project_id prj_b8d196d1dd0b --time_us 0.3s --width 960</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000, "width": 960}}</code></pre></div>
+<pre><code class="lang-text">photo  x -173   right 1978   bottom 1145     covers the frame
+text   x 693    right 1228   bottom 907      inside the frame</code></pre>
+</li>
+<li>
+<h3 id="undo">Спробуйте ідею й лишіть її, лише якщо вона допомагає</h3>
+<p>Правки в редакторі й правки Claude мають одну спільну історію скасування. Claude пробує сміливіший титр через <code class="cmd">text.apply_effect</code> (<code>fx_comic</code>), дивиться на кадр, вирішує, що він конфліктує з фото, і повертає все через <code class="cmd">edit.undo</code>. <code class="cmd">edit.history</code> підтверджує, що саме можна повторити.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.apply_effect --project_id prj_b8d196d1dd0b --segment_id seg_7f6cd623c899 --effect_id fx_comic
+kadrctl run preview.frame --project_id prj_b8d196d1dd0b --time_us 0.3s --width 960
+kadrctl run edit.undo --project_id prj_b8d196d1dd0b
+kadrctl run edit.history --project_id prj_b8d196d1dd0b</code></pre><pre data-lang="mcp"><code>{"name": "text_apply_effect", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_7f6cd623c899", "effect_id": "fx_comic"}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000, "width": 960}}
+{"name": "edit_undo", "arguments": {"project_id": "prj_b8d196d1dd0b"}}
+{"name": "edit_history", "arguments": {"project_id": "prj_b8d196d1dd0b"}}</code></pre></div>
+<pre><code class="lang-json">{ "can_undo": true, "can_redo": true, "undo_label": "Set transform", "redo_label": "Apply text effect" }</code></pre>
+</li>
+<li>
+<h3 id="final">Фінальна перевірка</h3>
+<p>Останній контактний аркуш підтверджує, що більше нічого не змінилося; <code class="cmd">export.estimate</code> показує розмір і тривалість результату ще до справжнього експорту.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_b8d196d1dd0b --count 8 --columns 4 --tile_width 240
+kadrctl run export.estimate --project_id prj_b8d196d1dd0b --resolution 1080p</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_b8d196d1dd0b", "count": 8, "columns": 4, "tile_width": 240}}
+{"name": "export_estimate", "arguments": {"project_id": "prj_b8d196d1dd0b", "resolution": "1080p"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="what-to-check">Що просити Claude перевірити</h2>
+<table>
+  <thead>
+    <tr><th>Проблема</th><th>Як агент її знаходить</th><th>Типове виправлення</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Чорні краї під час наближень і панорам</td><td>Контактний аркуш, потім <code class="cmd">preview.layout</code>: рамка кліпу не покриває 0…<code>canvas_width</code> × 0…<code>canvas_height</code></td><td>Збільшити масштаб (<code class="cmd">keyframe.add</code> або <code class="cmd">segment.set_transform</code>)</td></tr>
+    <tr><td>Текст обрізаний або задовгий</td><td>Рамка тексту виходить за полотно</td><td><code class="cmd">text.update</code> з меншим <code>size</code> або перемістити</td></tr>
+    <tr><td>Титр перекриває субтитри чи стікер</td><td>Рамки перетинаються в той самий момент</td><td>Перемістити один із них через <code class="cmd">segment.set_transform</code> або зсунути в часі через <code class="cmd">timeline.segment.move</code></td></tr>
+    <tr><td>Чорні кадри між кліпами</td><td>Проміжок на доріжці в <code class="cmd">timeline.get</code> або темна плитка</td><td>Увімкнути магніт через <code class="cmd">timeline.settings.set</code> або перемістити кліп</td></tr>
+    <tr><td>Субтитри не в синхроні</td><td>Порівняти час у <code class="cmd">captions.list</code> із <code class="cmd">transcript.get</code></td><td><code class="cmd">captions.shift</code> з невеликим <code>offset_us</code></td></tr>
+    <tr><td>Музика заглушує мову</td><td><code class="cmd">audio.loudness</code> для обох кліпів</td><td><code class="cmd">segment.set_volume</code>, щоб музика була на 10–15 LU тихіша за мову</td></tr>
+  </tbody>
+</table>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>Контактні аркуші дешеві: 8–12 плиток по 240–320 px досить, щоб оцінити композицію й темп. <code>start_us</code> і <code>end_us</code> наближають один фрагмент.</li>
+  <li><code class="cmd">preview.frame</code> з <code>width</code> 960 і більше — правильний інструмент, щоб прочитати дрібний текст.</li>
+  <li>Попросіть наприкінці короткий список змін. Кожне виправлення є в історії скасування, тож у редакторі можна пройтися по них назад.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

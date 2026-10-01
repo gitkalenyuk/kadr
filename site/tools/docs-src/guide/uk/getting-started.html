@@ -1,0 +1,95 @@
+<!--meta {"title":"Початок роботи","nav":"Початок роботи","order":10,"description":"Як завантажити й установити Kadr у Windows, обійти попередження SmartScreen, налаштувати FFmpeg і створити перший проєкт.","group":"Початок"} -->
+<p class="lead">Від завантаження до першого проєкту — приблизно п’ять хвилин. Kadr безкоштовний, не потребує облікового запису й працює без інтернету.</p>
+
+<h2 id="download">1. Завантажте Kadr</h2>
+<p>Kadr публікується на <a href="https://github.com/gitkalenyuk/kadr/releases">сторінці релізів на GitHub</a>. Відкрийте найновіший реліз і в розділі <strong>Assets</strong> завантажте інсталятор:</p>
+<table>
+  <thead><tr><th>Файл</th><th>Що це</th></tr></thead>
+  <tbody>
+    <tr><td><code>Kadr-Setup-X.Y.Z-x64.exe</code></td><td><strong>Інсталятор — оберіть його.</strong> Встановлює Kadr для вашого облікового запису (права адміністратора не потрібні), додає пункт у меню «Пуск» і сам оновлює програму.</td></tr>
+    <tr><td><code>Kadr-X.Y.Z-windows-x64-portable.zip</code></td><td>Портативна версія: розпакуйте й запускайте, нічого не встановлюється. Див. <a href="{{root}}{{lang_root}}docs/guide/settings.html#portable">Портативний режим</a>.</td></tr>
+    <tr><td><code>SHA256SUMS.txt</code></td><td>Контрольні суми — щоб переконатися, що файл справжній.</td></tr>
+  </tbody>
+</table>
+<div class="callout note"><p>Поки Kadr у бета-версії, релізи позначено як <em>Pre-release</em>. Якщо на сторінці немає релізу «Latest», просто візьміть найновіший пре-реліз угорі.</p></div>
+<p>Браузер може повідомити, що файл «зазвичай не завантажують». Це лише означає, що Kadr — нова програма. У Microsoft Edge відкрийте меню <strong>…</strong> біля завантаження, оберіть <strong>Зберегти</strong>, далі <strong>Показати більше → Усе одно зберегти</strong> (назви пунктів можуть трохи відрізнятися).</p>
+
+<h2 id="install">2. Встановіть</h2>
+<ol class="steps">
+  <li>
+    <h3 id="run-installer">Запустіть інсталятор</h3>
+    <p>Двічі клацніть <code>Kadr-Setup-…-x64.exe</code> у папці «Завантаження».</p>
+  </li>
+  <li>
+    <h3 id="smartscreen">Пройдіть SmartScreen</h3>
+    <p>Kadr поки не має цифрового підпису, тож Windows може показати синє вікно <em>«Windows protected your PC»</em> («Windows захистив ваш ПК»). Натисніть <strong>More info</strong> («Докладніше»), а потім <strong>Run anyway</strong> («Усе одно запустити»). Таке попередження з’являється майже для всіх нових програм від невеликих розробників.</p>
+  </li>
+  <li>
+    <h3 id="installer-pages">Пройдіть кроки інсталятора</h3>
+    <p>Інсталятор має українську мову. Прийміть ліцензію — і Kadr встановиться у вашу папку користувача (<code>%LOCALAPPDATA%\Programs\Kadr</code>). Дві опції увімкнено за замовчуванням: <strong>Створити ярлик на робочому столі</strong> та <strong>Додати kadrctl і kadr-mcp до PATH</strong>. Друга потрібна лише тоді, коли ви плануєте під’єднати ШІ-асистента, але й не заважає.</p>
+  </li>
+  <li>
+    <h3 id="webview2">Перевірка WebView2</h3>
+    <p>Вікно редактора працює на Microsoft Edge WebView2 — він уже є у Windows 11 і на більшості комп’ютерів із Windows 10. Якщо його бракує, інсталятор запропонує безкоштовне завантаження від Microsoft.</p>
+  </li>
+  <li>
+    <h3 id="launch">Запустіть Kadr</h3>
+    <p>Залиште позначку <strong>Запустити Kadr</strong> на останній сторінці або відкрийте Kadr пізніше з меню «Пуск».</p>
+  </li>
+</ol>
+<div class="callout tip"><p><strong>Хочете впевнитися, що файл справжній?</strong> Виконайте в PowerShell <code>Get-FileHash .\Kadr-Setup-X.Y.Z-x64.exe</code> і порівняйте результат із відповідним рядком у <code>SHA256SUMS.txt</code>.</p></div>
+
+<h2 id="ffmpeg">3. Перший запуск: налаштування FFmpeg</h2>
+<p>Kadr читає й записує відео за допомогою <strong>FFmpeg</strong> — безкоштовної програми, яка не входить до складу Kadr. Під час першого запуску Kadr шукає FFmpeg і, якщо не знаходить, показує вікно <strong>Set up FFmpeg</strong>:</p>
+<figure><img src="{{root}}assets/img/guide/ffmpeg-setup.webp" alt="Вікно Set up FFmpeg із кнопками Later і Download now" width="572" height="387" loading="lazy"><figcaption>Вікно налаштування FFmpeg. У програмі для комп’ютера є ще кнопка «I have FFmpeg — choose folder».</figcaption></figure>
+<ul>
+  <li><strong>Download now</strong> (рекомендовано) — Kadr завантажує FFmpeg 7.1 для Windows (близько 100 МБ), перевіряє цілісність файлу й зберігає його у власній папці інструментів. Коли з’явиться напис <strong>FFmpeg is ready</strong>, натисніть <strong>Continue</strong>.</li>
+  <li><strong>I have FFmpeg — choose folder</strong> — якщо FFmpeg уже є на комп’ютері, вкажіть папку з <code>ffmpeg.exe</code> і <code>ffprobe.exe</code>. FFmpeg, доступний через системний <code>PATH</code>, Kadr знаходить сам — і тоді це вікно взагалі не з’являється.</li>
+  <li><strong>Later</strong> — закриває вікно. Без FFmpeg не працюватимуть імпорт, перегляд і експорт; налаштувати його можна будь-коли в <a href="{{root}}{{lang_root}}docs/guide/settings.html#ffmpeg">Settings → FFmpeg</a>.</li>
+</ul>
+
+<h2 id="first-project">4. Створіть перший проєкт</h2>
+<figure><img src="{{root}}assets/img/guide/home.webp" alt="Головний екран Kadr із кнопкою Create project, швидкими кнопками для вертикального й квадратного відео та сіткою проєктів" width="1280" height="840" loading="lazy"><figcaption>Головний екран зі списком проєктів. Новий проєкт — кнопка <strong>Create project</strong>.</figcaption></figure>
+<ol class="steps">
+  <li>
+    <h3 id="create">Створіть проєкт</h3>
+    <p>Натисніть <strong>Create project</strong> (або <kbd>Ctrl</kbd>+<kbd>N</kbd>) для звичайного горизонтального відео 16:9. Для TikTok, Reels чи Shorts оберіть <strong>Vertical 9:16</strong>, для допису в Instagram — <strong>Square 1:1</strong>. Редактор відкриється одразу. Формат можна змінити пізніше — див. <a href="{{root}}{{lang_root}}docs/guide/projects.html#ratio">Проєкти</a>.</p>
+  </li>
+  <li>
+    <h3 id="import">Додайте медіа</h3>
+    <p>На вкладці <strong>Media</strong> натисніть <strong>Import</strong> (<kbd>Ctrl</kbd>+<kbd>I</kbd>) або перетягніть файли з Провідника у вікно. Докладніше — в розділі <a href="{{root}}{{lang_root}}docs/guide/import-media.html">Імпорт медіа</a>.</p>
+  </li>
+  <li>
+    <h3 id="add">Покладіть кліпи на таймлайн</h3>
+    <p>Натисніть <strong>+</strong> на картці медіа або перетягніть її вниз на таймлайн. На головній доріжці кліпи автоматично стають один за одним.</p>
+  </li>
+  <li>
+    <h3 id="edit">Змонтуйте</h3>
+    <p>Поставте курсор відтворення (білу вертикальну лінію) у потрібне місце й натисніть <kbd>Ctrl</kbd>+<kbd>B</kbd>, щоб розрізати; виділіть зайвий шматок і натисніть <kbd>Delete</kbd>. Заголовок додайте з вкладки <strong>Text</strong>, музику — з <strong>Media</strong>. Усі деталі — на сторінці <a href="{{root}}{{lang_root}}docs/guide/timeline.html">Монтаж на таймлайні</a>.</p>
+  </li>
+  <li>
+    <h3 id="export">Експортуйте</h3>
+    <p>Натисніть <strong>Export</strong> у правому верхньому куті (<kbd>Ctrl</kbd>+<kbd>E</kbd>), залиште запропоновані налаштування й ще раз натисніть <strong>Export</strong>. Готове відео з’явиться в папці <strong>Відео</strong> → <code>Kadr</code>. Див. <a href="{{root}}{{lang_root}}docs/guide/export.html">Експорт</a>.</p>
+  </li>
+</ol>
+<div class="callout tip"><p>Kadr зберігає кожну зміну миттєво — кнопки «Зберегти» немає. Помилилися? <kbd>Ctrl</kbd>+<kbd>Z</kbd> скасує останню дію.</p></div>
+
+<h2 id="extras">Додаткові можливості</h2>
+<p>Майже все працює одразу після встановлення. Дві «розумні» функції використовують безкоштовні ШІ-моделі, що працюють на вашому комп’ютері, і потребують одноразового налаштування Python:</p>
+<ul>
+  <li><strong>Автоматичні субтитри та монтаж за текстом</strong> — потрібні Python і <em>faster-whisper</em>. Див. <a href="{{root}}{{lang_root}}docs/guide/captions.html#requirements">Субтитри → Що потрібно</a>.</li>
+  <li><strong>Видалення фону</strong> — потрібні Python і <em>rembg</em>. Див. <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-background">ШІ-інструменти</a>.</li>
+</ul>
+
+<h2 id="requirements">Системні вимоги</h2>
+<table>
+  <thead><tr><th></th><th>Мінімум</th><th>Рекомендовано</th></tr></thead>
+  <tbody>
+    <tr><td>Windows</td><td>Windows 10 (версія 1809), 64-розрядна</td><td>Windows 11, 64-розрядна</td></tr>
+    <tr><td>Процесор</td><td>Будь-який 64-розрядний</td><td>6 ядер і більше</td></tr>
+    <tr><td>Оперативна пам’ять</td><td>4 ГБ</td><td>8 ГБ, для 4K — 16 ГБ</td></tr>
+    <tr><td>Відеокарта</td><td>Не обов’язкова</td><td>Відеокарта NVIDIA, Intel або AMD пришвидшує експорт</td></tr>
+    <tr><td>Диск</td><td>Близько 1 ГБ для Kadr і FFmpeg плюс місце для проєктів</td><td>SSD</td></tr>
+    <tr><td>Інтернет</td><td colspan="2">Лише для одноразового завантаження FFmpeg і перевірки оновлень. Монтаж працює офлайн.</td></tr>
+  </tbody>
+</table>

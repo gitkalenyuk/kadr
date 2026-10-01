@@ -1,0 +1,51 @@
+<!--meta {"title":"Projects","nav":"Projects","order":30,"description":"Create, open, rename, duplicate and delete projects on the Kadr home screen, and set the video shape (ratio), frame rate, background and cover.","group":"Start"} -->
+<p class="lead">A project is one video you are working on. Kadr keeps all your projects on the home screen and saves every change the moment you make it.</p>
+
+<h2 id="home">The home screen</h2>
+<p>Kadr opens on the home screen. To get back to it from the editor, click the <strong>←</strong> arrow in the top bar or choose <strong>Menu → Back to home</strong>.</p>
+<figure><img src="{{root}}assets/img/guide/home.webp" alt="Home screen: Create project button, Vertical 9:16 and Square 1:1 shortcuts, search box and five project cards" width="1280" height="840" loading="lazy"><figcaption>Your projects, newest first. Each card shows the length and the shape of the video.</figcaption></figure>
+<ul>
+  <li><strong>Create project</strong> — a new 16:9 video (1920×1080, 30 frames per second). Shortcut: <kbd>Ctrl</kbd>+<kbd>N</kbd>, which also works inside the editor.</li>
+  <li><strong>Vertical 9:16</strong> — for TikTok, Reels and Shorts (1080×1920).</li>
+  <li><strong>Square 1:1</strong> — for square posts (1080×1080).</li>
+  <li><strong>Search projects</strong> — type part of a name. The two buttons next to it switch between a grid and a list.</li>
+  <li><strong>Settings</strong> (bottom left) — updates, FFmpeg and more; see <a href="{{root}}{{lang_root}}docs/guide/settings.html">Settings &amp; updates</a>.</li>
+</ul>
+<p>A new project is named after today's date (for example <em>1001</em> on 1 October). Give it a proper name by clicking the name in the editor's top bar.</p>
+<div class="callout note"><p>The <strong>Auto captions</strong> and <strong>AI tools</strong> buttons on the home screen and the <strong>Templates</strong> section are placeholders for a later version. The same features are already available inside the editor: see <a href="{{root}}{{lang_root}}docs/guide/captions.html">Captions</a> and <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html">AI tools</a>.</p></div>
+
+<h2 id="manage">Open, rename, duplicate, delete</h2>
+<div class="grid-2">
+  <div>
+    <p>Click a project's picture (or double-click the card) to open it. For everything else, click the <strong>…</strong> button under the card:</p>
+    <ul>
+      <li><strong>Open</strong></li>
+      <li><strong>Rename</strong> — type the new name and press <kbd>Enter</kbd>.</li>
+      <li><strong>Duplicate</strong> — makes an independent copy, handy for trying out a different version.</li>
+      <li><strong>Delete</strong> — asks for confirmation first.</li>
+    </ul>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/project-menu.webp" alt="The project menu with Open, Rename, Duplicate and Delete" width="600" height="600" loading="lazy"><figcaption>The … menu of a project card.</figcaption></figure>
+</div>
+<div class="callout warn"><p><strong>Deleting a project cannot be undone.</strong> Kadr removes the project itself, but your original video, photo and music files stay where they are on your disk. If you only want to try something risky, duplicate the project first.</p></div>
+
+<h2 id="ratio">Video shape (ratio)</h2>
+<p>You can change the shape of your video at any time with the <strong>Ratio</strong> button below the player. Kadr offers 16:9, 9:16, 1:1, 4:3, 3:4, 21:9, 2.35:1, 2:1, 1.85:1 and 5.8-inch (a tall phone screen).</p>
+<figure><img src="{{root}}assets/img/guide/ratio.webp" alt="The Ratio menu open above the player, and the Draft settings panel on the right" width="1176" height="536" loading="lazy"><figcaption>The Ratio menu, and the Draft settings shown when no clip is selected.</figcaption></figure>
+<p>When the shape changes, every clip is fitted into the new frame and any empty area is filled with the canvas background (see below). Titles and stickers keep their place relative to the frame, so check them after switching. To turn a landscape video into a vertical one that follows the subject automatically, use <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#auto-reframe">Auto reframe</a>.</p>
+
+<h2 id="draft-settings">Frame rate and background</h2>
+<p>Click an empty part of the timeline so that nothing is selected. The inspector on the right then shows <strong>Draft settings</strong>:</p>
+<ul>
+  <li><strong>Frame rate</strong> — 24, 25, 30, 50 or 60 fps. 30 fps suits most social videos; use 25 fps if your camera records PAL video, 60 fps for smooth gaming or sports footage.</li>
+  <li><strong>Canvas background</strong> — what shows where no clip covers the frame: a <strong>Color</strong> (pick one of the swatches) or a <strong>Blur</strong> — a blurred, enlarged copy of the video itself, popular for vertical videos made from landscape footage.</li>
+</ul>
+<p>Each clip on the main track can override this: select the clip, open <strong>Video → Basic</strong> and scroll to <strong>Canvas</strong>. There you can choose None (use the project setting), Color, Blur (four strengths) or Image (type the full path of a picture), and use <strong>Apply to all</strong> to give every main-track clip the same background.</p>
+
+<h2 id="cover">Cover image</h2>
+<p>The cover is the frame used as the project's thumbnail. Click <strong>Cover</strong> at the start of the main track, drag the slider or pick one of the frames, then click <strong>Save</strong>. <strong>Use playhead</strong> takes the frame under the playhead; <strong>Reset</strong> goes back to the first frame.</p>
+<figure><img src="{{root}}assets/img/guide/cover.webp" alt="The Cover window with a large preview, a slider, a strip of frames and the Use playhead button" width="632" height="600" loading="lazy"><figcaption>Choosing the cover frame.</figcaption></figure>
+
+<h2 id="saving">Saving and where projects live</h2>
+<p>There is no Save button: Kadr saves after every single change, and <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> undo and redo. Projects are stored in your Windows profile, in <code>%APPDATA%\Kadr\projects</code> (one folder per project). A project contains only <em>links</em> to your media files, not copies — so keep your original files where they are. If you do move them, Kadr shows them as missing and lets you <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">relink</a> them.</p>
+<div class="callout tip"><p>Back up a project by copying its folder from <code>%APPDATA%\Kadr\projects</code> together with your media files. To see the exact data folder (it is different in <a href="{{root}}{{lang_root}}docs/guide/settings.html#portable">portable mode</a>), open <strong>Settings → About → Data folder</strong>.</p></div>

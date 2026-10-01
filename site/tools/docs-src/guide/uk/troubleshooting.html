@@ -1,0 +1,100 @@
+<!--meta {"title":"Проблеми та запитання","nav":"Проблеми та запитання","order":160,"description":"Як розв’язати типові проблеми Kadr — SmartScreen, відсутній FFmpeg, повільний перегляд, недоступні субтитри чи видалення фону — і відповіді на часті запитання.","group":"Довідка"} -->
+<p class="lead">Щось не працює? Знайдіть свою ситуацію нижче — більшість проблем розв’язується за хвилину.</p>
+
+<h2 id="install-problems">Встановлення</h2>
+
+<h3 id="smartscreen">«Windows protected your PC» («Windows захистив ваш ПК»)</h3>
+<p>Це Windows SmartScreen. Він попереджає про нові програми без цифрового підпису — а поки Kadr у беті, підпису ще немає. Натисніть <strong>More info</strong> («Докладніше»), потім <strong>Run anyway</strong> («Усе одно запустити»). Щоб переконатися, що файл справжній, порівняйте його контрольну суму з <code>SHA256SUMS.txt</code> зі сторінки релізу: у PowerShell виконайте <code>Get-FileHash .\Kadr-Setup-X.Y.Z-x64.exe</code>.</p>
+
+<h3 id="browser-blocks">Браузер блокує завантаження</h3>
+<p>Браузери насторожено ставляться до програм, які ще мало хто завантажував. У Microsoft Edge відкрийте меню <strong>…</strong> біля завантаження й оберіть <strong>Зберегти</strong> → <strong>Показати більше</strong> → <strong>Усе одно зберегти</strong>. У Chrome відкрийте список завантажень і оберіть <strong>Зберегти</strong>.</p>
+
+<h3 id="webview2">Вікно порожнє або Kadr просить WebView2</h3>
+<p>Вікно Kadr використовує Microsoft Edge WebView2 Runtime. У Windows 11 він вбудований; для Windows 10 встановіть безкоштовний «Evergreen» WebView2 Runtime із сайту Microsoft і запустіть Kadr знову.</p>
+
+<h2 id="ffmpeg-problems">FFmpeg</h2>
+
+<h3 id="missing-ffmpeg">Постійно з’являється «Set up FFmpeg» або не працюють імпорт, перегляд чи експорт</h3>
+<p>Kadr не знаходить FFmpeg. Відкрийте <strong>Settings → FFmpeg</strong> і натисніть <strong>Download FFmpeg</strong> або вкажіть FFmpeg, що вже є у вас (папку з <code>ffmpeg.exe</code> і <code>ffprobe.exe</code>). Див. <a href="{{root}}{{lang_root}}docs/guide/settings.html#ffmpeg">Налаштування → FFmpeg</a>.</p>
+
+<h3 id="ffmpeg-download-fails">Не вдається завантажити FFmpeg</h3>
+<p>Перевірте інтернет і натисніть <strong>Retry</strong>. Якщо мережа блокує GitHub (буває в офісах і навчальних закладах), завантажте збірку FFmpeg для Windows через інше підключення, розпакуйте її й вкажіть папку <code>bin</code> у полі <strong>Use my FFmpeg</strong>.</p>
+
+<h2 id="editing-problems">Монтаж</h2>
+
+<h3 id="slow-preview">Перегляд повільний або смикається</h3>
+<ol>
+  <li>Знизьте якість перегляду: натисніть <strong>Full</strong> під плеєром і оберіть <strong>Half</strong> або <strong>Quarter</strong>. На експорт це не впливає. Див. <a href="{{root}}{{lang_root}}docs/guide/player.html#quality">Якість перегляду</a>.</li>
+  <li>Для 4K, HEVC та іншого важкого відео створіть <a href="{{root}}{{lang_root}}docs/guide/import-media.html#proxies">проксі</a> (правий клік по відео в Media → <strong>Create proxy</strong>).</li>
+  <li>Закрийте інші важкі програми; за можливості тримайте проєкти й медіа на SSD.</li>
+</ol>
+
+<h3 id="import-fails">Файл не імпортується</h3>
+<p>Переконайтеся, що FFmpeg налаштовано (див. вище). Перевірте, чи файл відкривається в іншому плеєрі: пошкоджені чи недозавантажені файли прочитати неможливо. Дуже рідкісні формати можна спершу конвертувати в MP4. <a href="{{root}}{{lang_root}}docs/guide/import-media.html#formats">Список підтримуваних форматів</a> охоплює майже всі камери й телефони.</p>
+
+<h3 id="missing-media">Кліп позначено як відсутній</h3>
+<p>Оригінальний файл перемістили, перейменували чи видалили. Клацніть його правою кнопкою на вкладці <strong>Media</strong>, оберіть <strong>Link media…</strong> і вкажіть нове розташування. Див. <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">Відсутні файли</a>.</p>
+
+<h3 id="cant-edit">Не вдається виділити чи перемістити кліп</h3>
+<p>Найімовірніше, доріжку заблоковано — клацніть замок на її початку. Також перевірте, що активний інструмент виділення (<kbd>A</kbd>), у плеєрі — інструмент переміщення (<kbd>V</kbd>), а відтворення стоїть на паузі.</p>
+
+<h3 id="shortcuts-layout">Гарячі клавіші не працюють</h3>
+<p>Перемкніть розкладку клавіатури на англійську: літерні комбінації (<kbd>Ctrl</kbd>+<kbd>B</kbd>, <kbd>Q</kbd>, <kbd>W</kbd>, <kbd>M</kbd>…) в українській розкладці не розпізнаються. Також клацніть порожнє місце таймлайна: поки курсор стоїть у текстовому полі, гарячі клавіші вимкнені. Повний список — на сторінці <a href="{{root}}{{lang_root}}docs/guide/shortcuts.html">Гарячі клавіші</a>.</p>
+
+<h3 id="edited-by">З’являється повідомлення «Edited via API» або «Edited via MCP»</h3>
+<p>Проєкт змінила інша програма — зазвичай під’єднаний вами ШІ-асистент або скрипт. Це нормально, коли ви працюєте з Kadr разом зі ШІ. Будь-яку таку зміну можна скасувати через <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</p>
+
+<h2 id="smart-problems">Розумні функції</h2>
+
+<h3 id="captions-not-available">Автосубтитри пишуть «Speech recognition is not set up»</h3>
+<p>Автосубтитрам і транскрипту потрібні Python із faster-whisper та завантажена модель. Виконайте кроки з розділу <a href="{{root}}{{lang_root}}docs/guide/captions.html#requirements">Субтитри → Що потрібно</a> і натисніть <strong>Check again</strong>. Типові причини:</p>
+<ul>
+  <li><strong>Python не знайдено.</strong> Запустіть інсталятор Python ще раз, оберіть <em>Modify</em>, увімкніть <em>Add Python to environment variables</em> і перезапустіть Kadr.</li>
+  <li><strong>Встановлено кілька версій Python</strong>, і Kadr використовує не ту, куди ви встановили faster-whisper. Підкажіть Kadr потрібну: створіть змінну середовища користувача <code>KADR_PYTHON</code> зі шляхом до потрібного <code>python.exe</code> (меню «Пуск» → «Змінити змінні середовища для облікового запису») і перезапустіть Kadr.</li>
+  <li><strong>Модель неактивна з позначкою «not downloaded».</strong> Завантажте її один раз, як у кроці 3 налаштування, замінивши <code>small</code> на назву моделі.</li>
+  <li><strong>Дуже повільно.</strong> Обирайте модель <em>small</em> або <em>base</em>; для <em>large-v3</em> справді потрібна відеокарта NVIDIA.</li>
+</ul>
+
+<h3 id="bg-not-available">«Auto removal is not available on this computer»</h3>
+<p>Для видалення фону потрібен Python із <em>rembg</em>. Повідомлення точно каже, чого бракує. Встановіть пакет командою <code>pip install rembg onnxruntime</code> (див. <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-background-requirements">ШІ-інструменти → Що потрібно</a>) і натисніть <strong>Check again</strong>. Порада про <code>KADR_PYTHON</code> вище стосується й цього. Для запису на зеленому фоні нічого з цього не потрібно — скористайтеся <strong>Chroma key</strong>.</p>
+
+<h3 id="no-voices">Озвучення тексту показує «No speech voices found»</h3>
+<p>Додайте голос у Windows: <strong>Параметри → Час і мова → Мовлення → Додати голоси</strong>, а потім натисніть у Kadr <strong>Detect again</strong>. Якщо не з’являються голоси ElevenLabs, перевірте, що файл ключа називається саме <code>elevenlabs.key</code> (а не <code>elevenlabs.key.txt</code>), лежить у папці даних і що ви натиснули стрілку оновлення — див. <a href="{{root}}{{lang_root}}docs/guide/audio.html#elevenlabs">Голоси ElevenLabs</a>.</p>
+
+<h2 id="faq">Часті запитання</h2>
+
+<h3 id="free">Kadr справді безкоштовний?</h3>
+<p>Так. Kadr — безкоштовна програма (freeware): її можна використовувати на будь-якій кількості комп’ютерів, зокрема й комерційно, без облікового запису, водяних знаків, реклами й телеметрії.</p>
+
+<h3 id="offline">Kadr працює без інтернету?</h3>
+<p>Так. Монтаж, експорт, автосубтитри, видалення фону й інші розумні інструменти працюють на вашому комп’ютері. Інтернет потрібен лише для одноразового завантаження FFmpeg, перевірки оновлень (її можна вимкнути) і — тільки якщо ви їх оберете — голосів ElevenLabs.</p>
+
+<h3 id="where-projects">Де зберігаються мої проєкти?</h3>
+<table>
+  <thead><tr><th>Що</th><th>Де</th></tr></thead>
+  <tbody>
+    <tr><td>Проєкти, налаштування, My kit</td><td><code>%APPDATA%\Kadr</code> — проєкти в її підпапці <code>projects</code>, кожен в окремій папці</td></tr>
+    <tr><td>Портативна версія</td><td>папка <code>data</code> поруч із <code>Kadr.exe</code></td></tr>
+    <tr><td>Експортовані відео</td><td><code>Videos\Kadr</code> у вашій папці користувача («Відео» → Kadr), якщо ви не обрали іншу</td></tr>
+    <tr><td>FFmpeg, завантажений Kadr</td><td><code>%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin</code></td></tr>
+  </tbody>
+</table>
+<p>Щоб відкрити <code>%APPDATA%\Kadr</code>, вставте цей рядок в адресний рядок Провідника. <strong>Settings → About → Data folder</strong> завжди показує папку, яку використовує саме ваша копія Kadr.</p>
+
+<h3 id="move-computer">Як перенести проєкт на інший комп’ютер?</h3>
+<p>Скопіюйте папку проєкту з <code>%APPDATA%\Kadr\projects</code> у таке саме місце на іншому комп’ютері, а також скопіюйте медіафайли. Якщо там медіа опиняться в іншій папці, <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">вкажіть нове розташування</a>. Найнадійніше — передати вже експортоване відео.</p>
+
+<h3 id="lost-work">Kadr несподівано закрився. Робота пропала?</h3>
+<p>Ні. Kadr зберігає проєкт після кожної зміни, тож усе на місці. Заново доведеться запустити лише експорт, якщо він тоді тривав.</p>
+
+<h3 id="language">Чи є інтерфейс українською?</h3>
+<p>Кнопки й меню редактора поки що англійською; цей посібник і сайт доступні українською. Автосубтитри та озвучення тексту працюють українською й ще приблизно сотнею мов.</p>
+
+<h3 id="mac">Чи є версія для Mac?</h3>
+<p>Наразі Kadr працює у Windows 10 і 11 (64-розрядних). Версія для macOS готується — стежте за сторінкою релізів.</p>
+
+<h3 id="ai-agent">Чи може ШІ-асистент монтувати замість мене?</h3>
+<p>Так — саме цим Kadr і особливий. Claude та інші ШІ-асистенти можуть користуватися всіма функціями Kadr, а ви спостерігаєте. Див. <a href="{{root}}{{lang_root}}docs/ai/index.html">документацію для ШІ-агентів</a>.</p>
+
+<h3 id="report">Як повідомити про помилку чи запропонувати ідею?</h3>
+<p>Створіть issue на <a href="https://github.com/gitkalenyuk/kadr/issues">GitHub</a>. Вкажіть версію Kadr із <strong>Settings → About</strong> і опишіть кроки, що призводять до проблеми.</p>

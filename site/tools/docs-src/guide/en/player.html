@@ -1,0 +1,60 @@
+<!--meta {"title":"Player & preview","nav":"Player & preview","order":60,"description":"Play your video, move, scale and rotate clips right in the picture, zoom and pan the canvas, show safe zones, use masks and blend modes, and pick the preview quality.","group":"Editing"} -->
+<p class="lead">The player shows your video exactly as it will be exported. It is also an editing surface: you can grab titles, stickers and overlays right in the picture and put them where you want.</p>
+
+<figure><img src="{{root}}assets/img/guide/player-canvas.webp" alt="A vertical video in the player with a selected title showing corner handles and a rotate handle, and dashed safe-zone guides" width="834" height="676" loading="lazy"><figcaption>A selected title with its handles, and the safe zones of a vertical video.</figcaption></figure>
+
+<h2 id="playback">Playback</h2>
+<ul>
+  <li>Press <kbd>Space</kbd> or the round play button to play and pause.</li>
+  <li><kbd>←</kbd> and <kbd>→</kbd> move one frame back or forward — perfect for finding the exact spot for a cut.</li>
+  <li>The time on the left reads <em>hours:minutes:seconds:frames</em>, followed by the total length.</li>
+  <li>The square button at the bottom right shows the player full screen; <kbd>Esc</kbd> leaves it.</li>
+</ul>
+
+<h2 id="quality">Preview quality</h2>
+<p>The button next to <strong>Ratio</strong> (it shows <strong>Full</strong>, <strong>1/2</strong> or <strong>1/4</strong>) and the <strong>…</strong> menu at the top right set how sharp the preview is:</p>
+<ul>
+  <li><strong>Full quality</strong> — sharpest.</li>
+  <li><strong>Half</strong> — faster.</li>
+  <li><strong>Quarter</strong> — fastest, for slower computers or very heavy projects.</li>
+</ul>
+<p>This only affects the preview. <strong>Exports always use full quality.</strong> Kadr remembers your choice. If the preview still stutters, create <a href="{{root}}{{lang_root}}docs/guide/import-media.html#proxies">proxies</a> for your largest videos.</p>
+
+<h2 id="on-canvas">Edit right in the picture</h2>
+<p>Make sure the <strong>Move tool</strong> (the arrow at the top of the player, <kbd>V</kbd>) is active and playback is paused.</p>
+<table>
+  <thead><tr><th>To…</th><th>Do this</th></tr></thead>
+  <tbody>
+    <tr><td>Select a clip</td><td>Click it in the picture. A frame with handles appears. If several clips are stacked on top of each other, <kbd>Alt</kbd>+click picks the next one underneath. <kbd>Shift</kbd>+click or <kbd>Ctrl</kbd>+click adds to the selection.</td></tr>
+    <tr><td>Move</td><td>Drag the clip. It snaps to the centre lines, the edges of the frame and other elements, and guide lines show when it does. Hold <kbd>Shift</kbd> to move only horizontally or vertically, <kbd>Alt</kbd> to turn snapping off.</td></tr>
+    <tr><td>Resize</td><td>Drag a round corner handle. Hold <kbd>Shift</kbd> for 5 % steps.</td></tr>
+    <tr><td>Rotate</td><td>Drag the circular-arrow handle below the frame. It clicks into place at 0°, 90°, 180° and 270°; hold <kbd>Shift</kbd> for 15° steps.</td></tr>
+    <tr><td>Nudge</td><td>Click the picture, then use the arrow keys to move the selected clip 1 pixel at a time, or 10 pixels with <kbd>Shift</kbd>.</td></tr>
+  </tbody>
+</table>
+<p>While you drag, a small label shows the position, size or angle. Each drag is a single undo step. Clips on a locked track can't be moved — unlock the track first.</p>
+<p>For exact numbers, use the inspector: <strong>Video → Basic → Transform</strong> (for text: <strong>Text → Transform</strong>) has sliders for <strong>Scale</strong>, <strong>Position X/Y</strong> and <strong>Rotate</strong>, plus <strong>Flip</strong>, <strong>Flip V</strong>, <strong>90°</strong> and <strong>Crop</strong>. The diamonds next to the sliders animate them — see <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">keyframes</a>.</p>
+
+<h2 id="zoom">Zoom and pan the canvas</h2>
+<ul>
+  <li>The zoom button at the top of the player (it says <strong>Fit</strong> or a percentage) offers <strong>Zoom to fit</strong> (<kbd>Shift</kbd>+<kbd>F</kbd>), <strong>50%</strong> (<kbd>Shift</kbd>+<kbd>0</kbd>), <strong>100%</strong> (<kbd>Shift</kbd>+<kbd>1</kbd>) and <strong>200%</strong> (<kbd>Shift</kbd>+<kbd>2</kbd>).</li>
+  <li><kbd>Shift</kbd>+<kbd>=</kbd> and <kbd>Shift</kbd>+<kbd>-</kbd> zoom in and out step by step; <kbd>Ctrl</kbd> or <kbd>Shift</kbd> + mouse wheel zooms around the pointer.</li>
+  <li>To look around a zoomed canvas, pick the <strong>Hand tool</strong> (<kbd>H</kbd>) and drag, drag with the middle mouse button, or just turn the mouse wheel. Press <kbd>V</kbd> to return to the Move tool.</li>
+</ul>
+
+<h2 id="safe-zones">Safe zones</h2>
+<p>Social apps cover parts of your video with their own buttons and captions. Click the dashed-square button at the top of the player to show guides:</p>
+<ul>
+  <li><strong>Vertical videos</strong> get a <em>Top bar area</em>, a <em>Caption &amp; controls area</em> at the bottom, a <em>Buttons</em> column on the right and the <em>Safe for text</em> area in between. Keep titles and captions inside it.</li>
+  <li><strong>Other shapes</strong> get the classic <em>Action safe</em> and <em>Title safe</em> frames.</li>
+</ul>
+<p>The guides are only shown in the editor and never appear in the export. They are a neutral approximation, not the exact layout of any particular app.</p>
+
+<h2 id="compositing">Overlays, blend modes and masks</h2>
+<p>A video or photo placed above the main track is an <strong>overlay</strong> (picture-in-picture). Select it and use the inspector:</p>
+<ul>
+  <li><strong>Video → Basic → Blend</strong> — <strong>Opacity</strong> and 14 blend <strong>modes</strong> (Darken, Screen, Overlay, Multiply, Lighten, Hard light, Soft light, Linear burn, Color burn, Color dodge, Add, Difference, Exclusion).</li>
+  <li><strong>Video → Mask</strong> — hide part of the clip with a <em>Linear</em>, <em>Mirror</em>, <em>Circle</em>, <em>Rectangle</em>, <em>Heart</em> or <em>Star</em> shape. Sliders set the position, rotation, size, <strong>Feather</strong> (soft edge) and, for rectangles, <strong>Round</strong> corners. <strong>Invert</strong> swaps what is hidden and what is shown.</li>
+  <li><strong>Video → Remove BG → Chroma key</strong> — removes a green (or any other) screen. Pick the colour, then adjust <strong>Intensity</strong> and <strong>Shadow</strong>. To cut out a person without a green screen, see <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-background">Remove background</a>.</li>
+  <li><strong>Video → Basic</strong> also has <strong>Reduce image noise</strong> (for grainy low-light footage) and <strong>Remove flicker</strong> (for flickering lights).</li>
+</ul>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/guide/timeline.html" data-alt-uk="../../../uk/docs/guide/timeline.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Монтаж на таймлайні — Kadr</title>
+<meta name="description" content="Як виділяти, переміщувати, обрізати, розрізати й видаляти кліпи на таймлайні Kadr; магніт, прилипання, доріжки, маркери, копіювання, швидкість і скасування дій.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/timeline.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/timeline.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/timeline.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/timeline.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Монтаж на таймлайні — Kadr">
+<meta property="og:description" content="Як виділяти, переміщувати, обрізати, розрізати й видаляти кліпи на таймлайні Kadr; магніт, прилипання, доріжки, маркери, копіювання, швидкість і скасування дій.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/guide/timeline.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Монтаж на таймлайні — Kadr">
+<meta name="twitter:description" content="Як виділяти, переміщувати, обрізати, розрізати й видаляти кліпи на таймлайні Kadr; магніт, прилипання, доріжки, маркери, копіювання, швидкість і скасування дій.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-timeline" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/" aria-current="page">Для людей</a>
+      <a href="../../../uk/docs/ai/">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/guide/timeline.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/guide/timeline.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/#download"><svg aria-hidden="true"><use href="#i-download"/></svg><span class="label-long">Завантажити</span><span class="sr-only">Завантажити Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">Монтаж на таймлайні</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/guide/index.html"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/guide/getting-started.html"><span>Початок роботи</span></a></li><li><a href="../../../uk/docs/guide/interface.html"><span>Огляд інтерфейсу</span></a></li><li><a href="../../../uk/docs/guide/projects.html"><span>Проєкти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Монтаж</p><ul><li><a href="../../../uk/docs/guide/import-media.html"><span>Імпорт медіа</span></a></li><li><a href="../../../uk/docs/guide/timeline.html" aria-current="page"><span>Монтаж на таймлайні</span></a></li><li><a href="../../../uk/docs/guide/player.html"><span>Плеєр і перегляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Творчість</p><ul><li><a href="../../../uk/docs/guide/text.html"><span>Текст і заголовки</span></a></li><li><a href="../../../uk/docs/guide/captions.html"><span>Субтитри й транскрипт</span></a></li><li><a href="../../../uk/docs/guide/effects.html"><span>Ефекти й колір</span></a></li><li><a href="../../../uk/docs/guide/audio.html"><span>Аудіо</span></a></li><li><a href="../../../uk/docs/guide/stickers.html"><span>Стікери й генеровані медіа</span></a></li><li><a href="../../../uk/docs/guide/ai-tools.html"><span>ШІ-інструменти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Завершення</p><ul><li><a href="../../../uk/docs/guide/export.html"><span>Експорт</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідка</p><ul><li><a href="../../../uk/docs/guide/shortcuts.html"><span>Гарячі клавіші</span></a></li><li><a href="../../../uk/docs/guide/settings.html"><span>Налаштування й оновлення</span></a></li><li><a href="../../../uk/docs/guide/troubleshooting.html"><span>Проблеми та запитання</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><span aria-current="page">Монтаж на таймлайні</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</span><span class="pe-group">Монтаж</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 хв читання</span></p><h1>Монтаж на таймлайні</h1></header><p class="lead">На таймлайні відео набуває форми. Тут описано все, що на ньому можна робити, — від першої склейки до маркерів і зміни швидкості.</p>
+
+<figure><img decoding="async" src="../../../assets/img/guide/timeline.webp" alt="Панель інструментів і таймлайн: лінійка з двома маркерами, доріжки тексту, стікерів, фільтра й ефекту, накладення, головна доріжка зі значками переходів і дві аудіодоріжки" width="1280" height="380" loading="lazy"><figcaption>Панель інструментів і таймлайн. Виділений кліп обведено білим; біла лінія — курсор відтворення.</figcaption></figure>
+
+<h2 id="anatomy">Як улаштований таймлайн<a class="anchor" href="#anatomy" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Головна доріжка</strong> — найнижча відеодоріжка, на її початку кнопка <strong>Cover</strong>. Тут розгортається ваша історія. Кліпи на ній завжди стоять впритул, без проміжків (див. <a href="#magnet">магніт</a>).</li>
+  <li><strong>Доріжки над головною</strong> — накладене відео («картинка в картинці»), стікери, текст і субтитри, ефекти, фільтри й шари корекції. Те, що вище, перекриває те, що нижче.</li>
+  <li><strong>Аудіодоріжки</strong> — під головною: музика, закадровий голос, звукові ефекти.</li>
+  <li>Доріжки створюються автоматично, коли ви щось додаєте, і зникають, коли стають порожніми.</li>
+  <li>На кожному кліпі видно назву й тривалість. Відеокліпи показують маленькі кадри («кіноплівку»), аудіокліпи — хвилю звуку. Маленькі значки між кліпами — це <a href="../../../uk/docs/guide/effects.html#transitions">переходи</a>.</li>
+</ul>
+
+<h2 id="navigate">Навігація<a class="anchor" href="#navigate" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Курсор відтворення.</strong> Клацніть по лінійці або протягніть по ній — плеєр покаже цей момент. <kbd>Space</kbd> запускає й зупиняє відтворення, <kbd>←</kbd> / <kbd>→</kbd> — крок на один кадр.</li>
+  <li><strong>Масштаб.</strong> Утримуйте <kbd>Ctrl</kbd> і крутіть коліщатко миші над таймлайном, натискайте <kbd>Ctrl</kbd>+<kbd>=</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd> або тягніть повзунок масштабу праворуч на панелі інструментів. <strong>Zoom to fit</strong> (кнопка зі стрілками поруч) показує все відео.</li>
+  <li><strong>Прокрутка.</strong> Коліщатко прокручує вгору-вниз, коли доріжок багато; <kbd>Shift</kbd>+коліщатко — ліворуч-праворуч.</li>
+  <li><strong>Вісь перегляду</strong> (<kbd>S</kbd> або кнопка-приціл праворуч на панелі). Коли вона ввімкнена, плеєр показує кадр під вказівником миші, щойно ви ведете ним по таймлайну, — швидкий спосіб знайти момент, не рухаючи курсор відтворення.</li>
+</ul>
+
+<h2 id="select">Виділення кліпів<a class="anchor" href="#select" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Клацніть</strong> кліп, щоб виділити його. Його налаштування з’являться в інспекторі праворуч.</li>
+  <li><kbd>Shift</kbd>+клік або <kbd>Ctrl</kbd>+клік додає кліпи до виділення (або прибирає з нього).</li>
+  <li><strong>Протягніть рамку</strong>, почавши з порожнього місця таймлайна, — виділяться всі кліпи, яких вона торкнеться. З <kbd>Shift</kbd> чи <kbd>Ctrl</kbd> рамка додає до вже виділеного.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>A</kbd> виділяє всі кліпи на незаблокованих доріжках.</li>
+  <li>Клік по порожньому місцю знімає виділення (і переносить туди курсор відтворення).</li>
+</ul>
+
+<h2 id="move">Переміщення та обрізання<a class="anchor" href="#move" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Перемістити:</strong> тягніть кліп ліворуч-праворуч або вгору-вниз на іншу доріжку того самого типу. Відео можна переносити між головною доріжкою та доріжками накладення; якщо місце зайняте, Kadr створить для кліпу нову доріжку.</li>
+  <li><strong>Обрізати:</strong> наведіть мишу на лівий чи правий край кліпу — курсор стане подвійною стрілкою — і тягніть, щоб укоротити чи подовжити. Відео не може стати довшим за вихідний запис.</li>
+  <li>Під час перетягування напрямна лінія показує, до чого кліп <a href="#snapping">прилипне</a>.</li>
+</ul>
+
+<h2 id="split">Розрізання<a class="anchor" href="#split" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="grid-2">
+  <div>
+    <p><strong>У позиції курсора:</strong> поставте курсор відтворення туди, де потрібна склейка, і натисніть <kbd>Ctrl</kbd>+<kbd>B</kbd> або кнопку <strong>Split</strong> на панелі інструментів. Якщо виділений кліп лежить під курсором, розріжеться він; інакше — кліп головної доріжки під курсором.</p>
+  </div>
+  <div>
+    <p><strong>Інструментом Split:</strong> натисніть <kbd>B</kbd> (або оберіть <strong>Split</strong> у меню інструментів ліворуч на панелі). Вказівник стане хрестиком — клацніть будь-де на кліпі, щоб розрізати його там. <kbd>A</kbd> повертає інструмент виділення.</p>
+  </div>
+</div>
+
+<h2 id="delete">Видалення<a class="anchor" href="#delete" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><kbd>Delete</kbd> (або <kbd>Backspace</kbd>) видаляє виділені кліпи. На головній доріжці наступні кліпи зсуваються ліворуч і закривають проміжок.</li>
+  <li><kbd>Q</kbd> — <strong>Delete left</strong>: видаляє частину кліпу до курсора відтворення.</li>
+  <li><kbd>W</kbd> — <strong>Delete right</strong>: видаляє частину після курсора.</li>
+</ul>
+<div class="callout tip"><p>Найшвидший спосіб почистити розмовне відео: відтворюйте, зупиняйтеся там, де починається помилка, і тисніть <kbd>Q</kbd>… або виділяйте шматок і тисніть <kbd>Delete</kbd>. Ще швидше — доручити паузи й слова-паразити Kadr: див. <a href="../../../uk/docs/guide/captions.html#transcript">монтаж за транскриптом</a> і <a href="../../../uk/docs/guide/ai-tools.html#remove-silence">вирізання тиші</a>.</p></div>
+
+<h2 id="copy">Копіювання, вставлення й дублювання<a class="anchor" href="#copy" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><kbd>Ctrl</kbd>+<kbd>C</kbd> копіює виділені кліпи, <kbd>Ctrl</kbd>+<kbd>X</kbd> вирізає їх, <kbd>Ctrl</kbd>+<kbd>V</kbd> вставляє в позицію курсора відтворення.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>D</kbd> дублює виділений кліп одразу після нього.</li>
+</ul>
+
+<h2 id="context-menu">Контекстні меню<a class="anchor" href="#context-menu" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Клік правою кнопкою на…</th><th>Що в меню</th></tr></thead>
+  <tbody>
+    <tr><td>кліпі</td><td>Copy, Cut, Paste, Split, Duplicate, Freeze frame та Extract audio (для відео), доречні <a href="../../../uk/docs/guide/ai-tools.html">Smart tools</a>, Delete</td></tr>
+    <tr><td>порожньому місці</td><td>Paste, Add marker here</td></tr>
+    <tr><td>маркері на лінійці</td><td>Delete marker</td></tr>
+    <tr><td>значку переходу</td><td>Select transition, Apply to all, Remove transition</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="clip-tools">Інші інструменти панелі<a class="anchor" href="#clip-tools" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Кнопка</th><th>Що робить</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Freeze frame</strong></td><td>Вставляє у відеокліп 3-секундний стоп-кадр із моменту під курсором відтворення.</td></tr>
+    <tr><td><strong>Reverse</strong></td><td>Відтворює виділене відео задом наперед. Повторне натискання повертає звичайний напрямок.</td></tr>
+    <tr><td><strong>Mirror</strong></td><td>Віддзеркалює картинку зліва направо. Повторне натискання повертає як було.</td></tr>
+    <tr><td><strong>Rotate</strong></td><td>Повертає картинку на 90° за годинниковою стрілкою.</td></tr>
+    <tr><td><strong>Crop</strong></td><td>Відкриває вікно кадрування: тягніть рамку, оберіть <em>Free</em> (довільно), 16:9, 9:16, 1:1, 4:3 або 3:4 і натисніть <strong>Confirm</strong>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="speed">Швидкість<a class="anchor" href="#speed" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Виділіть відео- або аудіокліп і відкрийте вкладку <strong>Speed</strong> в інспекторі.</p>
+<ul>
+  <li><strong>Normal</strong> — одна швидкість від 0.1× (уповільнення) до 100× (таймлапс). Можна також ввести нову тривалість у <strong>Duration</strong>, і Kadr сам обчислить швидкість. <strong>Keep pitch</strong> не дає голосам «пищати» при прискоренні.</li>
+  <li><strong>Curve</strong> — швидкість, що змінюється впродовж кліпу: <em>Montage</em>, <em>Hero</em>, <em>Bullet</em>, <em>Jump cut</em>, <em>Flash in</em>, <em>Flash out</em> або власна крива.</li>
+</ul>
+<p>На головній доріжці наступні кліпи автоматично зсуваються, коли кліп стає коротшим чи довшим.</p>
+
+<h2 id="magnet">Магніт, прилипання й зв’язування<a class="anchor" href="#magnet" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Чотири перемикачі праворуч на панелі інструментів змінюють поведінку таймлайна. Увімкнений перемикач підсвічено.</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Перемикач</th><th>Коли ввімкнено</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Main track magnet</strong> — магніт головної доріжки (<kbd>N</kbd>)</td><td>Кліпи головної доріжки завжди стоять разом: видалення чи вкорочення кліпу закриває проміжок, вставлення — посуває решту праворуч. Вимкніть, якщо проміжок потрібен навмисно.</td></tr>
+    <tr id="snapping"><td><strong>Auto snapping</strong> — прилипання</td><td>Під час перетягування краї кліпів «примагнічуються» до країв інших кліпів, курсора відтворення, маркерів і початку відео.</td></tr>
+    <tr><td><strong>Linkage</strong> — зв’язування</td><td>Пов’язані кліпи — скажімо, відео та його відокремлений звук — переміщуються, обрізаються й видаляються разом.</td></tr>
+    <tr><td><strong>Preview axis</strong> — вісь перегляду (<kbd>S</kbd>)</td><td>Плеєр стежить за вказівником миші над таймлайном (див. вище).</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="tracks">Блокування, приховування й вимкнення звуку доріжок<a class="anchor" href="#tracks" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Кнопки на початку кожного рядка доріжки:</p>
+<ul>
+  <li><strong>Замок</strong> — блокує доріжку: її кліпи не можна виділити, перемістити чи змінити, доки не розблокуєте. Зручно, щоб захистити готову музику чи субтитри.</li>
+  <li><strong>Око</strong> — ховає доріжку в плеєрі та в експорті, нічого не видаляючи.</li>
+  <li><strong>Динамік</strong> — вимикає звук усієї доріжки.</li>
+</ul>
+
+<h2 id="markers">Маркери<a class="anchor" href="#markers" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Маркери — маленькі прапорці на лінійці, щоб запам’ятати важливі моменти: біти музики, місця для склейок.</p>
+<ul>
+  <li><kbd>M</kbd> або кнопка <strong>Add marker</strong> на панелі ставить маркер у позиції курсора відтворення. Клік правою кнопкою по порожньому місцю пропонує <strong>Add marker here</strong>.</li>
+  <li>Тягніть маркер уздовж лінійки, щоб перемістити його. Кліпи прилипають до маркерів.</li>
+  <li>Клацніть маркер правою кнопкою й оберіть <strong>Delete marker</strong>, щоб видалити.</li>
+</ul>
+<div class="callout note"><p>Маркери можуть мати назву й колір, а Kadr уміє ставити маркер на кожен біт пісні. Кнопок для цього поки немає — це зробить ШІ-асистент командами <a class="cmd-link" href="../../../uk/docs/ai/reference/timeline.html#timeline.marker.set"><code>timeline.marker.set</code></a> і <a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#audio.detect_beats"><code>audio.detect_beats</code></a>. Див. <a href="../../../uk/docs/ai/index.html">документацію для ШІ</a>.</p></div>
+
+<h2 id="undo">Скасування й повторення<a class="anchor" href="#undo" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p><kbd>Ctrl</kbd>+<kbd>Z</kbd> скасовує останню зміну, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> повертає її. Те саме роблять кнопки-стрілки ліворуч на панелі інструментів; їхні підказки, як і пункти в <strong>Menu</strong>, показують, який саме крок буде скасовано («Undo Split»). Кожна зміна — один крок, зокрема й зміни, зроблені ШІ-асистентом.</p>
+
+<h2 id="hide-timeline">Більше місця для плеєра<a class="anchor" href="#hide-timeline" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p><kbd>Ctrl</kbd>+<kbd>.</kbd> або остання кнопка праворуч на панелі інструментів згортає таймлайн; повторне натискання повертає його. Висоту таймлайна також можна змінити, перетягнувши межу над панеллю інструментів.</p>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/guide/import-media.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Імпорт медіа</b></a><a class="pager-next" href="../../../uk/docs/guide/player.html" rel="next"><span>Далі</span><b>Плеєр і перегляд<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#anatomy">Як улаштований таймлайн</a></li><li class="lvl-2"><a href="#navigate">Навігація</a></li><li class="lvl-2"><a href="#select">Виділення кліпів</a></li><li class="lvl-2"><a href="#move">Переміщення та обрізання</a></li><li class="lvl-2"><a href="#split">Розрізання</a></li><li class="lvl-2"><a href="#delete">Видалення</a></li><li class="lvl-2"><a href="#copy">Копіювання, вставлення й дублювання</a></li><li class="lvl-2"><a href="#context-menu">Контекстні меню</a></li><li class="lvl-2"><a href="#clip-tools">Інші інструменти панелі</a></li><li class="lvl-2"><a href="#speed">Швидкість</a></li><li class="lvl-2"><a href="#magnet">Магніт, прилипання й зв’язування</a></li><li class="lvl-2"><a href="#tracks">Блокування, приховування й вимкнення звуку доріжок</a></li><li class="lvl-2"><a href="#markers">Маркери</a></li><li class="lvl-2"><a href="#undo">Скасування й повторення</a></li><li class="lvl-2"><a href="#hide-timeline">Більше місця для плеєра</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#download">Завантажити</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr/issues">Повідомити про помилку</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>

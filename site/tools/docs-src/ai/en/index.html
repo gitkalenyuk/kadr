@@ -1,0 +1,88 @@
+<!--meta {"title":"Kadr for AI agents","nav":"Overview","order":10,"description":"What an AI agent can do in Kadr, how the editor is modelled, how to connect over MCP, REST or the CLI, and how Kadr keeps your machine safe.","group":"Start"} -->
+<p class="lead">Kadr is a CapCut-style desktop video editor in which every button, slider and menu item is a documented <em>command</em>. An AI agent runs the same 170+ commands over MCP, a local REST API or the <code>kadrctl</code> CLI — and a human sees every edit appear live in the editor window, with one shared undo history.</p>
+
+<div class="cards">
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/claude-code.html"><b>Quick start: Claude Code</b><span>One command connects Kadr; first prompts to try.</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/claude-desktop.html"><b>Claude Desktop</b><span>A four-line config snippet.</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/recipes.html"><b>Recipes</b><span>Ten end-to-end workflows, every call verified against a real engine.</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/reference-intro.html"><b>Command reference</b><span>Every command with parameters, units, defaults and examples.</span></a>
+</div>
+
+<h2 id="what-agents-can-do">What an agent can do</h2>
+<table>
+  <thead><tr><th>Area</th><th>What the agent does</th><th>Example commands</th></tr></thead>
+  <tbody>
+    <tr><td>Assemble</td><td>Import files and folders, place clips on a magnetic main track and overlay tracks, trim, split, move, duplicate, freeze, change speed</td><td><code class="cmd">media.import</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">timeline.segment.trim</code></td></tr>
+    <tr><td>Look</td><td>68 transitions, 70 filters, 56 effects, colour adjustments with HSL and curves, masks, chroma key, 136 clip animations, keyframes with easing</td><td><code class="cmd">transition.set</code>, <code class="cmd">filter.add</code>, <code class="cmd">keyframe.add</code></td></tr>
+    <tr><td>Text &amp; captions</td><td>46 text templates, 22 word-art effects, 39 letter animations; offline Whisper captions in about 100 languages with 15 caption styles; edit the video by editing its transcript</td><td><code class="cmd">text.add</code>, <code class="cmd">captions.auto</code>, <code class="cmd">transcript.remove_fillers</code></td></tr>
+    <tr><td>Audio</td><td>Volume in dB, fades, 25 voice effects, noise reduction, loudness normalisation, beat detection, 47 synthesised sound effects, text-to-speech with local or ElevenLabs voices</td><td><code class="cmd">segment.set_volume</code>, <code class="cmd">audio.detect_beats</code>, <code class="cmd">tts.speak</code></td></tr>
+    <tr><td>Smart tools</td><td>Auto reframe to any ratio, scene detection and splitting, silence removal, background removal</td><td><code class="cmd">ai.auto_reframe</code>, <code class="cmd">ai.remove_silence</code></td></tr>
+    <tr><td>Generate</td><td>Gradients, textures, countdowns, grids and test cards rendered locally — no stock footage</td><td><code class="cmd">media.generate</code></td></tr>
+    <tr><td>See</td><td>Render any frame, a contact sheet of the whole edit, or the on-canvas box of every clip; MCP returns pictures as images</td><td><code class="cmd">preview.frame</code>, <code class="cmd">preview.contact_sheet</code>, <code class="cmd">preview.layout</code></td></tr>
+    <tr><td>Deliver</td><td>MP4/MOV in H.264 or HEVC up to 4K (GPU encoders when available), GIF, audio only, SRT/VTT captions</td><td><code class="cmd">export.start</code>, <code class="cmd">captions.export</code></td></tr>
+    <tr><td>Show the human</td><td>Open a project in the window, select a clip, switch the library tab, show a notification</td><td><code class="cmd">ui.open_project</code>, <code class="cmd">ui.toast</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="three-ways-in">Three ways in</h2>
+<p>All three reach the same engine — the open editor (<code>Kadr.exe</code>) or the headless <code>kadr-server.exe</code> — at <code>http://127.0.0.1:7777</code>, and run exactly the same commands.</p>
+<table>
+  <thead><tr><th>Interface</th><th>Best for</th><th>How it names commands</th></tr></thead>
+  <tbody>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/mcp.html">MCP</a> (<code>kadr-mcp.exe</code>)</td><td>Claude Code, Claude Desktop and other agent apps. Starts the engine by itself if Kadr is not running; returns frames as images.</td><td>Dots become underscores: <code>timeline_segment_split</code>; plus <code>kadr_batch</code></td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/rest.html">REST</a></td><td>Your own scripts and services in any language; WebSocket events.</td><td><code>POST /api/v1/commands/timeline.segment.split</code></td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/cli.html">CLI</a> (<code>kadrctl.exe</code>)</td><td>Terminals, shell scripts, quick checks; accepts times like <code>2.5s</code>.</td><td><code>kadrctl run timeline.segment.split --at_us 2.5s …</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="mental-model">Mental model</h2>
+<pre><code class="lang-text">project          prj_…   canvas, settings, playhead
+├─ materials[]   mat_…   imported or generated files (photos: duration 0)
+├─ tracks[]      trk_…   tracks[0] is drawn first, at the bottom
+│  ├─ main_video         magnetic: clips sit back to back, no gaps
+│  ├─ video_overlay · text · sticker · effect · filter · adjustment
+│  └─ audio
+│     └─ segments[]  seg_…  timeline range + source range in a material
+└─ markers[]     mrk_…</code></pre>
+<ul>
+  <li><strong>Time is integer microseconds</strong> everywhere: 1 s = <code>1000000</code>. Parameters that hold time end in <code>_us</code>.</li>
+  <li><strong>Ids are opaque strings</strong> with a type prefix (<code>prj_</code>, <code>trk_</code>, <code>seg_</code>, <code>mat_</code>, <code>exp_</code>…). Read them from results; never invent them.</li>
+  <li><strong>Commands are either project-scoped</strong> (they take <code>project_id</code>, are saved and are undoable) <strong>or global</strong> (projects list, library, export jobs, settings).</li>
+  <li><strong>Every edit is undoable</strong> with <code class="cmd">edit.undo</code>; a batch of edits is one undo step; edits from the UI and from agents share the history.</li>
+</ul>
+<p>The full rules — magnet, linked clips, transitions, keyframes, coordinates, units — are in <a href="{{root}}{{lang_root}}docs/ai/concepts.html">Concepts</a>.</p>
+
+<h2 id="first-calls">The first five calls</h2>
+<p>A complete edit: create a vertical project, generate a background, add a title, look at it, export. Each tab shows the same calls; the MCP tab is what an agent sends.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "My first video", "ratio": "9:16"}}
+{"name": "media_generate", "arguments": {"project_id": "prj_74f3bf737c17", "preset_id": "sunset_gradient", "duration_us": 5000000, "add_to_timeline": true}}
+{"name": "text_add", "arguments": {"project_id": "prj_74f3bf737c17", "text": "Hello from an agent", "template_id": "title_bold", "at_us": 0, "duration_us": 3000000}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_74f3bf737c17", "time_us": 1000000, "width": 540}}
+{"name": "export_start", "arguments": {"project_id": "prj_74f3bf737c17", "resolution": "1080p"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run project.create --name "My first video" --ratio 9:16
+kadrctl run media.generate --project_id prj_74f3bf737c17 --preset_id sunset_gradient --duration_us 5s --add_to_timeline
+kadrctl run text.add --project_id prj_74f3bf737c17 --text "Hello from an agent" --template_id title_bold --at_us 0 --duration_us 3s
+kadrctl run preview.frame --project_id prj_74f3bf737c17 --time_us 1s --width 540
+kadrctl run export.start --project_id prj_74f3bf737c17 --resolution 1080p</code></pre><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/commands/project.create -H "Authorization: Bearer $KADR_TOKEN" -d '{"name":"My first video","ratio":"9:16"}'
+curl -s http://127.0.0.1:7777/api/v1/commands/media.generate -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","preset_id":"sunset_gradient","duration_us":5000000,"add_to_timeline":true}'
+curl -s http://127.0.0.1:7777/api/v1/commands/text.add -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","text":"Hello from an agent","template_id":"title_bold","at_us":0,"duration_us":3000000}'
+curl -s http://127.0.0.1:7777/api/v1/commands/preview.frame -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","time_us":1000000,"width":540}'
+curl -s http://127.0.0.1:7777/api/v1/commands/export.start -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_74f3bf737c17","resolution":"1080p"}'</code></pre></div>
+<p>The export runs in the background; <code class="cmd">export.status</code> with the returned <code>job_id</code> reports progress until <code>state</code> is <code>done</code>. Without <code>path</code>, videos go to <code>%USERPROFILE%\Videos\Kadr</code>.</p>
+
+<h2 id="safety">Safety and privacy</h2>
+<ul>
+  <li><strong>Local only.</strong> The API listens on <code>127.0.0.1</code>; requests addressed to any other host name get <code>403 forbidden</code> (DNS-rebinding protection), and browsers may only connect from local origins.</li>
+  <li><strong>Token.</strong> Every request except health and documentation needs the token from <code>%APPDATA%\Kadr\api-token</code>. <code>kadr-mcp</code> and <code>kadrctl</code> read it themselves. Treat it like a password: it gives full control over your projects.</li>
+  <li><strong>Everything is undoable</strong> — except deleting a whole project, which MCP marks as destructive so clients ask first. Imported media files are never modified or deleted.</li>
+  <li><strong>Nothing is uploaded by Kadr.</strong> Commands read and write files on your PC at paths you give. The only network traffic is optional: ElevenLabs voices (the text you synthesise), update checks, and the one-time FFmpeg download. Frames and data reach your AI provider only when the agent asks for them through tools you allow.</li>
+</ul>
+
+<h2 id="machine-readable">Machine-readable files</h2>
+<table>
+  <thead><tr><th>File</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td><a href="{{root}}llms.txt"><code>llms.txt</code></a></td><td>An index of these docs for LLMs (llmstxt.org format).</td></tr>
+    <tr><td><a href="{{root}}llms-full.txt"><code>llms-full.txt</code></a></td><td>All AI docs as Markdown plus the full specification of every command — paste it into a model’s context.</td></tr>
+    <tr><td><a href="{{root}}openapi.json"><code>openapi.json</code></a></td><td>OpenAPI 3.1 description of every command. A running Kadr serves its own copy at <code>/api/v1/openapi.json</code> and an HTML reference at <code>/docs</code>.</td></tr>
+  </tbody>
+</table>

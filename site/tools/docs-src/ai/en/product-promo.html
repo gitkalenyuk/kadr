@@ -1,0 +1,123 @@
+<!--meta {"title":"Product promo with word art and voice-over","nav":"Product promo","order":360,"description":"Build a 9-second product promo from generated backgrounds, a product photo, word-art headlines with letter animations, stickers, sound effects and a text-to-speech voice-over, then export it as MP4 and GIF.","group":"Recipes","summary":"Generated backgrounds, a product shot, metallic and neon headlines, a price tag, whooshes and a voice-over, exported as MP4 and GIF.","time":"~3 min","needs":"A product photo (a transparent PNG works best)","commands":["media.generate","transition.set","timeline.segment.add","animation.set","text.add","text.apply_effect","text.set_glyph_animation","sticker.add","sfx.add","tts.speak","export.start"]} -->
+<p class="lead">You get a 9-second 16:9 promo in three scenes: a neon headline over a moving grid, the product dropping in next to a gold title, then the price with a “Limited” tag. Whooshes and a ding sit on the cuts, a local voice reads the voice-over, and you get it as MP4 and as a looping GIF — with no stock footage at all.</p>
+<ul>
+  <li><strong>Time:</strong> ~3 min</li>
+  <li><strong>You need:</strong> A product photo (a transparent PNG works best)</li>
+  <li><strong>Main commands:</strong> <code class="cmd">media.generate</code>, <code class="cmd">transition.set</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">animation.set</code>, <code class="cmd">text.add</code>, <code class="cmd">text.apply_effect</code>, <code class="cmd">text.set_glyph_animation</code>, <code class="cmd">sticker.add</code>, <code class="cmd">sfx.add</code>, <code class="cmd">tts.speak</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Make a 9-second 16:9 promo in Kadr for my headphones, the Aurora X1, using C:\Users\you\Pictures\aurora-x1.png. Three 3-second scenes on generated backgrounds: neon_floor, then candy_flow, then midnight_glow, with a flash_zoom transition and then a cube_turn_left. Scene 1: "NEW DROP" in big neon pink word art, letters popping in. From 3 s, the product on its own track on the right at 60% size, dropping in with a bounce and then floating gently. Scene 2: "Aurora X1" in gold metal on the left, scrambling in. Scene 3: "$129" with the price_tag template plus a tag_limited sticker that pops in. Add a fast whoosh before the first cut, a ding at 6 s and a pop when the sticker appears. Add a voice-over from 0.3 s: "Meet Aurora X1. Thirty hours of battery, zero cables. Now just one twenty-nine." Show me a contact sheet, then export 1080p MP4 and a GIF.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="backgrounds">Generate three backgrounds</h3>
+<p><code class="cmd">media.generate</code> renders backgrounds locally and, with <code>add_to_timeline</code>, places them on the main track. Without <code>at_us</code> each one is appended after the previous one. <code>neon_floor</code> and <code>candy_flow</code> are moving MP4s; <code>midnight_glow</code> is a still PNG whose <code>duration_us</code> sets how long it stays on screen. They are rendered at the canvas size, 1920×1080.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Aurora X1 promo" --ratio 16:9
+kadrctl run media.generate --project_id prj_acdc53cc560a --preset_id neon_floor --duration_us 3s --add_to_timeline --at_us 0
+kadrctl run media.generate --project_id prj_acdc53cc560a --preset_id candy_flow --duration_us 3s --add_to_timeline
+kadrctl run media.generate --project_id prj_acdc53cc560a --preset_id midnight_glow --duration_us 3s --add_to_timeline</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Aurora X1 promo", "ratio": "16:9"}}
+{"name": "media_generate", "arguments": {"project_id": "prj_acdc53cc560a", "preset_id": "neon_floor", "duration_us": 3000000, "add_to_timeline": true, "at_us": 0}}
+{"name": "media_generate", "arguments": {"project_id": "prj_acdc53cc560a", "preset_id": "candy_flow", "duration_us": 3000000, "add_to_timeline": true}}
+{"name": "media_generate", "arguments": {"project_id": "prj_acdc53cc560a", "preset_id": "midnight_glow", "duration_us": 3000000, "add_to_timeline": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="transitions">Transitions between the scenes</h3>
+<p>A transition belongs to the clip on the <em>left</em> of the cut. Both go in one batch, <code>promo-transitions.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "transition.set", "args": {"segment_id": "seg_d77ee3f2cada", "type": "flash_zoom", "duration_us": 400000}},
+  {"command": "transition.set", "args": {"segment_id": "seg_20256820e08e", "type": "cube_turn_left", "duration_us": 600000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_acdc53cc560a promo-transitions.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_acdc53cc560a", "calls": [
+  {"command": "transition.set", "args": {"segment_id": "seg_d77ee3f2cada", "type": "flash_zoom", "duration_us": 400000}},
+  {"command": "transition.set", "args": {"segment_id": "seg_20256820e08e", "type": "cube_turn_left", "duration_us": 600000}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="product">Bring in the product</h3>
+<p>The photo goes on its own overlay track (<code>new_track</code>) from 3 s to 9 s, is moved right and scaled to 60% with <code class="cmd">segment.set_transform</code>, then animated with <code class="cmd">animation.set</code>. An In animation plays once at the start; a Loop animation repeats for the whole clip; the two combine.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run media.import --project_id prj_acdc53cc560a --paths "[\"C:/Users/you/Pictures/aurora-x1.png\"]"
+kadrctl run timeline.segment.add --project_id prj_acdc53cc560a --material_id mat_c0b66ca4c71e --at_us 3s --duration_us 6s --new_track
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_485f2665d091 --x 0.45 --scale 0.6
+kadrctl run animation.set --project_id prj_acdc53cc560a --segment_id seg_485f2665d091 --kind in --id in_drop_bounce --duration_us 0.7s
+kadrctl run animation.set --project_id prj_acdc53cc560a --segment_id seg_485f2665d091 --kind loop --id loop_float --duration_us 2s</code></pre><pre data-lang="mcp"><code>{"name": "media_import", "arguments": {"project_id": "prj_acdc53cc560a", "paths": ["C:/Users/you/Pictures/aurora-x1.png"]}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_acdc53cc560a", "material_id": "mat_c0b66ca4c71e", "at_us": 3000000, "duration_us": 6000000, "new_track": true}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_485f2665d091", "x": 0.45, "scale": 0.6}}
+{"name": "animation_set", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_485f2665d091", "kind": "in", "id": "in_drop_bounce", "duration_us": 700000}}
+{"name": "animation_set", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_485f2665d091", "kind": "loop", "id": "loop_float", "duration_us": 2000000}}</code></pre></div>
+</li>
+<li>
+<h3 id="headlines">Word-art headlines</h3>
+<p><code class="cmd">text.add</code> creates each headline; its <code>style</code> object sets size and weight (JSON, hence <code>--%</code>). <code class="cmd">text.apply_effect</code> applies a word-art preset: <code>fx_neon_pink</code> adds a pink outline and glow, <code>fx_gold_metal</code> a metallic gradient with an outline and shadow — every value it sets can be changed later with <code class="cmd">text.update</code>. <code class="cmd">text.set_glyph_animation</code> animates the letters.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run text.add --project_id prj_acdc53cc560a --text "NEW DROP" --at_us 0 --duration_us 3s --style "{\"size\":30,\"bold\":true}"
+kadrctl run text.apply_effect --project_id prj_acdc53cc560a --segment_id seg_fe621f2a7d99 --effect_id fx_neon_pink
+kadrctl run text.set_glyph_animation --project_id prj_acdc53cc560a --segment_id seg_fe621f2a7d99 --kind in --id in_letter_pop --duration_us 0.8s
+kadrctl --% run text.add --project_id prj_acdc53cc560a --text "Aurora X1" --at_us 3s --duration_us 3s --style "{\"size\":26,\"bold\":true}"
+kadrctl run text.apply_effect --project_id prj_acdc53cc560a --segment_id seg_209bec01faf4 --effect_id fx_gold_metal
+kadrctl run text.set_glyph_animation --project_id prj_acdc53cc560a --segment_id seg_209bec01faf4 --kind in --id in_scramble --duration_us 0.9s
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_209bec01faf4 --x -0.4</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_acdc53cc560a", "text": "NEW DROP", "at_us": 0, "duration_us": 3000000, "style": {"size": 30, "bold": true}}}
+{"name": "text_apply_effect", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_fe621f2a7d99", "effect_id": "fx_neon_pink"}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_fe621f2a7d99", "kind": "in", "id": "in_letter_pop", "duration_us": 800000}}
+{"name": "text_add", "arguments": {"project_id": "prj_acdc53cc560a", "text": "Aurora X1", "at_us": 3000000, "duration_us": 3000000, "style": {"size": 26, "bold": true}}}
+{"name": "text_apply_effect", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_209bec01faf4", "effect_id": "fx_gold_metal"}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_209bec01faf4", "kind": "in", "id": "in_scramble", "duration_us": 900000}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_209bec01faf4", "x": -0.4}}</code></pre></div>
+</li>
+<li>
+<h3 id="price">Price and sticker</h3>
+<p>The <code>price_tag</code> text template gives the price a ready-made look and <code class="cmd">text.update</code> makes it bigger. <code class="cmd">sticker.add</code> places a built-in sticker (at 30% of the canvas by default), which is then moved above the price and pops in.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_acdc53cc560a --text '$129' --template_id price_tag --at_us 6s --duration_us 3s
+kadrctl run text.update --project_id prj_acdc53cc560a --segment_id seg_c1a659f012cb --size 22
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_c1a659f012cb --x -0.4
+kadrctl run sticker.add --project_id prj_acdc53cc560a --sticker_id tag_limited --at_us 6.3s --duration_us 2.7s
+kadrctl run segment.set_transform --project_id prj_acdc53cc560a --segment_id seg_15df3c4d2dc0 --x -0.4 --y -0.55 --scale 0.25
+kadrctl run animation.set --project_id prj_acdc53cc560a --segment_id seg_15df3c4d2dc0 --kind in --id in_pop</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_acdc53cc560a", "text": "$129", "template_id": "price_tag", "at_us": 6000000, "duration_us": 3000000}}
+{"name": "text_update", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_c1a659f012cb", "size": 22}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_c1a659f012cb", "x": -0.4}}
+{"name": "sticker_add", "arguments": {"project_id": "prj_acdc53cc560a", "sticker_id": "tag_limited", "at_us": 6300000, "duration_us": 2700000}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_15df3c4d2dc0", "x": -0.4, "y": -0.55, "scale": 0.25}}
+{"name": "animation_set", "arguments": {"project_id": "prj_acdc53cc560a", "segment_id": "seg_15df3c4d2dc0", "kind": "in", "id": "in_pop"}}</code></pre></div>
+<div class="callout warn"><p>In PowerShell, <code>$</code> inside double quotes starts a variable, so <code>"$129"</code> becomes an empty string. Put text that contains <code>$</code> in single quotes, as above. In Command Prompt use double quotes. MCP and REST calls have no such problem.</p></div>
+</li>
+<li>
+<h3 id="sound">Sound effects and voice-over</h3>
+<p><code class="cmd">sfx.add</code> places one of Kadr’s own synthesised sound effects; a whoosh that should land on a cut starts a little before it. <code class="cmd">tts.speak</code> reads the script with a voice installed on your PC (Windows SAPI or eSpeak NG; <code>en-US</code> picks an English voice), levels it to about −16 LUFS and puts it on its own audio track.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run sfx.add --project_id prj_acdc53cc560a --sfx_id whoosh_fast --at_us 2.8s
+kadrctl run sfx.add --project_id prj_acdc53cc560a --sfx_id ding --at_us 6s
+kadrctl run sfx.add --project_id prj_acdc53cc560a --sfx_id pop_bubble --at_us 6.3s
+kadrctl run tts.speak --project_id prj_acdc53cc560a --text "Meet Aurora X1. Thirty hours of battery, zero cables. Now just one twenty-nine." --voice en-US --at_us 0.3s</code></pre><pre data-lang="mcp"><code>{"name": "sfx_add", "arguments": {"project_id": "prj_acdc53cc560a", "sfx_id": "whoosh_fast", "at_us": 2800000}}
+{"name": "sfx_add", "arguments": {"project_id": "prj_acdc53cc560a", "sfx_id": "ding", "at_us": 6000000}}
+{"name": "sfx_add", "arguments": {"project_id": "prj_acdc53cc560a", "sfx_id": "pop_bubble", "at_us": 6300000}}
+{"name": "tts_speak", "arguments": {"project_id": "prj_acdc53cc560a", "text": "Meet Aurora X1. Thirty hours of battery, zero cables. Now just one twenty-nine.", "voice": "en-US", "at_us": 300000}}</code></pre></div>
+<p>With <code>sapi:Microsoft Zira Desktop</code> the voice-over is 7.25 s long, so it fits. <code class="cmd">tts.voices</code> lists every voice you can use — including ElevenLabs voices after <code class="cmd">tts.set_api_key</code> (see the <a href="{{root}}{{lang_root}}docs/ai/documentary-archive-footage.html">documentary recipe</a>).</p>
+</li>
+<li>
+<h3 id="export">Check, then export MP4 and GIF</h3>
+<p>A GIF export is capped at 15 fps and 720 px on the longer side, loops forever and has no sound. Exports run one at a time; the second waits in state <code>queued</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_acdc53cc560a --count 6 --columns 3 --tile_width 320
+kadrctl run export.start --project_id prj_acdc53cc560a --resolution 1080p --path C:/Users/you/Videos/Kadr/aurora-x1-promo.mp4
+kadrctl run export.start --project_id prj_acdc53cc560a --gif --path C:/Users/you/Videos/Kadr/aurora-x1-promo.gif</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_acdc53cc560a", "count": 6, "columns": 3, "tile_width": 320}}
+{"name": "export_start", "arguments": {"project_id": "prj_acdc53cc560a", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/aurora-x1-promo.mp4"}}
+{"name": "export_start", "arguments": {"project_id": "prj_acdc53cc560a", "gif": true, "path": "C:/Users/you/Videos/Kadr/aurora-x1-promo.gif"}}</code></pre></div>
+<figure><img src="{{root}}assets/img/ai/promo-contact-sheet.webp" alt="Contact sheet of the promo: neon NEW DROP over a grid, the product next to a gold Aurora X1 title, then the 129 dollar price with a Limited tag" width="976" height="372" loading="lazy"><figcaption>The contact sheet the agent looks at before exporting — tile 3 catches the title mid-scramble. Stand-in product image.</figcaption></figure>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>Product photo with a background.</strong> <code class="cmd">ai.remove_background</code> cuts out the product locally when <code>rembg</code> or <code>onnxruntime</code> with a matting model is installed — check with <code class="cmd">ai.capabilities</code> first.</li>
+  <li><strong>Read the headline aloud.</strong> <code class="cmd">tts.from_text</code> speaks a text clip and links the speech to it; with <code>sync_duration</code> the text clip is resized to the speech.</li>
+  <li><strong>Vertical ad.</strong> Use 9:16 and stack the elements: product at <code>y</code> −0.3, headline at <code>y</code> 0.45.</li>
+  <li><strong>Reuse the look.</strong> <code class="cmd">presets.save</code> with <code>kind</code> <code>text_style</code> stores the neon headline in My kit; <code class="cmd">presets.apply</code> puts it on any text in any project.</li>
+  <li><strong>Countdown opener.</strong> The <code>countdown_3</code> preset of <code class="cmd">media.generate</code> adds a 3-2-1 intro.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li><code class="cmd">library.list</code> with <code>kind</code> <code>text_effect</code> shows the word-art presets, <code>text_animation</code> the letter animations, <code>sticker</code> the stickers and <code>sound_effect</code> the sounds. Each item has a <code>thumbnail</code> URL you can open with the token.</li>
+  <li>For a shorter GIF add <code>range_end_us</code> (for example 3000000) to export only the first scene.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

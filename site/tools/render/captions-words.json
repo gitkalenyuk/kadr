@@ -1,0 +1,309 @@
+{
+  "text": "Kadr writes your captions right on your computer. Every word lights up as it is spoken.",
+  "voice": "sapi:Microsoft Zira Desktop",
+  "style_id": "cap_pill_active",
+  "transcript": {
+    "count": 1,
+    "segments": [
+      {
+        "segment_id": "seg_7b44fe2e2c3a",
+        "track_id": "trk_b2ed7025afc4",
+        "track_type": "audio",
+        "material_id": "mat_69fb872ae8eb",
+        "material_name": "Speech: Kadr writes your captions right on your…",
+        "transcribed": true,
+        "audible": true,
+        "language": "en",
+        "model": "small",
+        "start_us": 400000,
+        "end_us": 5645771,
+        "text": "Kadr writes your captions right on your computer. Every word lights up as it is spoken.",
+        "words": [
+          {
+            "index": 0,
+            "text": "Kadr",
+            "start_us": 400000,
+            "end_us": 680000,
+            "source_start_us": 0,
+            "source_end_us": 280000,
+            "confidence": 0.032
+          },
+          {
+            "index": 1,
+            "text": "writes",
+            "start_us": 680000,
+            "end_us": 940000,
+            "source_start_us": 280000,
+            "source_end_us": 540000,
+            "confidence": 0.963
+          },
+          {
+            "index": 2,
+            "text": "your",
+            "start_us": 940000,
+            "end_us": 1120000,
+            "source_start_us": 540000,
+            "source_end_us": 720000,
+            "confidence": 0.939
+          },
+          {
+            "index": 3,
+            "text": "captions",
+            "start_us": 1120000,
+            "end_us": 1480000,
+            "source_start_us": 720000,
+            "source_end_us": 1080000,
+            "confidence": 0.975
+          },
+          {
+            "index": 4,
+            "text": "right",
+            "start_us": 1480000,
+            "end_us": 1880000,
+            "source_start_us": 1080000,
+            "source_end_us": 1480000,
+            "confidence": 0.958
+          },
+          {
+            "index": 5,
+            "text": "on",
+            "start_us": 1880000,
+            "end_us": 2080000,
+            "source_start_us": 1480000,
+            "source_end_us": 1680000,
+            "confidence": 0.996
+          },
+          {
+            "index": 6,
+            "text": "your",
+            "start_us": 2080000,
+            "end_us": 2220000,
+            "source_start_us": 1680000,
+            "source_end_us": 1820000,
+            "confidence": 0.998
+          },
+          {
+            "index": 7,
+            "text": "computer.",
+            "start_us": 2220000,
+            "end_us": 2700000,
+            "source_start_us": 1820000,
+            "source_end_us": 2300000,
+            "confidence": 0.995
+          },
+          {
+            "index": 8,
+            "text": "Every",
+            "start_us": 3610000,
+            "end_us": 3890000,
+            "source_start_us": 3210000,
+            "source_end_us": 3490000,
+            "confidence": 0.945
+          },
+          {
+            "index": 9,
+            "text": "word",
+            "start_us": 3890000,
+            "end_us": 4130000,
+            "source_start_us": 3490000,
+            "source_end_us": 3730000,
+            "confidence": 0.995
+          },
+          {
+            "index": 10,
+            "text": "lights",
+            "start_us": 4130000,
+            "end_us": 4430000,
+            "source_start_us": 3730000,
+            "source_end_us": 4030000,
+            "confidence": 0.956
+          },
+          {
+            "index": 11,
+            "text": "up",
+            "start_us": 4430000,
+            "end_us": 4630000,
+            "source_start_us": 4030000,
+            "source_end_us": 4230000,
+            "confidence": 0.994
+          },
+          {
+            "index": 12,
+            "text": "as",
+            "start_us": 4630000,
+            "end_us": 4770000,
+            "source_start_us": 4230000,
+            "source_end_us": 4370000,
+            "confidence": 0.992
+          },
+          {
+            "index": 13,
+            "text": "it",
+            "start_us": 4770000,
+            "end_us": 4910000,
+            "source_start_us": 4370000,
+            "source_end_us": 4510000,
+            "confidence": 0.991
+          },
+          {
+            "index": 14,
+            "text": "is",
+            "start_us": 4910000,
+            "end_us": 5010000,
+            "source_start_us": 4510000,
+            "source_end_us": 4610000,
+            "confidence": 0.996
+          },
+          {
+            "index": 15,
+            "text": "spoken.",
+            "start_us": 5010000,
+            "end_us": 5290000,
+            "source_start_us": 4610000,
+            "source_end_us": 4890000,
+            "confidence": 0.995
+          }
+        ]
+      }
+    ],
+    "untranscribed_material_ids": [],
+    "words": 16
+  },
+  "captions": {
+    "count": 4,
+    "cues": [
+      {
+        "segment_id": "seg_359f81e85258",
+        "track_id": "trk_5111418e9975",
+        "index": 0,
+        "start_us": 400000,
+        "end_us": 1480000,
+        "text": "Kadr writes\nyour captions",
+        "style_id": "cap_pill_active",
+        "words": [
+          {
+            "text": "Kadr",
+            "start_us": 0,
+            "end_us": 280000
+          },
+          {
+            "text": "writes",
+            "start_us": 280000,
+            "end_us": 540000
+          },
+          {
+            "text": "your",
+            "start_us": 540000,
+            "end_us": 720000
+          },
+          {
+            "text": "captions",
+            "start_us": 720000,
+            "end_us": 1080000
+          }
+        ]
+      },
+      {
+        "segment_id": "seg_24ddcc2c95a5",
+        "track_id": "trk_5111418e9975",
+        "index": 1,
+        "start_us": 1480000,
+        "end_us": 3610000,
+        "text": "right on your\ncomputer.",
+        "style_id": "cap_pill_active",
+        "words": [
+          {
+            "text": "right",
+            "start_us": 0,
+            "end_us": 400000
+          },
+          {
+            "text": "on",
+            "start_us": 400000,
+            "end_us": 600000
+          },
+          {
+            "text": "your",
+            "start_us": 600000,
+            "end_us": 740000
+          },
+          {
+            "text": "computer.",
+            "start_us": 740000,
+            "end_us": 1220000
+          }
+        ]
+      },
+      {
+        "segment_id": "seg_b9c30508b9d5",
+        "track_id": "trk_5111418e9975",
+        "index": 2,
+        "start_us": 3610000,
+        "end_us": 4630000,
+        "text": "Every word\nlights up",
+        "style_id": "cap_pill_active",
+        "words": [
+          {
+            "text": "Every",
+            "start_us": 0,
+            "end_us": 280000
+          },
+          {
+            "text": "word",
+            "start_us": 280000,
+            "end_us": 520000
+          },
+          {
+            "text": "lights",
+            "start_us": 520000,
+            "end_us": 820000
+          },
+          {
+            "text": "up",
+            "start_us": 820000,
+            "end_us": 1020000
+          }
+        ]
+      },
+      {
+        "segment_id": "seg_e9bbb8cd9697",
+        "track_id": "trk_5111418e9975",
+        "index": 3,
+        "start_us": 4630000,
+        "end_us": 6950000,
+        "text": "as it is\nspoken.",
+        "style_id": "cap_pill_active",
+        "words": [
+          {
+            "text": "as",
+            "start_us": 0,
+            "end_us": 140000
+          },
+          {
+            "text": "it",
+            "start_us": 140000,
+            "end_us": 280000
+          },
+          {
+            "text": "is",
+            "start_us": 280000,
+            "end_us": 380000
+          },
+          {
+            "text": "spoken.",
+            "start_us": 380000,
+            "end_us": 660000
+          }
+        ]
+      }
+    ],
+    "tracks": [
+      {
+        "count": 4,
+        "locked": false,
+        "name": "Captions",
+        "track_id": "trk_5111418e9975"
+      }
+    ]
+  }
+}

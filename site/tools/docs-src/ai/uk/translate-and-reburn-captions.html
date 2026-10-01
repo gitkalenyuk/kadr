@@ -1,0 +1,122 @@
+<!--meta {"title":"Переклад і повторне «вшивання» субтитрів","nav":"Переклад субтитрів","order":390,"description":"Claude перекладає субтитри відео, записує їх у копію проєкту зі збереженим таймінгом слів, експортує файли SRT і рендерить версію з вшитими субтитрами новою мовою.","group":"Рецепти","summary":"Claude перекладає субтитри, зберігає їхній таймінг, а ви отримуєте відео з вшитими субтитрами та файли SRT обома мовами.","time":"~2 хв","needs":"Проєкт Kadr із субтитрами (наприклад, з рецепта про «говорющу голову»)","commands":["captions.list","project.duplicate","captions.update","captions.set_style","captions.export","captions.import","export.start"]} -->
+<p class="lead">Результат — ваше відео з субтитрами іншою мовою: копія проєкту з вшитими перекладеними субтитрами плюс файли <code>.srt</code> обома мовами для YouTube чи плеєра. Перекладає Claude; Kadr тримає кожну репліку на її початковому таймінгу. Тут перекладаємо англійські субтитри українською — можна просити будь-яку мову, яку знає Claude.</p>
+<ul>
+  <li><strong>Час:</strong> ~2 хв</li>
+  <li><strong>Що потрібно:</strong> Проєкт Kadr із субтитрами (наприклад, з рецепта про «говорющу голову»)</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">captions.list</code>, <code class="cmd">project.duplicate</code>, <code class="cmd">captions.update</code>, <code class="cmd">captions.set_style</code>, <code class="cmd">captions.export</code>, <code class="cmd">captions.import</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>У моєму проєкті Kadr «Tips short» є англійські субтитри. Зроби українську версію: дублюй проєкт як «Tips short (UK)», переклади кожну репліку природною розмовною українською (кожна приблизно такої ж довжини, як оригінал, щоб таймінг лишився робочим) і запиши переклади в копію одним пакетом. Перемкни субтитри копії на стиль cap_yellow_outline. Експортуй обидві доріжки субтитрів у файли SRT поруч із відео, перевір один кадр, що кирилиця відображається правильно, і експортуй українську версію в 1080p у C:\Users\you\Videos\Kadr\tips-short-uk.mp4.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="read">Прочитайте субтитри</h3>
+<p><code class="cmd">captions.list</code> повертає кожну репліку з ідентифікатором, часом і текстом. <code>include_words</code> <code>false</code> прибирає таймінг окремих слів, щоб відповідь була компактною.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.list --project_id prj_ed95831b1bf0 --include_words false</code></pre><pre data-lang="mcp"><code>{"name": "captions_list", "arguments": {"project_id": "prj_ed95831b1bf0", "include_words": false}}</code></pre></div>
+<pre><code class="lang-text">seg_483cf05d7a3b   0.27 s   Hi everyone.
+seg_c7a21e8ac557   1.69 s   today I want
+seg_ec36b42dbeee   2.39 s   to show you
+seg_a21d88954c6f   2.99 s   three quick editing
+seg_14ffc67763f3   3.73 s   tips.
+seg_5e25780f9000   4.49 s   the first one
+seg_48cfd7689428   5.15 s   is simple, cut
+seg_1327457fba80   6.33 s   your pauses.
+seg_ec03fba25f1e   7.31 s   The second one
+seg_c6366ca86e46   8.06 s   is, add captions
+seg_3d5811649601   9.38 s   to every video.
+seg_f3d6135af313  10.62 s   And the third
+seg_e5b458b4c0fc  11.15 s   is to keep
+seg_3ccba6e05890  11.67 s   it short and
+seg_013e43033a05  12.31 s   punchy.
+seg_09aae4e3c1d2  12.95 s   Thanks for watching.</code></pre>
+</li>
+<li>
+<h3 id="duplicate">Працюйте з копією</h3>
+<p><code class="cmd">project.duplicate</code> копіює проєкт з тими самими ідентифікаторами реплік, тож список із кроку 1 і далі чинний. Оригінал не змінюється.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.duplicate --project_id prj_ed95831b1bf0 --name "Tips short (UK)"</code></pre><pre data-lang="mcp"><code>{"name": "project_duplicate", "arguments": {"project_id": "prj_ed95831b1bf0", "name": "Tips short (UK)"}}</code></pre></div>
+</li>
+<li>
+<h3 id="write">Запишіть переклад одним пакетом</h3>
+<p>Claude сам перекладає репліки, а потім записує їх через <code class="cmd">captions.update</code> — по виклику на репліку, усе одним кроком скасування. Змінені слова ділять між собою час репліки, тож підсвітка слів і далі йде за мовою. Збережіть як <code>captions-uk.json</code> (UTF-8 без BOM — див. <a href="{{root}}{{lang_root}}docs/ai/cli.html#batch">сторінку CLI</a>):</p>
+<pre><code class="lang-json">[
+  {"command": "captions.update", "args": {"segment_id": "seg_483cf05d7a3b", "text": "Привіт усім!"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c7a21e8ac557", "text": "сьогодні хочу"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec36b42dbeee", "text": "показати вам"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_a21d88954c6f", "text": "три швидкі поради"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_14ffc67763f3", "text": "з монтажу."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_5e25780f9000", "text": "Перша"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_48cfd7689428", "text": "проста: вирізайте"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_1327457fba80", "text": "паузи."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec03fba25f1e", "text": "Друга —"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c6366ca86e46", "text": "додавайте субтитри"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3d5811649601", "text": "до кожного відео."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_f3d6135af313", "text": "А третя —"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_e5b458b4c0fc", "text": "робіть відео"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3ccba6e05890", "text": "короткими й"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_013e43033a05", "text": "динамічними."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_09aae4e3c1d2", "text": "Дякую за перегляд!"}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_0ae446772d4b captions-uk.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_0ae446772d4b", "calls": [
+  {"command": "captions.update", "args": {"segment_id": "seg_483cf05d7a3b", "text": "Привіт усім!"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c7a21e8ac557", "text": "сьогодні хочу"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec36b42dbeee", "text": "показати вам"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_a21d88954c6f", "text": "три швидкі поради"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_14ffc67763f3", "text": "з монтажу."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_5e25780f9000", "text": "Перша"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_48cfd7689428", "text": "проста: вирізайте"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_1327457fba80", "text": "паузи."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec03fba25f1e", "text": "Друга —"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c6366ca86e46", "text": "додавайте субтитри"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3d5811649601", "text": "до кожного відео."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_f3d6135af313", "text": "А третя —"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_e5b458b4c0fc", "text": "робіть відео"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3ccba6e05890", "text": "короткими й"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_013e43033a05", "text": "динамічними."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_09aae4e3c1d2", "text": "Дякую за перегляд!"}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="style">Дайте новій версії власний вигляд</h3>
+<p><code class="cmd">captions.set_style</code> змінює вигляд усіх реплік, зберігаючи текст і таймінг.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.set_style --project_id prj_0ae446772d4b --style_id cap_yellow_outline</code></pre><pre data-lang="mcp"><code>{"name": "captions_set_style", "arguments": {"project_id": "prj_0ae446772d4b", "style_id": "cap_yellow_outline"}}</code></pre></div>
+</li>
+<li>
+<h3 id="srt">Експортуйте файли субтитрів</h3>
+<p><code class="cmd">captions.export</code> записує SRT, VTT, TXT або LRC; відсутні папки створюються. Без <code>path</code> текст повертається в полі <code>content</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.export --project_id prj_0ae446772d4b --format srt --path C:/Users/you/Videos/Kadr/tips-short-uk.srt
+kadrctl run captions.export --project_id prj_ed95831b1bf0 --format srt --path C:/Users/you/Videos/Kadr/tips-short-en.srt</code></pre><pre data-lang="mcp"><code>{"name": "captions_export", "arguments": {"project_id": "prj_0ae446772d4b", "format": "srt", "path": "C:/Users/you/Videos/Kadr/tips-short-uk.srt"}}
+{"name": "captions_export", "arguments": {"project_id": "prj_ed95831b1bf0", "format": "srt", "path": "C:/Users/you/Videos/Kadr/tips-short-en.srt"}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Перевірте символи й експортуйте</h3>
+<p>Для символів, яких немає в шрифті субтитрів, Kadr бере системний шрифт, тож діакритика, кирилиця й ієрогліфи відображаються. Один кадр це підтвердить:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_0ae446772d4b --time_us 2s --width 540
+kadrctl run export.start --project_id prj_0ae446772d4b --resolution 1080p --path C:/Users/you/Videos/Kadr/tips-short-uk.mp4</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_0ae446772d4b", "time_us": 2000000, "width": 540}}
+{"name": "export_start", "arguments": {"project_id": "prj_0ae446772d4b", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/tips-short-uk.mp4"}}</code></pre></div>
+</li>
+<li>
+<h3 id="bilingual">За бажанням: обидві мови в кадрі</h3>
+<p>Імпортуйте перекладений SRT в <em>оригінальний</em> проєкт як другу доріжку субтитрів іншим стилем. <code>replace</code> <code>false</code> лишає англійську доріжку й додає нову.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.import --project_id prj_ed95831b1bf0 --path C:/Users/you/Videos/Kadr/tips-short-uk.srt --style_id cap_box_dark --replace false</code></pre><pre data-lang="mcp"><code>{"name": "captions_import", "arguments": {"project_id": "prj_ed95831b1bf0", "path": "C:/Users/you/Videos/Kadr/tips-short-uk.srt", "style_id": "cap_box_dark", "replace": false}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="more-ideas">Інші ідеї</h2>
+<ul>
+  <li><strong>Лише субтитри.</strong> Пропустіть експорт із вшитими субтитрами й завантажте файли SRT; YouTube покаже їх як субтитри, що вмикаються окремо.</li>
+  <li><strong>Переділити довгі переклади.</strong> Якщо рядки перекладу задовгі, запустіть на копії <code class="cmd">captions.relayout</code> з <code>max_words</code> 3 або <code>max_chars</code> 24. Репліки перегрупуються за таймінгом слів.</li>
+  <li><strong>Текст із субтитрів.</strong> <code class="cmd">captions.export</code> з <code>format</code> <code>txt</code> і без <code>path</code> повертає чистий текст — попросіть Claude перетворити його на допис чи опис відео.</li>
+  <li><strong>Субтитрів ще немає?</strong> Спершу запустіть <code class="cmd">captions.auto</code>; Whisper розпізнає близько 100 мов.</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>Просіть Claude робити кожну перекладену репліку приблизно такої ж довжини, як оригінал: субтитри, яким раптом потрібно три рядки, важко читати.</li>
+  <li><code class="cmd">captions.shift</code> зсуває всі репліки раніше чи пізніше, якщо субтитри відстають на кілька кадрів.</li>
+  <li>Кілька мов: повторіть кроки 2–6 для кожної; копії незалежні.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

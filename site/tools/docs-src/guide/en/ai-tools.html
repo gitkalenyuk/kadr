@@ -1,0 +1,66 @@
+<!--meta {"title":"AI tools","nav":"AI tools","order":120,"description":"Kadr's smart tools run on your own computer: remove the background without a green screen, split a video at scene changes, cut silences and reframe landscape video for vertical formats.","group":"Creating"} -->
+<p class="lead">Smart tools do tedious work for you: they find scene changes, cut silences, follow the subject when you change the video's shape and cut people out of the background. They all run on your computer — nothing is uploaded.</p>
+
+<h2 id="where">Where to find them</h2>
+<div class="grid-2">
+  <div>
+    <ul>
+      <li><strong>Smart tools</strong> menu in the toolbar above the timeline: Split scenes, Remove silence, Auto reframe, Separate audio, Auto captions.</li>
+      <li>The <strong>right-click menu</strong> of a clip lists the smart tools that fit that clip.</li>
+      <li>The inspector: <strong>Video → Smart tools</strong> (with extra options) and <strong>Video → Remove BG</strong>.</li>
+    </ul>
+    <p>Select a clip first — the menu tells you “Select a clip” or “Not for this clip” when a tool doesn't apply. Longer jobs show a “started” message and run in the background; every result is <strong>one undo step</strong>, so <kbd>Ctrl</kbd>+<kbd>Z</kbd> brings everything back.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/smart-menu.webp" alt="The Smart tools menu open above the toolbar with Split scenes, Remove silence, Auto reframe, Separate audio and Auto captions" width="520" height="238" loading="lazy"><figcaption>The Smart tools menu.</figcaption></figure>
+</div>
+
+<h2 id="remove-background">Remove background</h2>
+<p>Cuts out people or the main subject from a video or photo — no green screen needed. Whatever is on lower tracks, or the canvas background, shows through.</p>
+<ol>
+  <li>Select the clip and open <strong>Video → Remove BG</strong> in the inspector.</li>
+  <li>Switch on <strong>Auto removal</strong>. A progress bar shows “Finding the subject” with a percentage and the time left. You can keep editing; <strong>Cancel</strong> stops it.</li>
+  <li>When it is done, the subject is cut out. <strong>Redo</strong> computes it again (for example after installing a better model); switching the toggle off brings the background back.</li>
+</ol>
+<figure><img src="{{root}}assets/img/guide/remove-bg.webp" alt="The Remove BG page with the Auto removal switch, a note that it uses an on-device model, and the Chroma key switch" width="342" height="250" loading="lazy"><figcaption>Video → Remove BG. If you filmed in front of a green screen, use <strong>Chroma key</strong> below instead.</figcaption></figure>
+<h3 id="remove-background-requirements">What you need</h3>
+<p>Background removal uses the free <em>rembg</em> package for Python. Setup is a one-time job:</p>
+<ol class="steps">
+  <li><strong>Install Python</strong><p>Install Python 3 from <a href="https://www.python.org/downloads/">python.org</a> and tick <strong>Add python.exe to PATH</strong> (if you set up <a href="{{root}}{{lang_root}}docs/guide/captions.html#requirements">auto captions</a>, you already have it).</p></li>
+  <li><strong>Install rembg</strong><p>Open PowerShell and run:</p><pre><code class="lang-powershell">pip install rembg onnxruntime</code></pre><p>The first background removal downloads rembg's model once; after that everything works offline.</p></li>
+  <li><strong>Check in Kadr</strong><p>Open <strong>Video → Remove BG</strong>. If it says <em>Auto removal is not available on this computer</em>, it also explains what is missing; fix that and click <strong>Check again</strong> (or restart Kadr).</p></li>
+</ol>
+<div class="callout note"><p>Advanced alternative: instead of rembg, Kadr can use <em>onnxruntime</em> with any ONNX matting model (U²-Net, IS-Net, MODNet…) saved as <code>models\matting.onnx</code> inside the Kadr data folder. Removal takes a while on long or 4K clips — you can keep editing meanwhile.</p></div>
+
+<h2 id="split-scenes">Split scenes</h2>
+<p>Have a long video made of several shots — a trailer, a screen recording with cuts, a downloaded compilation? <strong>Split scenes</strong> finds every camera change and cuts the clip there, so you can delete or reorder shots.</p>
+<ul>
+  <li>Quick: select a video clip, then <strong>Smart tools → Split scenes</strong>.</li>
+  <li>With options: <strong>Video → Smart tools → Split scenes</strong>. Raise <strong>Sensitivity</strong> to catch softer changes, lower it if Kadr cuts too often.</li>
+</ul>
+
+<h2 id="remove-silence">Remove silence</h2>
+<p>Perfect for talking-head videos, lessons and podcasts. Select a video or audio clip with speech and choose <strong>Smart tools → Remove silence</strong>. Kadr cuts out every pause longer than half a second and closes the gaps; a message tells you how many pauses and seconds were removed.</p>
+<p>For word-level control — removing “um”s and choosing pause lengths — use the <a href="{{root}}{{lang_root}}docs/guide/captions.html#transcript">Transcript tab</a>.</p>
+
+<h2 id="auto-reframe">Auto reframe</h2>
+<div class="grid-2">
+  <div>
+    <p>Turns a landscape video into a vertical (or square) one <em>without losing the subject</em>: Kadr follows the person or the main action and moves the picture smoothly with keyframes.</p>
+    <ul>
+      <li>Quick: select a video or photo clip, open <strong>Smart tools → Auto reframe</strong> and choose 9:16, 1:1, 4:3, 3:4 or 16:9. The project switches to that shape too.</li>
+      <li>With options: <strong>Video → Smart tools → Auto reframe…</strong> lets you pick the <strong>Ratio</strong>, the <strong>Smoothness</strong> of the camera movement, and whether to switch the <strong>Canvas</strong>; then click <strong>Reframe</strong>.</li>
+    </ul>
+    <p>Afterwards you can fine-tune the position keyframes like any other <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">keyframes</a>.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/smart-tools.webp" alt="Video → Smart tools with Auto reframe, Split scenes with a sensitivity slider, and Remove silence" width="342" height="450" loading="lazy"><figcaption>Video → Smart tools.</figcaption></figure>
+</div>
+
+<h2 id="more-smart">More smart features</h2>
+<ul>
+  <li><strong>Auto captions</strong> and <strong>transcript editing</strong> with offline Whisper — <a href="{{root}}{{lang_root}}docs/guide/captions.html">Captions &amp; transcript</a>.</li>
+  <li><strong>Separate audio</strong> — <a href="{{root}}{{lang_root}}docs/guide/audio.html#separate">Audio</a>.</li>
+  <li><strong>Auto adjust</strong> for colour — <a href="{{root}}{{lang_root}}docs/guide/effects.html#basic">Colour adjustment</a>.</li>
+  <li><strong>Reduce image noise</strong>, <strong>Remove flicker</strong> (Video → Basic) and <strong>Reduce noise</strong> for sound (Audio → Basic).</li>
+</ul>
+
+<div class="callout tip"><p><strong>Let an AI assistant drive.</strong> Everything above — and the whole editor — can be operated by Claude or another AI assistant: “cut the silences, add word-highlight captions and export a vertical version”. You watch every step happen in the window. Start with the <a href="{{root}}{{lang_root}}docs/ai/index.html">AI documentation</a>.</p></div>

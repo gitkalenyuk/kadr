@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — Kadr</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#07070a">
+<script>
+  // GitHub Pages serves this file for any missing path, at any depth: resolve
+  // relative URLs against the site root (/kadr/ on GitHub Pages, / locally),
+  // and speak Ukrainian under /uk/ or when the visitor chose Ukrainian before.
+  (function () {
+    var p = location.pathname;
+    var root = p.indexOf('/kadr/') === 0 ? '/kadr/' : '/';
+    document.write('<base href="' + root + '">');
+    var uk = p.indexOf(root + 'uk/') === 0;
+    try { if (!uk && localStorage.getItem('kadr-lang') === 'uk' && p.indexOf(root + 'uk/') !== 0) uk = true; } catch (e) {}
+    if (uk) { document.documentElement.lang = 'uk'; document.documentElement.className = 'is-uk'; document.title = 'Сторінку не знайдено — Kadr'; }
+  })();
+</script>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/base.css">
+<style>
+  .nf { isolation: isolate; min-height: 100vh; display: grid; place-items: center; padding: 100px var(--gutter) 60px; text-align: center; position: relative; overflow: hidden; }
+  .nf::before { content: ""; position: absolute; inset: -20%; z-index: -1;
+    background: radial-gradient(35% 40% at 30% 30%, rgba(31,209,219,.18), transparent 70%), radial-gradient(35% 40% at 70% 35%, rgba(255,61,139,.15), transparent 70%), radial-gradient(40% 45% at 50% 75%, rgba(123,97,255,.18), transparent 70%);
+    animation: nf-drift 16s ease-in-out infinite alternate; }
+  @keyframes nf-drift { to { transform: translate3d(3%, -2%, 0) scale(1.06); } }
+  .nf-tl { position: relative; width: min(560px, 90vw); margin: 0 auto 44px; padding: 22px 20px 18px; border-radius: 18px; background: #0f0f10; border: 1px solid var(--line-2); box-shadow: var(--shadow-2); }
+  .nf-row { position: relative; height: 34px; margin-top: 8px; border-radius: 8px; background: rgba(255,255,255,.03); }
+  .nf-row i { position: absolute; top: 3px; bottom: 3px; border-radius: 6px; }
+  .c1 { left: 0; width: 30%; background: #1e5a63; box-shadow: inset 0 0 0 1px #2bb8c4; }
+  .c2 { left: 64%; width: 36%; background: #1e5a63; box-shadow: inset 0 0 0 1px #2bb8c4; }
+  .gap { left: 30.5%; width: 33%; border: 1.5px dashed rgba(255,61,139,.7); background: rgba(255,61,139,.06); display: grid; place-items: center; font: 600 12px/1 var(--mono); color: #ff8fbc; }
+  .a1 { left: 2%; width: 26%; background: #2a3a6b; box-shadow: inset 0 0 0 1px #6d8cf0; }
+  .a2 { left: 66%; width: 30%; background: #2a3a6b; box-shadow: inset 0 0 0 1px #6d8cf0; }
+  .ph { position: absolute; top: 10px; bottom: 10px; left: 47%; width: 2px; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,.6); animation: scrub 3.2s cubic-bezier(.45,0,.55,1) infinite alternate; }
+  .ph::before { content: ""; position: absolute; top: -6px; left: -6px; width: 14px; height: 14px; background: #fff; clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%); }
+  @keyframes scrub { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
+  .nf h1 { font-size: clamp(40px, 7vw, 76px); letter-spacing: -.045em; }
+  .nf p { margin: 18px auto 0; max-width: 540px; color: var(--text-2); font-size: 18px; }
+  .nf code { color: #ff8fbc; background: rgba(255,61,139,.1); padding: .1em .4em; border-radius: 6px; }
+  .nf-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 34px; }
+  .logo { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); }
+  .logo img { height: 28px; width: auto; }
+  .uk-only { display: none; }
+  .is-uk .uk-only { display: revert; }
+  .is-uk .en-only { display: none; }
+  .is-uk .nf h1 { letter-spacing: -.03em; }
+</style>
+</head>
+<body>
+<main class="nf">
+  <a class="logo en-only" href="./" aria-label="Kadr home"><img src="assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+  <a class="logo uk-only" href="uk/" aria-label="Kadr — головна"><img src="assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+  <div>
+    <div class="nf-tl" aria-hidden="true">
+      <div class="nf-row"><i class="c1"></i><i class="gap">404</i><i class="c2"></i></div>
+      <div class="nf-row"><i class="a1"></i><i class="a2"></i></div>
+      <span class="ph"></span>
+    </div>
+    <div class="en-only" lang="en">
+      <h1>This frame was <span class="grad-text">cut.</span></h1>
+      <p>The page you were looking for isn't on the timeline. It may have moved — or it was ripple-deleted with <code>timeline.segment.delete</code>.</p>
+      <div class="nf-actions">
+        <a class="btn btn-primary" href="./">Back to Kadr</a>
+        <a class="btn btn-ghost" href="docs/">Docs</a>
+        <a class="btn btn-ghost" href="docs/ai/reference/">Command reference</a>
+        <a class="btn btn-ghost" href="uk/" hreflang="uk" lang="uk">Українською</a>
+      </div>
+    </div>
+    <div class="uk-only" lang="uk">
+      <h1>Цей кадр <span class="grad-text">вирізали.</span></h1>
+      <p>Сторінки, яку ви шукаєте, немає на таймлайні. Можливо, її перенесли — або видалили зі зсувом через <code>timeline.segment.delete</code>.</p>
+      <div class="nf-actions">
+        <a class="btn btn-primary" href="uk/">На головну Kadr</a>
+        <a class="btn btn-ghost" href="uk/docs/">Документація</a>
+        <a class="btn btn-ghost" href="uk/docs/ai/reference/">Довідник команд</a>
+        <a class="btn btn-ghost" href="./" hreflang="en" lang="en">English</a>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

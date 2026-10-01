@@ -1,0 +1,67 @@
+<!--meta {"title":"Claude Desktop","nav":"Claude Desktop","order":30,"description":"Add Kadr to Claude Desktop with a short claude_desktop_config.json entry, restart, and let Claude edit while you watch.","group":"Start"} -->
+<p class="lead">Claude Desktop starts <code>kadr-mcp.exe</code> for you and shows Kadr’s tools in every chat. It takes one entry in a JSON file and a restart.</p>
+
+<ol class="steps">
+  <li>
+    <h3 id="open-config">Open the config file</h3>
+    <p>In Claude Desktop open <strong>Settings → Developer → Edit Config</strong>. This opens <code>claude_desktop_config.json</code> — normally <code>%APPDATA%\Claude\claude_desktop_config.json</code>. Create the file if it does not exist.</p>
+  </li>
+  <li>
+    <h3 id="add-kadr">Add Kadr</h3>
+    <p>Paste this, with your own user name in the path (Kadr’s <strong>Settings → API &amp; automation</strong> shows the exact snippet for your PC). In JSON every backslash is written twice.</p>
+    <pre><code class="lang-json">{
+  "mcpServers": {
+    "kadr": {
+      "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe"
+    }
+  }
+}</code></pre>
+    <p>If the file already has an <code>mcpServers</code> section, add only the <code>"kadr": { … }</code> entry inside it, separated from its neighbours by a comma.</p>
+  </li>
+  <li>
+    <h3 id="restart">Restart Claude Desktop completely</h3>
+    <p>Closing the window is not enough: right-click the Claude icon in the notification area and choose <strong>Quit</strong>, then start Claude Desktop again. Open Kadr first if you want to watch the edits.</p>
+  </li>
+  <li>
+    <h3 id="verify">Check that it works</h3>
+    <p>Kadr’s tools now appear in the chat’s tools menu. Start a new chat and ask:</p>
+    <blockquote><p>List my Kadr projects.</p></blockquote>
+    <p>Claude calls <code>project_list</code> and answers. Then try an edit and watch the editor:</p>
+    <blockquote><p>Create a 9:16 Kadr project called "Desktop test", open it in the Kadr window, generate a 4-second sunset_gradient background, add the title "Hello" with the title_bold template and show me the frame at 1 second.</p></blockquote>
+  </li>
+</ol>
+
+<h2 id="what-claude-sees">What Claude gets</h2>
+<ul>
+  <li>One tool per Kadr command (<code>timeline_segment_split</code> for <code>timeline.segment.split</code>) with the full description, parameter units and examples, plus <code>kadr_batch</code> for atomic multi-step edits. See <a href="{{root}}{{lang_root}}docs/ai/mcp.html">MCP tools</a>.</li>
+  <li>Server instructions that explain the basics: projects → tracks → segments, microseconds, read state first, batch edits, look at frames.</li>
+  <li>Pictures: <code>preview_frame</code> and <code>preview_contact_sheet</code> return image content, so Claude actually sees the result of its edit.</li>
+</ul>
+
+<h2 id="env">Another port or data folder</h2>
+<p>By default the bridge talks to <code>127.0.0.1:7777</code> and reads the token from <code>%APPDATA%\Kadr</code>. For a separate engine, add an <code>env</code> block:</p>
+<pre><code class="lang-json">{
+  "mcpServers": {
+    "kadr": {
+      "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe",
+      "env": {
+        "KADR_ADDR": "127.0.0.1:7790",
+        "KADR_DATA_DIR": "D:\\kadr-automation"
+      }
+    }
+  }
+}</code></pre>
+<p><code>KADR_TOKEN</code> can be set instead of <code>KADR_DATA_DIR</code>.</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+  <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>No Kadr tools in the chat</td><td>The config was not reloaded, or the JSON is invalid.</td><td>Quit Claude Desktop from the tray and start it again. Check the JSON (commas, doubled backslashes).</td></tr>
+    <tr><td>“Server disconnected” or the server fails to start</td><td>Wrong path to <code>kadr-mcp.exe</code>.</td><td>Use the full path from Kadr’s <strong>Settings → API &amp; automation</strong>. The server’s log is in <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
+    <tr><td><code>Kadr engine did not start … within 10 s</code></td><td><code>kadr-server.exe</code> is missing next to <code>kadr-mcp.exe</code>, or blocked.</td><td>Start Kadr yourself and ask again.</td></tr>
+    <tr><td>Edits don’t appear in the open Kadr window</td><td>The bridge started a headless <code>kadr-server.exe</code> before Kadr was opened; it owns port 7777.</td><td>Quit <code>kadr-server.exe</code> in Task Manager, keep Kadr open, restart Claude Desktop.</td></tr>
+    <tr><td><code>unauthorized: missing or invalid API token</code></td><td>An old <code>KADR_TOKEN</code> or a different <code>KADR_DATA_DIR</code> in <code>env</code>.</td><td>Remove them, or copy the token from <code>%APPDATA%\Kadr\api-token</code>.</td></tr>
+    <tr><td>A call stops after 5 minutes</td><td>The bridge waits at most 5 minutes per call (for example <code>wait: true</code> on long captions).</td><td>Run long jobs without <code>wait</code> and poll <code>captions_status</code> or <code>export_status</code>.</td></tr>
+  </tbody>
+</table>

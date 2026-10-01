@@ -1,0 +1,44 @@
+{
+  "command": "export.status",
+  "request": {
+    "job_id": "exp_64100b74df3c"
+  },
+  "response": {
+    "ok": true,
+    "result": {
+      "job_id": "exp_64100b74df3c",
+      "project_id": "prj_b54c09c92d24",
+      "project_name": "Kadr hero",
+      "state": "done",
+      "phase": "done",
+      "progress": 1,
+      "frames_done": 300,
+      "frames_total": 300,
+      "speed_fps": 43.26286883957117,
+      "eta_s": 0,
+      "elapsed_s": 7.9058996,
+      "path": "C:\\Users\\you\\Videos\\Kadr\\hero.mp4",
+      "size_bytes": 9157262,
+      "encoder": "h264_nvenc",
+      "settings": {
+        "kind": "video",
+        "resolution": "720p",
+        "width": 1280,
+        "height": 720,
+        "fps": 30,
+        "frames": 300,
+        "bitrate": "higher",
+        "bitrate_kbps": 7500,
+        "codec": "h264",
+        "format": "mp4",
+        "audio_kbps": 192,
+        "range_start_us": 0,
+        "range_end_us": 10000000,
+        "duration_us": 10000000
+      },
+      "created_at": "2026-10-01T16:54:12.1275485+02:00",
+      "started_at": "2026-10-01T16:54:12.1275485+02:00",
+      "finished_at": "2026-10-01T16:54:20.0334828+02:00"
+    }
+  }
+}

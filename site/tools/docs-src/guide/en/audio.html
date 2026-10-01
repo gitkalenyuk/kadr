@@ -1,0 +1,81 @@
+<!--meta {"title":"Audio","nav":"Audio","order":100,"description":"Add music and sound effects, set volume and fades, change voices, reduce noise, separate audio from video and create voice-overs with text to speech — including ElevenLabs voices.","group":"Creating"} -->
+<p class="lead">Good sound makes a video. Kadr lets you add music and sound effects, balance volumes, clean up voices and even create a voice-over from text.</p>
+
+<figure><img src="{{root}}assets/img/guide/audio.webp" alt="The Audio tab with sound effects categories and a list of sounds, and the Basic audio settings of a selected voice-over clip: volume, fade in, fade out, normalize loudness and reduce noise" width="1280" height="428" loading="lazy"><figcaption>Sound effects on the left; the settings of the selected audio clip on the right.</figcaption></figure>
+
+<h2 id="music">Add music and other audio</h2>
+<p>Kadr has no built-in music library — bring your own tracks. <a href="{{root}}{{lang_root}}docs/guide/import-media.html">Import</a> MP3, WAV, M4A, FLAC or other audio files in the <strong>Media</strong> tab, then click <strong>+</strong> on the card or drag it onto the timeline. Audio goes on its own track below the video and can be moved, trimmed and split like any clip.</p>
+<div class="callout warn"><p>Only use music you have the right to use. Platforms such as YouTube may mute or block videos with copyrighted songs.</p></div>
+
+<h2 id="basic">Volume and fades</h2>
+<p>Select an audio clip — or a video clip and its <strong>Audio</strong> tab — to see <strong>Basic</strong>:</p>
+<ul>
+  <li><strong>Volume</strong> in decibels (dB): 0 dB is the original level, −6 dB is about half as loud, all the way down to −∞ (silent); up to +20 dB to boost quiet recordings. The diamond next to it lets you <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">animate the volume</a>, for example to lower the music while someone speaks.</li>
+  <li><strong>Fade in</strong> / <strong>Fade out</strong> — the sound rises at the start and dies away at the end, in seconds.</li>
+  <li><strong>Normalize loudness</strong> — evens out how loud the clip sounds, to a level that suits social media and YouTube.</li>
+  <li><strong>Reduce noise</strong> — removes steady background noise such as hiss, hum or wind.</li>
+</ul>
+<p>The circular-arrow button resets these settings. To silence a whole track, use the speaker button at the start of the track.</p>
+
+<h2 id="voice-changer">Voice changer</h2>
+<div class="grid-2">
+  <div>
+    <p>Change how a voice sounds with 25 voice effects — Chipmunk, Deep, Monster, Robot, Whisper, Echo, Reverb, Underwater, Megaphone, Lo-fi and more.</p>
+    <ul>
+      <li>Select the clip and open <strong>Voice changer</strong> in the inspector (for a video clip it is inside the <strong>Audio</strong> tab). Click an effect; <strong>None</strong> turns it off.</li>
+      <li>Or open <strong>Audio → Voice effects</strong> in the library, select a clip on the timeline and press <strong>+</strong> on an effect.</li>
+    </ul>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/voice-changer.webp" alt="The Voice changer grid with Character effects such as Chipmunk, Deep and Robot, and Space effects such as Echo and Reverb" width="342" height="536" loading="lazy"><figcaption>Voice changer.</figcaption></figure>
+</div>
+
+<h2 id="separate">Separate the sound from a video</h2>
+<p>A video clip carries its own sound. To work with the sound separately — trim it differently, move it or replace it — select the video and press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>, or choose <strong>Smart tools → Separate audio</strong>. The sound becomes its own audio clip, linked to the video so they still move together while <a href="{{root}}{{lang_root}}docs/guide/timeline.html#magnet">Linkage</a> is on.</p>
+<p>The right-click menu of a video clip also has <strong>Extract audio</strong>, which moves the sound to a new audio clip and mutes the video's own sound.</p>
+
+<h2 id="sound-effects">Sound effects</h2>
+<p>Open the <strong>Audio</strong> tab of the library; <strong>Sound effects</strong> is shown first. There are 47 original sounds — whooshes, pops, impacts, UI clicks, risers, magic, camera, countdowns, cartoon sounds and ambience — sorted by the chips at the top. All were synthesised by Kadr and are free to use anywhere.</p>
+<ul>
+  <li><strong>Preview:</strong> click a sound, or rest the mouse on it for a moment.</li>
+  <li><strong>Add:</strong> click <strong>+</strong> to place it at the playhead, or drag it to the exact spot on the timeline — a whoosh right on a transition works wonders.</li>
+</ul>
+
+<h2 id="tts">Text to speech (voice-over)</h2>
+<div class="grid-2">
+  <figure><img src="{{root}}assets/img/guide/tts.webp" alt="The Text to speech panel with a text box, a voice list showing Microsoft Zira Desktop, a speed slider and the Add to timeline button" width="424" height="490" loading="lazy"><figcaption>Audio → Text to speech.</figcaption></figure>
+  <div>
+    <ol>
+      <li>Open <strong>Audio → Text to speech</strong> in the library.</li>
+      <li>Type or paste your text (up to 5,000 characters).</li>
+      <li>Pick a <strong>Voice</strong> and a <strong>Speed</strong> (0.5× to 2×).</li>
+      <li>Click <strong>Add to timeline</strong>. The speech is placed at the playhead on a free audio track.</li>
+    </ol>
+    <p>Already have a text clip? Select it: the panel then offers <strong>Read this clip aloud</strong>, and with <strong>Fit the text clip to the speech length</strong> the text stays on screen exactly as long as it is spoken. The same is available in the inspector under <strong>Text → Speech</strong>.</p>
+    <p>Speech is loudness-matched, so it sits well next to your other audio. You can <a href="{{root}}{{lang_root}}docs/guide/captions.html">caption it automatically</a> afterwards.</p>
+  </div>
+</div>
+
+<h3 id="voices">Which voices are available</h3>
+<ul>
+  <li><strong>Windows voices</strong> — built into Windows and fully offline. To get more languages, open Windows <strong>Settings → Time &amp; language → Speech</strong> and add voices, then click the refresh arrow next to <strong>Voice</strong> in Kadr.</li>
+  <li><strong>eSpeak NG</strong> — a free voice engine for about 130 languages. If you install it, its voices appear automatically.</li>
+  <li><strong>ElevenLabs</strong> — very natural cloud voices in many languages, if you have an ElevenLabs account. See below.</li>
+</ul>
+
+<h3 id="elevenlabs">Use ElevenLabs voices</h3>
+<p>ElevenLabs is an online service, so it needs an API key from your ElevenLabs account (in your ElevenLabs profile, under API keys; it starts with <code>sk_</code>). Kadr stores the key only on your computer.</p>
+<ol class="steps"><li>Open <strong>Settings → Voices</strong> (Home → Settings, or <strong>Menu → Settings…</strong> in the editor).</li><li>Paste the key into <strong>ElevenLabs API key</strong> and click <strong>Save</strong>. Kadr tells you right away whether the key works and how many voices it unlocked.</li></ol>
+<p>Alternatively, without opening Settings:</p>
+<p><strong>Option A — a key file (no commands needed).</strong> Open <strong>Settings → About</strong> in Kadr and copy the <strong>Data folder</strong> path. In that folder create a text file named exactly <code>elevenlabs.key</code> (make sure Windows doesn't add <code>.txt</code> to the name), paste your key into it as the only line and save.</p>
+<p><strong>Option B — one command.</strong> If you installed Kadr with the <em>Add kadrctl and kadr-mcp to PATH</em> option, open PowerShell and run, with your own key:</p>
+<pre><code class="lang-powershell">kadrctl run tts.set_api_key --provider elevenlabs --api_key sk_your_key_here</code></pre>
+<p>The answer tells you whether the key works and how many voices it unlocked.</p>
+<p>Then, in <strong>Audio → Text to speech</strong>, click the refresh arrow next to <strong>Voice</strong>. The ElevenLabs voices appear in their own group of the list, and in <strong>Text → Speech</strong> too.</p>
+<div class="callout note"><p>With an ElevenLabs voice, the text you speak is sent to ElevenLabs and uses your account's credits. Windows and eSpeak voices never leave your computer. To remove the key, click <strong>Remove</strong> in <strong>Settings → Voices</strong> (or delete the <code>elevenlabs.key</code> file).</p></div>
+
+<h2 id="more-audio">More audio tools</h2>
+<ul>
+  <li><strong>Speed</strong> — audio clips have a <strong>Speed</strong> tab with <em>Keep pitch</em>; see <a href="{{root}}{{lang_root}}docs/guide/timeline.html#speed">Speed</a>.</li>
+  <li><strong>Remove silence</strong> — cuts the quiet parts out of speech; see <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-silence">AI tools</a>.</li>
+  <li><strong>Beat detection</strong> and the <strong>loudness meter</strong> exist as commands (<code class="cmd">audio.detect_beats</code> drops a marker on every beat of a song, <code class="cmd">audio.loudness</code> measures LUFS) but have no button yet — ask an <a href="{{root}}{{lang_root}}docs/ai/index.html">AI assistant</a> to run them, then cut to the markers yourself.</li>
+</ul>

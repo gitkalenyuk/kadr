@@ -1,0 +1,56 @@
+<!--meta {"title":"Огляд інтерфейсу","nav":"Огляд інтерфейсу","order":20,"description":"Пронумерована екскурсія редактором Kadr: меню, бібліотека, плеєр, інспектор, панель інструментів і таймлайн — що робить кожна частина.","group":"Початок"} -->
+<p class="lead">Редактор Kadr влаштований так само, як CapCut: бібліотека ліворуч, плеєр посередині, властивості праворуч і таймлайн унизу. Ось що робить кожна частина.</p>
+
+<figure><img src="{{root}}assets/img/guide/interface-tour.webp" alt="Редактор Kadr із номерами від 1 до 9 на меню, назві проєкту, кнопці експорту, бібліотеці, плеєрі, інспекторі, панелі інструментів, заголовках доріжок і таймлайні" width="1280" height="840" loading="lazy"><figcaption>Редактор із відкритим проєктом. Номери відповідають списку нижче.</figcaption></figure>
+
+<h2 id="title-bar">Верхня панель</h2>
+<ol>
+  <li><strong>Меню й повернення на головний екран.</strong> У <strong>Menu</strong> є New project (новий проєкт), Import media (імпорт), Undo і Redo (з назвою кроку, наприклад «Undo Split»), Keyboard shortcuts (гарячі клавіші), API documentation, Settings і Check for updates (перевірити оновлення). Маленька крапка на кнопці Menu означає, що готове оновлення. Стрілка <strong>←</strong> повертає на <a href="{{root}}{{lang_root}}docs/guide/projects.html">головний екран</a>.</li>
+  <li><strong>Назва проєкту.</strong> Клацніть її, щоб перейменувати проєкт, і натисніть <kbd>Enter</kbd>.</li>
+  <li><strong>Shortcuts та Export.</strong> <strong>Shortcuts</strong> показує всі гарячі клавіші (<kbd>Ctrl</kbd>+<kbd>/</kbd>). <strong>Export</strong> зберігає відео у файл (<kbd>Ctrl</kbd>+<kbd>E</kbd>).</li>
+</ol>
+
+<h2 id="library">Бібліотека (4)</h2>
+<p>Тут усе, що можна додати до відео, розкладене по вкладках. Оберіть вкладку вгорі, категорію ліворуч і клацніть картку, щоб її переглянути. <strong>+</strong> на картці (або подвійний клік) додає її в позицію курсора відтворення; картку також можна перетягнути на таймлайн.</p>
+<table>
+  <thead><tr><th>Вкладка</th><th>Що всередині</th><th>Розділ посібника</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Media</strong></td><td>Ваші імпортовані відео, фото й аудіо</td><td><a href="{{root}}{{lang_root}}docs/guide/import-media.html">Імпорт медіа</a></td></tr>
+    <tr><td><strong>Audio</strong></td><td>Звукові ефекти, озвучення тексту, ефекти голосу</td><td><a href="{{root}}{{lang_root}}docs/guide/audio.html">Аудіо</a></td></tr>
+    <tr><td><strong>Text</strong></td><td>Звичайний текст, текстові шаблони й ефекти word art</td><td><a href="{{root}}{{lang_root}}docs/guide/text.html">Текст і заголовки</a></td></tr>
+    <tr><td><strong>Stickers</strong></td><td>Стікери й згенеровані фони</td><td><a href="{{root}}{{lang_root}}docs/guide/stickers.html">Стікери</a></td></tr>
+    <tr><td><strong>Effects</strong>, <strong>Transitions</strong>, <strong>Filters</strong>, <strong>Adjustment</strong></td><td>Відеоефекти, переходи між кліпами, кольорові фільтри й шари корекції</td><td><a href="{{root}}{{lang_root}}docs/guide/effects.html">Ефекти й колір</a></td></tr>
+    <tr><td><strong>Captions</strong>, <strong>Transcript</strong></td><td>Автоматичні субтитри й монтаж за текстом</td><td><a href="{{root}}{{lang_root}}docs/guide/captions.html">Субтитри</a></td></tr>
+    <tr><td><strong>My kit</strong></td><td>Ваші збережені стилі: тексту, кольору, ефектів…</td><td><a href="{{root}}{{lang_root}}docs/guide/effects.html#my-kit">My kit</a></td></tr>
+  </tbody>
+</table>
+<div class="callout tip"><p>Якщо частина вкладок схована за правим краєм, розширте бібліотеку, перетягнувши межу між нею та плеєром, або прокрутіть рядок вкладок убік.</p></div>
+
+<h2 id="player">Плеєр (5)</h2>
+<p>Показує відео саме таким, яким воно буде після експорту. <kbd>Space</kbd> (пробіл) запускає й зупиняє відтворення. Клацнувши кліп просто в кадрі, його можна перемістити, масштабувати чи повернути мишею. Під картинкою — час, кнопка відтворення, якість перегляду, меню <strong>Ratio</strong> (співвідношення сторін) і повноекранний режим. Докладніше — у розділі <a href="{{root}}{{lang_root}}docs/guide/player.html">Плеєр і перегляд</a>.</p>
+
+<h2 id="inspector">Інспектор (6)</h2>
+<p>Налаштування того, що зараз виділено. Для відеокліпу це вкладки <strong>Video</strong>, <strong>Audio</strong>, <strong>Speed</strong>, <strong>Animation</strong> і <strong>Adjustment</strong>; для заголовка — <strong>Text</strong> і <strong>Animation</strong>; для аудіокліпу — <strong>Basic</strong>, <strong>Voice changer</strong> і <strong>Speed</strong>. Коли нічого не виділено, інспектор показує <strong>Draft settings</strong> — налаштування проєкту: частоту кадрів і тло полотна.</p>
+<p>Кожна зміна зберігається й скасовується через <kbd>Ctrl</kbd>+<kbd>Z</kbd>. Біля багатьох повзунків праворуч є маленький ромб — це <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">ключові кадри</a> (анімація значення в часі).</p>
+
+<h2 id="toolbar">Панель інструментів (7)</h2>
+<p>Рядок над таймлайном. Зліва направо:</p>
+<ul>
+  <li><strong>Інструмент виділення / розрізання</strong> (<kbd>A</kbd> / <kbd>B</kbd>), <strong>Undo</strong> (скасувати), <strong>Redo</strong> (повторити);</li>
+  <li><strong>Split</strong> (розрізати), <strong>Delete left</strong> і <strong>Delete right</strong> (видалити ліворуч / праворуч від курсора), <strong>Delete</strong>;</li>
+  <li><strong>Add marker</strong> (маркер), <strong>Freeze frame</strong> (стоп-кадр), <strong>Reverse</strong> (реверс), <strong>Mirror</strong> (дзеркало), <strong>Rotate</strong> (поворот), <strong>Crop</strong> (кадрування);</li>
+  <li><strong>Smart tools</strong> — поділ на сцени, вирізання тиші, автокадрування, відокремлення звуку й автосубтитри;</li>
+  <li>праворуч: <strong>магніт головної доріжки</strong>, <strong>прилипання</strong>, <strong>зв’язування</strong>, <strong>вісь перегляду</strong>, масштаб таймлайна, <strong>Zoom to fit</strong> (вмістити все) і <strong>приховати таймлайн</strong>.</li>
+</ul>
+<p>Наведіть курсор миші на будь-яку кнопку — побачите її назву й гарячу клавішу. Кнопки, які не стосуються поточного виділення, неактивні (сірі).</p>
+
+<h2 id="track-headers">Заголовки доріжок (8)</h2>
+<p>Кожен рядок доріжки починається з маленьких кнопок: замок <strong>блокує</strong> доріжку (захищає від змін), око <strong>ховає</strong> її, динамік <strong>вимикає</strong> звук. На головній відеодоріжці є ще кнопка <strong>Cover</strong> — вибір обкладинки проєкту.</p>
+
+<h2 id="timeline">Таймлайн (9)</h2>
+<p>Ваше відео, розгорнуте в часі зліва направо. Лінійка вгорі показує час; клацніть або протягніть по ній, щоб пересунути <strong>курсор відтворення</strong> (білу вертикальну лінію). Доріжки складені стосом: найнижча відеодоріжка — <strong>головна</strong>; накладене відео («картинка в картинці»), стікери, текст, ефекти й фільтри лежать на доріжках над нею, а звук — під нею. Кольорові прапорці на лінійці — це <strong>маркери</strong>. Усе про монтаж тут — у розділі <a href="{{root}}{{lang_root}}docs/guide/timeline.html">Монтаж на таймлайні</a>.</p>
+
+<h2 id="resize">Розмір панелей</h2>
+<p>Перетягуйте тонкі межі між панелями, щоб збільшити бібліотеку, інспектор чи таймлайн. <kbd>Ctrl</kbd>+<kbd>.</kbd> ховає таймлайн і дає великий плеєр; повторне натискання повертає його.</p>
+
+<div class="callout note"><p><strong>Проєкт змінив хтось інший?</strong> Якщо проєкт редагує ШІ-асистент або скрипт, вікно оновлюється наживо й показує коротке повідомлення, наприклад «Edited via MCP». Такі зміни скасовуються так само, як і ваші. Див. <a href="{{root}}{{lang_root}}docs/ai/index.html">документацію для ШІ</a>.</p></div>

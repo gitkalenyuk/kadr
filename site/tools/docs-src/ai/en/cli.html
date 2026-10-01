@@ -1,0 +1,163 @@
+<!--meta {"title":"Command line: kadrctl","nav":"CLI (kadrctl)","order":130,"description":"List, describe and run any Kadr command from a terminal with human time formats, run JSON batch files, and script whole folders in PowerShell.","group":"Interfaces"} -->
+<p class="lead"><code>kadrctl</code> runs any Kadr command from a terminal. It reads each command’s parameters from the running engine, converts values to the right types (including times like <code>2.5s</code>), and prints the result as JSON — handy for quick edits, for scripts, and for agents that only have a shell.</p>
+
+<h2 id="setup">Setup</h2>
+<p><code>kadrctl.exe</code> is installed next to <code>Kadr.exe</code> in <code>%LOCALAPPDATA%\Programs\Kadr\</code>. With the installer option <em>Add kadrctl and kadr-mcp to PATH</em> (on by default) it works from any new terminal: <code>kadrctl help</code>, <code>kadrctl version</code>.</p>
+<p>Unlike <code>kadr-mcp</code>, <code>kadrctl</code> does <strong>not</strong> start the engine: Kadr or <code>kadr-server.exe</code> must be running. It finds the address and token in <code>%APPDATA%\Kadr</code> by itself.</p>
+
+<h2 id="subcommands">Subcommands</h2>
+<table>
+  <thead><tr><th>Subcommand</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>kadrctl commands [category]</code></td><td>Lists every command with its title, optionally one category (<code>Export</code>, <code>"Smart tools"</code>…). Planned commands are marked <code>(planned)</code>.</td></tr>
+    <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>The full documentation of one command: description, UI path, hotkey, returns, and each <code>--parameter</code> with type.</td></tr>
+    <tr><td><code>kadrctl run &lt;command&gt; [--param value]…</code></td><td>Runs a command and prints its result as indented JSON.</td></tr>
+    <tr><td><code>kadrctl batch &lt;project_id&gt; &lt;calls.json&gt; [--dry-run]</code></td><td>Runs a JSON file of calls as one atomic, undoable edit.</td></tr>
+    <tr><td><code>kadrctl version</code></td><td>Prints the kadrctl version.</td></tr>
+  </tbody>
+</table>
+<pre><code class="lang-text">&gt; kadrctl commands Window
+ui.library_tab                     Switch library tab
+ui.open_project                    Show project in the window
+ui.select                          Select clip in the window
+ui.toast                           Show a message in the window</code></pre>
+<pre><code class="lang-text">&gt; kadrctl describe timeline.segment.split
+timeline.segment.split — Split
+
+Splits a clip into two at at_us (default: the playhead), exactly like CapCut's Split button / Ctrl+B. …
+UI: Toolbar/Split. Hotkey: Ctrl+B.
+Undoable with edit.undo.
+Returns: {track_id, left, right, linked_right_ids?} — both halves (full segments) and the ids of linked right halves.
+
+Parameters:
+  --project_id         string   (required) ID of the project to operate on (e.g. "prj_8f3a..."). …
+  --segment_id         string   ID of the segment (clip) to edit. Optional: when omitted the clip on the main track under at_us is used …
+  --at_us              integer  Timeline time in microseconds (1 s = 1000000). Defaults to the current playhead position.</code></pre>
+
+<h2 id="flags">Writing parameters</h2>
+<p>Each parameter becomes a flag with the same name; <code>kadrctl</code> converts the value to the parameter’s type. Unknown flags are rejected before anything runs.</p>
+<table>
+  <thead><tr><th>Form</th><th>Example</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>--param value</code>, <code>--param=value</code></td><td><code>--ratio 9:16</code></td><td>Quote values with spaces: <code>--name "Kitchen tour"</code>.</td></tr>
+    <tr><td>Boolean</td><td><code>--wait</code>, <code>--wait true</code>, <code>--snap false</code></td><td>A bare flag means <code>true</code>.</td></tr>
+    <tr><td>Number</td><td><code>--volume_db -12</code>, <code>--scale 0.6</code></td><td>Negative numbers are fine.</td></tr>
+    <tr><td>Time (<code>*_us</code>)</td><td><code>2500000</code>, <code>2.5s</code>, <code>1500ms</code>, <code>1m2s</code>, <code>00:01:02.5</code></td><td>Converted to microseconds; a plain number already is microseconds.</td></tr>
+    <tr><td>Array or object</td><td><code>--paths "[\"C:/Clips\"]"</code></td><td>Must be JSON — see <a href="#quoting">quoting</a>.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="quoting">Quoting JSON on Windows</h2>
+<p>Array and object parameters (<code>paths</code>, <code>segment_ids</code>, <code>style</code>, <code>params</code>, <code>points</code>…) are JSON, and its double quotes must survive the shell:</p>
+<table>
+  <thead><tr><th>Shell</th><th>Write</th></tr></thead>
+  <tbody>
+    <tr><td>Command Prompt</td><td><code>--paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+    <tr><td>PowerShell 7.3+</td><td><code>--paths '["C:/Users/you/Videos/trip"]'</code></td></tr>
+    <tr><td>Windows PowerShell 5.1</td><td><code>--paths '[\"C:/Users/you/Videos/trip\"]'</code></td></tr>
+    <tr><td>Any PowerShell</td><td><code>kadrctl --% run media.import --project_id prj_… --paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+  </tbody>
+</table>
+<p>The docs use the <code>--%</code> form: it works in every PowerShell version, and without <code>--%</code> the same line works in Command Prompt. After <code>--%</code> PowerShell stops interpreting the line, so <code>$variables</code> are not expanded. Inside JSON use forward slashes in paths (<code>C:/Users/you</code>) or double backslashes. In PowerShell, quote colours (<code>"#FFD400"</code> — <code>#</code> starts a comment) and put text containing <code>$</code> in single quotes.</p>
+
+<h2 id="batch">Batch files</h2>
+<p>A batch file is a JSON array of <code>{command, args}</code> objects without <code>project_id</code> (it comes from the command line). <code>--dry-run</code> checks the batch on a copy without saving. Save the file as UTF-8 <strong>without</strong> a byte-order mark: <code>kadrctl</code> rejects a BOM, and Windows PowerShell 5.1’s <code>Set-Content -Encoding UTF8</code> writes one — use <code>[IO.File]::WriteAllText()</code> as in the <a href="#scripting">script below</a>.</p>
+<pre><code class="lang-json">[
+  { "command": "transition.apply_all", "args": { "type": "mix", "duration_us": 400000 } },
+  { "command": "text.add", "args": { "text": "Kitchen tour", "template_id": "title_bold", "at_us": 0, "duration_us": 2500000 } }
+]</code></pre>
+<pre><code class="lang-powershell">kadrctl batch prj_9d2e4c7a1b05 calls.json --dry-run
+kadrctl batch prj_9d2e4c7a1b05 calls.json</code></pre>
+
+<h2 id="walkthrough">A complete edit from the terminal</h2>
+<p>Two clips become a captioned 9:16 short. Each command prints JSON; copy the ids it returns into the next command (the comments show what came back).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Kitchen tour" --ratio 9:16
+# "id": "prj_9d2e4c7a1b05"
+kadrctl --% run media.import --project_id prj_9d2e4c7a1b05 --paths "[\"C:/Users/you/Videos/kitchen\"]"
+# materials: mat_3f81c2d9e0a4 (pan.mp4), mat_7b0e5a1c9d36 (talk.mp4)
+kadrctl run timeline.segment.add --project_id prj_9d2e4c7a1b05 --material_id mat_3f81c2d9e0a4
+kadrctl run timeline.segment.add --project_id prj_9d2e4c7a1b05 --material_id mat_7b0e5a1c9d36
+kadrctl run timeline.get --project_id prj_9d2e4c7a1b05
+# main track: seg_51c08e7f2a93 (0–6 s), seg_c2a9e4b7d108 (6–12 s)
+kadrctl run timeline.segment.delete_right --project_id prj_9d2e4c7a1b05 --segment_id seg_c2a9e4b7d108 --at_us 9s
+# keep only the first 3 s of the second clip
+kadrctl run segment.set_background --project_id prj_9d2e4c7a1b05 --segment_id seg_51c08e7f2a93 --type blur --blur 0.75 --apply_to_all
+kadrctl run transition.apply_all --project_id prj_9d2e4c7a1b05 --type mix --duration_us 0.4s
+kadrctl run captions.auto --project_id prj_9d2e4c7a1b05 --style_id cap_highlight_word --wait
+kadrctl run export.start --project_id prj_9d2e4c7a1b05 --resolution 1080p --path C:/Users/you/Videos/Kadr/kitchen.mp4
+kadrctl run export.status --job_id exp_6a0d93e1f7c2</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Kitchen tour", "ratio": "9:16"}}
+{"name": "media_import", "arguments": {"project_id": "prj_9d2e4c7a1b05", "paths": ["C:/Users/you/Videos/kitchen"]}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_9d2e4c7a1b05", "material_id": "mat_3f81c2d9e0a4"}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_9d2e4c7a1b05", "material_id": "mat_7b0e5a1c9d36"}}
+{"name": "timeline_get", "arguments": {"project_id": "prj_9d2e4c7a1b05"}}
+{"name": "timeline_segment_delete_right", "arguments": {"project_id": "prj_9d2e4c7a1b05", "segment_id": "seg_c2a9e4b7d108", "at_us": 9000000}}
+{"name": "segment_set_background", "arguments": {"project_id": "prj_9d2e4c7a1b05", "segment_id": "seg_51c08e7f2a93", "type": "blur", "blur": 0.75, "apply_to_all": true}}
+{"name": "transition_apply_all", "arguments": {"project_id": "prj_9d2e4c7a1b05", "type": "mix", "duration_us": 400000}}
+{"name": "captions_auto", "arguments": {"project_id": "prj_9d2e4c7a1b05", "style_id": "cap_highlight_word", "wait": true}}
+{"name": "export_start", "arguments": {"project_id": "prj_9d2e4c7a1b05", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/kitchen.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_6a0d93e1f7c2"}}</code></pre></div>
+<p>Every step can be undone with <code>kadrctl run edit.undo --project_id prj_9d2e4c7a1b05</code>, and the editor shows each change as it happens.</p>
+
+<h2 id="scripting">Scripting in PowerShell</h2>
+<p>This script makes a vertical, reframed short from every <code>.mp4</code> in a folder and queues the exports. It runs in Windows PowerShell 5.1 and PowerShell 7. The helper <code>kadr</code> turns <code>kadrctl</code>’s JSON into objects and stops on errors; <code>kadr-batch</code> sends JSON through a file, so paths with spaces need no quoting.</p>
+<pre><code class="lang-powershell">$ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [Text.Encoding]::UTF8   # read non-English names correctly
+
+# Run kadrctl and turn its JSON output into PowerShell objects.
+function kadr {
+  $out = kadrctl @args
+  if ($LASTEXITCODE -ne 0) { throw "kadrctl $($args[0]) $($args[1]) failed" }
+  $out | Out-String | ConvertFrom-Json
+}
+
+# Run calls as one batch. JSON goes through a file, so no shell quoting is involved.
+function kadr-batch($ProjectId, $Calls) {
+  $file = Join-Path $env:TEMP 'kadr-calls.json'
+  [IO.File]::WriteAllText($file, (ConvertTo-Json -InputObject @($Calls) -Depth 10))  # UTF-8, no BOM
+  kadr batch $ProjectId $file
+}
+
+$src = "$env:USERPROFILE\Videos\Raw"
+$dst = "$env:USERPROFILE\Videos\Kadr\Shorts"
+
+Get-ChildItem $src -Filter *.mp4 | ForEach-Object {
+  $p   = kadr run project.create --name $_.BaseName --ratio 9:16
+  $imp = kadr-batch $p.id @(@{ command = 'media.import'; args = @{ paths = @($_.FullName) } })
+  $seg = kadr run timeline.segment.add --project_id $p.id --material_id $imp.results[0].materials[0].id
+  kadr run ai.auto_reframe --project_id $p.id --segment_id $seg.segment.id --ratio 9:16 | Out-Null
+  $job = kadr run export.start --project_id $p.id --resolution 1080p --path "$dst\$($_.BaseName).mp4"
+  "{0} -&gt; {1} ({2})" -f $_.Name, $job.path, $job.state
+}
+
+kadr run export.list | Format-Table job_id, state, progress, path</code></pre>
+<ul>
+  <li>Exports run one at a time; extra jobs wait as <code>queued</code>, so the loop finishes long before the videos do.</li>
+  <li><code class="cmd">export.estimate</code> shows the final size and path without exporting.</li>
+  <li>To test a script safely, point it at a separate engine: <code>$env:KADR_DATA_DIR</code> and <code>$env:KADR_ADDR</code> for both <code>kadr-server.exe</code> and <code>kadrctl</code>.</li>
+</ul>
+
+<h2 id="environment">Environment variables</h2>
+<table>
+  <thead><tr><th>Variable</th><th>Default</th><th>Used by</th></tr></thead>
+  <tbody>
+    <tr><td><code>KADR_ADDR</code></td><td><code>127.0.0.1:7777</code></td><td>Where the engine listens and where <code>kadrctl</code>/<code>kadr-mcp</code> connect.</td></tr>
+    <tr><td><code>KADR_DATA_DIR</code></td><td><code>%APPDATA%\Kadr</code></td><td>Projects, settings and the <code>api-token</code> file.</td></tr>
+    <tr><td><code>KADR_TOKEN</code></td><td>contents of <code>api-token</code></td><td>Overrides the token, for the engine and for clients.</td></tr>
+    <tr><td><code>KADR_FFMPEG_DIR</code></td><td>—</td><td>A folder with <code>ffmpeg.exe</code> and <code>ffprobe.exe</code> for the engine.</td></tr>
+    <tr><td><code>KADR_PYTHON</code></td><td>—</td><td>The <code>python.exe</code> that has faster-whisper (captions).</td></tr>
+    <tr><td><code>KADR_ELEVENLABS_API_KEY</code></td><td>—</td><td>An ElevenLabs key for the engine instead of <code class="cmd">tts.set_api_key</code>.</td></tr>
+  </tbody>
+</table>
+<pre><code class="lang-powershell">$env:KADR_DATA_DIR = "D:\kadr-automation"
+$env:KADR_ADDR = "127.0.0.1:7790"
+Start-Process kadr-server.exe
+kadrctl run project.list</code></pre>
+
+<h2 id="errors">Exit codes and errors</h2>
+<p>On success <code>kadrctl</code> prints the result to standard output and exits with <code>0</code>. On failure it prints the error to standard error and exits with <code>1</code>:</p>
+<pre><code class="lang-text">error [not_found]: project "prj_nope" not found
+hint: Call project.list to get valid project ids.</code></pre>
+<p>Problems found before the call is sent start with a plain <code>error:</code>:</p>
+<pre><code class="lang-text">error: project.list has no parameter "foo" (see `kadrctl describe project.list`)
+error: cannot reach Kadr at http://127.0.0.1:7777 (is the editor or `kadr-server` running?): …</code></pre>
+<p>Error codes are the same as in the <a href="{{root}}{{lang_root}}docs/ai/rest.html#errors">REST API</a>.</p>

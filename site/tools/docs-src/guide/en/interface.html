@@ -1,0 +1,56 @@
+<!--meta {"title":"Interface tour","nav":"Interface tour","order":20,"description":"A numbered tour of the Kadr editor: menu, library, player, inspector, toolbar and timeline — what each part does.","group":"Start"} -->
+<p class="lead">The Kadr editor has the same layout as CapCut: library on the left, player in the middle, properties on the right and the timeline at the bottom. Here is what every part does.</p>
+
+<figure><img src="{{root}}assets/img/guide/interface-tour.webp" alt="The Kadr editor with numbered markers 1 to 9 on the menu, project name, export button, library, player, inspector, toolbar, track headers and timeline" width="1280" height="840" loading="lazy"><figcaption>The editor with a project open. The numbers match the list below.</figcaption></figure>
+
+<h2 id="title-bar">Top bar</h2>
+<ol>
+  <li><strong>Menu and Back to home.</strong> <strong>Menu</strong> holds New project, Import media, Undo and Redo (with the name of the step, e.g. “Undo Split”), Keyboard shortcuts, API documentation, Settings and Check for updates. A small dot on Menu means an update is ready. The arrow <strong>←</strong> takes you back to the <a href="{{root}}{{lang_root}}docs/guide/projects.html">home screen</a>.</li>
+  <li><strong>Project name.</strong> Click it to rename the project, then press <kbd>Enter</kbd>.</li>
+  <li><strong>Shortcuts and Export.</strong> <strong>Shortcuts</strong> lists every keyboard shortcut (<kbd>Ctrl</kbd>+<kbd>/</kbd>). <strong>Export</strong> saves your video as a file (<kbd>Ctrl</kbd>+<kbd>E</kbd>).</li>
+</ol>
+
+<h2 id="library">Library (4)</h2>
+<p>Everything you can add to a video lives here, sorted into tabs. Pick a tab at the top, a category on the left, and click a card to preview it. Click <strong>+</strong> on a card (or double-click it) to add it at the playhead, or drag it onto the timeline.</p>
+<table>
+  <thead><tr><th>Tab</th><th>What's inside</th><th>Guide page</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Media</strong></td><td>Your imported videos, photos and audio files</td><td><a href="{{root}}{{lang_root}}docs/guide/import-media.html">Import media</a></td></tr>
+    <tr><td><strong>Audio</strong></td><td>Sound effects, text to speech, voice effects</td><td><a href="{{root}}{{lang_root}}docs/guide/audio.html">Audio</a></td></tr>
+    <tr><td><strong>Text</strong></td><td>Default text, text templates and word-art effects</td><td><a href="{{root}}{{lang_root}}docs/guide/text.html">Text &amp; titles</a></td></tr>
+    <tr><td><strong>Stickers</strong></td><td>Stickers and generated backgrounds</td><td><a href="{{root}}{{lang_root}}docs/guide/stickers.html">Stickers</a></td></tr>
+    <tr><td><strong>Effects</strong>, <strong>Transitions</strong>, <strong>Filters</strong>, <strong>Adjustment</strong></td><td>Video effects, transitions between clips, colour filters and adjustment layers</td><td><a href="{{root}}{{lang_root}}docs/guide/effects.html">Effects &amp; colour</a></td></tr>
+    <tr><td><strong>Captions</strong>, <strong>Transcript</strong></td><td>Automatic subtitles and editing by text</td><td><a href="{{root}}{{lang_root}}docs/guide/captions.html">Captions</a></td></tr>
+    <tr><td><strong>My kit</strong></td><td>Looks you saved yourself: text styles, colour settings, effects…</td><td><a href="{{root}}{{lang_root}}docs/guide/effects.html#my-kit">My kit</a></td></tr>
+  </tbody>
+</table>
+<div class="callout tip"><p>If some tabs are hidden at the right edge, drag the border between the library and the player to make the library wider, or scroll the tab row sideways.</p></div>
+
+<h2 id="player">Player (5)</h2>
+<p>Shows your video exactly as it will be exported. Press <kbd>Space</kbd> to play and pause. You can click a clip in the picture to select it and then move, scale or rotate it with the mouse. Below the picture are the time, the play button, the preview quality, the <strong>Ratio</strong> menu and full screen. More in <a href="{{root}}{{lang_root}}docs/guide/player.html">Player &amp; preview</a>.</p>
+
+<h2 id="inspector">Inspector (6)</h2>
+<p>The settings of whatever is selected. Select a video clip and you get the tabs <strong>Video</strong>, <strong>Audio</strong>, <strong>Speed</strong>, <strong>Animation</strong> and <strong>Adjustment</strong>; select a title and you get <strong>Text</strong> and <strong>Animation</strong>; an audio clip shows <strong>Basic</strong>, <strong>Voice changer</strong> and <strong>Speed</strong>. When nothing is selected, the inspector shows the <strong>Draft settings</strong> of the project: frame rate and canvas background.</p>
+<p>Every change is saved and can be undone with <kbd>Ctrl</kbd>+<kbd>Z</kbd>. Many sliders have a small diamond on the right: that is for <a href="{{root}}{{lang_root}}docs/guide/effects.html#keyframes">keyframes</a> (animating a value over time).</p>
+
+<h2 id="toolbar">Toolbar (7)</h2>
+<p>The row above the timeline. From left to right:</p>
+<ul>
+  <li><strong>Select / Split tool</strong> (<kbd>A</kbd> / <kbd>B</kbd>), <strong>Undo</strong>, <strong>Redo</strong>;</li>
+  <li><strong>Split</strong>, <strong>Delete left</strong>, <strong>Delete right</strong>, <strong>Delete</strong>;</li>
+  <li><strong>Add marker</strong>, <strong>Freeze frame</strong>, <strong>Reverse</strong>, <strong>Mirror</strong>, <strong>Rotate</strong>, <strong>Crop</strong>;</li>
+  <li><strong>Smart tools</strong> — scene split, silence removal, auto reframe, separate audio and auto captions;</li>
+  <li>on the right: <strong>Main track magnet</strong>, <strong>Auto snapping</strong>, <strong>Linkage</strong>, <strong>Preview axis</strong>, timeline zoom, <strong>Zoom to fit</strong> and <strong>Hide timeline</strong>.</li>
+</ul>
+<p>Hover over any button to see its name and shortcut. Buttons that don't apply to the current selection are greyed out.</p>
+
+<h2 id="track-headers">Track headers (8)</h2>
+<p>Each track row starts with small buttons: a padlock to <strong>lock</strong> the track (protect it from edits), an eye to <strong>hide</strong> it and a speaker to <strong>mute</strong> it. The main video track also has a <strong>Cover</strong> button for choosing the project's thumbnail.</p>
+
+<h2 id="timeline">Timeline (9)</h2>
+<p>Your video laid out in time, from left to right. The ruler at the top shows the time; click or drag on it to move the <strong>playhead</strong> (the white vertical line). Tracks are stacked: the lowest video track is the <strong>main track</strong>, picture-in-picture clips, stickers, text, effects and filters go on tracks above it, and audio goes below. Coloured flags on the ruler are <strong>markers</strong>. Everything about editing here is in <a href="{{root}}{{lang_root}}docs/guide/timeline.html">Timeline editing</a>.</p>
+
+<h2 id="resize">Resize the panels</h2>
+<p>Drag the thin borders between the panels to make the library, inspector or timeline bigger. Press <kbd>Ctrl</kbd>+<kbd>.</kbd> to hide the timeline and get a large player; press it again to bring it back.</p>
+
+<div class="callout note"><p><strong>Edited by someone else?</strong> If an AI assistant or a script changes your project, the editor updates live and shows a short message such as “Edited via MCP”. Those changes can be undone like your own. See the <a href="{{root}}{{lang_root}}docs/ai/index.html">AI documentation</a>.</p></div>

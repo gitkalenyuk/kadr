@@ -1,0 +1,62 @@
+<!--meta {"title":"Ліцензії","nav":"Ліцензії","order":30,"description":"Ліцензія безкоштовної програми Kadr простими словами, компоненти з відкритим кодом, на яких вона побудована, та їхні ліцензії, FFmpeg і ліцензії матеріалів цього сайту.","group":"Kadr"} -->
+<p class="lead">Kadr — безкоштовна програма із закритим кодом, побудована на компонентах із відкритим кодом. На цій сторінці коротко викладено ліцензію Kadr, перелічено ці компоненти з їхніми ліцензіями та описано матеріали, використані на сайті.</p>
+<div class="callout note"><p>Це переклад для зручності. Юридичну силу мають англійський текст ліцензії та <a href="../licenses.html" hreflang="en">англійська версія цієї сторінки</a>.</p></div>
+
+<h2 id="kadr-licence">Ліцензія Kadr</h2>
+<p>Kadr поширюється за ліцензійною угодою з кінцевим користувачем (EULA) для безкоштовних програм. Простими словами:</p>
+<ul>
+  <li><strong>Безкоштовне використання.</strong> Ви можете встановлювати й використовувати Kadr на будь-якій кількості комп’ютерів, якими володієте чи керуєте, з будь-якою законною метою, зокрема для комерційної роботи.</li>
+  <li><strong>Ваш результат належить вам.</strong> Створені вами відео, зображення, аудіо й проєкти — ваші. Ви можете публікувати та продавати їх, нічого не винні Kadr. Права на медіа інших авторів, які ви імпортуєте, зберігаються.</li>
+  <li><strong>Закритий код.</strong> Не можна виконувати зворотну розробку, змінювати чи поширювати програми або інсталятори Kadr, наприклад на сайтах із завантаженнями. Натомість давайте посилання на офіційну сторінку завантаження.</li>
+  <li><strong>Автоматизацію вітаємо.</strong> Керування Kadr через задокументовані інтерфейси (REST API, MCP-сервер і інструмент командного рядка) прямо дозволене й не вважається зворотною розробкою.</li>
+  <li><strong>Без гарантій.</strong> Kadr надається «як є», безкоштовно. Робіть резервні копії медіа й проєктів.</li>
+</ul>
+<p>Цей виклад не є ліцензією. Повний текст — у файлі <a href="https://github.com/gitkalenyuk/kadr/blob/main/LICENSE">LICENSE</a> на GitHub і в теці <code>licenses</code> кожної інсталяції Kadr.</p>
+
+<h2 id="third-party">Сторонні компоненти</h2>
+<p>Повні повідомлення з текстами всіх ліцензій — у файлі <a href="https://github.com/gitkalenyuk/kadr/blob/main/THIRD_PARTY_NOTICES">THIRD_PARTY_NOTICES</a> і в теці <code>licenses</code> встановленої програми. Ніщо в EULA Kadr не обмежує прав, які надають вам ці ліцензії.</p>
+
+<h3 id="compiled-in">Скомпільовано в Kadr</h3>
+<table>
+  <thead>
+    <tr><th>Компонент</th><th>Для чого</th><th>Ліцензія</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Стандартна бібліотека й середовище виконання <a href="https://go.dev">Go</a></td><td>Рушій, API, CLI та міст MCP</td><td>BSD 3-Clause</td></tr>
+    <tr><td><a href="https://wails.io">Wails</a> v3 (<code>github.com/wailsapp/wails/v3</code>, <code>@wailsio/runtime</code>)</td><td>Вікно настільного застосунку</td><td>MIT</td></tr>
+    <tr><td><code>golang.org/x/image</code>, <code>golang.org/x/sys</code>, <code>golang.org/x/text</code></td><td>Робота із зображеннями та шрифтами, системні виклики Windows, текст</td><td>BSD 3-Clause</td></tr>
+    <tr><td>Шрифти Go (Bigelow &amp; Holmes, через <code>golang.org/x/image</code>)</td><td>Вбудовані шрифти для титрів і субтитрів</td><td>Ліцензія на кшталт BSD</td></tr>
+    <tr><td><a href="https://github.com/coder/websocket"><code>github.com/coder/websocket</code></a></td><td>Потік подій WebSocket</td><td>ISC</td></tr>
+    <tr><td><code>github.com/adrg/xdg</code>, <code>github.com/go-ole/go-ole</code></td><td>Використовуються Wails для системних тек і Windows COM</td><td>MIT</td></tr>
+    <tr><td><a href="https://react.dev">React</a> і React DOM (із <code>scheduler</code>, <code>loose-envify</code>, <code>js-tokens</code>)</td><td>Інтерфейс редактора</td><td>MIT</td></tr>
+    <tr><td><a href="https://lucide.dev">Lucide</a> (<code>lucide-react</code>)</td><td>Іконки інтерфейсу</td><td>ISC (іконки, похідні від Feather: MIT)</td></tr>
+    <tr><td><a href="https://github.com/pmndrs/zustand">zustand</a></td><td>Стан інтерфейсу</td><td>MIT</td></tr>
+    <tr><td><a href="https://github.com/rsms/inter">Inter</a></td><td>Шрифт інтерфейсу</td><td>SIL Open Font License 1.1</td></tr>
+  </tbody>
+</table>
+
+<h3 id="ffmpeg">FFmpeg</h3>
+<p><a href="https://ffmpeg.org">FFmpeg</a> <strong>не входить</strong> до складу Kadr. Kadr запускає <code>ffmpeg.exe</code> і <code>ffprobe.exe</code> як окремі програми. За вашої згоди Kadr завантажує GPL-збірку FFmpeg 7.1 для Windows x64 з проєкту <a href="https://github.com/BtbN/FFmpeg-Builds">BtbN/FFmpeg-Builds</a> або використовує копію, яка у вас уже є. Цей FFmpeg поширюють його автори за власною ліцензією; GPL-збірки ліцензовано за GNU General Public License версії 3 або новішої. Він не є частиною Kadr, і EULA Kadr на нього не поширюється. Вихідний код доступний у <a href="https://ffmpeg.org/download.html">проєкті FFmpeg</a> і у випусках BtbN/FFmpeg-Builds. Подробиці про ліцензію: <a href="https://ffmpeg.org/legal.html">ffmpeg.org/legal.html</a>. FFmpeg — торговельна марка Фабріса Беллара, засновника проєкту FFmpeg.</p>
+
+<h3 id="optional">Необов’язкові компоненти, які ви встановлюєте самі</h3>
+<p>Kadr може використовувати їх, якщо вони є на вашому ПК. Вони не постачаються з Kadr і залишаються під власними ліцензіями:</p>
+<table>
+  <thead>
+    <tr><th>Компонент</th><th>Для чого</th><th>Ліцензія</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="https://github.com/SYSTRAN/faster-whisper">faster-whisper</a> і моделі Whisper</td><td>Офлайн-субтитри й транскрипти</td><td>MIT (моделі — за власними ліцензіями)</td></tr>
+    <tr><td><a href="https://onnxruntime.ai">ONNX Runtime</a>, <a href="https://github.com/danielgatis/rembg">rembg</a></td><td>Прибирання фону</td><td>MIT</td></tr>
+    <tr><td><a href="https://github.com/espeak-ng/espeak-ng">eSpeak NG</a></td><td>Синтез мовлення понад 100 мовами</td><td>GPL-3.0-or-later</td></tr>
+    <tr><td>Microsoft Edge WebView2 Runtime, мовні голоси Windows</td><td>Відображення інтерфейсу, синтез мовлення</td><td>Ліцензовано вам Microsoft як частину Windows</td></tr>
+  </tbody>
+</table>
+
+<h2 id="library-content">Вбудована бібліотека</h2>
+<p>Переходи, ефекти, фільтри, анімації кліпів і тексту, текстові шаблони, стилі субтитрів, стікери, звукові ефекти й згенеровані фони Kadr — оригінальні, їх створює власний код Kadr. Жоден із них не скопійовано з інших продуктів. Вони є частиною Kadr, і ви можете вільно використовувати їх у своїх відео, зокрема комерційних.</p>
+
+<h2 id="website">Цей сайт</h2>
+<ul>
+  <li>Шрифт <strong>Inter</strong> від The Inter Project Authors, завантажується з цього сайту. Ліцензія — <a href="https://openfontlicense.org">SIL Open Font License 1.1</a> (<a href="{{root}}assets/fonts/OFL.txt">текст ліцензії</a>).</li>
+  <li><strong>Зображення й відео.</strong> Кожен рендер на цьому сайті зроблено самим Kadr із медіа, які Kadr згенерував: градієнтів, візерунків, тестових джерел і синтезованого звуку. Жодних стокових відео чи сторонніх ілюстрацій.</li>
+</ul>

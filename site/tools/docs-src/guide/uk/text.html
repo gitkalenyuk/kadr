@@ -1,0 +1,87 @@
+<!--meta {"title":"Текст і заголовки","nav":"Текст і заголовки","order":70,"description":"Як додавати заголовки й текст у Kadr: шаблони, шрифти й кольори, обведення, тіні та світіння, ефекти word art, текст по дузі та побуквена анімація.","group":"Творчість"} -->
+<p class="lead">Заголовки, підписи, нижні титри й виноски — усе це текстові кліпи. Почніть із шаблону або звичайного тексту, а потім налаштуйте й анімуйте його в інспекторі.</p>
+
+<figure><img src="{{root}}assets/img/guide/text.webp" alt="Вкладка Text із картками шаблонів Bold title, Neon, Comic pop, виділений заголовок у плеєрі та інспектор Text зі шрифтом, розміром, стилем і кольором" width="1280" height="428" loading="lazy"><figcaption>Текстові шаблони ліворуч, виділений заголовок у плеєрі, його налаштування праворуч.</figcaption></figure>
+
+<h2 id="add">Додати текст</h2>
+<ol class="steps">
+  <li>
+    <h3 id="add-playhead">Поставте курсор відтворення</h3>
+    <p>Новий текст з’являється з позиції курсора відтворення, тож спершу поставте курсор туди, де має з’явитися текст.</p>
+  </li>
+  <li>
+    <h3 id="add-pick">Оберіть шаблон</h3>
+    <p>Відкрийте вкладку <strong>Text</strong>. У режимі <strong>Templates</strong> категорія <strong>Default</strong> містить простий білий текст, а інші — Trending, Basic, Title, Caption, Fancy, Social, Lower third (нижні титри), Neon і Animated — готові стилі. Клацніть картку, щоб побачити її назву й опис.</p>
+  </li>
+  <li>
+    <h3 id="add-place">Додайте його</h3>
+    <p>Натисніть <strong>+</strong> на картці, клацніть її двічі або перетягніть на таймлайн. На текстовій доріжці з’явиться текстовий кліп (простий текст — на 3 секунди), уже виділений і готовий до редагування.</p>
+  </li>
+</ol>
+
+<h2 id="edit-words">Змінити слова</h2>
+<p>Коли текстовий кліп виділено, інспектор показує вкладку <strong>Text</strong>. Введіть свої слова у велике поле вгорі розділу <strong>Basic</strong>; <kbd>Enter</kbd> — новий рядок. Зміна застосовується, щойно ви клацнете в іншому місці.</p>
+<p>Щоб змінити, скільки часу текст на екрані, тягніть краї його кліпу на таймлайні. Щоб розмістити текст, тягніть його в <a href="{{root}}{{lang_root}}docs/guide/player.html#on-canvas">плеєрі</a>.</p>
+
+<h2 id="style">Шрифт, розмір і колір</h2>
+<p>Розділ <strong>Font</strong> у <strong>Text → Basic</strong> містить:</p>
+<ul>
+  <li><strong>Font</strong> — вбудовані шрифти Kadr і всі шрифти, встановлені на комп’ютері. Для кирилиці та інших абеток автоматично підставляється відповідний системний шрифт.</li>
+  <li><strong>Size</strong> (розмір), <strong>Bold</strong>, <strong>Italic</strong>, <strong>Underline</strong> та вирівнювання ліворуч / по центру / праворуч.</li>
+  <li><strong>Case</strong> — регістр: <em>Aa</em> (як введено), <em>AB</em> (великі літери), <em>ab</em> (малі), <em>Ab Cd</em> (кожне слово з великої). Ваш початковий текст зберігається, тож можна повернутися.</li>
+  <li><strong>Color</strong> — колір зі зразків або з палітри.</li>
+  <li><strong>Character</strong> і <strong>Line</strong> — відстань між літерами та між рядками.</li>
+</ul>
+
+<h2 id="decorations">Обведення, тло, тінь і світіння</h2>
+<p>Під налаштуваннями шрифту — розділи, які вмикаються власним перемикачем. Кожен має свій колір і повзунки:</p>
+<table>
+  <thead><tr><th>Розділ</th><th>Що додає</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Stroke</strong></td><td>Обведення навколо літер — текст читається навіть на строкатому тлі.</td></tr>
+    <tr><td><strong>Extra outline</strong></td><td>Друге й наступні обведення — ефект «наліпки».</td></tr>
+    <tr><td><strong>Background</strong></td><td>Плашка під текстом із прозорістю та заокругленими кутами.</td></tr>
+    <tr><td><strong>Shadow</strong></td><td>Тінь із прозорістю, розмиттям, відстанню й кутом.</td></tr>
+    <tr><td><strong>Glow</strong></td><td>М’яке світіння навколо літер (інтенсивність і радіус).</td></tr>
+    <tr><td><strong>Gradient fill</strong></td><td>Заливка літер 2–4 кольорами — лінійним або радіальним градієнтом під будь-яким кутом.</td></tr>
+    <tr><td><strong>3D extrude</strong></td><td>Об’ємна 3D-глибина за літерами: колір, глибина й кут.</td></tr>
+    <tr id="curve"><td><strong>Curve</strong></td><td>Вигинає рядок дугою — <strong>Bend</strong> понад нуль вигинає вгору, менше нуля — вниз.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="word-art">Word art (текстові ефекти)</h2>
+<div class="grid-2">
+  <div>
+    <p>Текстові ефекти — готові образи одним клацанням: градієнти, метал, світіння, 3D, обведення, ретро.</p>
+    <ul>
+      <li><strong>Для нового тексту:</strong> на вкладці <strong>Text</strong> перемкніться з <strong>Templates</strong> на <strong>Text effects</strong> і додайте картку — отримаєте текст у цьому стилі.</li>
+      <li><strong>Для наявного тексту:</strong> виділіть його й відкрийте <strong>Text → Effects</strong> в інспекторі. Оберіть картку або <strong>None</strong>, щоб прибрати ефект.</li>
+    </ul>
+    <p>Ефект просто заповнює налаштування Basic (градієнт, світіння, обведення, 3D), тож потім його можна там підправити.</p>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/text-effects.webp" alt="Сітка текстових ефектів: Sunset, Candy, Gold, Neon outline, 3D block, Glitch double, Sticker cut" width="640" height="536" loading="lazy"><figcaption>Текстові ефекти в бібліотеці.</figcaption></figure>
+</div>
+
+<h2 id="animate">Побуквена анімація</h2>
+<div class="grid-2">
+  <figure><img src="{{root}}assets/img/guide/text-animate.webp" alt="Панель Animate з вкладками In, Out і Loop та анімаціями Typewriter, Letter rise, Karaoke sweep, Word pop" width="342" height="536" loading="lazy"><figcaption>Text → Animate.</figcaption></figure>
+  <div>
+    <p>Відкрийте <strong>Text → Animate</strong>. Ці анімації рухають літери й слова <em>всередині</em> тексту:</p>
+    <ul>
+      <li><strong>In</strong> — як текст з’являється: Typewriter (друкарська машинка), Letter rise, Letter drop, Karaoke sweep, Random spell, Word pop та інші;</li>
+      <li><strong>Out</strong> — як зникає;</li>
+      <li><strong>Loop</strong> — рух, що повторюється, поки текст на екрані, наприклад хвиля чи пульсація.</li>
+    </ul>
+    <p>Клацніть картку, щоб застосувати, і задайте <strong>Duration</strong> (для циклу — <strong>Period</strong>) під сіткою. <strong>None</strong> прибирає анімацію.</p>
+    <p>Вони поєднуються з анімаціями кліпу на вкладці <strong>Animation</strong> (In, Out, Combo, Loop), які рухають увесь текстовий кліп, — поява, виїзд, наближення, підстрибування.</p>
+  </div>
+</div>
+
+<h2 id="more">Інші можливості тексту</h2>
+<ul>
+  <li><strong>Text → Transform</strong> — точне положення, масштаб, поворот і змішування тексту.</li>
+  <li><strong>Text → Speech</strong> — зачитує текст комп’ютерним голосом і кладе озвучення під нього. Див. <a href="{{root}}{{lang_root}}docs/guide/audio.html#tts">Озвучення тексту</a>.</li>
+  <li><strong>Зберегти в My kit</strong> — кнопка-закладка поруч із підвкладками зберігає стиль, щоб застосовувати його до інших текстів у будь-якому проєкті. Див. <a href="{{root}}{{lang_root}}docs/guide/effects.html#my-kit">My kit</a>.</li>
+  <li>Для субтитрів, що йдуть за мовленням, краще скористатися <a href="{{root}}{{lang_root}}docs/guide/captions.html">автосубтитрами</a>, ніж набирати їх вручну.</li>
+</ul>
+<div class="callout tip"><p>Тримайте важливий текст у безпечній зоні: увімкніть <a href="{{root}}{{lang_root}}docs/guide/player.html#safe-zones">безпечні зони</a> в плеєрі, особливо для вертикального відео.</p></div>

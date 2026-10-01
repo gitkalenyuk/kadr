@@ -1,0 +1,86 @@
+# Kadr
+
+> Kadr is a free, offline CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 177 commands with parameters, units and examples — while a human watches the edits live in the editor.
+
+Key facts for agents:
+
+- Times are integer microseconds (1 s = 1000000); time parameters end in `_us`. `kadrctl` also accepts `2.5s`, `1500ms`, `00:01:02.5`.
+- MCP tool names are command names with dots replaced by underscores (`timeline.segment.split` → `timeline_segment_split`); `kadr_batch` runs several project commands as one atomic, undoable step (`dry_run` supported).
+- REST: `POST /api/v1/commands/{name}` with a JSON object of arguments and `Authorization: Bearer <token>` (token file `%APPDATA%\Kadr\api-token`). Responses: `{"ok": true, "result": …}` or `{"ok": false, "error": {"code", "message", "hint", "field"}}`; `not_available` (HTTP 503) means a local component is missing.
+- Model: project (`prj_…`) → tracks (`trk_…`, compositing order, one magnetic `main_video` track) → segments (`seg_…`, timeline range + source range) → materials (`mat_…`). Transitions live on the left clip; keyframe times are relative to the segment; positions are canvas fractions with +Y down; `volume_db` is dB but `volume` keyframes are linear.
+- Work loop: read state (`timeline_get`), batch related edits, look at `preview_frame` / `preview_contact_sheet` (returned as images over MCP), follow error hints, poll long jobs (`captions_status` with `wait_s`, `export_status`).
+
+## Start
+
+- [Kadr for AI agents](https://gitkalenyuk.github.io/kadr/docs/ai/index.html): What an AI agent can do in Kadr, how the editor is modelled, how to connect over MCP, REST or the CLI, and how Kadr keeps your machine safe.
+- [Quick start: Claude Code](https://gitkalenyuk.github.io/kadr/docs/ai/claude-code.html): Connect Claude Code to Kadr with one command, check the connection, pre-approve tools and try your first prompts.
+- [Claude Desktop](https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html): Add Kadr to Claude Desktop with a short claude_desktop_config.json entry, restart, and let Claude edit while you watch.
+- [Other MCP clients](https://gitkalenyuk.github.io/kadr/docs/ai/other-mcp-clients.html): Connect Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI or any other MCP client to Kadr, test the bridge by hand, and use agents without MCP.
+
+## Interfaces
+
+- [MCP tools](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html): How Kadr’s commands appear as MCP tools: naming, annotations, kadr_batch for atomic edits, images from preview tools, errors and timeouts.
+- [REST API](https://gitkalenyuk.github.io/kadr/docs/ai/rest.html): Call any Kadr command over HTTP on 127.0.0.1:7777: token, response envelope, error codes and hints, batches and dry runs, resource aliases, WebSocket events and binary endpoints.
+- [Command line: kadrctl](https://gitkalenyuk.github.io/kadr/docs/ai/cli.html): List, describe and run any Kadr command from a terminal with human time formats, run JSON batch files, and script whole folders in PowerShell.
+
+## Guides
+
+- [Concepts](https://gitkalenyuk.github.io/kadr/docs/ai/concepts.html): The rules an agent needs: projects, tracks, segments and materials, microsecond time, compositing order, the magnetic main track, linked clips, transitions, keyframes and easing, coordinates, volume units, ids and undo.
+- [Working visibly with a human watching](https://gitkalenyuk.github.io/kadr/docs/ai/working-visibly.html): Let a person follow an agent’s work in the Kadr window: open the project, select the clip being edited, switch library tabs, move the playhead and narrate with notifications.
+- [Verifying results](https://gitkalenyuk.github.io/kadr/docs/ai/verifying.html): Check an edit the way an editor would: read the timeline, look at frames and contact sheets, measure layouts and loudness, then confirm the exported file itself.
+- [Best practices and pitfalls](https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html): How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.
+
+## Recipes
+
+- [Recipes](https://gitkalenyuk.github.io/kadr/docs/ai/recipes.html): End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions and an archive documentary — with every call as kadrctl and MCP.
+- [Vertical TikTok from a folder of clips](https://gitkalenyuk.github.io/kadr/docs/ai/vertical-tiktok.html): Turn a folder of landscape clips and a song into a 9:16 TikTok, Reels or Shorts video with reframed shots, whip-pan transitions, word-highlight captions and steady background music.
+- [Music video cut to the beat](https://gitkalenyuk.github.io/kadr/docs/ai/beat-cut-music-video.html): Detect the beats of a song, cut a set of clips exactly on them in one atomic batch, then add flash transitions, a colour filter, a punch-zoom on the drop and a title.
+- [Talking-head cleanup to a vertical short](https://gitkalenyuk.github.io/kadr/docs/ai/talking-head-cleanup.html): Clean up a talking-head recording: denoise and level the voice, cut silences, filler words and long pauses, add captions, and reframe to 9:16 for a short.
+- [Photo slideshow with Ken Burns motion](https://gitkalenyuk.github.io/kadr/docs/ai/photo-slideshow.html): Turn a folder of photos into a slideshow with slow Ken Burns zoom and pan (keyframes with cubic easing), cross-dissolves, music with fades and an animated title.
+- [Podcast clip as an audiogram](https://gitkalenyuk.github.io/kadr/docs/ai/podcast-audiogram.html): Turn a podcast audio clip into a square audiogram video with a generated moving background, karaoke captions, a pulsing icon and a show name tag.
+- [Product promo with word art and voice-over](https://gitkalenyuk.github.io/kadr/docs/ai/product-promo.html): Build a 9-second product promo from generated backgrounds, a product photo, word-art headlines with letter animations, stickers, sound effects and a text-to-speech voice-over, then export it as MP4 and GIF.
+- [One project, three formats](https://gitkalenyuk.github.io/kadr/docs/ai/batch-export-variants.html): Turn a finished 16:9 edit into 9:16 and 1:1 versions — reframed or with a blurred fill — fix titles that no longer fit, and queue all three exports.
+- [Let Claude review and fix its own edit](https://gitkalenyuk.github.io/kadr/docs/ai/ai-review-loop.html): Ask Claude to look at the rendered video with contact sheets and frames, measure problems with preview.layout, fix them, confirm the fix, and undo anything that turns out worse.
+- [Translate and re-burn captions](https://gitkalenyuk.github.io/kadr/docs/ai/translate-and-reburn-captions.html): Have Claude translate a video’s captions, write them into a copy of the project with the word timing kept, export SRT files and render a burned-in version in the new language.
+- [Documentary from public-domain archive footage](https://gitkalenyuk.github.io/kadr/docs/ai/documentary-archive-footage.html): Build a short documentary from public-domain newsreels on archive.org: search and cut the footage with ffmpeg, narrate it in Ukrainian with an ElevenLabs voice, fit every shot to the narration, add Ken Burns moves, a film look and corrected captions, then export.
+
+## Command reference
+
+- [Introduction to the command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html): How the reference of all 177 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.
+- [All commands](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html): the 177 commands by category, with parameters, units, defaults, returns and examples.
+- [Adjustment](https://gitkalenyuk.github.io/kadr/docs/ai/reference/adjustment.html): adjustment.auto_enhance, segment.reset_adjust, segment.reset_curves, segment.reset_hsl, segment.set_adjust, segment.set_curves, segment.set_hsl
+- [Animation](https://gitkalenyuk.github.io/kadr/docs/ai/reference/animation.html): animation.remove, animation.set
+- [App](https://gitkalenyuk.github.io/kadr/docs/ai/reference/app.html): app.version
+- [Audio](https://gitkalenyuk.github.io/kadr/docs/ai/reference/audio.html): audio.detect_beats, audio.extract, audio.loudness, audio.restore, audio.separate, audio.voice_effects, sfx.add, sfx.list, tts.from_text, tts.set_api_key, tts.speak, tts.voices
+- [Audio properties](https://gitkalenyuk.github.io/kadr/docs/ai/reference/audio-properties.html): segment.set_audio, segment.set_fade, segment.set_volume
+- [Captions](https://gitkalenyuk.github.io/kadr/docs/ai/reference/captions.html): captions.add, captions.asr_status, captions.auto, captions.cancel, captions.delete, captions.export, captions.from_transcript, captions.import, captions.list, captions.merge, captions.relayout, captions.set_style, captions.shift, captions.split, captions.status, captions.update
+- [Edit](https://gitkalenyuk.github.io/kadr/docs/ai/reference/edit.html): clipboard.copy, clipboard.cut, clipboard.paste, edit.history, edit.redo, edit.undo
+- [Effects](https://gitkalenyuk.github.io/kadr/docs/ai/reference/effects.html): effect.add, effect.apply, effect.get_params, effect.remove, effect.set_params
+- [Export](https://gitkalenyuk.github.io/kadr/docs/ai/reference/export.html): export.cancel, export.estimate, export.list, export.reveal, export.start, export.status
+- [Filters](https://gitkalenyuk.github.io/kadr/docs/ai/reference/filters.html): adjustment.add, filter.add, filter.apply, filter.remove
+- [Keyframes](https://gitkalenyuk.github.io/kadr/docs/ai/reference/keyframes.html): keyframe.add, keyframe.clear, keyframe.list, keyframe.remove
+- [Library](https://gitkalenyuk.github.io/kadr/docs/ai/reference/library.html): library.get, library.list
+- [Media](https://gitkalenyuk.github.io/kadr/docs/ai/reference/media.html): media.create_proxy, media.delete, media.generate, media.get, media.import, media.list, media.relink, media.rename, media.usage
+- [Playback](https://gitkalenyuk.github.io/kadr/docs/ai/reference/playback.html): playback.pause, playback.play, playback.seek, playback.state, playback.step, playback.toggle, preview.contact_sheet, preview.frame, preview.layout
+- [Presets](https://gitkalenyuk.github.io/kadr/docs/ai/reference/presets.html): presets.apply, presets.delete, presets.get, presets.list, presets.rename, presets.save
+- [Projects](https://gitkalenyuk.github.io/kadr/docs/ai/reference/projects.html): project.create, project.delete, project.duplicate, project.get, project.list, project.rename, project.set_canvas, project.set_cover
+- [Smart tools](https://gitkalenyuk.github.io/kadr/docs/ai/reference/smart-tools.html): ai.auto_reframe, ai.cancel, ai.capabilities, ai.detect_scenes, ai.jobs, ai.remove_background, ai.remove_silence, ai.split_scenes
+- [Speed](https://gitkalenyuk.github.io/kadr/docs/ai/reference/speed.html): segment.set_speed, segment.set_speed_curve
+- [Stickers](https://gitkalenyuk.github.io/kadr/docs/ai/reference/stickers.html): sticker.add
+- [Text](https://gitkalenyuk.github.io/kadr/docs/ai/reference/text.html): captions.export_srt, captions.import_srt, text.add, text.apply_effect, text.apply_template, text.remove_glyph_animation, text.set_glyph_animation, text.update
+- [Timeline](https://gitkalenyuk.github.io/kadr/docs/ai/reference/timeline.html): timeline.get, timeline.marker.add, timeline.marker.delete, timeline.marker.move, timeline.marker.set, timeline.segment.add, timeline.segment.crop, timeline.segment.delete, timeline.segment.delete_left, timeline.segment.delete_right, timeline.segment.duplicate, timeline.segment.freeze, timeline.segment.mirror, timeline.segment.move, timeline.segment.replace, timeline.segment.reverse, timeline.segment.rotate, timeline.segment.split, timeline.segment.trim, timeline.settings.set, timeline.track.add, timeline.track.delete, timeline.track.set
+- [Tools](https://gitkalenyuk.github.io/kadr/docs/ai/reference/tools.html): tools.cancel, tools.install_ffmpeg, tools.set_ffmpeg_dir, tools.status
+- [Transcript](https://gitkalenyuk.github.io/kadr/docs/ai/reference/transcript.html): transcript.clear, transcript.delete_text, transcript.delete_words, transcript.get, transcript.remove_fillers, transcript.remove_pauses, transcript.transcribe
+- [Transitions](https://gitkalenyuk.github.io/kadr/docs/ai/reference/transitions.html): transition.apply_all, transition.get, transition.remove, transition.set
+- [Updates](https://gitkalenyuk.github.io/kadr/docs/ai/reference/updates.html): update.check, update.download, update.install, update.settings, update.skip, update.status
+- [Video](https://gitkalenyuk.github.io/kadr/docs/ai/reference/video.html): segment.set_video_cleanup
+- [Video properties](https://gitkalenyuk.github.io/kadr/docs/ai/reference/video-properties.html): segment.get, segment.reset, segment.set_background, segment.set_blend, segment.set_chroma_key, segment.set_crop, segment.set_mask, segment.set_opacity, segment.set_transform
+- [Window](https://gitkalenyuk.github.io/kadr/docs/ai/reference/window.html): ui.library_tab, ui.open_project, ui.select, ui.toast
+- [OpenAPI 3.1 specification](https://gitkalenyuk.github.io/kadr/openapi.json): machine-readable description of every command (request bodies are JSON Schemas).
+- [llms-full.txt](https://gitkalenyuk.github.io/kadr/llms-full.txt): all AI docs pages plus the full specification of every command, as one Markdown file.
+
+## Optional
+
+- [User guide](https://gitkalenyuk.github.io/kadr/docs/guide/index.html): how people use the Kadr editor (UI, shortcuts, workflows).
+- [AI docs in Ukrainian](https://gitkalenyuk.github.io/kadr/uk/docs/ai/index.html): the same AI documentation in Ukrainian.
+- [Downloads and releases](https://github.com/gitkalenyuk/kadr/releases): Windows installer and portable zip.

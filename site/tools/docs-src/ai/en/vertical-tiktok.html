@@ -1,0 +1,128 @@
+<!--meta {"title":"Vertical TikTok from a folder of clips","nav":"Vertical TikTok","order":310,"description":"Turn a folder of landscape clips and a song into a 9:16 TikTok, Reels or Shorts video with reframed shots, whip-pan transitions, word-highlight captions and steady background music.","group":"Recipes","summary":"A folder of clips and a song become a 9:16 video with subject-tracking reframes, whip-pan cuts, word-highlight captions and music at a steady level.","time":"~3 min","needs":"A folder of clips (one where you talk) and a music track","commands":["project.create","media.import","timeline.segment.add","ai.auto_reframe","transition.apply_all","captions.auto","segment.set_volume","segment.set_fade","audio.loudness","preview.contact_sheet","export.start"]} -->
+<p class="lead">You get a 1080×1920 video for TikTok, Reels or Shorts. It opens with your talking clip, follows with short b-roll shots, every landscape shot is reframed to fill the vertical screen, the cuts are fast whip pans, captions highlight each word as it is spoken, and your song plays underneath at a steady level.</p>
+<ul>
+  <li><strong>Time:</strong> ~3 min</li>
+  <li><strong>You need:</strong> A folder of clips (one where you talk) and a music track</li>
+  <li><strong>Main commands:</strong> <code class="cmd">project.create</code>, <code class="cmd">media.import</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">ai.auto_reframe</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">captions.auto</code>, <code class="cmd">segment.set_volume</code>, <code class="cmd">segment.set_fade</code>, <code class="cmd">audio.loudness</code>, <code class="cmd">preview.contact_sheet</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Make a vertical 9:16 TikTok in Kadr from the clips in C:\Users\you\Videos\tiktok. Start with 01_intro.mp4 in full (that's me talking), then use 2.5-second slices of the other clips, starting 1 second into each. Reframe every clip so it fills the vertical frame and follows the subject. Put 0.3-second whip-pan transitions between all clips. Add word-highlight captions, 3 words at a time, for what I say in the intro. Mute the b-roll's own sound and lay C:\Users\you\Music\beat.mp3 under the whole video about 12 dB down, with a short fade-in and fade-out. Show me a contact sheet, then export 1080p to C:\Users\you\Videos\Kadr\weekend-tiktok.mp4.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="create">Create a 9:16 project</h3>
+<p><code class="cmd">project.create</code> with ratio <code>9:16</code> gives a 1080×1920 canvas at 30 fps. The result is the new project; its <code>id</code> is used by every later call.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Weekend TikTok" --ratio 9:16</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Weekend TikTok", "ratio": "9:16"}}</code></pre></div>
+</li>
+<li>
+<h3 id="import">Import the folder and the song</h3>
+<p><code class="cmd">media.import</code> accepts files and folders; a folder imports every media file directly inside it. The result lists each material with its <code>id</code>, <code>type</code> and <code>duration_us</code>. Importing puts nothing on the timeline yet.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run media.import --project_id prj_8a3dc0a150b8 --paths "[\"C:/Users/you/Videos/tiktok\",\"C:/Users/you/Music/beat.mp3\"]"</code></pre><pre data-lang="mcp"><code>{"name": "media_import", "arguments": {"project_id": "prj_8a3dc0a150b8", "paths": ["C:/Users/you/Videos/tiktok", "C:/Users/you/Music/beat.mp3"]}}</code></pre></div>
+</li>
+<li>
+<h3 id="layout">Lay out the clips in one step</h3>
+<p>Video clips added without <code>at_us</code> go to the end of the magnetic main track, so the call order becomes the edit order. The intro is added whole; each b-roll clip becomes a 2.5 s slice starting 1 s in (<code>source_start_us</code> + <code>duration_us</code>). As a batch, the four adds are one undo step. Save this as <code>tiktok-layout.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_708d08b25bae"}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_fccc03654420", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_9360221234d9", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_312fa58a675e", "source_start_us": 1000000, "duration_us": 2500000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_8a3dc0a150b8 tiktok-layout.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_8a3dc0a150b8", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_708d08b25bae"}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_fccc03654420", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_9360221234d9", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_312fa58a675e", "source_start_us": 1000000, "duration_us": 2500000}}
+]}}</code></pre></div>
+<p>Read the result back with <code class="cmd">timeline.get</code> — a compact tree of tracks and segments with start and end times:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.get --project_id prj_8a3dc0a150b8</code></pre><pre data-lang="mcp"><code>{"name": "timeline_get", "arguments": {"project_id": "prj_8a3dc0a150b8"}}</code></pre></div>
+<pre><code class="lang-text">main_video  seg_f3a56bc31a8f  01_intro.mp4   0 s     → 7 s
+            seg_a01cb913dfa3  02_city.mp4    7 s     → 9.5 s
+            seg_4852e1afa8a7  03_beach.mp4   9.5 s   → 12 s
+            seg_4712217ee4d0  04_food.mp4    12 s    → 14.5 s</code></pre>
+</li>
+<li>
+<h3 id="reframe">Fill the vertical frame</h3>
+<p><code class="cmd">ai.auto_reframe</code> scales each landscape clip to fill 9:16 without bars and animates its position (keyframes) to follow the subject, using motion, edges and skin tones. It runs locally, about a second per minute of video. All four in one batch, <code>tiktok-reframe.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_f3a56bc31a8f", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a01cb913dfa3", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4852e1afa8a7", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4712217ee4d0", "ratio": "9:16"}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_8a3dc0a150b8 tiktok-reframe.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_8a3dc0a150b8", "calls": [
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_f3a56bc31a8f", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a01cb913dfa3", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4852e1afa8a7", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4712217ee4d0", "ratio": "9:16"}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="transitions">Add punchy transitions</h3>
+<p><code class="cmd">transition.apply_all</code> puts the same transition on every cut of the main track. A short <code>whip_pan</code> keeps the pace up. Each transition is stored on the clip to the left of its cut.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_8a3dc0a150b8 --type whip_pan --duration_us 0.3s</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_8a3dc0a150b8", "type": "whip_pan", "duration_us": 300000}}</code></pre></div>
+</li>
+<li>
+<h3 id="captions">Caption the talking clip</h3>
+<p><code class="cmd">captions.auto</code> recognises speech locally with Whisper and creates cues with per-word timing. <code>segment_id</code> limits it to the clip where you talk, so b-roll sound is not transcribed. <code>cap_highlight_word</code> highlights each word as it is spoken; <code>max_words</code> 3 keeps cues short. <code>wait</code> makes the call return when the job is done instead of returning a job id at once.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.auto --project_id prj_8a3dc0a150b8 --segment_id seg_f3a56bc31a8f --language en --style_id cap_highlight_word --max_words 3 --wait</code></pre><pre data-lang="mcp"><code>{"name": "captions_auto", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_f3a56bc31a8f", "language": "en", "style_id": "cap_highlight_word", "max_words": 3, "wait": true}}</code></pre></div>
+<p>The job ends with <code>"state": "done"</code>; the cues are on a new text track named “Captions”.</p>
+</li>
+<li>
+<h3 id="music">Set the sound</h3>
+<p>Mute the b-roll’s own sound first. <code class="cmd">segment.set_volume</code> takes decibels; −60 dB is the bottom of the slider (silent). Save as <code>tiktok-mute.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a01cb913dfa3", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4852e1afa8a7", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4712217ee4d0", "volume_db": -60}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_8a3dc0a150b8 tiktok-mute.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_8a3dc0a150b8", "calls": [
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a01cb913dfa3", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4852e1afa8a7", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4712217ee4d0", "volume_db": -60}}
+]}}</code></pre></div>
+<p>Then add the song from 0 s for the length of the video (14.5 s here). It lands on an audio track. Lower it by a fixed 12 dB so it sits under the voice everywhere, and give it short fades:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_8a3dc0a150b8 --material_id mat_446985c2caf5 --at_us 0 --duration_us 14.5s
+kadrctl run segment.set_volume --project_id prj_8a3dc0a150b8 --segment_id seg_5223e6a5f677 --volume_db -12
+kadrctl run segment.set_fade --project_id prj_8a3dc0a150b8 --segment_id seg_5223e6a5f677 --fade_in_us 0.3s --fade_out_us 1.5s</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_8a3dc0a150b8", "material_id": "mat_446985c2caf5", "at_us": 0, "duration_us": 14500000}}
+{"name": "segment_set_volume", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_5223e6a5f677", "volume_db": -12}}
+{"name": "segment_set_fade", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_5223e6a5f677", "fade_in_us": 300000, "fade_out_us": 1500000}}</code></pre></div>
+<p>To check the balance, measure both with <code class="cmd">audio.loudness</code>. Background music works well 10–15 LU below speech: compare the voice’s <code>integrated_lufs</code> with the music’s <code>effective_lufs</code>, which already includes the −12 dB.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run audio.loudness --project_id prj_8a3dc0a150b8 --segment_id seg_f3a56bc31a8f
+kadrctl run audio.loudness --project_id prj_8a3dc0a150b8 --segment_id seg_5223e6a5f677</code></pre><pre data-lang="mcp"><code>{"name": "audio_loudness", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_f3a56bc31a8f"}}
+{"name": "audio_loudness", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_5223e6a5f677"}}</code></pre></div>
+</li>
+<li>
+<h3 id="check">Look at the edit</h3>
+<p><code class="cmd">preview.contact_sheet</code> renders a grid of frames from the whole video with the export renderer. Through MCP the agent receives it as an image and can spot black bars, cut-off captions or a weak first frame before exporting.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_8a3dc0a150b8 --count 8 --columns 4 --tile_width 180</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_8a3dc0a150b8", "count": 8, "columns": 4, "tile_width": 180}}</code></pre></div>
+</li>
+<li>
+<h3 id="export">Export 1080p</h3>
+<p><code class="cmd">export.start</code> renders in the background and returns a <code>job_id</code> at once. 1080p on a 9:16 canvas means 1080×1920 H.264 MP4; Kadr uses a GPU encoder when one works on your PC. Poll <code class="cmd">export.status</code> until <code>state</code> is <code>done</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_8a3dc0a150b8 --resolution 1080p --path C:/Users/you/Videos/Kadr/weekend-tiktok.mp4
+kadrctl run export.status --job_id exp_ca964467da2a</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_8a3dc0a150b8", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/weekend-tiktok.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_ca964467da2a"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>Keep the whole picture.</strong> Instead of reframing, show each landscape clip in full over a blurred copy of itself: <code class="cmd">segment.set_background</code> with <code>type</code> <code>blur</code>, <code>blur</code> 0.75 and <code>apply_to_all</code> on any main-track clip.</li>
+  <li><strong>Other caption looks.</strong> <code>cap_pop_word</code> shows one word at a time, <code>cap_pill_active</code> puts the active word in a pill, <code>cap_karaoke_bar</code> fills words left to right. Switch at any time with <code class="cmd">captions.set_style</code>.</li>
+  <li><strong>Sound on the cuts.</strong> Add <code>whoosh_fast</code> just before each cut with <code class="cmd">sfx.add</code> (here at 6.8 s, 9.3 s and 11.8 s).</li>
+  <li><strong>Cut to the music.</strong> Slice the b-roll on the song’s beats instead of every 2.5 s — see <a href="{{root}}{{lang_root}}docs/ai/beat-cut-music-video.html">Music video cut to the beat</a>.</li>
+  <li><strong>Choose the cover.</strong> <code class="cmd">project.set_cover</code> with <code>time_us</code> sets the thumbnail frame.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>The first caption job loads the Whisper model and takes longer than later ones. On an NVIDIA GPU the default <code>small</code> model runs about five times faster than real time; <code>model</code> <code>base</code> is faster and slightly less accurate.</li>
+  <li>If captions fail with <code>not_available</code>, run <code class="cmd">captions.asr_status</code>: its <code>hint</code> says what to install.</li>
+  <li>To reorder later, <code class="cmd">timeline.segment.move</code> a clip to a new <code>start_us</code>; the magnetic main track closes the gaps.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

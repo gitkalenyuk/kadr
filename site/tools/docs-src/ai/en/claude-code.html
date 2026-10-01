@@ -1,0 +1,78 @@
+<!--meta {"title":"Quick start: Claude Code","nav":"Claude Code","order":20,"description":"Connect Claude Code to Kadr with one command, check the connection, pre-approve tools and try your first prompts.","group":"Start"} -->
+<p class="lead">One command registers Kadr’s MCP server with Claude Code for every project on your PC. After that, describe the video you want — Claude edits it in Kadr, looks at rendered frames to check its work, and every change can be undone.</p>
+
+<h2 id="before">Before you start</h2>
+<ul>
+  <li><strong>Kadr is installed.</strong> The installer puts <code>kadr-mcp.exe</code> in <code>%LOCALAPPDATA%\Programs\Kadr\</code> next to <code>Kadr.exe</code> and <code>kadr-server.exe</code>. In Kadr, <strong>Settings → API &amp; automation</strong> shows the exact path and a ready-made command.</li>
+  <li><strong>Claude Code is installed</strong> and <code>claude</code> runs in your terminal.</li>
+  <li><strong>Kadr does not have to be running.</strong> If neither the editor nor a server answers, <code>kadr-mcp</code> starts the headless <code>kadr-server.exe</code> by itself (about 2 seconds). To <em>watch</em> the edits, open Kadr before the first call — see the note below.</li>
+</ul>
+
+<h2 id="add">1. Add the server</h2>
+<p>Register Kadr once for your user account (<code>--scope user</code>), so it is available in every folder. Everything after <code>--</code> is the command Claude Code starts.</p>
+<div class="code-tabs"><pre data-lang="cmd"><code>claude mcp add --scope user kadr -- "%LOCALAPPDATA%\Programs\Kadr\kadr-mcp.exe"</code></pre><pre data-lang="powershell"><code>claude mcp add --scope user kadr -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code></pre></div>
+<p>If you kept the installer option <em>Add kadrctl and kadr-mcp to PATH</em>, the short form works too: <code>claude mcp add --scope user kadr -- kadr-mcp</code>.</p>
+
+<h2 id="check">2. Check the connection</h2>
+<pre><code class="lang-powershell">claude mcp list
+claude mcp get kadr</code></pre>
+<p><code>kadr</code> should be listed as connected. Inside a session, <code>/mcp</code> shows the server, its 178 tools (one per command plus <code>kadr_batch</code>) and lets you reconnect after a problem.</p>
+
+<h2 id="permissions">3. Pre-approve tools (optional)</h2>
+<p>Claude Code asks before it uses a tool. To stop the prompts for Kadr, allow the whole server in <code>.claude/settings.json</code> (one project) or <code>~/.claude/settings.json</code> (everywhere):</p>
+<pre><code class="lang-json">{
+  "permissions": {
+    "allow": ["mcp__kadr"]
+  }
+}</code></pre>
+<p>Prefer something stricter? Allow only read-only tools, for example <code>"mcp__kadr__project_list"</code>, <code>"mcp__kadr__timeline_get"</code>, <code>"mcp__kadr__preview_frame"</code> and <code>"mcp__kadr__preview_contact_sheet"</code>, and keep approving edits one by one. Every edit can be undone anyway.</p>
+
+<h2 id="first-prompts">4. First prompts to try</h2>
+<p>Open Kadr first so you can watch, start <code>claude</code> in any folder, and try:</p>
+<blockquote><p>List my Kadr projects and summarise the timeline of the most recent one.</p></blockquote>
+<blockquote><p>Create a 9:16 Kadr project called "MCP test", generate a 5-second aurora_flow background, add the title "It works" with the title_bold template, open the project in the Kadr window and show me the frame at 1 second.</p></blockquote>
+<blockquote><p>Import C:\Users\you\Videos\clip.mp4 into "MCP test", put it after the background, add word-highlight captions and show me a contact sheet of the whole video.</p></blockquote>
+<blockquote><p>Put a 0.4-second mix transition on every cut in one batch, then export 1080p to C:\Users\you\Videos\Kadr\mcp-test.mp4 and tell me when it is done.</p></blockquote>
+<blockquote><p>Undo the last two changes in "MCP test".</p></blockquote>
+<p>More complete workflows, with every call spelled out, are in the <a href="{{root}}{{lang_root}}docs/ai/recipes.html">recipes</a>.</p>
+
+<div class="callout warn"><p><strong>Watching live needs the editor’s engine.</strong> If Kadr was closed when Claude made its first call, <code>kadr-mcp</code> started a headless <code>kadr-server.exe</code>, which keeps running after the chat. If you then open Kadr, the window cannot take over port 7777 and will not show the agent’s edits. Quit <code>kadr-server.exe</code> (Task Manager → Details) before opening Kadr, then run <code>/mcp</code> to reconnect.</p></div>
+
+<h2 id="project-scope">Share the setup with a repository</h2>
+<p>For a folder that always works with Kadr, commit a <code>.mcp.json</code> at its root. Claude Code asks each person once before it loads a project-scoped server. With <code>kadr-mcp</code> on <code>PATH</code> the file is the same for everyone:</p>
+<pre><code class="lang-json">{
+  "mcpServers": {
+    "kadr": { "type": "stdio", "command": "kadr-mcp", "args": [] }
+  }
+}</code></pre>
+<p>A few lines in that folder’s <code>CLAUDE.md</code> save the agent a lot of guessing:</p>
+<pre><code class="lang-markdown">## Video editing
+- Edit videos through the kadr MCP server. Times are integer microseconds (1 s = 1000000).
+- Read state first (timeline_get), apply related edits in one kadr_batch, then check with preview_frame or preview_contact_sheet.
+- Show your work: call ui_open_project at the start; export with export_start and poll export_status.
+- Media lives in ./footage; exports go to ./exports.</code></pre>
+
+<h2 id="custom-engine">A different port or data folder</h2>
+<p>To drive a separate engine (for example a test <code>kadr-server.exe</code> on port 7790 with its own projects), pass environment variables when adding the server:</p>
+<pre><code class="lang-powershell">claude mcp add --scope user --env KADR_ADDR=127.0.0.1:7790 --env KADR_DATA_DIR=D:\kadr-automation kadr-test -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code></pre>
+<p>Remove a server with <code>claude mcp remove kadr --scope user</code>.</p>
+
+<h2 id="tips">Tips for Claude Code</h2>
+<ul>
+  <li><strong>Large results.</strong> Claude Code caps a tool result at about 25,000 tokens by default (<code>MAX_MCP_OUTPUT_TOKENS</code> raises it). Prefer <code>timeline_get</code> over <code>project_get</code>, pass <code>include_words: false</code> to <code>captions_list</code>, and keep contact-sheet tiles small (240–320 px).</li>
+  <li><strong>Long jobs.</strong> Captions, transcription and exports run in the background. Asking for <code>wait: true</code> is fine for a few minutes of media; for longer jobs ask Claude to poll <code>captions_status</code> (with <code>wait_s</code>) or <code>export_status</code>.</li>
+  <li><strong>Slow first start.</strong> If the server times out while the engine starts, raise <code>MCP_TIMEOUT</code> (milliseconds) when launching Claude Code.</li>
+  <li><strong>Files.</strong> Paths are on the PC where Kadr runs. Claude Code’s own file tools and Kadr see the same disk, so Claude can write a batch file or an SRT and hand its path to Kadr.</li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+  <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td><code>claude mcp list</code> shows kadr as failed</td><td>Check the path: <code>Test-Path "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code>. Quote paths that contain spaces.</td></tr>
+    <tr><td><code>Kadr engine did not start … within 10 s</code></td><td><code>kadr-server.exe</code> must sit next to <code>kadr-mcp.exe</code>. Start Kadr yourself, then <code>/mcp</code> → reconnect.</td></tr>
+    <tr><td><code>unauthorized: missing or invalid API token</code></td><td>A stale <code>KADR_TOKEN</code> or a different <code>KADR_DATA_DIR</code> in the server’s environment. Remove them, or re-add the server.</td></tr>
+    <tr><td>Edits don’t appear in the open window</td><td>A headless <code>kadr-server.exe</code> owns port 7777 — see the warning above.</td></tr>
+    <tr><td><code>not_available</code> from captions or background removal</td><td>An optional local component is missing. Ask Claude to run <code>captions_asr_status</code> or <code>ai_capabilities</code>; the <code>hint</code> says what to install.</td></tr>
+  </tbody>
+</table>

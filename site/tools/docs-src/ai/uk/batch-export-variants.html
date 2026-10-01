@@ -1,0 +1,104 @@
+<!--meta {"title":"Один проєкт — три формати","nav":"Три формати","order":370,"description":"Перетворіть готовий монтаж 16:9 на версії 9:16 і 1:1 — з перекадруванням або розмитим тлом, — виправте титри, що більше не влазять, і поставте в чергу всі три експорти.","group":"Рецепти","summary":"Готовий монтаж 16:9 стає трьома відео — 16:9, 9:16 і 1:1, з перекадруванням або розмитим тлом і титрами, що вміщаються в кадр, — усе експортується разом.","time":"~2 хв","needs":"Готовий проєкт Kadr 16:9 (наприклад, з рецепта про монтаж під біт)","commands":["project.duplicate","project.set_canvas","ai.auto_reframe","segment.set_background","preview.layout","text.update","export.estimate","export.start","export.list"]} -->
+<p class="lead">Результат — три експорти того самого монтажу: оригінал 16:9 для YouTube, версія 9:16 для TikTok, Reels і Shorts, де кожен кадр стежить за об’єктом, і версія 1:1 для стрічок, що показує весь кадр на розмитому тлі. Оригінальний проєкт лишається незмінним.</p>
+<ul>
+  <li><strong>Час:</strong> ~2 хв</li>
+  <li><strong>Що потрібно:</strong> Готовий проєкт Kadr 16:9 (наприклад, з рецепта про монтаж під біт)</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">project.duplicate</code>, <code class="cmd">project.set_canvas</code>, <code class="cmd">ai.auto_reframe</code>, <code class="cmd">segment.set_background</code>, <code class="cmd">preview.layout</code>, <code class="cmd">text.update</code>, <code class="cmd">export.estimate</code>, <code class="cmd">export.start</code>, <code class="cmd">export.list</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Візьми мій проєкт Kadr «Night drive» (16:9) і зроби ще дві версії окремими копіями. «Night drive 9x16»: перемкни на 9:16 і автоматично перекадруй кожен кліп основної доріжки, щоб він стежив за об’єктом, з плавним рухом камери. «Night drive 1x1»: перемкни на 1:1 і збережи весь кадр із розмитим тлом позаду. У кожній копії перевір через preview_layout, що титр уміщається в кадр, і зменш його, якщо ні. Потім експортуй усі три в 1080p у C:\Users\you\Videos\Kadr\night-drive\ і скажи, коли буде готово.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="find">Знайдіть проєкт</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.list --query "Night drive"</code></pre><pre data-lang="mcp"><code>{"name": "project_list", "arguments": {"query": "Night drive"}}</code></pre></div>
+<p>Оригінал — <code>prj_408e1a6dfbd6</code>: вісім кадрів під біт, фільтр, ефект, музика й титр.</p>
+</li>
+<li>
+<h3 id="vertical">Зробіть копію 9:16 і перекадруйте її</h3>
+<p><code class="cmd">project.duplicate</code> робить незалежну копію (медіафайли спільні, не копіюються). Ідентифікатори сегментів у копії ті самі, тож відомі вам id і далі працюють. <code class="cmd">project.set_canvas</code> перемикає кадр на 1080×1920.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.duplicate --project_id prj_408e1a6dfbd6 --name "Night drive 9x16"
+kadrctl run project.set_canvas --project_id prj_b050d0c2e585 --ratio 9:16</code></pre><pre data-lang="mcp"><code>{"name": "project_duplicate", "arguments": {"project_id": "prj_408e1a6dfbd6", "name": "Night drive 9x16"}}
+{"name": "project_set_canvas", "arguments": {"project_id": "prj_b050d0c2e585", "ratio": "9:16"}}</code></pre></div>
+<p>Далі <code class="cmd">ai.auto_reframe</code> проходить по кожному кадру основної доріжки одним пакетом (<code>reframe-9x16.json</code>). <code>smoothing</code> 0.7 робить рух віртуальної камери спокійним.</p>
+<pre><code class="lang-json">[
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_896a3c69fde1", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4dd4dd6ff8a2", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_2b7e19c04d5a", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_c81f3e60a97b", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_5e0a94d2c1f8", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_e7b2063d9a14", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_19c4f7a2e08d", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a3d58e1b6c27", "ratio": "9:16", "smoothing": 0.7}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_b050d0c2e585 reframe-9x16.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_b050d0c2e585", "calls": [
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_896a3c69fde1", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4dd4dd6ff8a2", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_2b7e19c04d5a", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_c81f3e60a97b", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_5e0a94d2c1f8", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_e7b2063d9a14", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_19c4f7a2e08d", "ratio": "9:16", "smoothing": 0.7}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a3d58e1b6c27", "ratio": "9:16", "smoothing": 0.7}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="fit-title">Підженіть титр</h3>
+<p>Титр, розрахований на широкий кадр, у вузькому може не вміститися. <code class="cmd">preview.layout</code> повертає рамку кожного тексту в пікселях полотна; рамка вміщається, коли <code>x</code> ≥ 0 і <code>x + w</code> ≤ <code>canvas_width</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_b050d0c2e585 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_b050d0c2e585", "time_us": 1000000}}</code></pre></div>
+<pre><code class="lang-text">canvas_width 1080
+text  x -66   w 1212     too wide: sticks out 66 px on each side</code></pre>
+<p>Шаблон <code>cinematic</code> має розмір 18; розмір 12 уміщається:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.update --project_id prj_b050d0c2e585 --segment_id seg_546525632ffb --size 12
+kadrctl run preview.layout --project_id prj_b050d0c2e585 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "text_update", "arguments": {"project_id": "prj_b050d0c2e585", "segment_id": "seg_546525632ffb", "size": 12}}
+{"name": "preview_layout", "arguments": {"project_id": "prj_b050d0c2e585", "time_us": 1000000}}</code></pre></div>
+<pre><code class="lang-text">text  x 135   w 810      fits, with 135 px margins</code></pre>
+</li>
+<li>
+<h3 id="square">Зробіть копію 1:1 із розмитим тлом</h3>
+<p>На квадратному полотні кадри 16:9 вписуються за шириною й лишають порожнечу зверху та знизу. <code class="cmd">segment.set_background</code> з <code>apply_to_all</code> заповнює її на кожному кліпі основної доріжки розмитою збільшеною копією самого кліпу.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.duplicate --project_id prj_408e1a6dfbd6 --name "Night drive 1x1"
+kadrctl run project.set_canvas --project_id prj_4d5e818c84de --ratio 1:1
+kadrctl run segment.set_background --project_id prj_4d5e818c84de --segment_id seg_896a3c69fde1 --type blur --blur 0.75 --apply_to_all</code></pre><pre data-lang="mcp"><code>{"name": "project_duplicate", "arguments": {"project_id": "prj_408e1a6dfbd6", "name": "Night drive 1x1"}}
+{"name": "project_set_canvas", "arguments": {"project_id": "prj_4d5e818c84de", "ratio": "1:1"}}
+{"name": "segment_set_background", "arguments": {"project_id": "prj_4d5e818c84de", "segment_id": "seg_896a3c69fde1", "type": "blur", "blur": 0.75, "apply_to_all": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="estimate">Оцініть розмір файлів</h3>
+<p><code class="cmd">export.estimate</code> приймає ті самі параметри, що й експорт, і повертає розмір кадру, кількість кадрів і розмір файлу, нічого не рендерячи.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.estimate --project_id prj_4d5e818c84de --resolution 1080p</code></pre><pre data-lang="mcp"><code>{"name": "export_estimate", "arguments": {"project_id": "prj_4d5e818c84de", "resolution": "1080p"}}</code></pre></div>
+</li>
+<li>
+<h3 id="export">Поставте в чергу три експорти</h3>
+<p>Експорти виконуються по черзі: перший стартує одразу, інші чекають у стані <code>queued</code>. 1080p означає, що коротша сторона — 1080 px, тож кожен експорт отримує правильну форму. Відсутні папки створюються.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_408e1a6dfbd6 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive/night-drive-16x9.mp4
+kadrctl run export.start --project_id prj_b050d0c2e585 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive/night-drive-9x16.mp4
+kadrctl run export.start --project_id prj_4d5e818c84de --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive/night-drive-1x1.mp4
+kadrctl run export.list</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_408e1a6dfbd6", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive/night-drive-16x9.mp4"}}
+{"name": "export_start", "arguments": {"project_id": "prj_b050d0c2e585", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive/night-drive-9x16.mp4"}}
+{"name": "export_start", "arguments": {"project_id": "prj_4d5e818c84de", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive/night-drive-1x1.mp4"}}
+{"name": "export_list", "arguments": {}}</code></pre></div>
+<p>Стежте за завданнями через <code class="cmd">export.status</code> або слухайте події <code>export.progress</code> і <code>export.done</code> у <a href="{{root}}{{lang_root}}docs/ai/rest.html#events">потоці подій</a>.</p>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<ul>
+  <li><strong>Субтитри у вузькому кадрі.</strong> Переділіть субтитри під вузький кадр через <code class="cmd">captions.relayout</code>, наприклад з <code>max_words</code> 3.</li>
+  <li><strong>Різний грейд у копіях.</strong> Копії незалежні: <code class="cmd">filter.apply</code> чи <code class="cmd">segment.set_adjust</code> в одній не зачіпає інших.</li>
+  <li><strong>Слайдшоу з фото.</strong> <code class="cmd">ai.auto_reframe</code> замінює наявні ключові кадри позиції й масштабу. Для слайдшоу з рухом Кена Бернса краще розмите тло — так рух збережеться.</li>
+  <li><strong>Інші розміри.</strong> <code class="cmd">project.set_canvas</code> також пропонує 4:3, 3:4, 21:9, 2.35:1, 2:1, 1.85:1 і 5.8-inch.</li>
+  <li><strong>Менші файли.</strong> <code>codec</code> <code>hevc</code> дає файли приблизно на 30% менші за тієї самої якості; <code>bitrate</code> <code>lower</code> жертвує якістю заради розміру.</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>Позиції задаються в частках полотна, тож стікери й текст зберігають відносне місце після зміни співвідношення сторін — але перевіряйте їх через <code class="cmd">preview.layout</code> або <code class="cmd">preview.contact_sheet</code>.</li>
+  <li><code class="cmd">export.list</code> показує всі завдання від запуску Kadr; після перезапуску вони забуваються.</li>
+  <li>Видалити копію можна через <code class="cmd">project.delete</code>; імпортовані медіафайли ніколи не видаляються.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

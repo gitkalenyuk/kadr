@@ -1,0 +1,60 @@
+<!--meta {"title":"Verifying results","nav":"Verifying results","order":230,"description":"Check an edit the way an editor would: read the timeline, look at frames and contact sheets, measure layouts and loudness, then confirm the exported file itself.","group":"Guides"} -->
+<p class="lead">A command that succeeded only proves the call was valid. To know the video is right, an agent should do what an editor does: read the timeline, look at the picture, measure what can be measured, and finally check the exported file.</p>
+
+<h2 id="structure">1. Read the structure</h2>
+<p><code class="cmd">timeline.get</code> is the compact, agent-sized view: tracks top to bottom, each clip with <code>start_us</code>, <code>end_us</code>, source range, speed, volume, link group, transition and effects, plus <code>duration_us</code> of the whole edit and how often each material is used. Compare it with the plan: right order, no unexpected gaps on non-magnetic tracks, total length as intended.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.get --project_id prj_e5a2c8f1d940</code></pre><pre data-lang="mcp"><code>{"name": "timeline_get", "arguments": {"project_id": "prj_e5a2c8f1d940"}}</code></pre></div>
+<p>For one clip in depth, <code class="cmd">segment.get</code> with <code>time_us</code> returns every property plus <code>evaluated</code> — the keyframed values at that moment.</p>
+
+<h2 id="look">2. Look at the picture</h2>
+<p><code class="cmd">preview.frame</code> renders one frame with the export renderer. <code class="cmd">preview.contact_sheet</code> renders a grid of evenly spaced frames (<code>times_us</code> lists each tile’s time); <code>start_us</code>/<code>end_us</code> zoom in on a section. Through MCP both arrive as images the model can see.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_e5a2c8f1d940 --time_us 1s --width 960
+kadrctl run preview.contact_sheet --project_id prj_e5a2c8f1d940 --count 8 --columns 4 --tile_width 240</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_e5a2c8f1d940", "time_us": 1000000, "width": 960}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_e5a2c8f1d940", "count": 8, "columns": 4, "tile_width": 240}}</code></pre></div>
+<figure><img src="{{root}}assets/img/ai/promo-contact-sheet.webp" alt="A contact sheet: six frames of a promo in a 3 by 2 grid" width="976" height="372" loading="lazy"><figcaption>A contact sheet (6 tiles, 3 columns) from the product promo recipe — one image shows the whole edit.</figcaption></figure>
+<p>Without MCP, decode <code>png_base64</code> yourself, or fetch a JPEG from the <a href="{{root}}{{lang_root}}docs/ai/rest.html#binary">frame endpoint</a>:</p>
+<pre><code class="lang-powershell">$r = Invoke-Kadr preview.frame @{ project_id = 'prj_e5a2c8f1d940'; time_us = 1000000; width = 960 }
+[IO.File]::WriteAllBytes("$PWD\frame.png", [Convert]::FromBase64String($r.png_base64))</code></pre>
+<table>
+  <thead><tr><th>Look for</th><th>Where</th></tr></thead>
+  <tbody>
+    <tr><td>Black bars or edges during zooms</td><td>Contact sheet, then frames at the move’s start and end</td></tr>
+    <tr><td>Text cut off, overlapping captions, stickers on faces</td><td>Frames at 960 px or wider</td></tr>
+    <tr><td>Black frames between clips</td><td>Dark tiles; gaps in <code class="cmd">timeline.get</code></td></tr>
+    <tr><td>A weak first frame (the thumbnail)</td><td><code class="cmd">preview.frame</code> at <code>time_us</code> 0, or set one with <code class="cmd">project.set_cover</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="measure">3. Measure</h2>
+<p><code class="cmd">preview.layout</code> returns the box of every visible clip, text and sticker at a time, in canvas pixels (<code>x</code>, <code>y</code>, <code>w</code>, <code>h</code>, <code>rotation</code>, <code>corners</code>, <code>z</code>). A clip covers the frame when <code>x</code> ≤ 0, <code>y</code> ≤ 0, <code>x + w</code> ≥ <code>canvas_width</code> and <code>y + h</code> ≥ <code>canvas_height</code>; text fits when its box is inside those bounds.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_e5a2c8f1d940 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_e5a2c8f1d940", "time_us": 1000000}}</code></pre></div>
+<p>For sound, <code class="cmd">audio.loudness</code> measures a clip (integrated LUFS, loudness range, true peak, and <code>effective_lufs</code> including the clip’s volume). Speech under music reads well when the music sits 10–15 LU lower. For words, compare <code class="cmd">captions.list</code> (cue text and times) with <code class="cmd">transcript.get</code> (what was recognised).</p>
+
+<h2 id="export">4. Check the exported file</h2>
+<p><code class="cmd">export.start</code> returns a <code>job_id</code> immediately; poll <code class="cmd">export.status</code> every second or two until <code>state</code> is <code>done</code> (or <code>failed</code> with an <code>error</code>). The final <code>path</code> can differ from the one you asked for: an existing file is never overwritten unless you pass <code>overwrite</code>, so Kadr adds “ (1)”.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_e5a2c8f1d940 --resolution 720p --path C:/Users/you/Videos/Kadr/check.mp4 --overwrite
+kadrctl run export.status --job_id exp_2d7f9b1e4c06</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_e5a2c8f1d940", "resolution": "720p", "path": "C:/Users/you/Videos/Kadr/check.mp4", "overwrite": true}}
+{"name": "export_status", "arguments": {"job_id": "exp_2d7f9b1e4c06"}}</code></pre></div>
+<pre><code class="lang-json">{ "job_id": "exp_2d7f9b1e4c06", "state": "done", "progress": 1, "path": "C:\\Users\\you\\Videos\\Kadr\\check.mp4",
+  "size_bytes": 117503, "encoder": "h264_nvenc", "settings": { "width": 1280, "height": 720, "fps": 30, "duration_us": 4000000, … } }</code></pre>
+<p>Then confirm the file itself. With a shell, <code>ffprobe</code> answers in one line. Without one, Kadr can probe it: import the export into a scratch project — the material reports duration, size, codecs and whether it has sound — look at it, and delete the scratch project (imported files are never deleted).</p>
+<pre><code class="lang-powershell">ffprobe -v error -show_entries format=duration:stream=codec_type,codec_name,width,height -of compact "C:\Users\you\Videos\Kadr\check.mp4"</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Scratch: check export" --ratio 16:9
+kadrctl --% run media.import --project_id prj_4f9a1c7e0b38 --paths "[\"C:/Users/you/Videos/Kadr/check.mp4\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Scratch: check export", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_4f9a1c7e0b38", "paths": ["C:/Users/you/Videos/Kadr/check.mp4"]}}</code></pre></div>
+<pre><code class="lang-json">{ "id": "mat_a6e0c3b9d752", "type": "video", "duration_us": 4000000, "width": 1280, "height": 720, "fps": 30,
+  "video_codec": "h264", "has_audio": true, "audio_codec": "aac", … }</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_4f9a1c7e0b38 --material_id mat_a6e0c3b9d752
+kadrctl run preview.contact_sheet --project_id prj_4f9a1c7e0b38 --count 4 --columns 4 --tile_width 240
+kadrctl run project.delete --project_id prj_4f9a1c7e0b38</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_4f9a1c7e0b38", "material_id": "mat_a6e0c3b9d752"}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_4f9a1c7e0b38", "count": 4, "columns": 4, "tile_width": 240}}
+{"name": "project_delete", "arguments": {"project_id": "prj_4f9a1c7e0b38"}}</code></pre></div>
+<h2 id="checklist">Checklist before saying “done”</h2>
+<ul>
+  <li><code class="cmd">timeline.get</code>: order, lengths and total duration match the plan.</li>
+  <li>A contact sheet of the whole edit, plus frames at every risky moment (zooms, titles, the first frame).</li>
+  <li><code class="cmd">preview.layout</code> confirms coverage and that text fits; <code class="cmd">audio.loudness</code> confirms voice vs. music.</li>
+  <li>Captions match the script (<code class="cmd">captions.list</code>); fixes made with <code class="cmd">captions.update</code>.</li>
+  <li><code class="cmd">export.status</code> is <code>done</code>; the file’s duration, size and audio are confirmed.</li>
+  <li>A short report to the person: what changed, where the file is, anything you were unsure about.</li>
+</ul>

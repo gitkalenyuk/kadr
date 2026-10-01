@@ -1,0 +1,67 @@
+<!--meta {"title":"Claude Desktop","nav":"Claude Desktop","order":30,"description":"Додайте Kadr у Claude Desktop коротким записом у claude_desktop_config.json, перезапустіть і дайте Claude монтувати, поки ви дивитеся.","group":"Початок"} -->
+<p class="lead">Claude Desktop сам запускає <code>kadr-mcp.exe</code> і показує інструменти Kadr у кожному чаті. Потрібен лише один запис у JSON-файлі та перезапуск.</p>
+
+<ol class="steps">
+  <li>
+    <h3 id="open-config">Відкрийте файл конфігурації</h3>
+    <p>У Claude Desktop відкрийте <strong>Settings → Developer → Edit Config</strong>. Відкриється <code>claude_desktop_config.json</code> — зазвичай <code>%APPDATA%\Claude\claude_desktop_config.json</code>. Якщо файлу немає, створіть його.</p>
+  </li>
+  <li>
+    <h3 id="add-kadr">Додайте Kadr</h3>
+    <p>Вставте це, підставивши своє ім’я користувача в шлях (розділ <strong>Налаштування → API &amp; automation</strong> у Kadr показує точний фрагмент для вашого ПК). У JSON кожна зворотна коса риска пишеться двічі.</p>
+    <pre><code class="lang-json">{
+  "mcpServers": {
+    "kadr": {
+      "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe"
+    }
+  }
+}</code></pre>
+    <p>Якщо у файлі вже є розділ <code>mcpServers</code>, додайте всередину лише запис <code>"kadr": { … }</code>, відокремивши його від сусідів комою.</p>
+  </li>
+  <li>
+    <h3 id="restart">Повністю перезапустіть Claude Desktop</h3>
+    <p>Закрити вікно замало: клацніть правою кнопкою іконку Claude в області сповіщень, виберіть <strong>Quit</strong> і знову запустіть Claude Desktop. Якщо хочете бачити правки, спершу відкрийте Kadr.</p>
+  </li>
+  <li>
+    <h3 id="verify">Перевірте, що все працює</h3>
+    <p>Інструменти Kadr тепер є в меню інструментів чату. Почніть новий чат і попросіть:</p>
+    <blockquote><p>Покажи мої проєкти в Kadr.</p></blockquote>
+    <p>Claude викличе <code>project_list</code> і відповість. Потім спробуйте правку й дивіться в редактор:</p>
+    <blockquote><p>Створи в Kadr проєкт 9:16 «Desktop test», відкрий його у вікні Kadr, згенеруй 4-секундне тло sunset_gradient, додай титр «Привіт» шаблоном title_bold і покажи кадр на першій секунді.</p></blockquote>
+  </li>
+</ol>
+
+<h2 id="what-claude-sees">Що отримує Claude</h2>
+<ul>
+  <li>По інструменту на кожну команду Kadr (<code>timeline_segment_split</code> для <code>timeline.segment.split</code>) з повним описом, одиницями параметрів і прикладами, плюс <code>kadr_batch</code> для атомарних багатокрокових правок. Див. <a href="{{root}}{{lang_root}}docs/ai/mcp.html">Інструменти MCP</a>.</li>
+  <li>Інструкції сервера з основами: проєкти → доріжки → сегменти, мікросекунди, спершу читати стан, правки пакетами, дивитися на кадри.</li>
+  <li>Зображення: <code>preview_frame</code> і <code>preview_contact_sheet</code> повертають вміст-зображення, тож Claude справді бачить результат своєї правки.</li>
+</ul>
+
+<h2 id="env">Інший порт або папка даних</h2>
+<p>Типово міст звертається до <code>127.0.0.1:7777</code> і читає токен із <code>%APPDATA%\Kadr</code>. Для окремого рушія додайте блок <code>env</code>:</p>
+<pre><code class="lang-json">{
+  "mcpServers": {
+    "kadr": {
+      "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe",
+      "env": {
+        "KADR_ADDR": "127.0.0.1:7790",
+        "KADR_DATA_DIR": "D:\\kadr-automation"
+      }
+    }
+  }
+}</code></pre>
+<p>Замість <code>KADR_DATA_DIR</code> можна задати <code>KADR_TOKEN</code>.</p>
+
+<h2 id="troubleshooting">Усунення проблем</h2>
+<table>
+  <thead><tr><th>Симптом</th><th>Причина</th><th>Що робити</th></tr></thead>
+  <tbody>
+    <tr><td>У чаті немає інструментів Kadr</td><td>Конфігурацію не перечитано або JSON некоректний.</td><td>Завершіть Claude Desktop через трей і запустіть знову. Перевірте JSON (коми, подвоєні зворотні риски).</td></tr>
+    <tr><td>«Server disconnected» або сервер не стартує</td><td>Неправильний шлях до <code>kadr-mcp.exe</code>.</td><td>Візьміть повний шлях із <strong>Налаштування → API &amp; automation</strong> у Kadr. Журнал сервера — у <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
+    <tr><td><code>Kadr engine did not start … within 10 s</code></td><td>Поруч із <code>kadr-mcp.exe</code> немає <code>kadr-server.exe</code> або його заблоковано.</td><td>Запустіть Kadr самі й повторіть запит.</td></tr>
+    <tr><td>Правки не з’являються у відкритому вікні Kadr</td><td>Міст запустив «безголовий» <code>kadr-server.exe</code> ще до відкриття Kadr; порт 7777 зайнятий ним.</td><td>Завершіть <code>kadr-server.exe</code> у Диспетчері завдань, лишіть Kadr відкритим, перезапустіть Claude Desktop.</td></tr>
+    <tr><td><code>unauthorized: missing or invalid API token</code></td><td>Старий <code>KADR_TOKEN</code> або інший <code>KADR_DATA_DIR</code> в <code>env</code>.</td><td>Приберіть їх або скопіюйте токен із <code>%APPDATA%\Kadr\api-token</code>.</td></tr>
+    <tr><td>Виклик обривається через 5 хвилин</td><td>Міст чекає на виклик щонайбільше 5 хвилин (наприклад, <code>wait: true</code> на довгих субтитрах).</td><td>Запускайте довгі завдання без <code>wait</code> і опитуйте <code>captions_status</code> або <code>export_status</code>.</td></tr>
+  </tbody>
+</table>

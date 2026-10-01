@@ -1,0 +1,140 @@
+<!--meta {"title":"Слайдшоу з фото з рухом Кена Бернса","nav":"Слайдшоу з фото","order":340,"description":"Папка фото стає слайдшоу з повільним наближенням і панорамою Кена Бернса (ключові кадри з кубічним згладжуванням), плавними переходами, музикою з наростанням і згасанням та анімованим титром.","group":"Рецепти","summary":"Папка фото стає слайдшоу з повільним наближенням і панорамою на кожному фото, плавними переходами, музикою й анімованим титром.","time":"~2 хв","needs":"Папка фото і музичний трек","commands":["media.import","timeline.segment.add","keyframe.add","transition.apply_all","segment.set_fade","text.add","text.set_glyph_animation","preview.layout","export.start"]} -->
+<p class="lead">Результат — слайдшоу 16:9, де кожне фото повільно наближається й зсувається вбік, по черзі то наближаючись, то віддаляючись. Фото змінюються плавними переходами по 0,8 с, музика наростає й згасає, а титр з’являється літера за літерою.</p>
+<ul>
+  <li><strong>Час:</strong> ~2 хв</li>
+  <li><strong>Що потрібно:</strong> Папка фото і музичний трек</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">media.import</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">keyframe.add</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">segment.set_fade</code>, <code class="cmd">text.add</code>, <code class="cmd">text.set_glyph_animation</code>, <code class="cmd">preview.layout</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Зроби в Kadr слайдшоу 16:9 з фото в C:\Users\you\Pictures\summer, по 4 секунди на фото. Дай кожному фото повільний рух Кена Бернса: по черзі наближення від 110% до 125% і віддалення від 125% до 110%, з легким зсувом убік і ease-in-out, і простеж, щоб ніде не було чорних країв. Між усіма фото — переходи mix по 0,8 с. Поклади C:\Users\you\Music\warm.mp3 під усе слайдшоу з наростанням 1 с і згасанням 2 с. Додай титр «Літо 2026» з 0,3 с до 3,5 с шаблоном title_bold: літери піднімаються на появі й тануть наприкінці. Покажи кадри на 0,1 с і 3 с, потім експортуй 1080p.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="import">Створіть проєкт та імпортуйте</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Літнє слайдшоу" --ratio 16:9
+kadrctl --% run media.import --project_id prj_ea391e038f3f --paths "[\"C:/Users/you/Pictures/summer\",\"C:/Users/you/Music/warm.mp3\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Літнє слайдшоу", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_ea391e038f3f", "paths": ["C:/Users/you/Pictures/summer", "C:/Users/you/Music/warm.mp3"]}}</code></pre></div>
+<p>Фото імпортуються з <code>duration_us</code> 0: на таймлайні фото можна розтягнути на будь-яку довжину.</p>
+</li>
+<li>
+<h3 id="place">Розставте фото по 4 секунди</h3>
+<p>По одному <code class="cmd">timeline.segment.add</code> на фото, усе одним пакетом (<code>slides.json</code>). <code>duration_us</code> задає довжину кожного фото (типово для фото — 5 с).</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_35640c6ac4cf", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_0d53e39cc91a", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_6cf1f65ad462", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_c41da8217be6", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_bd01c3e803d1", "duration_us": 4000000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_ea391e038f3f slides.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_ea391e038f3f", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_35640c6ac4cf", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_0d53e39cc91a", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_6cf1f65ad462", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_c41da8217be6", "duration_us": 4000000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_bd01c3e803d1", "duration_us": 4000000}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="ken-burns">Додайте рух Кена Бернса</h3>
+<p>Кожне фото отримує чотири ключові кадри: <code>transform.scale</code> і <code>transform.x</code> на початку кліпу (<code>time_us</code> 0) і в кінці (4000000). Час у <code class="cmd">keyframe.add</code> — <em>відносно початку кліпу</em>, тож ті самі числа підходять для кожного фото. Згладжування задається на першому кадрі пари: воно формує рух <em>від</em> цього кадру до наступного (кубічне <code>ease_in_out</code>). Фото 1, 3 і 5 наближаються, 2 і 4 — віддаляються. Збережіть як <code>ken-burns.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 4000000, "value": 0.05}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_ea391e038f3f ken-burns.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_ea391e038f3f", "calls": [
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f81fd1e725f2", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_8915fde933d3", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_40017cbd60ba", "property": "transform.x", "time_us": 4000000, "value": 0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 0, "value": 1.25, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.scale", "time_us": 4000000, "value": 1.1}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 0, "value": 0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_4830a3e9d473", "property": "transform.x", "time_us": 4000000, "value": -0.05}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 0, "value": 1.1, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.scale", "time_us": 4000000, "value": 1.25}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 0, "value": -0.05, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_ec9e87a49909", "property": "transform.x", "time_us": 4000000, "value": 0.05}}
+]}}</code></pre></div>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.list --project_id prj_ea391e038f3f --segment_id seg_f81fd1e725f2</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_list", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_f81fd1e725f2"}}</code></pre></div>
+<div class="callout tip"><p><strong>Без чорних країв.</strong> <code>transform.x</code> вимірюється в половинах ширини полотна (±1 ставить центр кліпу на край), а <code>scale</code> 1 означає, що фото вписане в полотно. Фото тієї самої форми, що й полотно, при масштабі <em>s</em> можна зсунути вбік щонайбільше на <em>s</em> − 1, перш ніж з’явиться край: при 1.1 це 0.1, тож зсув ±0.05 безпечний. Фото іншої форми (3:2, 4:3) при масштабі 1 вписуються за висотою й лишають бічні смуги — помножте масштаби на коефіцієнт заповнення (приблизно 1.19 для 3:2 і 1.33 для 4:3 на полотні 16:9) або заповніть смуги через <code class="cmd">segment.set_background</code>.</p></div>
+</li>
+<li>
+<h3 id="dissolves">Плавні переходи між фото</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_ea391e038f3f --type mix --duration_us 0.8s</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_ea391e038f3f", "type": "mix", "duration_us": 800000}}</code></pre></div>
+</li>
+<li>
+<h3 id="music">Додайте музику</h3>
+<p>Слайдшоу триває 20 с, тож пісню додаємо з 0 с завдовжки 20 с і даємо їй наростання та згасання:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_ea391e038f3f --material_id mat_306a084087e3 --at_us 0 --duration_us 20s
+kadrctl run segment.set_fade --project_id prj_ea391e038f3f --segment_id seg_a1ac3ece258d --fade_in_us 1s --fade_out_us 2s</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_ea391e038f3f", "material_id": "mat_306a084087e3", "at_us": 0, "duration_us": 20000000}}
+{"name": "segment_set_fade", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_a1ac3ece258d", "fade_in_us": 1000000, "fade_out_us": 2000000}}</code></pre></div>
+</li>
+<li>
+<h3 id="title">Додайте анімований титр</h3>
+<p><code class="cmd">text.add</code> із шаблоном задає базовий вигляд. <code class="cmd">text.set_glyph_animation</code> анімує окремі літери: <code>in_letter_rise</code> піднімає їх одну за одною, <code>out_letter_fade</code> розчиняє наприкінці.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_ea391e038f3f --text "Літо 2026" --template_id title_bold --at_us 0.3s --duration_us 3.2s
+kadrctl run text.set_glyph_animation --project_id prj_ea391e038f3f --segment_id seg_cebc6c4db938 --kind in --id in_letter_rise --duration_us 1.2s
+kadrctl run text.set_glyph_animation --project_id prj_ea391e038f3f --segment_id seg_cebc6c4db938 --kind out --id out_letter_fade --duration_us 0.6s</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_ea391e038f3f", "text": "Літо 2026", "template_id": "title_bold", "at_us": 300000, "duration_us": 3200000}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_cebc6c4db938", "kind": "in", "id": "in_letter_rise", "duration_us": 1200000}}
+{"name": "text_set_glyph_animation", "arguments": {"project_id": "prj_ea391e038f3f", "segment_id": "seg_cebc6c4db938", "kind": "out", "id": "out_letter_fade", "duration_us": 600000}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Перевірте й експортуйте</h3>
+<p>Два кадри показують початок і середину першого руху; <code class="cmd">preview.layout</code> підтверджує, що рамка фото й далі покриває все полотно 1920×1080 (<code>x</code> ≤ 0, <code>x + w</code> ≥ 1920).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_ea391e038f3f --time_us 0.1s --width 960
+kadrctl run preview.frame --project_id prj_ea391e038f3f --time_us 3s --width 960
+kadrctl run preview.layout --project_id prj_ea391e038f3f --time_us 3s
+kadrctl run export.start --project_id prj_ea391e038f3f --resolution 1080p --path C:/Users/you/Videos/Kadr/summer-slideshow.mp4</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_ea391e038f3f", "time_us": 100000, "width": 960}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_ea391e038f3f", "time_us": 3000000, "width": 960}}
+{"name": "preview_layout", "arguments": {"project_id": "prj_ea391e038f3f", "time_us": 3000000}}
+{"name": "export_start", "arguments": {"project_id": "prj_ea391e038f3f", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/summer-slideshow.mp4"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<ul>
+  <li><strong>Готовий рух.</strong> Для швидшого результату без ключових кадрів застосуйте анімації кліпу <code>combo_ken_burns_in</code> і <code>combo_ken_burns_out</code> через <code class="cmd">animation.set</code> (<code>kind</code> <code>combo</code>).</li>
+  <li><strong>Інші переходи.</strong> Спробуйте <code>luma_fade</code>, <code>light_leak</code>, <code>film_burn_warm</code> або <code>photo_drop</code>.</li>
+  <li><strong>Інший вигляд титру.</strong> Ефекти word-art на кшталт <code>fx_gold_metal</code> чи <code>fx_sunset_gradient</code> (<code class="cmd">text.apply_effect</code>) і анімації літер на кшталт <code>in_typewriter</code> чи <code>in_word_blur</code>; <code class="cmd">library.list</code> з <code>kind</code> <code>text_animation</code> покаже всі.</li>
+  <li><strong>Вертикальне слайдшоу.</strong> На полотні 9:16 горизонтальні фото вписуються за шириною; заповніть порожнечу через <code class="cmd">segment.set_background</code> (<code>type</code> <code>blur</code>, <code>apply_to_all</code>).</li>
+  <li><strong>Один грейд для всіх фото.</strong> <code class="cmd">filter.add</code> на все слайдшоу, наприклад <code>golden</code> на 60%.</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>Щоб підігнати слайди під пісню, поділіть <code>duration_us</code> пісні на кількість фото й використайте результат як <code>duration_us</code> кожного фото.</li>
+  <li>Ключові кадри лишаються прив’язаними до фото, навіть якщо потім його обрізати чи перемістити.</li>
+  <li>Поки властивість має ключові кадри, <code class="cmd">segment.set_transform</code> записує ключовий кадр у позиції курсора, а не змінює статичне значення — щоб змінити рух, викликайте <code class="cmd">keyframe.add</code> з явним <code>time_us</code>.</li>
+  <li><code class="cmd">segment.get</code> з <code>time_us</code> показує інтерпольовані масштаб і позицію в будь-який момент.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

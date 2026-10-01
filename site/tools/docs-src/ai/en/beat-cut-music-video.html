@@ -1,0 +1,140 @@
+<!--meta {"title":"Music video cut to the beat","nav":"Cut to the beat","order":320,"description":"Detect the beats of a song, cut a set of clips exactly on them in one atomic batch, then add flash transitions, a colour filter, a punch-zoom on the drop and a title.","group":"Recipes","summary":"Kadr finds the beats in your song and every cut lands on one, with flash transitions, a colour grade and a punch-zoom on the drop.","time":"~2 min","needs":"A song and a folder of clips","commands":["audio.detect_beats","timeline.segment.add","timeline.segment.trim","segment.set_volume","transition.apply_all","filter.add","effect.add","text.add","export.start"]} -->
+<p class="lead">You get a music video where every cut lands on a beat, with a white flash on each cut, a teal-and-orange grade over everything, a punch-zoom when the track drops and a title over the first bar. The beats are detected on your PC, and the whole cut list is applied as one undoable step.</p>
+<ul>
+  <li><strong>Time:</strong> ~2 min</li>
+  <li><strong>You need:</strong> A song and a folder of clips</li>
+  <li><strong>Main commands:</strong> <code class="cmd">audio.detect_beats</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">timeline.segment.trim</code>, <code class="cmd">segment.set_volume</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">filter.add</code>, <code class="cmd">effect.add</code>, <code class="cmd">text.add</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>In Kadr, make a 16:9 music video from C:\Users\you\Music\night-drive.mp3 and the clips in C:\Users\you\Videos\drive. Detect the beats and add beat markers. Cut to a new clip on every bar (every 8th onset — about 2 seconds at this tempo) for the first 16 seconds, cycling through the clips and using a later part of each clip the second time round. Mute the clips' own sound, end the song where the video ends with a 1.5 s fade-out, put a short white flash on every cut, grade everything with teal_orange at 80%, add punch_zoom for one bar at 8 seconds and the title "NIGHT DRIVE" with the cinematic template for the first 3 seconds. Show me a contact sheet, then export 1080p.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="create-import">Create the project and import</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Night drive" --ratio 16:9
+kadrctl --% run media.import --project_id prj_408e1a6dfbd6 --paths "[\"C:/Users/you/Music/night-drive.mp3\",\"C:/Users/you/Videos/drive\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Night drive", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_408e1a6dfbd6", "paths": ["C:/Users/you/Music/night-drive.mp3", "C:/Users/you/Videos/drive"]}}</code></pre></div>
+<p>The song becomes <code>mat_971f6c60fb07</code>; the four clips are <code>mat_757801976c94</code>, <code>mat_eb4ddf31388d</code>, <code>mat_f5b1e7278a6f</code> and <code>mat_434577267af4</code>.</p>
+</li>
+<li>
+<h3 id="song">Put the song on the timeline</h3>
+<p>Audio never goes to the main track: it lands on an audio track, here from 0 s.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_408e1a6dfbd6 --material_id mat_971f6c60fb07 --at_us 0</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "material_id": "mat_971f6c60fb07", "at_us": 0}}</code></pre></div>
+</li>
+<li>
+<h3 id="beats">Detect the beats</h3>
+<p><code class="cmd">audio.detect_beats</code> analyses the song on your PC and returns every onset as a <em>timeline</em> time in microseconds, plus a rough tempo. <code>add_markers</code> also puts a “Beat” marker on the ruler, so clips you drag later in the editor snap to the music.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run audio.detect_beats --project_id prj_408e1a6dfbd6 --segment_id seg_a685cca02d34 --sensitivity 0.5 --add_markers</code></pre><pre data-lang="mcp"><code>{"name": "audio_detect_beats", "arguments": {"project_id": "prj_408e1a6dfbd6", "segment_id": "seg_a685cca02d34", "sensitivity": 0.5, "add_markers": true}}</code></pre></div>
+<pre><code class="lang-json">{
+  "segment_id": "seg_a685cca02d34",
+  "count": 120,
+  "bpm": 119.8,
+  "markers_added": 120,
+  "beats_us": [0, 252517, 501769, 720907, 1000998, 1248435, 1501678, 1750567, 2001270, …]
+}</code></pre>
+<p>Shortened. This track has a hi-hat on every eighth note, so onsets come about every 0.25 s at 120 BPM; one 4/4 bar is 8 onsets. Taking every 8th entry gives the cut points 0, 2001270, 4001088, 6001270, 8001088, 10001270, 12001088, 14001270 and 16001088 µs.</p>
+</li>
+<li>
+<h3 id="cut">Cut the clips on the beats in one batch</h3>
+<p>Each shot is added with <code>duration_us</code> equal to the distance between two cut points. Clips appended to the magnetic main track sit back to back, so every cut lands exactly on a beat. The second time round, <code>source_start_us</code> starts each clip 3 s in, so no shot repeats. Save as <code>beat-cut.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 0, "duration_us": 2001270}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 0, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 3000000, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 3000000, "duration_us": 1999818}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_408e1a6dfbd6 beat-cut.json --dry-run
+kadrctl batch prj_408e1a6dfbd6 beat-cut.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_408e1a6dfbd6", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 0, "duration_us": 2001270}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 0, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 0, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_757801976c94", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_eb4ddf31388d", "source_start_us": 3000000, "duration_us": 1999818}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_f5b1e7278a6f", "source_start_us": 3000000, "duration_us": 2000182}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_434577267af4", "source_start_us": 3000000, "duration_us": 1999818}}
+]}}</code></pre></div>
+<p>The dry run checks the plan first — for example, it fails if a slice asks for more video than a clip has — and changes nothing. The real run adds all eight shots as one undo step.</p>
+</li>
+<li>
+<h3 id="audio">Mute the clips and fit the song</h3>
+<p>One more batch: mute every shot’s own sound, cut the song where the video ends (16001088 µs) with <code class="cmd">timeline.segment.trim</code>, and fade it out. <code>snap</code> <code>false</code> puts the edge exactly there instead of snapping to a nearby beat marker. Save as <code>beat-audio.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_896a3c69fde1", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4dd4dd6ff8a2", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_2b7e19c04d5a", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_c81f3e60a97b", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_5e0a94d2c1f8", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_e7b2063d9a14", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_19c4f7a2e08d", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a3d58e1b6c27", "volume_db": -60}},
+  {"command": "timeline.segment.trim", "args": {"segment_id": "seg_a685cca02d34", "edge": "right", "to_us": 16001088, "snap": false}},
+  {"command": "segment.set_fade", "args": {"segment_id": "seg_a685cca02d34", "fade_out_us": 1500000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_408e1a6dfbd6 beat-audio.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_408e1a6dfbd6", "calls": [
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_896a3c69fde1", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4dd4dd6ff8a2", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_2b7e19c04d5a", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_c81f3e60a97b", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_5e0a94d2c1f8", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_e7b2063d9a14", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_19c4f7a2e08d", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a3d58e1b6c27", "volume_db": -60}},
+  {"command": "timeline.segment.trim", "args": {"segment_id": "seg_a685cca02d34", "edge": "right", "to_us": 16001088, "snap": false}},
+  {"command": "segment.set_fade", "args": {"segment_id": "seg_a685cca02d34", "fade_out_us": 1500000}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="flash">Flash on every cut</h3>
+<p>A short transition keeps the cut on the beat. <code class="cmd">transition.apply_all</code> sets it on all seven cuts.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_408e1a6dfbd6 --type white_flash --duration_us 160ms</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_408e1a6dfbd6", "type": "white_flash", "duration_us": 160000}}</code></pre></div>
+</li>
+<li>
+<h3 id="grade">Grade, hit the drop, add a title</h3>
+<p><code class="cmd">filter.add</code> puts the filter on its own track, so it colours everything below it for its whole length. <code class="cmd">effect.add</code> places <code>punch_zoom</code> on the fifth bar, from 8001088 µs for one bar. <code class="cmd">text.add</code> with the <code>cinematic</code> template adds the title on a text track.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run filter.add --project_id prj_408e1a6dfbd6 --filter_id teal_orange --at_us 0 --duration_us 16001088 --intensity 0.8
+kadrctl run effect.add --project_id prj_408e1a6dfbd6 --effect_id punch_zoom --at_us 8001088 --duration_us 2000182
+kadrctl run text.add --project_id prj_408e1a6dfbd6 --text "NIGHT DRIVE" --template_id cinematic --at_us 0 --duration_us 3s</code></pre><pre data-lang="mcp"><code>{"name": "filter_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "filter_id": "teal_orange", "at_us": 0, "duration_us": 16001088, "intensity": 0.8}}
+{"name": "effect_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "effect_id": "punch_zoom", "at_us": 8001088, "duration_us": 2000182}}
+{"name": "text_add", "arguments": {"project_id": "prj_408e1a6dfbd6", "text": "NIGHT DRIVE", "template_id": "cinematic", "at_us": 0, "duration_us": 3000000}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Check and export</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_408e1a6dfbd6 --count 8 --columns 4 --tile_width 240
+kadrctl run export.start --project_id prj_408e1a6dfbd6 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-drive.mp4
+kadrctl run export.status --job_id exp_51d0a7c3e9b2</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_408e1a6dfbd6", "count": 8, "columns": 4, "tile_width": 240}}
+{"name": "export_start", "arguments": {"project_id": "prj_408e1a6dfbd6", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-drive.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_51d0a7c3e9b2"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<h3 id="split-one-clip">One long clip, split on every beat</h3>
+<p><code class="cmd">timeline.segment.split</code> needs no <code>segment_id</code> when you pass only <code>at_us</code>: it splits whatever main-track clip is under that time. A batch of splits, one per cut point, chops a single long take into beat-length pieces that you can then delete, reverse or speed up one by one.</p>
+<pre><code class="lang-json">[
+  { "command": "timeline.segment.split", "args": { "at_us": 2001270 } },
+  { "command": "timeline.segment.split", "args": { "at_us": 4001088 } },
+  { "command": "timeline.segment.split", "args": { "at_us": 6001270 } }
+]</code></pre>
+<h3 id="more-ideas">More ideas</h3>
+<ul>
+  <li><strong>Faster cuts.</strong> Use every 4th onset (one cut per beat) for the chorus and every 8th for the verse.</li>
+  <li><strong>Other cut styles.</strong> Try <code>flash_zoom</code>, <code>glitch</code>, <code>whip_pan</code> or <code>zoom_blur_through</code> as the transition, and <code>rgb_pulse</code> or <code>hard_shake</code> as the drop effect. <code class="cmd">library.list</code> with <code>kind</code> <code>transition</code> or <code>effect</code> lists them all.</li>
+  <li><strong>Vertical version.</strong> See <a href="{{root}}{{lang_root}}docs/ai/batch-export-variants.html">One project, three formats</a>.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li><code>sensitivity</code> goes from 0 to 1: 0.7–0.9 for busy percussion, 0.2–0.4 to keep only strong hits. <code>strengths</code> gives each beat’s strength (0–1), which helps tell downbeats from off-beats.</li>
+  <li>Beat times are already timeline times (the song’s position and speed are taken into account), so they go straight into <code>at_us</code> and <code>duration_us</code>.</li>
+  <li><code class="cmd">audio.detect_beats</code> is recorded as an undo step even without <code>add_markers</code>; that is harmless.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

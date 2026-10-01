@@ -1,0 +1,51 @@
+<!--meta {"title":"Проєкти","nav":"Проєкти","order":30,"description":"Як створювати, відкривати, перейменовувати, дублювати й видаляти проєкти на головному екрані Kadr і задавати формат відео, частоту кадрів, тло та обкладинку.","group":"Початок"} -->
+<p class="lead">Проєкт — це одне відео, над яким ви працюєте. Усі проєкти зібрані на головному екрані Kadr, а кожна зміна зберігається в ту ж мить.</p>
+
+<h2 id="home">Головний екран</h2>
+<p>Kadr відкривається на головному екрані. Щоб повернутися сюди з редактора, натисніть стрілку <strong>←</strong> на верхній панелі або <strong>Menu → Back to home</strong>.</p>
+<figure><img src="{{root}}assets/img/guide/home.webp" alt="Головний екран: кнопка Create project, швидкі кнопки Vertical 9:16 і Square 1:1, поле пошуку й п’ять карток проєктів" width="1280" height="840" loading="lazy"><figcaption>Ваші проєкти, найновіші першими. На кожній картці — тривалість і формат відео.</figcaption></figure>
+<ul>
+  <li><strong>Create project</strong> — нове відео 16:9 (1920×1080, 30 кадрів за секунду). Гаряча клавіша <kbd>Ctrl</kbd>+<kbd>N</kbd> працює й у редакторі.</li>
+  <li><strong>Vertical 9:16</strong> — для TikTok, Reels і Shorts (1080×1920).</li>
+  <li><strong>Square 1:1</strong> — для квадратних дописів (1080×1080).</li>
+  <li><strong>Search projects</strong> — введіть частину назви. Дві кнопки поруч перемикають вигляд: сітка або список.</li>
+  <li><strong>Settings</strong> (ліворуч унизу) — оновлення, FFmpeg тощо; див. <a href="{{root}}{{lang_root}}docs/guide/settings.html">Налаштування й оновлення</a>.</li>
+</ul>
+<p>Новий проєкт отримує назву за сьогоднішньою датою (наприклад, <em>1001</em> для 1 жовтня). Щоб дати йому нормальну назву, клацніть її на верхній панелі редактора.</p>
+<div class="callout note"><p>Кнопки <strong>Auto captions</strong> та <strong>AI tools</strong> на головному екрані й розділ <strong>Templates</strong> зарезервовані для майбутньої версії. Самі функції вже доступні в редакторі: див. <a href="{{root}}{{lang_root}}docs/guide/captions.html">Субтитри</a> і <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html">ШІ-інструменти</a>.</p></div>
+
+<h2 id="manage">Відкрити, перейменувати, дублювати, видалити</h2>
+<div class="grid-2">
+  <div>
+    <p>Клацніть зображення проєкту (або двічі клацніть картку), щоб відкрити його. Решта дій — у кнопці <strong>…</strong> під карткою:</p>
+    <ul>
+      <li><strong>Open</strong> — відкрити;</li>
+      <li><strong>Rename</strong> — введіть нову назву й натисніть <kbd>Enter</kbd>;</li>
+      <li><strong>Duplicate</strong> — незалежна копія, зручно, щоб спробувати інший варіант;</li>
+      <li><strong>Delete</strong> — спершу попросить підтвердження.</li>
+    </ul>
+  </div>
+  <figure><img src="{{root}}assets/img/guide/project-menu.webp" alt="Меню проєкту з пунктами Open, Rename, Duplicate і Delete" width="600" height="600" loading="lazy"><figcaption>Меню «…» картки проєкту.</figcaption></figure>
+</div>
+<div class="callout warn"><p><strong>Видалення проєкту не можна скасувати.</strong> Kadr видаляє сам проєкт, але ваші вихідні відео, фото й музика залишаються на диску. Якщо хочете спробувати щось ризиковане, спершу зробіть дублікат.</p></div>
+
+<h2 id="ratio">Формат відео (співвідношення сторін)</h2>
+<p>Формат можна змінити будь-коли кнопкою <strong>Ratio</strong> під плеєром. Доступні 16:9, 9:16, 1:1, 4:3, 3:4, 21:9, 2.35:1, 2:1, 1.85:1 і 5.8-inch (високий екран телефона).</p>
+<figure><img src="{{root}}assets/img/guide/ratio.webp" alt="Відкрите меню Ratio над плеєром і панель Draft settings праворуч" width="1176" height="536" loading="lazy"><figcaption>Меню Ratio та панель Draft settings, яку видно, коли не виділено жодного кліпу.</figcaption></figure>
+<p>Після зміни формату кожен кліп вписується в новий кадр, а порожні ділянки заповнюються тлом полотна (див. нижче). Заголовки й стікери зберігають місце відносно кадру, тож після перемикання перевірте їх. Щоб перетворити горизонтальне відео на вертикальне, яке автоматично стежить за об’єктом, скористайтеся <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#auto-reframe">автокадруванням</a>.</p>
+
+<h2 id="draft-settings">Частота кадрів і тло</h2>
+<p>Клацніть порожнє місце на таймлайні, щоб нічого не було виділено. Тоді інспектор праворуч покаже <strong>Draft settings</strong>:</p>
+<ul>
+  <li><strong>Frame rate</strong> — 24, 25, 30, 50 або 60 кадрів за секунду. 30 підходить для більшості соцмереж; 25 — якщо ваша камера знімає у PAL; 60 — для плавних ігрових чи спортивних кадрів.</li>
+  <li><strong>Canvas background</strong> — що видно там, де кадр не закритий кліпом: <strong>Color</strong> (оберіть зразок кольору) або <strong>Blur</strong> — розмита збільшена копія самого відео, популярна для вертикальних роликів із горизонтального матеріалу.</li>
+</ul>
+<p>Кожен кліп головної доріжки може мати власне тло: виділіть кліп, відкрийте <strong>Video → Basic</strong> і прокрутіть до <strong>Canvas</strong>. Там є None (як у проєкті), Color, Blur (чотири рівні розмиття) або Image (введіть повний шлях до зображення), а <strong>Apply to all</strong> дає однакове тло всім кліпам головної доріжки.</p>
+
+<h2 id="cover">Обкладинка</h2>
+<p>Обкладинка — кадр, який використовується як мініатюра проєкту. Натисніть <strong>Cover</strong> на початку головної доріжки, протягніть повзунок або оберіть один із кадрів і натисніть <strong>Save</strong>. <strong>Use playhead</strong> бере кадр під курсором відтворення, <strong>Reset</strong> повертає перший кадр.</p>
+<figure><img src="{{root}}assets/img/guide/cover.webp" alt="Вікно Cover із великим переглядом, повзунком, стрічкою кадрів і кнопкою Use playhead" width="632" height="600" loading="lazy"><figcaption>Вибір кадру для обкладинки.</figcaption></figure>
+
+<h2 id="saving">Збереження і де лежать проєкти</h2>
+<p>Кнопки «Зберегти» немає: Kadr зберігає проєкт після кожної зміни, а <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> скасовують і повторюють дії. Проєкти зберігаються у вашому профілі Windows, у папці <code>%APPDATA%\Kadr\projects</code> (по папці на проєкт). Проєкт містить лише <em>посилання</em> на медіафайли, а не їхні копії, — тож не переміщуйте оригінали. Якщо все ж перемістили, Kadr позначить їх як відсутні й дозволить <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">вказати нове розташування</a>.</p>
+<div class="callout tip"><p>Щоб зробити резервну копію проєкту, скопіюйте його папку з <code>%APPDATA%\Kadr\projects</code> разом із медіафайлами. Точну папку даних (у <a href="{{root}}{{lang_root}}docs/guide/settings.html#portable">портативному режимі</a> вона інша) показує <strong>Settings → About → Data folder</strong>.</p></div>

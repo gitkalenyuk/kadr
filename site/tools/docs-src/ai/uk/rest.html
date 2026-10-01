@@ -1,0 +1,168 @@
+<!--meta {"title":"REST API","nav":"REST API","order":120,"description":"Викликайте будь-яку команду Kadr через HTTP на 127.0.0.1:7777: токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.","group":"Інтерфейси"} -->
+<p class="lead">Кожна команда Kadr доступна через HTTP на вашому ПК. Надішліть POST із JSON-об’єктом аргументів на <code>/api/v1/commands/&lt;name&gt;</code> — і отримаєте рівно те, що отримують кнопки редактора.</p>
+
+<h2 id="base-url">Базова адреса</h2>
+<pre><code class="lang-text">http://127.0.0.1:7777/api/v1</code></pre>
+<p>Її обслуговують і редактор (<code>Kadr.exe</code>), і «безголовий» <code>kadr-server.exe</code>. Щоб змінити адресу, задайте <code>KADR_ADDR</code> (наприклад, <code>127.0.0.1:7790</code>) до запуску Kadr. Без токена доступні <code>GET /api/v1/health</code> → <code>{"ok":true,"result":{"status":"ok","version":"…"}}</code>, <code>GET /api/v1/openapi.json</code> і HTML-довідник <code>GET /docs</code>.</p>
+
+<h2 id="auth">Автентифікація</h2>
+<p>Усе інше потребує токена API, що створюється під час першого запуску й зберігається в <code>%APPDATA%\Kadr\api-token</code> (Kadr показує шлях у <strong>Налаштування → API &amp; automation</strong>). Надсилайте його як bearer-токен: <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<div class="code-tabs"><pre data-lang="powershell"><code>$env:KADR_TOKEN = (Get-Content "$env:APPDATA\Kadr\api-token" -Raw).Trim()</code></pre><pre data-lang="cmd"><code>set /p KADR_TOKEN=&lt;"%APPDATA%\Kadr\api-token"</code></pre><pre data-lang="bash"><code>export KADR_TOKEN=$(cat "$APPDATA/Kadr/api-token")</code></pre></div>
+<p>Браузери не можуть ставити заголовки для запитів <code>&lt;img&gt;</code>, <code>&lt;audio&gt;</code> чи WebSocket, тож там можна передати <code>?token=&lt;token&gt;</code>. <code>KADR_TOKEN</code>, заданий до запуску Kadr, має пріоритет над файлом; щоб змінити токен, закрийте Kadr, видаліть <code>api-token</code> і запустіть Kadr знову.</p>
+
+<h2 id="calling">Виклик команди</h2>
+<p><code>POST /api/v1/commands/{name}</code> із JSON-об’єктом аргументів (порожнє тіло — без аргументів). Назви однакові всюди — у довіднику, у <code>kadrctl</code> і в MCP (з підкресленнями).</p>
+<div class="code-tabs"><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/commands/text.add -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_a049124a748a","text":"Day one","template_id":"title_bold","at_us":0,"duration_us":2000000}'</code></pre><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_a049124a748a --text "Day one" --template_id title_bold --at_us 0 --duration_us 2s</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_a049124a748a", "text": "Day one", "template_id": "title_bold", "at_us": 0, "duration_us": 2000000}}</code></pre></div>
+<p>У PowerShell <code>Invoke-RestMethod</code> одразу перетворює відповідь на об’єкти. Лишайте <code>charset=utf-8</code> у типі вмісту — без нього Windows PowerShell 5.1 псує неанглійський текст.</p>
+<pre><code class="lang-powershell">function Invoke-Kadr($Command, $Arguments = @{}) {
+  $body = $Arguments | ConvertTo-Json -Depth 10 -Compress
+  $r = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:7777/api/v1/commands/$Command" `
+    -Headers @{ Authorization = "Bearer $env:KADR_TOKEN" } `
+    -ContentType 'application/json; charset=utf-8' -Body $body
+  $r.result
+}
+
+$p = Invoke-Kadr project.create @{ name = 'Подорож'; ratio = '9:16' }
+Invoke-Kadr timeline.get @{ project_id = $p.id }</code></pre>
+<p>У Windows PowerShell 5.1 <code>curl</code> — це псевдонім <code>Invoke-WebRequest</code>; викликайте <code>curl.exe</code> повним ім’ям або користуйтеся <code>Invoke-RestMethod</code>.</p>
+
+<h2 id="envelope">Конверт відповіді</h2>
+<p>Кожна відповідь — JSON. Успіх:</p>
+<pre><code class="lang-json">{ "ok": true, "result": { … результат команди … } }</code></pre>
+<p>Помилка — <code>message</code> пояснює, що пішло не так, <code>hint</code> — як виправити виклик, <code>field</code> — який параметр винен (якщо є):</p>
+<pre><code class="lang-json">{
+  "ok": false,
+  "error": {
+    "code": "invalid_argument",
+    "message": "parameter \"ratio\": must be one of [16:9 9:16 1:1 4:3 3:4 21:9 2.35:1 2:1 1.85:1 5.8-inch]",
+    "hint": "Canvas aspect ratio. 9:16 is vertical (TikTok/Reels/Shorts), 16:9 is landscape (YouTube), 1:1 is square.",
+    "field": "ratio"
+  }
+}</code></pre>
+
+<h2 id="errors">Коди помилок і статуси HTTP</h2>
+<table>
+  <thead><tr><th>Код</th><th>HTTP</th><th>Значення</th></tr></thead>
+  <tbody>
+    <tr><td><code>invalid_argument</code></td><td>400</td><td>Параметра бракує, він не того типу чи поза діапазоном; також некоректний пакет.</td></tr>
+    <tr><td><code>unauthorized</code></td><td>401</td><td>Немає токена або він неправильний.</td></tr>
+    <tr><td><code>forbidden</code></td><td>403</td><td>Запит адресовано не <code>localhost</code>/<code>127.0.0.1</code>/<code>::1</code>.</td></tr>
+    <tr><td><code>not_found</code></td><td>404</td><td>Невідомий проєкт, сегмент, матеріал, завдання, голос чи id бібліотеки.</td></tr>
+    <tr><td><code>unknown_command</code></td><td>404</td><td>Команди з такою назвою немає.</td></tr>
+    <tr><td><code>conflict</code></td><td>409</td><td>Правка суперечить проєкту: заблокована доріжка, кліпи, що не торкаються, для переходу, репліки, що перекриваються.</td></tr>
+    <tr><td><code>nothing_to_undo</code></td><td>409</td><td>Скасування чи повтор із порожньою історією.</td></tr>
+    <tr><td><code>not_implemented</code></td><td>501</td><td>Команду заплановано, але вона ще недоступна.</td></tr>
+    <tr><td><code>not_available</code></td><td>503</td><td>На цьому ПК бракує потрібного — FFmpeg, faster-whisper чи моделі Whisper, голосу мовлення, моделі матування. <code>hint</code> підкаже, що встановити; <code class="cmd">tools.status</code>, <code class="cmd">captions.asr_status</code>, <code class="cmd">ai.capabilities</code> і <code class="cmd">tts.voices</code> показують, що знайдено.</td></tr>
+    <tr><td><code>internal</code></td><td>500</td><td>Неочікуваний збій (наприклад, помилка FFmpeg під час рендеру).</td></tr>
+  </tbody>
+</table>
+
+<h2 id="time">Час — у мікросекундах</h2>
+<p>Будь-який час і тривалість — ціле число мікросекунд, а такі параметри закінчуються на <code>_us</code>: один кадр при 30 fps = <code>33333</code>, 0,5 с = <code>500000</code>, 1 хв 30 с = <code>90000000</code>. REST приймає лише цілі числа; <code>kadrctl</code> розуміє ще й <code>2.5s</code>, <code>1500ms</code> і <code>00:01:02.5</code>. Інші одиниці вказано в описі кожного параметра (децибели, непрозорість 0–1, частки полотна…).</p>
+
+<h2 id="discovery">Як дізнатися про команди</h2>
+<table>
+  <thead><tr><th>Запит</th><th>Повертає</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /api/v1/commands</code></td><td>Специфікації всіх команд: name, title, category, description, scope, params, returns, errors, examples, menu, undoable, read_only. <code>?category=Export</code> фільтрує.</td></tr>
+    <tr><td><code>GET /api/v1/commands/{name}</code></td><td><code>{spec, input_schema}</code> — <code>input_schema</code> є JSON Schema.</td></tr>
+    <tr><td><code>GET /api/v1/openapi.json</code></td><td>OpenAPI 3.1 для всього API (без токена) — генеруйте з нього клієнти чи описи інструментів.</td></tr>
+    <tr><td><code>GET /docs</code></td><td>HTML-довідник команд, який віддає ваш запущений Kadr.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="batches">Пакети й пробні запуски</h2>
+<p><code>POST /api/v1/projects/{id}/batch</code> виконує кілька проєктних команд як <strong>одну атомарну правку</strong> й один крок скасування («Batch (N actions)»). Якщо виклик падає, нічого не зберігається. З <code>"dry_run": true</code> кожен виклик виконується на копії й ви бачите результати, але нічого не зберігається. <code>project_id</code> підставляється в кожен виклик.</p>
+<pre><code class="lang-json">[
+  {"command": "segment.set_background", "args": {"segment_id": "seg_a049124a748b", "type": "blur", "blur": 0.75}},
+  {"command": "text.add", "args": {"text": "День перший", "at_us": 0, "duration_us": 2000000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/projects/prj_a049124a748a/batch -H "Authorization: Bearer $KADR_TOKEN" \
+  -d '{"dry_run":false,"calls":[{"command":"segment.set_background","args":{"segment_id":"seg_a049124a748b","type":"blur","blur":0.75}},{"command":"text.add","args":{"text":"День перший","at_us":0,"duration_us":2000000}}]}'</code></pre><pre data-lang="kadrctl"><code>kadrctl batch prj_a049124a748a demo.json --dry-run
+kadrctl batch prj_a049124a748a demo.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_a049124a748a", "calls": [
+  {"command": "segment.set_background", "args": {"segment_id": "seg_a049124a748b", "type": "blur", "blur": 0.75}},
+  {"command": "text.add", "args": {"text": "День перший", "at_us": 0, "duration_us": 2000000}}
+]}}</code></pre></div>
+<p>Відповідь — <code>{"ok": true, "result": {"results": [ … по одному на виклик … ], "dry_run": false}}</code>. Виклики виконуються по черзі й бачать наслідки попередніх, але аргументи фіксуються заздалегідь, тож виклик не може використати id, створений раніше в тому самому пакеті. Пакетувати можна лише проєктні команди; глобальні команди та <code>edit.undo</code>/<code>edit.redo</code> відхиляються з <code>invalid_argument</code> («call 0: …», нумерація з 0).</p>
+
+<h2 id="aliases">Ресурсні псевдоніми</h2>
+<table>
+  <thead><tr><th>Маршрут</th><th>Виконує</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /api/v1/projects</code></td><td><code class="cmd">project.list</code> — параметри запиту стають аргументами, наприклад <code>?query=trip</code> (лише рядки).</td></tr>
+    <tr><td><code>POST /api/v1/projects</code></td><td><code class="cmd">project.create</code></td></tr>
+    <tr><td><code>GET /api/v1/projects/{id}</code></td><td><code class="cmd">project.get</code></td></tr>
+    <tr><td><code>PATCH /api/v1/projects/{id}</code></td><td><code class="cmd">project.rename</code>, тіло <code>{"name": "…"}</code></td></tr>
+    <tr><td><code>DELETE /api/v1/projects/{id}</code></td><td><code class="cmd">project.delete</code></td></tr>
+    <tr><td><code>POST /api/v1/projects/{id}/undo</code>, <code>…/redo</code></td><td><code class="cmd">edit.undo</code>, <code class="cmd">edit.redo</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="jobs">Довгі завдання</h2>
+<p>Експорт, автосубтитри, транскрипція й видалення фону одразу повертають завдання і працюють у фоні. Опитуйте <code class="cmd">export.status</code>, <code class="cmd">captions.status</code> (з <code>wait_s</code> — довге опитування до 600 с) чи <code class="cmd">ai.jobs</code> — або слухайте події нижче. Завдання живуть у пам’яті й забуваються після перезапуску Kadr.</p>
+
+<h2 id="events">Події WebSocket</h2>
+<p>Під’єднайтеся до <code>ws://127.0.0.1:7777/api/v1/events?token=&lt;token&gt;</code>, щоб отримувати JSON-повідомлення щоразу, коли щось стається — у редакторі, через API, з CLI чи від агента. Додайте <code>&amp;project_id=prj_…</code>, щоб отримувати лише події цього проєкту (плюс події, що не належать жодному проєкту).</p>
+<pre><code class="lang-json">{
+  "type": "project.changed",
+  "project_id": "prj_1a347e3a7883",
+  "source": "mcp",
+  "data": { "commands": ["transition.apply_all"] },
+  "time": "2026-10-01T16:47:42.9702474+02:00"
+}</code></pre>
+<p><code>source</code> — це <code>ui</code>, <code>api</code>, <code>mcp</code> чи <code>cli</code>, або модуль, що виконав фонову роботу (<code>media</code>, <code>ai</code>, <code>tools</code>, <code>update</code>).</p>
+<table>
+  <thead><tr><th>Подія</th><th>Коли</th><th><code>data</code></th></tr></thead>
+  <tbody>
+    <tr><td><code>project.created</code></td><td>Проєкт створено або дубльовано.</td><td>Зведення проєкту: <code>id</code>, <code>name</code>, <code>ratio</code>, …</td></tr>
+    <tr><td><code>project.changed</code></td><td>Проєкт збережено після правки чи фонового оновлення.</td><td><code>{commands}</code> — команди, що його змінили</td></tr>
+    <tr><td><code>project.deleted</code></td><td>Проєкт видалено.</td><td>—</td></tr>
+    <tr><td><code>history.changed</code></td><td>Змінилася доступність скасування/повтору.</td><td><code>{can_undo, can_redo, undo_label, redo_label}</code></td></tr>
+    <tr><td><code>command.executed</code></td><td>Глобальна команда щось змінила.</td><td><code>{command}</code></td></tr>
+    <tr><td><code>playhead.moved</code>, <code>playback.state</code></td><td>Перемотування, крок кадру, відтворення.</td><td><code>{time_us}</code>, <code>{playing, time_us}</code></td></tr>
+    <tr><td><code>media.import.progress</code>, <code>media.ready</code></td><td>Мініатюри, хвильові форми чи проксі створюються / готові.</td><td><code>{material_id, stage, progress}</code></td></tr>
+    <tr><td><code>export.progress</code></td><td>Завдання експорту просунулося.</td><td><code>job_id</code>, <code>state</code>, <code>phase</code>, <code>progress</code>, <code>speed_fps</code>, <code>eta_s</code></td></tr>
+    <tr><td><code>export.done</code>, <code>export.failed</code>, <code>export.cancelled</code></td><td>Експорт завершився.</td><td><code>{job_id, path}</code> / <code>{job_id, error}</code></td></tr>
+    <tr><td><code>captions.progress</code>, <code>captions.done</code>, <code>captions.failed</code>, <code>captions.cancelled</code></td><td>Автосубтитри чи транскрипція просунулися / завершилися.</td><td>Стан завдання: <code>state</code>, <code>phase</code>, <code>progress</code>, <code>result</code></td></tr>
+    <tr><td><code>ai.progress</code></td><td>Завдання видалення фону просунулося чи завершилося.</td><td><code>state</code>, <code>progress</code>, <code>frames</code>, <code>eta_s</code></td></tr>
+    <tr><td><code>presets.changed</code></td><td>Пресет «Мого набору» збережено, перейменовано чи видалено.</td><td><code>{action, preset_id, kind}</code></td></tr>
+    <tr><td><code>ui.open_project</code>, <code>ui.select</code>, <code>ui.library_tab</code>, <code>ui.toast</code></td><td>Агент попросив вікно щось показати.</td><td><code>{segment_id}</code>, <code>{tab}</code>, <code>{title, body}</code></td></tr>
+    <tr><td><code>tools.progress</code></td><td>Завантаження FFmpeg просунулося.</td><td><code>{tool, state, downloaded_bytes, total_bytes, progress, error}</code></td></tr>
+    <tr><td><code>update.available</code>, <code>update.progress</code>, <code>update.ready</code>, <code>update.failed</code></td><td>Перевірка й завантаження оновлень.</td><td>Версія, прогрес або помилка</td></tr>
+  </tbody>
+</table>
+<p>Слухач на Node.js 22+ (вбудований <code>WebSocket</code>, без пакетів):</p>
+<pre><code class="lang-js">const token = require('fs').readFileSync(process.env.APPDATA + '/Kadr/api-token', 'utf8').trim();
+const ws = new WebSocket('ws://127.0.0.1:7777/api/v1/events?token=' + token);
+ws.onmessage = (m) =&gt; {
+  const e = JSON.parse(m.data);
+  if (e.type === 'export.progress') console.log(e.data.job_id, Math.round(e.data.progress * 100) + '%');
+  else console.log(e.type, e.source, e.project_id || '');
+};</code></pre>
+<p>Події повідомляють, <em>що</em> щось змінилося; новий стан читайте через <code class="cmd">timeline.get</code>. Повільні клієнти втрачають події, а не гальмують редактор, тож після перепід’єднання перечитуйте стан.</p>
+
+<h2 id="binary">Бінарні ендпоінти</h2>
+<p>Картинки й звук віддаються як файли. Їм теж потрібен токен (заголовок або <code>?token=</code>).</p>
+<table>
+  <thead><tr><th>Endpoint (GET)</th><th>Повертає</th></tr></thead>
+  <tbody>
+    <tr><td><code>/api/v1/projects/{id}/frame?t_us=&amp;w=&amp;h=&amp;format=jpeg|png</code></td><td>Скомпонований кадр у момент <code>t_us</code> — та сама картинка, що й у <code class="cmd">preview.frame</code> та експорті.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/stream?start_us=&amp;w=&amp;h=&amp;fps=</code></td><td>Живе MJPEG-відтворення (<code>multipart/x-mixed-replace</code>), придатне як <code>&lt;img src&gt;</code>.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/audio?start_us=&amp;dur_us=&amp;rate=</code></td><td>Звуковий мікс цього діапазону, 16-бітний стерео WAV.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/media/{mid}/thumbnail?h=</code></td><td>JPEG-постер матеріалу.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/media/{mid}/frame?t_us=&amp;h=</code></td><td>JPEG-кадр вихідного файлу в момент <code>t_us</code>.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/media/{mid}/waveform?pps=</code></td><td>JSON <code>{"peaks_per_second": N, "peaks": [0..1, …]}</code></td></tr>
+    <tr><td><code>/api/v1/library/{kind}/{id}/thumbnail</code></td><td>Прев’ю елемента бібліотеки.</td></tr>
+    <tr><td><code>/api/v1/library/sound_effect/{id}/audio</code></td><td>WAV-прев’ю звукового ефекту.</td></tr>
+    <tr><td><code>/api/v1/exports/{job}/file</code></td><td>Готовий файл експорту.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="security">Модель безпеки</h2>
+<ul>
+  <li><strong>Лише локально.</strong> Kadr слухає на <code>127.0.0.1</code>; інші комп’ютери під’єднатися не можуть.</li>
+  <li><strong>Перевірка хоста.</strong> Запити мають бути адресовані <code>localhost</code>, <code>127.0.0.1</code> або <code>::1</code>; усе інше отримує <code>403 forbidden</code>. Це блокує атаки DNS rebinding з вебсторінок.</li>
+  <li><strong>Origin браузера.</strong> CORS і WebSocket приймаються лише з loopback-origin, і токен однаково потрібен.</li>
+  <li><strong>Токен.</strong> Зберігається у вашому профілі; хто його має, той керує вашими проєктами. Ніколи не вставляйте його в запити до ШІ й не комітьте.</li>
+  <li><strong>Ваші файли лишаються на місці.</strong> Команди читають і записують файли за вказаними шляхами на тому ПК, де працює Kadr.</li>
+</ul>

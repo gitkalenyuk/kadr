@@ -1,0 +1,127 @@
+<!--meta {"title":"Timeline editing","nav":"Timeline editing","order":50,"description":"Select, move, trim, split and delete clips on the Kadr timeline; use the magnet, snapping, tracks, markers, copy and paste, speed and undo.","group":"Editing"} -->
+<p class="lead">The timeline is where your video takes shape. This page covers everything you do there, from the first cut to markers and speed changes.</p>
+
+<figure><img src="{{root}}assets/img/guide/timeline.webp" alt="The toolbar and timeline: a ruler with two markers, text, sticker, filter and effect tracks, an overlay, the main track with transition badges and two audio tracks" width="1280" height="380" loading="lazy"><figcaption>Toolbar and timeline. The selected clip has a white outline; the white line is the playhead.</figcaption></figure>
+
+<h2 id="anatomy">How the timeline is organised</h2>
+<ul>
+  <li><strong>Main track</strong> — the lowest video track, with the <strong>Cover</strong> button at its start. Your story goes here. Clips on it always sit next to each other without gaps (see <a href="#magnet">magnet</a>).</li>
+  <li><strong>Tracks above the main track</strong> — overlays (picture-in-picture), stickers, text and captions, effects, filters and adjustment layers. What is higher covers what is lower.</li>
+  <li><strong>Audio tracks</strong> — below the main track: music, voice-overs and sound effects.</li>
+  <li>Tracks are created automatically when you add something and disappear when they become empty.</li>
+  <li>Each clip shows its name and length. Video clips show little pictures (a filmstrip), audio clips a waveform. Small badges between clips are <a href="{{root}}{{lang_root}}docs/guide/effects.html#transitions">transitions</a>.</li>
+</ul>
+
+<h2 id="navigate">Move around</h2>
+<ul>
+  <li><strong>Playhead.</strong> Click the ruler or drag along it to move the playhead; the player shows that moment. <kbd>Space</kbd> plays and pauses, <kbd>←</kbd> / <kbd>→</kbd> step one frame.</li>
+  <li><strong>Zoom.</strong> Hold <kbd>Ctrl</kbd> and turn the mouse wheel over the timeline, press <kbd>Ctrl</kbd>+<kbd>=</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd>, or use the zoom slider on the right of the toolbar. <strong>Zoom to fit</strong> (the arrows button next to it) shows the whole video.</li>
+  <li><strong>Scroll.</strong> The mouse wheel scrolls up and down when there are many tracks; <kbd>Shift</kbd>+wheel scrolls left and right.</li>
+  <li><strong>Preview axis</strong> (<kbd>S</kbd> or the target button on the right of the toolbar). When it is on, the player shows the frame under your mouse pointer as you hover over the timeline — a quick way to find a moment without moving the playhead.</li>
+</ul>
+
+<h2 id="select">Select clips</h2>
+<ul>
+  <li><strong>Click</strong> a clip to select it. Its settings appear in the inspector on the right.</li>
+  <li><kbd>Shift</kbd>+click or <kbd>Ctrl</kbd>+click adds clips to the selection (or removes them).</li>
+  <li><strong>Drag a rectangle</strong> starting on an empty part of the timeline to select every clip it touches. Hold <kbd>Shift</kbd> or <kbd>Ctrl</kbd> to add to the current selection.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>A</kbd> selects all clips on unlocked tracks.</li>
+  <li>Click an empty spot to deselect everything (this also moves the playhead there).</li>
+</ul>
+
+<h2 id="move">Move and trim</h2>
+<ul>
+  <li><strong>Move:</strong> drag a clip left or right, or up and down to another track of the same kind. A video can move between the main track and overlay tracks; if the spot is taken, Kadr makes a new track for it.</li>
+  <li><strong>Trim:</strong> point at the left or right edge of a clip — the cursor turns into a double arrow — and drag to shorten or lengthen it. A video can't get longer than its original recording.</li>
+  <li>While you drag, a guide line shows where the clip will <a href="#snapping">snap</a>.</li>
+</ul>
+
+<h2 id="split">Split (cut)</h2>
+<div class="grid-2">
+  <div>
+    <p><strong>At the playhead:</strong> move the playhead to where you want the cut and press <kbd>Ctrl</kbd>+<kbd>B</kbd> or click <strong>Split</strong> in the toolbar. If a clip is selected and under the playhead, that clip is cut; otherwise the main-track clip under the playhead is.</p>
+  </div>
+  <div>
+    <p><strong>With the Split tool:</strong> press <kbd>B</kbd> (or pick <strong>Split</strong> in the tool menu at the left of the toolbar). The pointer becomes a cross — click anywhere on a clip to cut it there. Press <kbd>A</kbd> to go back to the Select tool.</p>
+  </div>
+</div>
+
+<h2 id="delete">Delete</h2>
+<ul>
+  <li><kbd>Delete</kbd> (or <kbd>Backspace</kbd>) removes the selected clips. On the main track the following clips slide left to close the gap.</li>
+  <li><kbd>Q</kbd> — <strong>Delete left</strong>: removes the part of the clip before the playhead.</li>
+  <li><kbd>W</kbd> — <strong>Delete right</strong>: removes the part after the playhead.</li>
+</ul>
+<div class="callout tip"><p>The fastest way to tidy a talking video: play it, stop where a mistake starts, press <kbd>Q</kbd>… or select a stretch and press <kbd>Delete</kbd>. Even faster: let Kadr cut pauses and filler words for you — see <a href="{{root}}{{lang_root}}docs/guide/captions.html#transcript">editing by transcript</a> and <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-silence">Remove silence</a>.</p></div>
+
+<h2 id="copy">Copy, paste and duplicate</h2>
+<ul>
+  <li><kbd>Ctrl</kbd>+<kbd>C</kbd> copies the selected clips, <kbd>Ctrl</kbd>+<kbd>X</kbd> cuts them, <kbd>Ctrl</kbd>+<kbd>V</kbd> pastes at the playhead.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>D</kbd> duplicates the selected clip right after itself.</li>
+</ul>
+
+<h2 id="context-menu">Right-click menus</h2>
+<table>
+  <thead><tr><th>Right-click on…</th><th>You get</th></tr></thead>
+  <tbody>
+    <tr><td>A clip</td><td>Copy, Cut, Paste, Split, Duplicate, Freeze frame and Extract audio (video clips), the <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html">Smart tools</a> that fit the clip, Delete</td></tr>
+    <tr><td>An empty spot</td><td>Paste, Add marker here</td></tr>
+    <tr><td>A marker on the ruler</td><td>Delete marker</td></tr>
+    <tr><td>A transition badge</td><td>Select transition, Apply to all, Remove transition</td></tr>
+  </tbody>
+</table>
+
+<h2 id="clip-tools">More clip tools in the toolbar</h2>
+<table>
+  <thead><tr><th>Button</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Freeze frame</strong></td><td>Inserts a 3-second still of the frame under the playhead into the video clip.</td></tr>
+    <tr><td><strong>Reverse</strong></td><td>Plays the selected video backwards. Click again to play it forwards.</td></tr>
+    <tr><td><strong>Mirror</strong></td><td>Flips the picture left to right. Click again to flip it back.</td></tr>
+    <tr><td><strong>Rotate</strong></td><td>Turns the picture 90° clockwise.</td></tr>
+    <tr><td><strong>Crop</strong></td><td>Opens the crop window: drag the frame, pick <em>Free</em>, 16:9, 9:16, 1:1, 4:3 or 3:4, then <strong>Confirm</strong>.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="speed">Speed</h2>
+<p>Select a video or audio clip and open the <strong>Speed</strong> tab in the inspector.</p>
+<ul>
+  <li><strong>Normal</strong> — a single speed from 0.1× (slow motion) to 100× (time-lapse). You can also type the new <strong>Duration</strong> and Kadr works out the speed. <strong>Keep pitch</strong> stops voices from sounding like chipmunks when sped up.</li>
+  <li><strong>Curve</strong> — speed that changes over the clip: <em>Montage</em>, <em>Hero</em>, <em>Bullet</em>, <em>Jump cut</em>, <em>Flash in</em>, <em>Flash out</em>, or draw your own.</li>
+</ul>
+<p>On the main track, the following clips move automatically when a clip gets shorter or longer.</p>
+
+<h2 id="magnet">Magnet, snapping and linkage</h2>
+<p>Four switches on the right side of the toolbar change how the timeline behaves. Each is highlighted when it is on.</p>
+<table>
+  <thead><tr><th>Switch</th><th>When on</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Main track magnet</strong> (<kbd>N</kbd>)</td><td>Clips on the main track always stick together: deleting or shortening a clip closes the gap, inserting one pushes the rest right. Turn it off to leave gaps on purpose.</td></tr>
+    <tr id="snapping"><td><strong>Auto snapping</strong></td><td>While you drag, clip edges jump to other clip edges, the playhead, markers and the start of the video when they come close.</td></tr>
+    <tr><td><strong>Linkage</strong></td><td>Linked clips — for example a video and its separated sound — move, trim and delete together.</td></tr>
+    <tr><td><strong>Preview axis</strong> (<kbd>S</kbd>)</td><td>The player follows the mouse pointer over the timeline (see above).</td></tr>
+  </tbody>
+</table>
+
+<h2 id="tracks">Lock, hide and mute tracks</h2>
+<p>The buttons at the start of each track row:</p>
+<ul>
+  <li><strong>Padlock</strong> — locks the track. Its clips can't be selected, moved or changed until you unlock it. Handy for protecting finished music or captions.</li>
+  <li><strong>Eye</strong> — hides the track in the player and in the export, without deleting anything.</li>
+  <li><strong>Speaker</strong> — mutes the sound of the whole track.</li>
+</ul>
+
+<h2 id="markers">Markers</h2>
+<p>Markers are little flags on the ruler that help you remember important moments, such as beats of the music or places to cut.</p>
+<ul>
+  <li>Press <kbd>M</kbd> or click <strong>Add marker</strong> in the toolbar to drop a marker at the playhead. Right-clicking an empty spot gives <strong>Add marker here</strong>.</li>
+  <li>Drag a marker along the ruler to move it. Clips snap to markers.</li>
+  <li>Right-click a marker and choose <strong>Delete marker</strong> to remove it.</li>
+</ul>
+<div class="callout note"><p>Markers can also have a name and a colour, and Kadr can place one on every beat of a song. Those options don't have buttons yet — an AI assistant can do them for you with <code class="cmd">timeline.marker.set</code> and <code class="cmd">audio.detect_beats</code>. See the <a href="{{root}}{{lang_root}}docs/ai/index.html">AI documentation</a>.</p></div>
+
+<h2 id="undo">Undo and redo</h2>
+<p><kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes the last change, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> redoes it. The arrow buttons at the left of the toolbar do the same, and their tooltips — like the items in <strong>Menu</strong> — tell you which step you are about to undo (“Undo Split”). Every change is one step, including changes made by an AI assistant.</p>
+
+<h2 id="hide-timeline">More room for the player</h2>
+<p>Press <kbd>Ctrl</kbd>+<kbd>.</kbd> or click the last button on the right of the toolbar to fold the timeline away; do it again to bring it back. You can also drag the border above the toolbar to give the timeline more or less height.</p>

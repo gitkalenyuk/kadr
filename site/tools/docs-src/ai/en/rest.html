@@ -1,0 +1,168 @@
+<!--meta {"title":"REST API","nav":"REST API","order":120,"description":"Call any Kadr command over HTTP on 127.0.0.1:7777: token, response envelope, error codes and hints, batches and dry runs, resource aliases, WebSocket events and binary endpoints.","group":"Interfaces"} -->
+<p class="lead">Every Kadr command is available over HTTP on your own PC. POST a JSON object of arguments to <code>/api/v1/commands/&lt;name&gt;</code> and you get back exactly what the editor’s buttons get.</p>
+
+<h2 id="base-url">Base URL</h2>
+<pre><code class="lang-text">http://127.0.0.1:7777/api/v1</code></pre>
+<p>The editor (<code>Kadr.exe</code>) and the headless <code>kadr-server.exe</code> both serve it. Set <code>KADR_ADDR</code> (for example <code>127.0.0.1:7790</code>) before starting Kadr to move it. Without a token you can call <code>GET /api/v1/health</code> → <code>{"ok":true,"result":{"status":"ok","version":"…"}}</code>, <code>GET /api/v1/openapi.json</code> and the HTML reference at <code>GET /docs</code>.</p>
+
+<h2 id="auth">Authentication</h2>
+<p>Everything else needs the API token, created on first run and stored in <code>%APPDATA%\Kadr\api-token</code> (Kadr shows the path in <strong>Settings → API &amp; automation</strong>). Send it as a bearer token: <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<div class="code-tabs"><pre data-lang="powershell"><code>$env:KADR_TOKEN = (Get-Content "$env:APPDATA\Kadr\api-token" -Raw).Trim()</code></pre><pre data-lang="cmd"><code>set /p KADR_TOKEN=&lt;"%APPDATA%\Kadr\api-token"</code></pre><pre data-lang="bash"><code>export KADR_TOKEN=$(cat "$APPDATA/Kadr/api-token")</code></pre></div>
+<p>Browsers cannot set headers on <code>&lt;img&gt;</code>, <code>&lt;audio&gt;</code> or WebSocket requests, so those may pass <code>?token=&lt;token&gt;</code> instead. <code>KADR_TOKEN</code> set before Kadr starts overrides the file; to rotate the token, quit Kadr, delete <code>api-token</code> and start Kadr again.</p>
+
+<h2 id="calling">Calling a command</h2>
+<p><code>POST /api/v1/commands/{name}</code> with a JSON object of arguments (an empty body means no arguments). Names are the same everywhere — in the reference, in <code>kadrctl</code>, and in MCP with underscores.</p>
+<div class="code-tabs"><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/commands/text.add -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_a049124a748a","text":"Day one","template_id":"title_bold","at_us":0,"duration_us":2000000}'</code></pre><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_a049124a748a --text "Day one" --template_id title_bold --at_us 0 --duration_us 2s</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_a049124a748a", "text": "Day one", "template_id": "title_bold", "at_us": 0, "duration_us": 2000000}}</code></pre></div>
+<p>In PowerShell, <code>Invoke-RestMethod</code> turns the answer into objects. Keep <code>charset=utf-8</code> in the content type — without it Windows PowerShell 5.1 garbles non-English text.</p>
+<pre><code class="lang-powershell">function Invoke-Kadr($Command, $Arguments = @{}) {
+  $body = $Arguments | ConvertTo-Json -Depth 10 -Compress
+  $r = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:7777/api/v1/commands/$Command" `
+    -Headers @{ Authorization = "Bearer $env:KADR_TOKEN" } `
+    -ContentType 'application/json; charset=utf-8' -Body $body
+  $r.result
+}
+
+$p = Invoke-Kadr project.create @{ name = 'Trip'; ratio = '9:16' }
+Invoke-Kadr timeline.get @{ project_id = $p.id }</code></pre>
+<p>In Windows PowerShell 5.1, <code>curl</code> is an alias of <code>Invoke-WebRequest</code>; call <code>curl.exe</code> by its full name or use <code>Invoke-RestMethod</code>.</p>
+
+<h2 id="envelope">Response envelope</h2>
+<p>Every response is JSON. Success:</p>
+<pre><code class="lang-json">{ "ok": true, "result": { … the command’s result … } }</code></pre>
+<p>Failure — <code>message</code> says what went wrong, <code>hint</code> how to fix the call, <code>field</code> which parameter is at fault (when there is one):</p>
+<pre><code class="lang-json">{
+  "ok": false,
+  "error": {
+    "code": "invalid_argument",
+    "message": "parameter \"ratio\": must be one of [16:9 9:16 1:1 4:3 3:4 21:9 2.35:1 2:1 1.85:1 5.8-inch]",
+    "hint": "Canvas aspect ratio. 9:16 is vertical (TikTok/Reels/Shorts), 16:9 is landscape (YouTube), 1:1 is square.",
+    "field": "ratio"
+  }
+}</code></pre>
+
+<h2 id="errors">Error codes and HTTP status</h2>
+<table>
+  <thead><tr><th>Code</th><th>HTTP</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>invalid_argument</code></td><td>400</td><td>A parameter is missing, has the wrong type or is out of range; also a malformed batch.</td></tr>
+    <tr><td><code>unauthorized</code></td><td>401</td><td>Missing or wrong token.</td></tr>
+    <tr><td><code>forbidden</code></td><td>403</td><td>The request was not addressed to <code>localhost</code>/<code>127.0.0.1</code>/<code>::1</code>.</td></tr>
+    <tr><td><code>not_found</code></td><td>404</td><td>Unknown project, segment, material, job, voice or library id.</td></tr>
+    <tr><td><code>unknown_command</code></td><td>404</td><td>No command has that name.</td></tr>
+    <tr><td><code>conflict</code></td><td>409</td><td>The edit clashes with the project: a locked track, clips that don’t touch for a transition, overlapping cues.</td></tr>
+    <tr><td><code>nothing_to_undo</code></td><td>409</td><td>Undo or redo with an empty history.</td></tr>
+    <tr><td><code>not_implemented</code></td><td>501</td><td>The command is planned but not available yet.</td></tr>
+    <tr><td><code>not_available</code></td><td>503</td><td>Something needed is missing on this PC — FFmpeg, faster-whisper or a Whisper model, a speech voice, a matting model. The <code>hint</code> says what to install; <code class="cmd">tools.status</code>, <code class="cmd">captions.asr_status</code>, <code class="cmd">ai.capabilities</code> and <code class="cmd">tts.voices</code> report what was found.</td></tr>
+    <tr><td><code>internal</code></td><td>500</td><td>An unexpected failure (for example an FFmpeg error while rendering).</td></tr>
+  </tbody>
+</table>
+
+<h2 id="time">Times are microseconds</h2>
+<p>Every time and duration is an integer number of microseconds, and those parameters end in <code>_us</code>: one frame at 30 fps = <code>33333</code>, 0.5 s = <code>500000</code>, 1 min 30 s = <code>90000000</code>. REST takes integers only; <code>kadrctl</code> also accepts <code>2.5s</code>, <code>1500ms</code> and <code>00:01:02.5</code>. Other units are written in each parameter’s description (decibels, 0–1 opacity, canvas fractions…).</p>
+
+<h2 id="discovery">Discovering commands</h2>
+<table>
+  <thead><tr><th>Request</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /api/v1/commands</code></td><td>Every command spec: name, title, category, description, scope, params, returns, errors, examples, menu, undoable, read_only. <code>?category=Export</code> filters.</td></tr>
+    <tr><td><code>GET /api/v1/commands/{name}</code></td><td><code>{spec, input_schema}</code> — <code>input_schema</code> is a JSON Schema.</td></tr>
+    <tr><td><code>GET /api/v1/openapi.json</code></td><td>OpenAPI 3.1 for the whole API (no token) — generate clients or tool definitions from it.</td></tr>
+    <tr><td><code>GET /docs</code></td><td>The HTML command reference served by your running Kadr.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="batches">Batches and dry runs</h2>
+<p><code>POST /api/v1/projects/{id}/batch</code> runs several project commands as <strong>one atomic edit</strong> and one undo step (“Batch (N actions)”). If a call fails nothing is saved. With <code>"dry_run": true</code> every call runs on a copy and you see the results, but nothing is saved. <code>project_id</code> is filled in for every call.</p>
+<pre><code class="lang-json">[
+  {"command": "segment.set_background", "args": {"segment_id": "seg_a049124a748b", "type": "blur", "blur": 0.75}},
+  {"command": "text.add", "args": {"text": "Day one", "at_us": 0, "duration_us": 2000000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/projects/prj_a049124a748a/batch -H "Authorization: Bearer $KADR_TOKEN" \
+  -d '{"dry_run":false,"calls":[{"command":"segment.set_background","args":{"segment_id":"seg_a049124a748b","type":"blur","blur":0.75}},{"command":"text.add","args":{"text":"Day one","at_us":0,"duration_us":2000000}}]}'</code></pre><pre data-lang="kadrctl"><code>kadrctl batch prj_a049124a748a demo.json --dry-run
+kadrctl batch prj_a049124a748a demo.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_a049124a748a", "calls": [
+  {"command": "segment.set_background", "args": {"segment_id": "seg_a049124a748b", "type": "blur", "blur": 0.75}},
+  {"command": "text.add", "args": {"text": "Day one", "at_us": 0, "duration_us": 2000000}}
+]}}</code></pre></div>
+<p>The answer is <code>{"ok": true, "result": {"results": [ … one per call … ], "dry_run": false}}</code>. Calls run in order and see the effects of earlier calls, but arguments are fixed in advance, so a call cannot use an id created earlier in the same batch. Only project commands can be batched; global commands and <code>edit.undo</code>/<code>edit.redo</code> are rejected with <code>invalid_argument</code> (“call 0: …”, counting from 0).</p>
+
+<h2 id="aliases">Resource-style aliases</h2>
+<table>
+  <thead><tr><th>Route</th><th>Runs</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /api/v1/projects</code></td><td><code class="cmd">project.list</code> — query parameters become arguments, e.g. <code>?query=trip</code> (strings only).</td></tr>
+    <tr><td><code>POST /api/v1/projects</code></td><td><code class="cmd">project.create</code></td></tr>
+    <tr><td><code>GET /api/v1/projects/{id}</code></td><td><code class="cmd">project.get</code></td></tr>
+    <tr><td><code>PATCH /api/v1/projects/{id}</code></td><td><code class="cmd">project.rename</code>, body <code>{"name": "…"}</code></td></tr>
+    <tr><td><code>DELETE /api/v1/projects/{id}</code></td><td><code class="cmd">project.delete</code></td></tr>
+    <tr><td><code>POST /api/v1/projects/{id}/undo</code>, <code>…/redo</code></td><td><code class="cmd">edit.undo</code>, <code class="cmd">edit.redo</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="jobs">Long-running jobs</h2>
+<p>Exports, auto captions, transcription and background removal return a job at once and run in the background. Poll <code class="cmd">export.status</code>, <code class="cmd">captions.status</code> (pass <code>wait_s</code> to long-poll up to 600 s) or <code class="cmd">ai.jobs</code> — or listen to the events below. Jobs live in memory and are forgotten when Kadr restarts.</p>
+
+<h2 id="events">WebSocket events</h2>
+<p>Connect to <code>ws://127.0.0.1:7777/api/v1/events?token=&lt;token&gt;</code> to receive a JSON message whenever something happens — in the editor, through the API, from the CLI or from an agent. Add <code>&amp;project_id=prj_…</code> to receive only that project’s events (plus events that belong to no project).</p>
+<pre><code class="lang-json">{
+  "type": "project.changed",
+  "project_id": "prj_1a347e3a7883",
+  "source": "mcp",
+  "data": { "commands": ["transition.apply_all"] },
+  "time": "2026-10-01T16:47:42.9702474+02:00"
+}</code></pre>
+<p><code>source</code> is <code>ui</code>, <code>api</code>, <code>mcp</code> or <code>cli</code>, or the module that did background work (<code>media</code>, <code>ai</code>, <code>tools</code>, <code>update</code>).</p>
+<table>
+  <thead><tr><th>Event</th><th>When</th><th><code>data</code></th></tr></thead>
+  <tbody>
+    <tr><td><code>project.created</code></td><td>A project was created or duplicated.</td><td>Project summary: <code>id</code>, <code>name</code>, <code>ratio</code>, …</td></tr>
+    <tr><td><code>project.changed</code></td><td>A project was saved after an edit or a background update.</td><td><code>{commands}</code> — the commands that changed it</td></tr>
+    <tr><td><code>project.deleted</code></td><td>A project was deleted.</td><td>—</td></tr>
+    <tr><td><code>history.changed</code></td><td>Undo/redo availability changed.</td><td><code>{can_undo, can_redo, undo_label, redo_label}</code></td></tr>
+    <tr><td><code>command.executed</code></td><td>A global command changed something.</td><td><code>{command}</code></td></tr>
+    <tr><td><code>playhead.moved</code>, <code>playback.state</code></td><td>Seek, frame step, playback.</td><td><code>{time_us}</code>, <code>{playing, time_us}</code></td></tr>
+    <tr><td><code>media.import.progress</code>, <code>media.ready</code></td><td>Thumbnails, waveforms or proxies are being made / are ready.</td><td><code>{material_id, stage, progress}</code></td></tr>
+    <tr><td><code>export.progress</code></td><td>An export job advanced.</td><td><code>job_id</code>, <code>state</code>, <code>phase</code>, <code>progress</code>, <code>speed_fps</code>, <code>eta_s</code></td></tr>
+    <tr><td><code>export.done</code>, <code>export.failed</code>, <code>export.cancelled</code></td><td>An export finished.</td><td><code>{job_id, path}</code> / <code>{job_id, error}</code></td></tr>
+    <tr><td><code>captions.progress</code>, <code>captions.done</code>, <code>captions.failed</code>, <code>captions.cancelled</code></td><td>Auto captions or transcription advanced / finished.</td><td>Job status: <code>state</code>, <code>phase</code>, <code>progress</code>, <code>result</code></td></tr>
+    <tr><td><code>ai.progress</code></td><td>A background-removal job advanced or finished.</td><td><code>state</code>, <code>progress</code>, <code>frames</code>, <code>eta_s</code></td></tr>
+    <tr><td><code>presets.changed</code></td><td>A My kit preset was saved, renamed or deleted.</td><td><code>{action, preset_id, kind}</code></td></tr>
+    <tr><td><code>ui.open_project</code>, <code>ui.select</code>, <code>ui.library_tab</code>, <code>ui.toast</code></td><td>An agent asked the window to show something.</td><td><code>{segment_id}</code>, <code>{tab}</code>, <code>{title, body}</code></td></tr>
+    <tr><td><code>tools.progress</code></td><td>The FFmpeg download advanced.</td><td><code>{tool, state, downloaded_bytes, total_bytes, progress, error}</code></td></tr>
+    <tr><td><code>update.available</code>, <code>update.progress</code>, <code>update.ready</code>, <code>update.failed</code></td><td>Update check and download.</td><td>Version, progress or error</td></tr>
+  </tbody>
+</table>
+<p>A listener in Node.js 22+ (built-in <code>WebSocket</code>, no packages):</p>
+<pre><code class="lang-js">const token = require('fs').readFileSync(process.env.APPDATA + '/Kadr/api-token', 'utf8').trim();
+const ws = new WebSocket('ws://127.0.0.1:7777/api/v1/events?token=' + token);
+ws.onmessage = (m) =&gt; {
+  const e = JSON.parse(m.data);
+  if (e.type === 'export.progress') console.log(e.data.job_id, Math.round(e.data.progress * 100) + '%');
+  else console.log(e.type, e.source, e.project_id || '');
+};</code></pre>
+<p>Events say <em>that</em> something changed; read the new state with <code class="cmd">timeline.get</code>. Slow clients lose events rather than slowing the editor down, so re-read state after a reconnect.</p>
+
+<h2 id="binary">Binary endpoints</h2>
+<p>Pictures and sound are served as files. They need the token too (header or <code>?token=</code>).</p>
+<table>
+  <thead><tr><th>Endpoint (GET)</th><th>Returns</th></tr></thead>
+  <tbody>
+    <tr><td><code>/api/v1/projects/{id}/frame?t_us=&amp;w=&amp;h=&amp;format=jpeg|png</code></td><td>The composited frame at <code>t_us</code> — the same picture as <code class="cmd">preview.frame</code> and the export.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/stream?start_us=&amp;w=&amp;h=&amp;fps=</code></td><td>Live MJPEG playback (<code>multipart/x-mixed-replace</code>), usable as <code>&lt;img src&gt;</code>.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/audio?start_us=&amp;dur_us=&amp;rate=</code></td><td>The audio mix of that range, 16-bit stereo WAV.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/media/{mid}/thumbnail?h=</code></td><td>JPEG poster frame of a material.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/media/{mid}/frame?t_us=&amp;h=</code></td><td>JPEG frame of the source file at <code>t_us</code>.</td></tr>
+    <tr><td><code>/api/v1/projects/{id}/media/{mid}/waveform?pps=</code></td><td>JSON <code>{"peaks_per_second": N, "peaks": [0..1, …]}</code></td></tr>
+    <tr><td><code>/api/v1/library/{kind}/{id}/thumbnail</code></td><td>Preview image of a library item.</td></tr>
+    <tr><td><code>/api/v1/library/sound_effect/{id}/audio</code></td><td>WAV preview of a sound effect.</td></tr>
+    <tr><td><code>/api/v1/exports/{job}/file</code></td><td>The finished export file.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="security">Security model</h2>
+<ul>
+  <li><strong>Local only.</strong> Kadr listens on <code>127.0.0.1</code>; other computers cannot connect.</li>
+  <li><strong>Host check.</strong> Requests must be addressed to <code>localhost</code>, <code>127.0.0.1</code> or <code>::1</code>; anything else gets <code>403 forbidden</code>. This blocks DNS-rebinding attacks from web pages.</li>
+  <li><strong>Browser origins.</strong> CORS and WebSocket connections are accepted only from loopback origins, and the token is still required.</li>
+  <li><strong>Token.</strong> Stored in your user profile; anyone who has it controls your projects. Never paste it into prompts or commit it.</li>
+  <li><strong>Your files stay put.</strong> Commands read and write files at the paths you give, on the PC where Kadr runs.</li>
+</ul>

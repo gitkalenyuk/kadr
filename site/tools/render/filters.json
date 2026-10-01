@@ -1,0 +1,37 @@
+[
+  {
+    "id": "none",
+    "name": "Original",
+    "file": "filter-none.webp"
+  },
+  {
+    "id": "teal_orange",
+    "name": "Teal & orange",
+    "file": "filter-teal_orange.webp"
+  },
+  {
+    "id": "cyberpunk",
+    "name": "Cyberpunk",
+    "file": "filter-cyberpunk.webp"
+  },
+  {
+    "id": "noir",
+    "name": "Noir",
+    "file": "filter-noir.webp"
+  },
+  {
+    "id": "honey_glow",
+    "name": "Honey Glow",
+    "file": "filter-honey_glow.webp"
+  },
+  {
+    "id": "cross_process",
+    "name": "Cross Process",
+    "file": "filter-cross_process.webp"
+  },
+  {
+    "id": "duotone_sunset",
+    "name": "Duotone Sunset",
+    "file": "filter-duotone_sunset.webp"
+  }
+]

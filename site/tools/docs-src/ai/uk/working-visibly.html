@@ -1,0 +1,51 @@
+<!--meta {"title":"Робота на очах у людини","nav":"Робота на очах","order":220,"description":"Дайте людині стежити за роботою агента у вікні Kadr: відкрийте проєкт, виділіть кліп, який редагуєте, перемкніть вкладку бібліотеки, посуньте курсор і коментуйте сповіщеннями.","group":"Посібники"} -->
+<p class="lead">Кожна правка агента одразу з’являється у відкритому вікні Kadr. Команди <code>ui.*</code> ідуть далі: вони керують тим, що вікно <em>показує</em> — який проєкт, який кліп, яку вкладку бібліотеки — і виводять короткі нотатки на екран, щоб людина могла стежити, вчитися й втрутитися.</p>
+
+<h2 id="requirements">Коли вікно може стежити</h2>
+<ul>
+  <li>Агент має працювати з <strong>редактором</strong> (<code>Kadr.exe</code>), а не з «безголовим» <code>kadr-server.exe</code>. <code class="cmd">app.version</code> підкаже: у редактора <code>executable</code> закінчується на <code>Kadr.exe</code>.</li>
+  <li>Команди <code>ui.*</code> не змінюють даних проєкту, не скасовуються й просто нічого не роблять, якщо вікно не відкрите, — їх завжди безпечно викликати.</li>
+  <li>Правки агента й людини потрапляють в одну історію скасування. Людина може натиснути <kbd>Ctrl</kbd>+<kbd>Z</kbd> на будь-якій правці агента; агент може скасувати правку людини через <code class="cmd">edit.undo</code>.</li>
+</ul>
+
+<h2 id="commands">Команди</h2>
+<table>
+  <thead><tr><th>Команда</th><th>Що бачить людина</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">ui.open_project</code></td><td>Вікно перемикається на цей проєкт, наче його відкрили з головного екрана.</td></tr>
+    <tr><td><code class="cmd">ui.select</code></td><td>Кліп виділяється на таймлайні, а його властивості з’являються в інспекторі. <code>segment_id</code> <code>""</code> знімає виділення.</td></tr>
+    <tr><td><code class="cmd">ui.library_tab</code></td><td>Ліва панель перемикається на <code>media</code>, <code>audio</code>, <code>text</code>, <code>stickers</code>, <code>effects</code>, <code>transitions</code>, <code>captions</code>, <code>transcript</code>, <code>filters</code>, <code>adjustment</code> або <code>templates</code> («Мій набір»).</td></tr>
+    <tr><td><code class="cmd">ui.toast</code></td><td>Коротке сповіщення вгорі вікна: жирний <code>title</code> і необов’язковий <code>body</code>.</td></tr>
+    <tr><td><code class="cmd">playback.seek</code>, <code class="cmd">playback.play</code>, <code class="cmd">playback.pause</code></td><td>Курсор переміщується, і плеєр показує цей кадр або відтворює звідти.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="session">Монтаж із коментарями</h2>
+<p>Відкрийте проєкт, оголосіть крок, покажіть, де живе функція, виділіть кліп, зробіть правку і програйте результат:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ui.open_project --project_id prj_6b0e4d2a9c71
+kadrctl run ui.toast --title "Додаю перехід" --body "Поворот куба між двома кадрами"
+kadrctl run ui.library_tab --tab transitions
+kadrctl run ui.select --project_id prj_6b0e4d2a9c71 --segment_id seg_d02f7b9e3a64
+kadrctl run transition.set --project_id prj_6b0e4d2a9c71 --segment_id seg_d02f7b9e3a64 --type cube_turn_left --duration_us 0.6s
+kadrctl run playback.play --project_id prj_6b0e4d2a9c71 --from_us 2s
+kadrctl run playback.pause --project_id prj_6b0e4d2a9c71
+kadrctl run ui.select --project_id prj_6b0e4d2a9c71 --segment_id=</code></pre><pre data-lang="mcp"><code>{"name": "ui_open_project", "arguments": {"project_id": "prj_6b0e4d2a9c71"}}
+{"name": "ui_toast", "arguments": {"title": "Додаю перехід", "body": "Поворот куба між двома кадрами"}}
+{"name": "ui_library_tab", "arguments": {"tab": "transitions"}}
+{"name": "ui_select", "arguments": {"project_id": "prj_6b0e4d2a9c71", "segment_id": "seg_d02f7b9e3a64"}}
+{"name": "transition_set", "arguments": {"project_id": "prj_6b0e4d2a9c71", "segment_id": "seg_d02f7b9e3a64", "type": "cube_turn_left", "duration_us": 600000}}
+{"name": "playback_play", "arguments": {"project_id": "prj_6b0e4d2a9c71", "from_us": 2000000}}
+{"name": "playback_pause", "arguments": {"project_id": "prj_6b0e4d2a9c71"}}
+{"name": "ui_select", "arguments": {"project_id": "prj_6b0e4d2a9c71", "segment_id": ""}}</code></pre></div>
+<h2 id="habits">Корисні звички</h2>
+<ul>
+  <li><strong>Спершу відкрийте проєкт.</strong> Викликайте <code class="cmd">ui.open_project</code> одразу після створення чи вибору проєкту, до початку правок.</li>
+  <li><strong>Коментуйте етапи, а не виклики.</strong> Одного сповіщення на змістовний крок («Ріжу під біт», «Додаю субтитри — близько хвилини») досить; десятки сповіщень — це шум.</li>
+  <li><strong>Пакетуйте візуальні правки.</strong> <code>kadr_batch</code> приходить одним оновленням і одним кроком скасування, тож людина бачить чисту зміну, а не мерехтіння.</li>
+  <li><strong>Показуйте, що змінилося.</strong> Виділіть кліп через <code class="cmd">ui.select</code> і посуньте курсор через <code class="cmd">playback.seek</code> на змінений момент, щоб плеєр його показав.</li>
+  <li><strong>Питайте перед великими змінами.</strong> Якщо людина монтує одночасно з вами, домовтеся, хто що редагує: кожна команда атомарна, але блокувань між людьми й агентами немає.</li>
+  <li><strong>Довгі завдання.</strong> Повідомляйте сповіщенням, коли завдання субтитрів чи експорт починається і закінчується; прогрес експорту вікно показує й саме.</li>
+</ul>
+
+<h2 id="events">Як це працює</h2>
+<p>Команди <code>ui.*</code> публікують події <code>ui.open_project</code>, <code>ui.select</code>, <code>ui.library_tab</code> і <code>ui.toast</code>. Кожне відкрите вікно — десктопний застосунок чи редактор у веб-режимі — виконує їх, а будь-який інший клієнт бачить їх у <a href="{{root}}{{lang_root}}docs/ai/rest.html#events">потоці подій</a>.</p>

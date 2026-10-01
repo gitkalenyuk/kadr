@@ -1,0 +1,90 @@
+<!--meta {"title":"Очищення «говорющої голови» у вертикальний шортс","nav":"Очищення «говорющої голови»","order":330,"description":"Почистіть запис «говорющої голови»: приберіть шум і вирівняйте голос, виріжте тишу, слова-паразити й довгі паузи, додайте субтитри та перекадруйте у 9:16 для шортса.","group":"Рецепти","summary":"Сирий дубль «говорющої голови» стає щільним шортсом 9:16 із чистим звуком, без тиші та «еее», із субтитрами.","time":"~2 хв","needs":"Відео «говорющої голови» (горизонтальне підійде)","commands":["segment.set_audio","segment.set_video_cleanup","ai.auto_reframe","ai.remove_silence","transcript.transcribe","transcript.remove_fillers","transcript.remove_pauses","captions.from_transcript","export.start"]} -->
+<p class="lead">Результат — вертикальний шортс із сирого дубля «говорющої голови». Фоновий шум приглушено, голос вирівняно, мертві паузи вирізано, усі «ем» і «е-е» зникли, а субтитри показують по три слова. У нашому тесті дубль на 26,8 с став шортсом на 15,9 с.</p>
+<ul>
+  <li><strong>Час:</strong> ~2 хв</li>
+  <li><strong>Що потрібно:</strong> Відео «говорющої голови» (горизонтальне підійде)</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">segment.set_audio</code>, <code class="cmd">segment.set_video_cleanup</code>, <code class="cmd">ai.auto_reframe</code>, <code class="cmd">ai.remove_silence</code>, <code class="cmd">transcript.transcribe</code>, <code class="cmd">transcript.remove_fillers</code>, <code class="cmd">transcript.remove_pauses</code>, <code class="cmd">captions.from_transcript</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Почисть у Kadr моє відео «говорющої голови» C:\Users\you\Videos\tips-take3.mp4 і зроби з нього вертикальний шортс. Приглуши фоновий шум і нормалізуй гучність, трохи прибери шум картинки й перекадруй у 9:16 так, щоб кадр стежив за мною. Виріж тишу довшу за 0,7 с, потім розпізнай мову (англійська) і прибери слова-паразити та паузи понад 0,6 с, що залишилися. Перш ніж різати, покажи, які паразити знайшов. Додай субтитри стилем cap_pill_active, по 3 слова. Покажи кадр, потім експортуй 1080p у C:\Users\you\Videos\Kadr\tips-short.mp4.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="import">Створіть проєкт, імпортуйте й покладіть дубль</h3>
+<p>Почніть із проєкту 16:9; крок перекадрування сам перемкне полотно на 9:16.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Tips short" --ratio 16:9
+kadrctl --% run media.import --project_id prj_ed95831b1bf0 --paths "[\"C:/Users/you/Videos/tips-take3.mp4\"]"
+kadrctl run timeline.segment.add --project_id prj_ed95831b1bf0 --material_id mat_745ea2a4d7e6</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Tips short", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_ed95831b1bf0", "paths": ["C:/Users/you/Videos/tips-take3.mp4"]}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_ed95831b1bf0", "material_id": "mat_745ea2a4d7e6"}}</code></pre></div>
+</li>
+<li>
+<h3 id="clean">Спершу почистіть звук і картинку</h3>
+<p>Задайте це до різання: кожен шматок, що з’явиться після розрізів, успадкує налаштування кліпу, тож задаєте один раз. <code class="cmd">segment.set_audio</code> вмикає шумозаглушення й нормалізацію гучності; <code class="cmd">segment.set_video_cleanup</code> застосовує легке знешумлення (0–1) під час декодування відео.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run segment.set_audio --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --reduce_noise --normalize_loudness
+kadrctl run segment.set_video_cleanup --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --denoise 0.3</code></pre><pre data-lang="mcp"><code>{"name": "segment_set_audio", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "reduce_noise": true, "normalize_loudness": true}}
+{"name": "segment_set_video_cleanup", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "denoise": 0.3}}</code></pre></div>
+</li>
+<li>
+<h3 id="reframe">Перекадруйте у 9:16</h3>
+<p><code class="cmd">ai.auto_reframe</code> із <code>set_canvas</code> перемикає проєкт на 9:16 і анімує кадрування, стежачи за мовцем. Якщо зробити це до розрізів, один виклик охопить увесь дубль.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ai.auto_reframe --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --ratio 9:16 --set_canvas</code></pre><pre data-lang="mcp"><code>{"name": "ai_auto_reframe", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "ratio": "9:16", "set_canvas": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="silence">Виріжте тишу</h3>
+<p><code class="cmd">ai.remove_silence</code> вимірює рівень звуку й вирізає кожну ділянку, тихішу за −40 dBFS і довшу за 0,7 с, лишаючи по 120 мс запасу з кожного боку, щоб не обрізати слова, і закриває проміжки. У результаті — що саме вирізано та ідентифікатори шматків, що лишилися (<code>segment_ids</code>).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ai.remove_silence --project_id prj_ed95831b1bf0 --segment_id seg_997808f11662 --threshold_db -40 --min_silence_us 0.7s --padding_us 120ms</code></pre><pre data-lang="mcp"><code>{"name": "ai_remove_silence", "arguments": {"project_id": "prj_ed95831b1bf0", "segment_id": "seg_997808f11662", "threshold_db": -40, "min_silence_us": 700000, "padding_us": 120000}}</code></pre></div>
+</li>
+<li>
+<h3 id="transcribe">Розпізнайте мову</h3>
+<p><code class="cmd">transcript.transcribe</code> локально запускає Whisper і зберігає кожне слово з таймінгом у матеріалі. Kadr сам проєктує слова на шматки, що лишилися після розрізів, тож транскрипт завжди відповідає таймлайну. Без <code>segment_id</code> розпізнаються всі кліпи, які чути.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transcript.transcribe --project_id prj_ed95831b1bf0 --language en --wait</code></pre><pre data-lang="mcp"><code>{"name": "transcript_transcribe", "arguments": {"project_id": "prj_ed95831b1bf0", "language": "en", "wait": true}}</code></pre></div>
+<pre><code class="lang-text">Hi everyone. Um, today I want to show you three quick editing tips. Uh, the first one is simple,
+cut your pauses. The second one is, um, add captions to every video. And the third is to keep it
+short and punchy. Thanks for watching.</code></pre>
+</li>
+<li>
+<h3 id="fillers">Приберіть слова-паразити</h3>
+<p><code class="cmd">transcript.remove_fillers</code> із <code>preview</code> лише показує знайдене (тут <em>Um,</em> <em>Uh,</em> і <em>um,</em>). Без <code>preview</code> він вирізає їх, і решта таймлайну зсувається, закриваючи проміжки.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transcript.remove_fillers --project_id prj_ed95831b1bf0 --preview
+kadrctl run transcript.remove_fillers --project_id prj_ed95831b1bf0</code></pre><pre data-lang="mcp"><code>{"name": "transcript_remove_fillers", "arguments": {"project_id": "prj_ed95831b1bf0", "preview": true}}
+{"name": "transcript_remove_fillers", "arguments": {"project_id": "prj_ed95831b1bf0"}}</code></pre></div>
+</li>
+<li>
+<h3 id="pauses">Скоротіть паузи, що лишилися</h3>
+<p><code class="cmd">transcript.remove_pauses</code> працює з таймінгом слів, а не з рівнем звуку: кожен проміжок між словами, довший за 0,6 с, скорочується до 0,25 с. Після <code class="cmd">ai.remove_silence</code> він ловить паузи, заповнені диханням чи шумом кімнати. У нашому чистому тестовому записі прибирати вже не було чого.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transcript.remove_pauses --project_id prj_ed95831b1bf0 --min_pause_us 0.6s --keep_us 250ms</code></pre><pre data-lang="mcp"><code>{"name": "transcript_remove_pauses", "arguments": {"project_id": "prj_ed95831b1bf0", "min_pause_us": 600000, "keep_us": 250000}}</code></pre></div>
+</li>
+<li>
+<h3 id="captions">Субтитри з транскрипту</h3>
+<p>Транскрипт уже є, тож <code class="cmd">captions.from_transcript</code> створює репліки без повторного розпізнавання.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.from_transcript --project_id prj_ed95831b1bf0 --style_id cap_pill_active --max_words 3</code></pre><pre data-lang="mcp"><code>{"name": "captions_from_transcript", "arguments": {"project_id": "prj_ed95831b1bf0", "style_id": "cap_pill_active", "max_words": 3}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Перевірте й експортуйте</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_ed95831b1bf0 --time_us 2s --width 360
+kadrctl run export.start --project_id prj_ed95831b1bf0 --resolution 1080p --path C:/Users/you/Videos/Kadr/tips-short.mp4</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_ed95831b1bf0", "time_us": 2000000, "width": 360}}
+{"name": "export_start", "arguments": {"project_id": "prj_ed95831b1bf0", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/tips-short.mp4"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<ul>
+  <li><strong>Вирізати фразу за текстом.</strong> <code class="cmd">transcript.delete_text</code> з <code>text</code> «thanks for watching» знаходить слова в транскрипті й вирізає їх із відео; субтитри зсуваються слідом.</li>
+  <li><strong>Власні паразити.</strong> <code class="cmd">transcript.remove_fillers</code> приймає додаткові <code>words</code>, наприклад <code>["типу", "коротше"]</code>. Вбудовані списки є для англійської, української та російської.</li>
+  <li><strong>Лишити 16:9.</strong> Для YouTube пропустіть крок перекадрування.</li>
+  <li><strong>Лише звук.</strong> Експортуйте почищений голос для подкасту: <code class="cmd">export.start</code> з <code>audio_only</code> і <code>audio_format</code> <code>mp3</code>.</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>У шумній кімнаті підніміть <code>threshold_db</code> до −30, щоб гул вважався тишею; у дуже тихій — опустіть до −50.</li>
+  <li>Спершу запускайте <code class="cmd">transcript.remove_fillers</code> і <code class="cmd">transcript.remove_pauses</code> з <code>preview</code>. Будь-який розріз можна скасувати, але переглянути список швидше.</li>
+  <li>Транскрипти належать медіа, а не таймлайну. Після подальших правок <code class="cmd">captions.from_transcript</code> перебудує субтитри без повторного розпізнавання.</li>
+  <li>Імена розпізнаються з помилками? Передайте <code>prompt</code> «Kadr, Київ, Олена» в <code class="cmd">transcript.transcribe</code> (додайте <code>force</code>, щоб переробити наявний транскрипт).</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

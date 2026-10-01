@@ -1,0 +1,163 @@
+<!--meta {"title":"Командний рядок: kadrctl","nav":"CLI (kadrctl)","order":130,"description":"Переглядайте, читайте опис і запускайте будь-яку команду Kadr із термінала з людськими форматами часу, виконуйте пакетні JSON-файли й автоматизуйте цілі папки в PowerShell.","group":"Інтерфейси"} -->
+<p class="lead"><code>kadrctl</code> запускає будь-яку команду Kadr із термінала. Він бере параметри кожної команди із запущеного рушія, перетворює значення на потрібні типи (зокрема час на кшталт <code>2.5s</code>) і друкує результат як JSON — зручно для швидких правок, скриптів і агентів, які мають лише оболонку.</p>
+
+<h2 id="setup">Налаштування</h2>
+<p><code>kadrctl.exe</code> встановлюється поруч із <code>Kadr.exe</code> у <code>%LOCALAPPDATA%\Programs\Kadr\</code>. З опцією інсталятора <em>Додати kadrctl і kadr-mcp до PATH</em> (типово ввімкнена) він працює з будь-якого нового термінала: <code>kadrctl help</code>, <code>kadrctl version</code>.</p>
+<p>На відміну від <code>kadr-mcp</code>, <code>kadrctl</code> <strong>не</strong> запускає рушій: Kadr або <code>kadr-server.exe</code> мають працювати. Адресу й токен він сам знаходить у <code>%APPDATA%\Kadr</code>.</p>
+
+<h2 id="subcommands">Підкоманди</h2>
+<table>
+  <thead><tr><th>Підкоманда</th><th>Що робить</th></tr></thead>
+  <tbody>
+    <tr><td><code>kadrctl commands [category]</code></td><td>Показує всі команди з назвами, за бажанням — лише одну категорію (<code>Export</code>, <code>"Smart tools"</code>…). Заплановані команди позначено <code>(planned)</code>.</td></tr>
+    <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>Повна документація однієї команди: опис, місце в інтерфейсі, гаряча клавіша, результат і кожен <code>--параметр</code> з типом.</td></tr>
+    <tr><td><code>kadrctl run &lt;command&gt; [--param value]…</code></td><td>Виконує команду й друкує результат як відформатований JSON.</td></tr>
+    <tr><td><code>kadrctl batch &lt;project_id&gt; &lt;calls.json&gt; [--dry-run]</code></td><td>Виконує JSON-файл викликів як одну атомарну правку, яку можна скасувати.</td></tr>
+    <tr><td><code>kadrctl version</code></td><td>Друкує версію kadrctl.</td></tr>
+  </tbody>
+</table>
+<pre><code class="lang-text">&gt; kadrctl commands Window
+ui.library_tab                     Switch library tab
+ui.open_project                    Show project in the window
+ui.select                          Select clip in the window
+ui.toast                           Show a message in the window</code></pre>
+<pre><code class="lang-text">&gt; kadrctl describe timeline.segment.split
+timeline.segment.split — Split
+
+Splits a clip into two at at_us (default: the playhead), exactly like CapCut's Split button / Ctrl+B. …
+UI: Toolbar/Split. Hotkey: Ctrl+B.
+Undoable with edit.undo.
+Returns: {track_id, left, right, linked_right_ids?} — both halves (full segments) and the ids of linked right halves.
+
+Parameters:
+  --project_id         string   (required) ID of the project to operate on (e.g. "prj_8f3a..."). …
+  --segment_id         string   ID of the segment (clip) to edit. Optional: when omitted the clip on the main track under at_us is used …
+  --at_us              integer  Timeline time in microseconds (1 s = 1000000). Defaults to the current playhead position.</code></pre>
+
+<h2 id="flags">Як записувати параметри</h2>
+<p>Кожен параметр стає прапорцем з тією самою назвою; <code>kadrctl</code> перетворює значення на тип параметра. Невідомі прапорці відхиляються ще до виконання.</p>
+<table>
+  <thead><tr><th>Форма</th><th>Приклад</th><th>Примітки</th></tr></thead>
+  <tbody>
+    <tr><td><code>--param value</code>, <code>--param=value</code></td><td><code>--ratio 9:16</code></td><td>Значення з пробілами беріть у лапки: <code>--name "Кухня"</code>.</td></tr>
+    <tr><td>Логічне</td><td><code>--wait</code>, <code>--wait true</code>, <code>--snap false</code></td><td>Голий прапорець означає <code>true</code>.</td></tr>
+    <tr><td>Число</td><td><code>--volume_db -12</code>, <code>--scale 0.6</code></td><td>Від’ємні числа — без проблем.</td></tr>
+    <tr><td>Час (<code>*_us</code>)</td><td><code>2500000</code>, <code>2.5s</code>, <code>1500ms</code>, <code>1m2s</code>, <code>00:01:02.5</code></td><td>Перетворюється на мікросекунди; просте число — це вже мікросекунди.</td></tr>
+    <tr><td>Масив чи об’єкт</td><td><code>--paths "[\"C:/Clips\"]"</code></td><td>Має бути JSON — див. <a href="#quoting">лапки</a>.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="quoting">Лапки для JSON у Windows</h2>
+<p>Параметри-масиви й об’єкти (<code>paths</code>, <code>segment_ids</code>, <code>style</code>, <code>params</code>, <code>points</code>…) — це JSON, і його подвійні лапки мають пережити оболонку:</p>
+<table>
+  <thead><tr><th>Оболонка</th><th>Пишіть</th></tr></thead>
+  <tbody>
+    <tr><td>Командний рядок (cmd)</td><td><code>--paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+    <tr><td>PowerShell 7.3+</td><td><code>--paths '["C:/Users/you/Videos/trip"]'</code></td></tr>
+    <tr><td>Windows PowerShell 5.1</td><td><code>--paths '[\"C:/Users/you/Videos/trip\"]'</code></td></tr>
+    <tr><td>Будь-який PowerShell</td><td><code>kadrctl --% run media.import --project_id prj_… --paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+  </tbody>
+</table>
+<p>Документація використовує форму з <code>--%</code>: вона працює в будь-якій версії PowerShell, а без <code>--%</code> той самий рядок працює в cmd. Після <code>--%</code> PowerShell перестає розбирати рядок, тож <code>$змінні</code> не підставляються. У JSON пишіть шляхи з прямими косими рисками (<code>C:/Users/you</code>) або подвоєними зворотними. У PowerShell беріть у лапки кольори (<code>"#FFD400"</code> — <code>#</code> починає коментар), а текст із <code>$</code> — в одинарні лапки.</p>
+
+<h2 id="batch">Пакетні файли</h2>
+<p>Пакетний файл — це JSON-масив об’єктів <code>{command, args}</code> без <code>project_id</code> (він береться з командного рядка). <code>--dry-run</code> перевіряє пакет на копії без збереження. Зберігайте файл у UTF-8 <strong>без</strong> BOM: <code>kadrctl</code> відхиляє BOM, а <code>Set-Content -Encoding UTF8</code> у Windows PowerShell 5.1 його додає — користуйтеся <code>[IO.File]::WriteAllText()</code>, як у <a href="#scripting">скрипті нижче</a>.</p>
+<pre><code class="lang-json">[
+  { "command": "transition.apply_all", "args": { "type": "mix", "duration_us": 400000 } },
+  { "command": "text.add", "args": { "text": "Тур кухнею", "template_id": "title_bold", "at_us": 0, "duration_us": 2500000 } }
+]</code></pre>
+<pre><code class="lang-powershell">kadrctl batch prj_9d2e4c7a1b05 calls.json --dry-run
+kadrctl batch prj_9d2e4c7a1b05 calls.json</code></pre>
+
+<h2 id="walkthrough">Повний монтаж із термінала</h2>
+<p>Два кліпи стають вертикальним шортсом із субтитрами. Кожна команда друкує JSON; копіюйте отримані id у наступну команду (коментарі показують, що повернулося).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Тур кухнею" --ratio 9:16
+# "id": "prj_9d2e4c7a1b05"
+kadrctl --% run media.import --project_id prj_9d2e4c7a1b05 --paths "[\"C:/Users/you/Videos/kitchen\"]"
+# матеріали: mat_3f81c2d9e0a4 (pan.mp4), mat_7b0e5a1c9d36 (talk.mp4)
+kadrctl run timeline.segment.add --project_id prj_9d2e4c7a1b05 --material_id mat_3f81c2d9e0a4
+kadrctl run timeline.segment.add --project_id prj_9d2e4c7a1b05 --material_id mat_7b0e5a1c9d36
+kadrctl run timeline.get --project_id prj_9d2e4c7a1b05
+# основна доріжка: seg_51c08e7f2a93 (0–6 с), seg_c2a9e4b7d108 (6–12 с)
+kadrctl run timeline.segment.delete_right --project_id prj_9d2e4c7a1b05 --segment_id seg_c2a9e4b7d108 --at_us 9s
+# лишити тільки перші 3 с другого кліпу
+kadrctl run segment.set_background --project_id prj_9d2e4c7a1b05 --segment_id seg_51c08e7f2a93 --type blur --blur 0.75 --apply_to_all
+kadrctl run transition.apply_all --project_id prj_9d2e4c7a1b05 --type mix --duration_us 0.4s
+kadrctl run captions.auto --project_id prj_9d2e4c7a1b05 --style_id cap_highlight_word --wait
+kadrctl run export.start --project_id prj_9d2e4c7a1b05 --resolution 1080p --path C:/Users/you/Videos/Kadr/kitchen.mp4
+kadrctl run export.status --job_id exp_6a0d93e1f7c2</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Тур кухнею", "ratio": "9:16"}}
+{"name": "media_import", "arguments": {"project_id": "prj_9d2e4c7a1b05", "paths": ["C:/Users/you/Videos/kitchen"]}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_9d2e4c7a1b05", "material_id": "mat_3f81c2d9e0a4"}}
+{"name": "timeline_segment_add", "arguments": {"project_id": "prj_9d2e4c7a1b05", "material_id": "mat_7b0e5a1c9d36"}}
+{"name": "timeline_get", "arguments": {"project_id": "prj_9d2e4c7a1b05"}}
+{"name": "timeline_segment_delete_right", "arguments": {"project_id": "prj_9d2e4c7a1b05", "segment_id": "seg_c2a9e4b7d108", "at_us": 9000000}}
+{"name": "segment_set_background", "arguments": {"project_id": "prj_9d2e4c7a1b05", "segment_id": "seg_51c08e7f2a93", "type": "blur", "blur": 0.75, "apply_to_all": true}}
+{"name": "transition_apply_all", "arguments": {"project_id": "prj_9d2e4c7a1b05", "type": "mix", "duration_us": 400000}}
+{"name": "captions_auto", "arguments": {"project_id": "prj_9d2e4c7a1b05", "style_id": "cap_highlight_word", "wait": true}}
+{"name": "export_start", "arguments": {"project_id": "prj_9d2e4c7a1b05", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/kitchen.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_6a0d93e1f7c2"}}</code></pre></div>
+<p>Будь-який крок скасовується через <code>kadrctl run edit.undo --project_id prj_9d2e4c7a1b05</code>, а редактор показує кожну зміну одразу.</p>
+
+<h2 id="scripting">Скрипти в PowerShell</h2>
+<p>Цей скрипт робить вертикальний перекадрований шортс із кожного <code>.mp4</code> у папці й ставить експорти в чергу. Працює у Windows PowerShell 5.1 і PowerShell 7. Допоміжна функція <code>kadr</code> перетворює JSON від <code>kadrctl</code> на об’єкти й зупиняється на помилках; <code>kadr-batch</code> передає JSON через файл, тож шляхи з пробілами не потребують лапок.</p>
+<pre><code class="lang-powershell">$ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [Text.Encoding]::UTF8   # read non-English names correctly
+
+# Run kadrctl and turn its JSON output into PowerShell objects.
+function kadr {
+  $out = kadrctl @args
+  if ($LASTEXITCODE -ne 0) { throw "kadrctl $($args[0]) $($args[1]) failed" }
+  $out | Out-String | ConvertFrom-Json
+}
+
+# Run calls as one batch. JSON goes through a file, so no shell quoting is involved.
+function kadr-batch($ProjectId, $Calls) {
+  $file = Join-Path $env:TEMP 'kadr-calls.json'
+  [IO.File]::WriteAllText($file, (ConvertTo-Json -InputObject @($Calls) -Depth 10))  # UTF-8, no BOM
+  kadr batch $ProjectId $file
+}
+
+$src = "$env:USERPROFILE\Videos\Raw"
+$dst = "$env:USERPROFILE\Videos\Kadr\Shorts"
+
+Get-ChildItem $src -Filter *.mp4 | ForEach-Object {
+  $p   = kadr run project.create --name $_.BaseName --ratio 9:16
+  $imp = kadr-batch $p.id @(@{ command = 'media.import'; args = @{ paths = @($_.FullName) } })
+  $seg = kadr run timeline.segment.add --project_id $p.id --material_id $imp.results[0].materials[0].id
+  kadr run ai.auto_reframe --project_id $p.id --segment_id $seg.segment.id --ratio 9:16 | Out-Null
+  $job = kadr run export.start --project_id $p.id --resolution 1080p --path "$dst\$($_.BaseName).mp4"
+  "{0} -&gt; {1} ({2})" -f $_.Name, $job.path, $job.state
+}
+
+kadr run export.list | Format-Table job_id, state, progress, path</code></pre>
+<ul>
+  <li>Експорти виконуються по одному; зайві завдання чекають як <code>queued</code>, тож цикл завершується задовго до відео.</li>
+  <li><code class="cmd">export.estimate</code> показує підсумковий розмір і шлях без експорту.</li>
+  <li>Щоб безпечно перевірити скрипт, спрямуйте його на окремий рушій: <code>$env:KADR_DATA_DIR</code> і <code>$env:KADR_ADDR</code> і для <code>kadr-server.exe</code>, і для <code>kadrctl</code>.</li>
+</ul>
+
+<h2 id="environment">Змінні середовища</h2>
+<table>
+  <thead><tr><th>Змінна</th><th>Типово</th><th>Хто використовує</th></tr></thead>
+  <tbody>
+    <tr><td><code>KADR_ADDR</code></td><td><code>127.0.0.1:7777</code></td><td>Де слухає рушій і куди під’єднуються <code>kadrctl</code>/<code>kadr-mcp</code>.</td></tr>
+    <tr><td><code>KADR_DATA_DIR</code></td><td><code>%APPDATA%\Kadr</code></td><td>Проєкти, налаштування і файл <code>api-token</code>.</td></tr>
+    <tr><td><code>KADR_TOKEN</code></td><td>вміст <code>api-token</code></td><td>Перевизначає токен — для рушія і для клієнтів.</td></tr>
+    <tr><td><code>KADR_FFMPEG_DIR</code></td><td>—</td><td>Папка з <code>ffmpeg.exe</code> і <code>ffprobe.exe</code> для рушія.</td></tr>
+    <tr><td><code>KADR_PYTHON</code></td><td>—</td><td><code>python.exe</code>, у якому встановлено faster-whisper (субтитри).</td></tr>
+    <tr><td><code>KADR_ELEVENLABS_API_KEY</code></td><td>—</td><td>Ключ ElevenLabs для рушія замість <code class="cmd">tts.set_api_key</code>.</td></tr>
+  </tbody>
+</table>
+<pre><code class="lang-powershell">$env:KADR_DATA_DIR = "D:\kadr-automation"
+$env:KADR_ADDR = "127.0.0.1:7790"
+Start-Process kadr-server.exe
+kadrctl run project.list</code></pre>
+
+<h2 id="errors">Коди виходу й помилки</h2>
+<p>У разі успіху <code>kadrctl</code> друкує результат у стандартний вивід і завершується з кодом <code>0</code>. У разі помилки друкує її у стандартний потік помилок і завершується з кодом <code>1</code>:</p>
+<pre><code class="lang-text">error [not_found]: project "prj_nope" not found
+hint: Call project.list to get valid project ids.</code></pre>
+<p>Проблеми, знайдені ще до надсилання виклику, починаються з простого <code>error:</code>:</p>
+<pre><code class="lang-text">error: project.list has no parameter "foo" (see `kadrctl describe project.list`)
+error: cannot reach Kadr at http://127.0.0.1:7777 (is the editor or `kadr-server` running?): …</code></pre>
+<p>Коди помилок — ті самі, що в <a href="{{root}}{{lang_root}}docs/ai/rest.html#errors">REST API</a>.</p>

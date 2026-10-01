@@ -1,0 +1,218 @@
+{
+  "command": "timeline.get",
+  "request": {
+    "project_id": "prj_b54c09c92d24"
+  },
+  "response": {
+    "ok": true,
+    "result": {
+      "project_id": "prj_b54c09c92d24",
+      "name": "Kadr hero",
+      "duration_us": 10000000,
+      "playhead_us": 0,
+      "fps": 30,
+      "settings": {
+        "main_track_magnet": true,
+        "auto_snapping": true,
+        "linkage": true,
+        "preview_axis": false
+      },
+      "tracks": [
+        {
+          "id": "trk_336934a80db8",
+          "type": "sticker",
+          "layer": 2,
+          "muted": false,
+          "locked": false,
+          "hidden": false,
+          "segments": [
+            {
+              "id": "seg_e26985d95716",
+              "kind": "sticker",
+              "label": "Twinkle",
+              "start_us": 7500000,
+              "end_us": 9850000,
+              "duration_us": 2350000,
+              "material_id": "mat_90ac694378d7",
+              "source_start_us": 0,
+              "source_duration_us": 2350000,
+              "speed": 1
+            }
+          ]
+        },
+        {
+          "id": "trk_3b9ed8f10afa",
+          "type": "text",
+          "layer": 1,
+          "muted": false,
+          "locked": false,
+          "hidden": false,
+          "segments": [
+            {
+              "id": "seg_8ce2832025e4",
+              "kind": "text",
+              "label": "Edit by hand.",
+              "start_us": 250000,
+              "end_us": 3150000,
+              "duration_us": 2900000,
+              "source_start_us": 0,
+              "source_duration_us": 2900000,
+              "speed": 1
+            },
+            {
+              "id": "seg_101ab73f3bb3",
+              "kind": "text",
+              "label": "Or by API.",
+              "start_us": 3850000,
+              "end_us": 6700000,
+              "duration_us": 2850000,
+              "source_start_us": 0,
+              "source_duration_us": 2850000,
+              "speed": 1
+            },
+            {
+              "id": "seg_c56b9c308ab2",
+              "kind": "text",
+              "label": "Or just ask.",
+              "start_us": 7300000,
+              "end_us": 9850000,
+              "duration_us": 2550000,
+              "source_start_us": 0,
+              "source_duration_us": 2550000,
+              "speed": 1
+            }
+          ]
+        },
+        {
+          "id": "trk_aa407f94858d",
+          "type": "main_video",
+          "layer": 0,
+          "muted": false,
+          "locked": false,
+          "hidden": false,
+          "segments": [
+            {
+              "id": "seg_0c5086994a76",
+              "kind": "photo",
+              "label": "synthwave.png",
+              "start_us": 0,
+              "end_us": 3500000,
+              "duration_us": 3500000,
+              "material_id": "mat_0bc8ae47f859",
+              "source_start_us": 0,
+              "source_duration_us": 3500000,
+              "speed": 1,
+              "transition_out": {
+                "type": "swirl_twist",
+                "duration_us": 600000
+              }
+            },
+            {
+              "id": "seg_2f0eeae0bea7",
+              "kind": "photo",
+              "label": "ocean.png",
+              "start_us": 3500000,
+              "end_us": 7000000,
+              "duration_us": 3500000,
+              "material_id": "mat_9d7ee8b1a0c6",
+              "source_start_us": 0,
+              "source_duration_us": 3500000,
+              "speed": 1,
+              "transition_out": {
+                "type": "kaleido_turn",
+                "duration_us": 600000
+              },
+              "filter": "teal_orange"
+            },
+            {
+              "id": "seg_d15e39d4398d",
+              "kind": "photo",
+              "label": "city.png",
+              "start_us": 7000000,
+              "end_us": 10000000,
+              "duration_us": 3000000,
+              "material_id": "mat_35a2f6285093",
+              "source_start_us": 0,
+              "source_duration_us": 3000000,
+              "speed": 1
+            }
+          ]
+        },
+        {
+          "id": "trk_b3d338974f10",
+          "type": "audio",
+          "layer": 3,
+          "muted": false,
+          "locked": false,
+          "hidden": false,
+          "segments": [
+            {
+              "id": "seg_bd2b05e7c310",
+              "kind": "audio",
+              "label": "Fast Whoosh",
+              "start_us": 3220000,
+              "end_us": 3670000,
+              "duration_us": 450000,
+              "material_id": "mat_d40483a87e89",
+              "source_start_us": 0,
+              "source_duration_us": 450000,
+              "speed": 1,
+              "volume": 1
+            },
+            {
+              "id": "seg_84e31ee76448",
+              "kind": "audio",
+              "label": "Fast Whoosh",
+              "start_us": 6720000,
+              "end_us": 7170000,
+              "duration_us": 450000,
+              "material_id": "mat_d40483a87e89",
+              "source_start_us": 0,
+              "source_duration_us": 450000,
+              "speed": 1,
+              "volume": 1
+            }
+          ]
+        }
+      ],
+      "markers": [],
+      "materials": [
+        {
+          "id": "mat_0bc8ae47f859",
+          "type": "photo",
+          "name": "synthwave.png",
+          "duration_us": 0,
+          "uses": 1
+        },
+        {
+          "id": "mat_9d7ee8b1a0c6",
+          "type": "photo",
+          "name": "ocean.png",
+          "duration_us": 0,
+          "uses": 1
+        },
+        {
+          "id": "mat_35a2f6285093",
+          "type": "photo",
+          "name": "city.png",
+          "duration_us": 0,
+          "uses": 1
+        },
+        {
+          "id": "mat_90ac694378d7",
+          "type": "sticker",
+          "name": "Twinkle",
+          "duration_us": 0,
+          "uses": 1
+        },
+        {
+          "id": "mat_d40483a87e89",
+          "type": "audio",
+          "name": "Fast Whoosh",
+          "duration_us": 450000,
+          "uses": 2
+        }
+      ]
+    }
+  }
+}

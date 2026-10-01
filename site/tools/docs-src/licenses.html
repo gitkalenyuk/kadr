@@ -1,0 +1,61 @@
+<!--meta {"title":"Licences","nav":"Licences","order":30,"description":"Kadr's freeware licence in plain words, the open-source components it uses and their licences, FFmpeg, and the licences of this website's own assets.","group":"Kadr"} -->
+<p class="lead">Kadr is closed-source freeware built on open-source components. This page summarises the Kadr licence, lists those components and their licences, and covers the assets used on this website.</p>
+
+<h2 id="kadr-licence">The Kadr licence</h2>
+<p>Kadr is distributed under a freeware end-user licence agreement (EULA). In plain words:</p>
+<ul>
+  <li><strong>Free to use.</strong> You can install and use Kadr on any number of computers you own or control, for any lawful purpose, including commercial work.</li>
+  <li><strong>Your output is yours.</strong> Videos, images, audio and projects you create belong to you. You can publish and sell them without owing anything to Kadr. Rights in media you import from others still apply.</li>
+  <li><strong>Closed source.</strong> You may not reverse engineer, modify or redistribute Kadr's programs or installers, for example on download portals. Link to the official download page instead.</li>
+  <li><strong>Automation is welcome.</strong> Controlling Kadr through its documented interfaces (the REST API, the MCP server and the command-line tool) is explicitly allowed and is not reverse engineering.</li>
+  <li><strong>No warranty.</strong> Kadr is provided as is, free of charge. Keep backups of your media and projects.</li>
+</ul>
+<p>This summary is not the licence. The full text is in <a href="https://github.com/gitkalenyuk/kadr/blob/main/LICENSE">LICENSE</a> on GitHub, and in the <code>licenses</code> folder of every Kadr installation.</p>
+
+<h2 id="third-party">Third-party components</h2>
+<p>The complete notices, with every licence text, are in <a href="https://github.com/gitkalenyuk/kadr/blob/main/THIRD_PARTY_NOTICES">THIRD_PARTY_NOTICES</a> and in the installed <code>licenses</code> folder. Nothing in the Kadr EULA limits the rights these licences give you.</p>
+
+<h3 id="compiled-in">Compiled into Kadr</h3>
+<table>
+  <thead>
+    <tr><th>Component</th><th>Used for</th><th>Licence</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="https://go.dev">Go</a> standard library and runtime</td><td>The engine, API, CLI and MCP bridge</td><td>BSD 3-Clause</td></tr>
+    <tr><td><a href="https://wails.io">Wails</a> v3 (<code>github.com/wailsapp/wails/v3</code>, <code>@wailsio/runtime</code>)</td><td>The desktop window</td><td>MIT</td></tr>
+    <tr><td><code>golang.org/x/image</code>, <code>golang.org/x/sys</code>, <code>golang.org/x/text</code></td><td>Image and font handling, Windows system calls, text</td><td>BSD 3-Clause</td></tr>
+    <tr><td>Go fonts (Bigelow &amp; Holmes, via <code>golang.org/x/image</code>)</td><td>Built-in fonts for titles and captions</td><td>BSD-style</td></tr>
+    <tr><td><a href="https://github.com/coder/websocket"><code>github.com/coder/websocket</code></a></td><td>The WebSocket event stream</td><td>ISC</td></tr>
+    <tr><td><code>github.com/adrg/xdg</code>, <code>github.com/go-ole/go-ole</code></td><td>Used by Wails for system folders and Windows COM</td><td>MIT</td></tr>
+    <tr><td><a href="https://react.dev">React</a> and React DOM (with <code>scheduler</code>, <code>loose-envify</code>, <code>js-tokens</code>)</td><td>The editor interface</td><td>MIT</td></tr>
+    <tr><td><a href="https://lucide.dev">Lucide</a> (<code>lucide-react</code>)</td><td>Interface icons</td><td>ISC (icons derived from Feather: MIT)</td></tr>
+    <tr><td><a href="https://github.com/pmndrs/zustand">zustand</a></td><td>Interface state</td><td>MIT</td></tr>
+    <tr><td><a href="https://github.com/rsms/inter">Inter</a></td><td>Interface font</td><td>SIL Open Font License 1.1</td></tr>
+  </tbody>
+</table>
+
+<h3 id="ffmpeg">FFmpeg</h3>
+<p><a href="https://ffmpeg.org">FFmpeg</a> is <strong>not included</strong> with Kadr. Kadr runs <code>ffmpeg.exe</code> and <code>ffprobe.exe</code> as separate programs. When you agree, Kadr downloads a GPL build of FFmpeg 7.1 for Windows x64 from the <a href="https://github.com/BtbN/FFmpeg-Builds">BtbN/FFmpeg-Builds</a> project, or uses a copy you already have. That FFmpeg is distributed to you by its authors under its own licence; the GPL builds are licensed under the GNU General Public License version 3 or later. It is not part of Kadr and the Kadr EULA doesn't cover it. The source code is available from the <a href="https://ffmpeg.org/download.html">FFmpeg project</a> and from the BtbN/FFmpeg-Builds releases. Licence details: <a href="https://ffmpeg.org/legal.html">ffmpeg.org/legal.html</a>. FFmpeg is a trademark of Fabrice Bellard, originator of the FFmpeg project.</p>
+
+<h3 id="optional">Optional components you install yourself</h3>
+<p>Kadr can use these if they are on your PC. They are not distributed with Kadr and remain under their own licences:</p>
+<table>
+  <thead>
+    <tr><th>Component</th><th>Used for</th><th>Licence</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="https://github.com/SYSTRAN/faster-whisper">faster-whisper</a> and Whisper models</td><td>Offline captions and transcripts</td><td>MIT (models under their own licences)</td></tr>
+    <tr><td><a href="https://onnxruntime.ai">ONNX Runtime</a>, <a href="https://github.com/danielgatis/rembg">rembg</a></td><td>Background removal</td><td>MIT</td></tr>
+    <tr><td><a href="https://github.com/espeak-ng/espeak-ng">eSpeak NG</a></td><td>Text-to-speech in more than 100 languages</td><td>GPL-3.0-or-later</td></tr>
+    <tr><td>Microsoft Edge WebView2 Runtime, Windows speech voices</td><td>Rendering the interface, text-to-speech</td><td>Licensed to you by Microsoft as part of Windows</td></tr>
+  </tbody>
+</table>
+
+<h2 id="library-content">Built-in library content</h2>
+<p>Kadr's transitions, effects, filters, clip and text animations, text templates, caption styles, stickers, sound effects and generated backgrounds are original and are produced by Kadr's own code. None of them are copied from other products. They are part of Kadr and you can use them freely in your videos, including commercial ones.</p>
+
+<h2 id="website">This website</h2>
+<ul>
+  <li><strong>Inter</strong> font by The Inter Project Authors, served from this site. Licensed under the <a href="https://openfontlicense.org">SIL Open Font License 1.1</a> (<a href="{{root}}assets/fonts/OFL.txt">licence text</a>).</li>
+  <li><strong>Images and videos.</strong> Every render on this site was made with Kadr itself from media that Kadr generated: gradients, patterns, test sources and synthesised sound. There is no stock footage or third-party artwork.</li>
+</ul>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/guide/ai-tools.html" data-alt-uk="../../../uk/docs/guide/ai-tools.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ШІ-інструменти — Kadr</title>
+<meta name="description" content="Розумні інструменти Kadr працюють на вашому комп’ютері: видалення фону без хромакею, поділ відео на сцени, вирізання тиші й автокадрування горизонтального відео під вертикальні формати.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/ai-tools.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/ai-tools.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/ai-tools.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/ai-tools.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="ШІ-інструменти — Kadr">
+<meta property="og:description" content="Розумні інструменти Kadr працюють на вашому комп’ютері: видалення фону без хромакею, поділ відео на сцени, вирізання тиші й автокадрування горизонтального відео під вертикальні формати.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/guide/ai-tools.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ШІ-інструменти — Kadr">
+<meta name="twitter:description" content="Розумні інструменти Kadr працюють на вашому комп’ютері: видалення фону без хромакею, поділ відео на сцени, вирізання тиші й автокадрування горизонтального відео під вертикальні формати.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-ai-tools" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/" aria-current="page">Для людей</a>
+      <a href="../../../uk/docs/ai/">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/guide/ai-tools.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/guide/ai-tools.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/#download"><svg aria-hidden="true"><use href="#i-download"/></svg><span class="label-long">Завантажити</span><span class="sr-only">Завантажити Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">ШІ-інструменти</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/guide/index.html"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/guide/getting-started.html"><span>Початок роботи</span></a></li><li><a href="../../../uk/docs/guide/interface.html"><span>Огляд інтерфейсу</span></a></li><li><a href="../../../uk/docs/guide/projects.html"><span>Проєкти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Монтаж</p><ul><li><a href="../../../uk/docs/guide/import-media.html"><span>Імпорт медіа</span></a></li><li><a href="../../../uk/docs/guide/timeline.html"><span>Монтаж на таймлайні</span></a></li><li><a href="../../../uk/docs/guide/player.html"><span>Плеєр і перегляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Творчість</p><ul><li><a href="../../../uk/docs/guide/text.html"><span>Текст і заголовки</span></a></li><li><a href="../../../uk/docs/guide/captions.html"><span>Субтитри й транскрипт</span></a></li><li><a href="../../../uk/docs/guide/effects.html"><span>Ефекти й колір</span></a></li><li><a href="../../../uk/docs/guide/audio.html"><span>Аудіо</span></a></li><li><a href="../../../uk/docs/guide/stickers.html"><span>Стікери й генеровані медіа</span></a></li><li><a href="../../../uk/docs/guide/ai-tools.html" aria-current="page"><span>ШІ-інструменти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Завершення</p><ul><li><a href="../../../uk/docs/guide/export.html"><span>Експорт</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідка</p><ul><li><a href="../../../uk/docs/guide/shortcuts.html"><span>Гарячі клавіші</span></a></li><li><a href="../../../uk/docs/guide/settings.html"><span>Налаштування й оновлення</span></a></li><li><a href="../../../uk/docs/guide/troubleshooting.html"><span>Проблеми та запитання</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><span aria-current="page">ШІ-інструменти</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</span><span class="pe-group">Творчість</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 хв читання</span></p><h1>ШІ-інструменти</h1></header><p class="lead">Розумні інструменти беруть на себе нудну роботу: знаходять зміну сцен, вирізають тишу, стежать за об’єктом під час зміни формату й вирізають людей із фону. Усі вони працюють на вашому комп’ютері — нічого не завантажується в мережу.</p>
+
+<h2 id="where">Де їх шукати<a class="anchor" href="#where" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="grid-2">
+  <div>
+    <ul>
+      <li>Меню <strong>Smart tools</strong> на панелі інструментів над таймлайном: Split scenes (поділ на сцени), Remove silence (вирізати тишу), Auto reframe (автокадрування), Separate audio (відокремити звук), Auto captions (автосубтитри).</li>
+      <li><strong>Контекстне меню</strong> кліпу показує розумні інструменти, доречні саме для нього.</li>
+      <li>Інспектор: <strong>Video → Smart tools</strong> (з додатковими параметрами) і <strong>Video → Remove BG</strong>.</li>
+    </ul>
+    <p>Спершу виділіть кліп — якщо інструмент не підходить, меню підкаже «Select a clip» або «Not for this clip». Довші завдання повідомляють про старт і працюють у фоні; кожен результат — <strong>один крок скасування</strong>, тож <kbd>Ctrl</kbd>+<kbd>Z</kbd> поверне все як було.</p>
+  </div>
+  <figure><img decoding="async" src="../../../assets/img/guide/smart-menu.webp" alt="Відкрите меню Smart tools над панеллю інструментів: Split scenes, Remove silence, Auto reframe, Separate audio, Auto captions" width="520" height="238" loading="lazy"><figcaption>Меню Smart tools.</figcaption></figure>
+</div>
+
+<h2 id="remove-background">Видалення фону<a class="anchor" href="#remove-background" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Вирізає людей або головний об’єкт із відео чи фото — без зеленого фону. Крізь вирізане місце видно нижні доріжки або тло полотна.</p>
+<ol>
+  <li>Виділіть кліп і відкрийте в інспекторі <strong>Video → Remove BG</strong>.</li>
+  <li>Увімкніть <strong>Auto removal</strong>. Смуга прогресу покаже «Finding the subject» (пошук об’єкта), відсоток і час, що лишився. Можна далі монтувати; <strong>Cancel</strong> зупиняє процес.</li>
+  <li>Коли все готово, об’єкт вирізано. <strong>Redo</strong> обчислює все заново (наприклад, після встановлення кращої моделі); вимкнення перемикача повертає фон.</li>
+</ol>
+<figure><img decoding="async" src="../../../assets/img/guide/remove-bg.webp" alt="Сторінка Remove BG із перемикачем Auto removal, приміткою про локальну модель і перемикачем Chroma key" width="342" height="250" loading="lazy"><figcaption>Video → Remove BG. Якщо знімали на зеленому фоні, скористайтеся нижче розділом <strong>Chroma key</strong>.</figcaption></figure>
+<h3 id="remove-background-requirements">Що потрібно<a class="anchor" href="#remove-background-requirements" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<p>Видалення фону працює на безкоштовному Python-пакеті <em>rembg</em>. Налаштування — одноразове:</p>
+<ol class="steps">
+  <li><strong>Встановіть Python</strong><p>Встановіть Python 3 із <a class="ext" rel="noopener" href="https://www.python.org/downloads/">python.org</a> і поставте позначку <strong>Add python.exe to PATH</strong> (якщо ви вже налаштували <a href="../../../uk/docs/guide/captions.html#requirements">автосубтитри</a>, Python у вас є).</p></li>
+  <li><strong>Встановіть rembg</strong><p>Відкрийте PowerShell і виконайте:</p><div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-k">pip</span> install rembg onnxruntime</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div><p>Під час першого видалення фону rembg один раз завантажить свою модель; далі все працює офлайн.</p></li>
+  <li><strong>Перевірте в Kadr</strong><p>Відкрийте <strong>Video → Remove BG</strong>. Якщо там написано <em>Auto removal is not available on this computer</em>, поруч пояснено, чого бракує; виправте це й натисніть <strong>Check again</strong> (або перезапустіть Kadr).</p></li>
+</ol>
+<div class="callout note"><p>Для досвідчених: замість rembg Kadr може використати <em>onnxruntime</em> з будь-якою ONNX-моделлю маскування (U²-Net, IS-Net, MODNet…), збереженою як <code>models\matting.onnx</code> у папці даних Kadr. На довгих чи 4K-кліпах видалення займає час — тим часом можна монтувати далі.</p></div>
+
+<h2 id="split-scenes">Поділ на сцени<a class="anchor" href="#split-scenes" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Маєте довге відео з кількох планів — трейлер, запис екрана зі склейками, збірку? <strong>Split scenes</strong> знаходить кожну зміну плану й розрізає там кліп, щоб плани можна було видаляти чи переставляти.</p>
+<ul>
+  <li>Швидко: виділіть відеокліп і оберіть <strong>Smart tools → Split scenes</strong>.</li>
+  <li>З параметрами: <strong>Video → Smart tools → Split scenes</strong>. Збільште <strong>Sensitivity</strong> (чутливість), щоб ловити м’якші переходи, зменште — якщо Kadr ріже надто часто.</li>
+</ul>
+
+<h2 id="remove-silence">Вирізання тиші<a class="anchor" href="#remove-silence" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Ідеально для розмовних відео, уроків і подкастів. Виділіть відео- чи аудіокліп із мовленням і оберіть <strong>Smart tools → Remove silence</strong>. Kadr виріже кожну паузу, довшу за пів секунди, і закриє проміжки; повідомлення скаже, скільки пауз і секунд прибрано.</p>
+<p>Для точнішого контролю — прибрати «е-е» чи задати довжину пауз — скористайтеся <a href="../../../uk/docs/guide/captions.html#transcript">вкладкою Transcript</a>.</p>
+
+<h2 id="auto-reframe">Автокадрування<a class="anchor" href="#auto-reframe" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="grid-2">
+  <div>
+    <p>Перетворює горизонтальне відео на вертикальне (чи квадратне), <em>не втрачаючи об’єкта</em>: Kadr стежить за людиною чи головною дією й плавно рухає кадр ключовими кадрами.</p>
+    <ul>
+      <li>Швидко: виділіть відео- чи фотокліп, відкрийте <strong>Smart tools → Auto reframe</strong> і оберіть 9:16, 1:1, 4:3, 3:4 або 16:9. Проєкт теж перейде на цей формат.</li>
+      <li>З параметрами: <strong>Video → Smart tools → Auto reframe…</strong> дає обрати <strong>Ratio</strong> (формат), <strong>Smoothness</strong> (плавність руху «камери») і чи перемикати <strong>Canvas</strong> (полотно); потім натисніть <strong>Reframe</strong>.</li>
+    </ul>
+    <p>Після цього ключові кадри положення можна підправити, як і будь-які інші <a href="../../../uk/docs/guide/effects.html#keyframes">ключові кадри</a>.</p>
+  </div>
+  <figure><img decoding="async" src="../../../assets/img/guide/smart-tools.webp" alt="Video → Smart tools з розділами Auto reframe, Split scenes із повзунком чутливості та Remove silence" width="342" height="450" loading="lazy"><figcaption>Video → Smart tools.</figcaption></figure>
+</div>
+
+<h2 id="more-smart">Інші розумні функції<a class="anchor" href="#more-smart" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Автосубтитри</strong> й <strong>монтаж за транскриптом</strong> з офлайн-Whisper — <a href="../../../uk/docs/guide/captions.html">Субтитри й транскрипт</a>.</li>
+  <li><strong>Відокремлення звуку</strong> — <a href="../../../uk/docs/guide/audio.html#separate">Аудіо</a>.</li>
+  <li><strong>Auto adjust</strong> для кольору — <a href="../../../uk/docs/guide/effects.html#basic">Корекція кольору</a>.</li>
+  <li><strong>Reduce image noise</strong>, <strong>Remove flicker</strong> (Video → Basic) і <strong>Reduce noise</strong> для звуку (Audio → Basic).</li>
+</ul>
+
+<div class="callout tip"><p><strong>Доручіть керування ШІ-асистентові.</strong> Усе описане вище — і весь редактор — може виконувати Claude чи інший ШІ-асистент: «виріж тишу, додай субтитри з підсвічуванням слів і експортуй вертикальну версію». Ви бачите кожен крок у вікні. Почніть із <a href="../../../uk/docs/ai/index.html">документації для ШІ</a>.</p></div>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/guide/stickers.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Стікери й генеровані медіа</b></a><a class="pager-next" href="../../../uk/docs/guide/export.html" rel="next"><span>Далі</span><b>Експорт<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#where">Де їх шукати</a></li><li class="lvl-2"><a href="#remove-background">Видалення фону</a></li><li class="lvl-3"><a href="#remove-background-requirements">Що потрібно</a></li><li class="lvl-2"><a href="#split-scenes">Поділ на сцени</a></li><li class="lvl-2"><a href="#remove-silence">Вирізання тиші</a></li><li class="lvl-2"><a href="#auto-reframe">Автокадрування</a></li><li class="lvl-2"><a href="#more-smart">Інші розумні функції</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#download">Завантажити</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr/issues">Повідомити про помилку</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>

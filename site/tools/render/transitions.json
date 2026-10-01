@@ -1,0 +1,38 @@
+[
+  {
+    "id": "zoom_blur_through",
+    "name": "Zoom blur",
+    "start_s": 1.5,
+    "end_s": 2.3
+  },
+  {
+    "id": "page_peel",
+    "name": "Page peel",
+    "start_s": 3.4,
+    "end_s": 4.2
+  },
+  {
+    "id": "iris_heart",
+    "name": "Heart iris",
+    "start_s": 5.3,
+    "end_s": 6.1
+  },
+  {
+    "id": "block_glitch",
+    "name": "Block glitch",
+    "start_s": 7.2,
+    "end_s": 8.0
+  },
+  {
+    "id": "cube_turn_left",
+    "name": "Cube left",
+    "start_s": 9.1,
+    "end_s": 9.9
+  },
+  {
+    "id": "photo_drop",
+    "name": "Photo drop",
+    "start_s": 11.0,
+    "end_s": 11.8
+  }
+]

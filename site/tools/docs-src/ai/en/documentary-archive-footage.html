@@ -1,0 +1,231 @@
+<!--meta {"title":"Documentary from public-domain archive footage","nav":"Archive documentary","order":395,"description":"Build a short documentary from public-domain newsreels on archive.org: search and cut the footage with ffmpeg, narrate it in Ukrainian with an ElevenLabs voice, fit every shot to the narration, add Ken Burns moves, a film look and corrected captions, then export.","group":"Recipes","summary":"Public-domain newsreels from archive.org, Ukrainian ElevenLabs narration, shots timed to the voice, Ken Burns moves, a film-strip look and fixed captions.","time":"~10 min (mostly downloading)","needs":"ffmpeg on PATH, an ElevenLabs API key (optional — local voices work too), internet for the footage","commands":["media.import","tts.set_api_key","tts.voices","tts.speak","timeline.segment.add","timeline.segment.trim","keyframe.add","transition.apply_all","filter.add","effect.add","captions.auto","captions.update","ui.open_project","export.start"]} -->
+<p class="lead">You get a 30-second documentary about D-Day, 6 June 1944, cut from public-domain newsreels: five archive shots, each timed to a line of Ukrainian narration read by an ElevenLabs voice, slow Ken Burns moves, a black-and-white film-strip look, an opening title, corrected Ukrainian captions and a source credit. The same steps work for any topic and any language.</p>
+<ul>
+  <li><strong>Time:</strong> ~10 min (mostly downloading)</li>
+  <li><strong>You need:</strong> ffmpeg on PATH, an ElevenLabs API key (optional — local voices work too), internet for the footage</li>
+  <li><strong>Main commands:</strong> <code class="cmd">media.import</code>, <code class="cmd">tts.set_api_key</code>, <code class="cmd">tts.voices</code>, <code class="cmd">tts.speak</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">timeline.segment.trim</code>, <code class="cmd">keyframe.add</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">filter.add</code>, <code class="cmd">effect.add</code>, <code class="cmd">captions.auto</code>, <code class="cmd">captions.update</code>, <code class="cmd">ui.open_project</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Make a 30-second Ukrainian-language documentary about D-Day (6 June 1944) in Kadr. Find public-domain newsreel footage on archive.org (check each item's rights), cut five 14-second shots with ffmpeg into C:\Users\you\Videos\dday — the fleet, landing craft, the beach, troops moving inland, crowds — without the original sound. Open the project in the Kadr window so I can watch. Narrate these five lines with my ElevenLabs voice (the key is already set in Kadr): [the five lines below]. Time every shot to its line with a short pause, add slow Ken Burns zooms, dissolves, a soft black-and-white grade with the film_frame effect, the title "6 червня 1944" at the start and a source credit at the end. Add Ukrainian captions (cap_cinema), fix any misheard words, show me a contact sheet, then export 1080p to C:\Users\you\Videos\Kadr\dday-1944.mp4.</p></blockquote>
+
+<h3 id="script">The narration script</h3>
+<table>
+  <thead><tr><th>#</th><th>Ukrainian (spoken)</th><th>English gloss</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Шосте червня тисяча дев’ятсот сорок четвертого року. Світанок над Ла-Маншем.</td><td>June 6, 1944. Dawn over the English Channel.</td></tr>
+    <tr><td>2</td><td>Близько семи тисяч суден везуть до узбережжя Нормандії понад сто п’ятдесят тисяч солдатів.</td><td>About seven thousand vessels carry more than 150,000 soldiers to the coast of Normandy.</td></tr>
+    <tr><td>3</td><td>О пів на сьому ранку перші десантні катери підходять до пляжів.</td><td>At half past six in the morning the first landing craft reach the beaches.</td></tr>
+    <tr><td>4</td><td>До вечора союзники закріплюються на всіх п’яти плацдармах.</td><td>By evening the Allies hold all five beachheads.</td></tr>
+    <tr><td>5</td><td>Так почалося звільнення Західної Європи.</td><td>This is how the liberation of Western Europe began.</td></tr>
+  </tbody>
+</table>
+<div class="callout warn"><p><strong>Rights first.</strong> “On archive.org” does not mean “public domain”. Use items whose <code>licenseurl</code> is a Public Domain Mark or CC0, or works that are public domain by law (for example films made by the U.S. federal government, such as Army Signal Corps footage). Read the item page’s rights statement, keep the identifiers, and credit the source in the video. When in doubt, skip the item.</p></div>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="find">Find public-domain footage</h3>
+<p>The Internet Archive’s advanced search API returns JSON, so an agent with a shell can search directly. Ask for the rights fields and keep only items that are clearly public domain:</p>
+<pre><code class="lang-powershell">$q = '("d-day" OR normandy) AND year:1944 AND mediatype:movies'
+$url = "https://archive.org/advancedsearch.php?q=$([uri]::EscapeDataString($q))" +
+       "&amp;fl[]=identifier&amp;fl[]=title&amp;fl[]=year&amp;fl[]=licenseurl&amp;fl[]=rights&amp;rows=50&amp;output=json"
+(Invoke-RestMethod $url).response.docs | Format-Table identifier, year, licenseurl, title -AutoSize</code></pre>
+<p>Then list the video files of a chosen item (<code>length</code> is in seconds):</p>
+<pre><code class="lang-powershell">$item = 'ITEM_ID'   # an identifier from the search
+(Invoke-RestMethod "https://archive.org/metadata/$item").files |
+  Where-Object { $_.name -like '*.mp4' } | Format-Table name, size, length</code></pre>
+<p>To pick shots, an agent can import a low-resolution copy into a scratch project and use <code class="cmd">ai.detect_scenes</code> plus <code class="cmd">preview.contact_sheet</code> to see where each shot starts.</p>
+</li>
+<li>
+<h3 id="cut">Cut only the shots you need with ffmpeg</h3>
+<p>ffmpeg can read straight from the download URL: with <code>-ss</code> before <code>-i</code> it seeks with HTTP range requests, so only a few megabytes per shot are fetched. Re-encoding makes every cut frame-accurate, and <code>-an</code> drops the original commentary. The timecodes below are placeholders — use the ones you picked.</p>
+<pre><code class="lang-powershell">$src = 'https://archive.org/download/ITEM_ID/FILE.mp4'
+$dst = "$env:USERPROFILE\Videos\dday"
+New-Item -ItemType Directory -Force $dst | Out-Null
+# -ss before -i seeks over HTTP (only the needed bytes are fetched); -t = length; -an drops the old soundtrack
+ffmpeg -ss 00:01:12 -i $src -t 14 -c:v libx264 -crf 18 -pix_fmt yuv420p -an "$dst\01_fleet.mp4"
+ffmpeg -ss 00:03:40 -i $src -t 14 -c:v libx264 -crf 18 -pix_fmt yuv420p -an "$dst\02_landing_craft.mp4"
+ffmpeg -ss 00:05:05 -i $src -t 14 -c:v libx264 -crf 18 -pix_fmt yuv420p -an "$dst\03_beach.mp4"
+ffmpeg -ss 00:06:30 -i $src -t 14 -c:v libx264 -crf 18 -pix_fmt yuv420p -an "$dst\04_inland.mp4"
+ffmpeg -ss 00:08:15 -i $src -t 14 -c:v libx264 -crf 18 -pix_fmt yuv420p -an "$dst\05_crowds.mp4"</code></pre>
+</li>
+<li>
+<h3 id="project">Create the project, show it, import the shots</h3>
+<p><code class="cmd">ui.open_project</code> switches the open Kadr window to the new project, so a human can watch every following step. A folder path imports all five shots at once.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "D-Day 1944" --ratio 16:9
+kadrctl run ui.open_project --project_id prj_d4a1c9e3b702
+kadrctl --% run media.import --project_id prj_d4a1c9e3b702 --paths "[\"C:/Users/you/Videos/dday\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "D-Day 1944", "ratio": "16:9"}}
+{"name": "ui_open_project", "arguments": {"project_id": "prj_d4a1c9e3b702"}}
+{"name": "media_import", "arguments": {"project_id": "prj_d4a1c9e3b702", "paths": ["C:/Users/you/Videos/dday"]}}</code></pre></div>
+</li>
+<li>
+<h3 id="voice">Connect ElevenLabs and pick a voice</h3>
+<p><code class="cmd">tts.set_api_key</code> stores the key only on this PC (in the Kadr data folder); it is never returned by any command or written into projects. The result reports whether the key works and how many voices it unlocked. Then <code class="cmd">tts.voices</code> with <code>refresh</code> lists them with ids like <code>elevenlabs:&lt;voice_id&gt;</code>. Run the key step yourself (or set <code>KADR_ELEVENLABS_API_KEY</code> before starting Kadr) rather than pasting the key into a chat — anything in a prompt reaches your AI provider.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run tts.set_api_key --provider elevenlabs --api_key sk_...
+kadrctl run tts.voices --refresh</code></pre><pre data-lang="mcp"><code>{"name": "tts_set_api_key", "arguments": {"provider": "elevenlabs", "api_key": "sk_..."}}
+{"name": "tts_voices", "arguments": {"refresh": true}}</code></pre></div>
+<pre><code class="lang-text">id                         provider     name       language
+elevenlabs:VOICE_ID        elevenlabs   &lt;name&gt;     en
+sapi:Microsoft Zira Desktop sapi        Zira       en-US
+espeak:uk                  espeak       Ukrainian  uk</code></pre>
+<div class="callout note"><p>ElevenLabs voices are multilingual: the <code>eleven_multilingual_v2</code> model reads Ukrainian text with any voice, even when the voice is labelled <code>en</code>. Pass the full id (<code>elevenlabs:…</code>); a bare language code such as <code>uk</code> picks a <em>local</em> voice. Without a key, use <code>espeak:uk</code> — robotic, but offline.</p></div>
+</li>
+<li>
+<h3 id="narrate">Record the narration</h3>
+<p>One <code class="cmd">tts.speak</code> per line, each at its planned start. Every result carries the line’s real <code>duration_us</code> — the agent uses these numbers to time the shots. Speech is trimmed of silence, levelled to about −16 LUFS and placed on an audio track; the same text and voice are cached, so re-running is free.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run tts.speak --project_id prj_d4a1c9e3b702 --text "Шосте червня тисяча дев’ятсот сорок четвертого року. Світанок над Ла-Маншем." --voice elevenlabs:VOICE_ID --at_us 0.6s
+kadrctl run tts.speak --project_id prj_d4a1c9e3b702 --text "Близько семи тисяч суден везуть до узбережжя Нормандії понад сто п’ятдесят тисяч солдатів." --voice elevenlabs:VOICE_ID --at_us 5.5s
+kadrctl run tts.speak --project_id prj_d4a1c9e3b702 --text "О пів на сьому ранку перші десантні катери підходять до пляжів." --voice elevenlabs:VOICE_ID --at_us 12.9s
+kadrctl run tts.speak --project_id prj_d4a1c9e3b702 --text "До вечора союзники закріплюються на всіх п’яти плацдармах." --voice elevenlabs:VOICE_ID --at_us 18.2s
+kadrctl run tts.speak --project_id prj_d4a1c9e3b702 --text "Так почалося звільнення Західної Європи." --voice elevenlabs:VOICE_ID --at_us 23.1s</code></pre><pre data-lang="mcp"><code>{"name": "tts_speak", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "Шосте червня тисяча дев’ятсот сорок четвертого року. Світанок над Ла-Маншем.", "voice": "elevenlabs:VOICE_ID", "at_us": 600000}}
+{"name": "tts_speak", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "Близько семи тисяч суден везуть до узбережжя Нормандії понад сто п’ятдесят тисяч солдатів.", "voice": "elevenlabs:VOICE_ID", "at_us": 5500000}}
+{"name": "tts_speak", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "О пів на сьому ранку перші десантні катери підходять до пляжів.", "voice": "elevenlabs:VOICE_ID", "at_us": 12900000}}
+{"name": "tts_speak", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "До вечора союзники закріплюються на всіх п’яти плацдармах.", "voice": "elevenlabs:VOICE_ID", "at_us": 18200000}}
+{"name": "tts_speak", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "Так почалося звільнення Західної Європи.", "voice": "elevenlabs:VOICE_ID", "at_us": 23100000}}</code></pre></div>
+<pre><code class="lang-text">line 1  seg_0c6e2b8f1a93  start  0.6 s  duration_us 3900000
+line 2  seg_5a1d9e7c3b04  start  5.5 s  duration_us 6400000
+line 3  seg_e83f0a4d6c21  start 12.9 s  duration_us 4300000
+line 4  seg_29b7c5e1f0a8  start 18.2 s  duration_us 3900000
+line 5  seg_c4e0a8f2d917  start 23.1 s  duration_us 3200000</code></pre>
+</li>
+<li>
+<h3 id="fit">Time the shots to the narration</h3>
+<p>Each shot covers its line plus a breath: it starts 0.4 s before the line and ends 0.6 s after it, so cuts never land mid-word. On the magnetic main track the shots sit back to back in call order; <code>source_start_us</code> skips leader frames at the start of a shot. Save as <code>dday-shots.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_1f7c2a9e4b30", "source_start_us": 1000000, "duration_us": 5100000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_6e0b3d8a2c51", "source_start_us": 2000000, "duration_us": 7400000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_93c5e1f7a024", "source_start_us": 0, "duration_us": 5300000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_b2d84a6c0e19", "source_start_us": 3000000, "duration_us": 4900000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_47a9f3b1d6e8", "source_start_us": 1500000, "duration_us": 5800000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_d4a1c9e3b702 dday-shots.json --dry-run
+kadrctl batch prj_d4a1c9e3b702 dday-shots.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_d4a1c9e3b702", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_1f7c2a9e4b30", "source_start_us": 1000000, "duration_us": 5100000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_6e0b3d8a2c51", "source_start_us": 2000000, "duration_us": 7400000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_93c5e1f7a024", "source_start_us": 0, "duration_us": 5300000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_b2d84a6c0e19", "source_start_us": 3000000, "duration_us": 4900000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_47a9f3b1d6e8", "source_start_us": 1500000, "duration_us": 5800000}}
+]}}</code></pre></div>
+<p>If a line comes out longer after a re-take, move the right edge of its shot with <code class="cmd">timeline.segment.trim</code>; the magnet ripples the later shots. <code>snap</code> <code>false</code> keeps the exact time:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.trim --project_id prj_d4a1c9e3b702 --segment_id seg_a0f4e6b2c83d --edge right --to_us 12.7s --snap false
+kadrctl run timeline.get --project_id prj_d4a1c9e3b702</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_trim", "arguments": {"project_id": "prj_d4a1c9e3b702", "segment_id": "seg_a0f4e6b2c83d", "edge": "right", "to_us": 12700000, "snap": false}}
+{"name": "timeline_get", "arguments": {"project_id": "prj_d4a1c9e3b702"}}</code></pre></div>
+</li>
+<li>
+<h3 id="ken-burns">Ken Burns moves on every shot</h3>
+<p>The 4:3 archive shots fit a 16:9 canvas by height, so they need a scale of at least 1.33 to fill the frame. Zooming between 1.36 and 1.48 hides the bars the whole time, and a vertical drift of ±0.06 is safe at that size (the side-to-side slack is tiny). Keyframe times are relative to each shot; the easing on the first keyframe of a pair shapes the move. Save as <code>dday-kenburns.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.scale", "time_us": 0, "value": 1.36, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.scale", "time_us": 5100000, "value": 1.48}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.y", "time_us": 0, "value": 0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.y", "time_us": 5100000, "value": -0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.scale", "time_us": 0, "value": 1.48, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.scale", "time_us": 7400000, "value": 1.36}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.y", "time_us": 0, "value": -0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.y", "time_us": 7400000, "value": 0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.scale", "time_us": 0, "value": 1.36, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.scale", "time_us": 5300000, "value": 1.48}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.y", "time_us": 0, "value": 0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.y", "time_us": 5300000, "value": -0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.scale", "time_us": 0, "value": 1.48, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.scale", "time_us": 4900000, "value": 1.36}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.y", "time_us": 0, "value": -0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.y", "time_us": 4900000, "value": 0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.scale", "time_us": 0, "value": 1.36, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.scale", "time_us": 5800000, "value": 1.48}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.y", "time_us": 0, "value": 0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.y", "time_us": 5800000, "value": -0.06}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_d4a1c9e3b702 dday-kenburns.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_d4a1c9e3b702", "calls": [
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.scale", "time_us": 0, "value": 1.36, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.scale", "time_us": 5100000, "value": 1.48}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.y", "time_us": 0, "value": 0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_7d2a5c9e1b46", "property": "transform.y", "time_us": 5100000, "value": -0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.scale", "time_us": 0, "value": 1.48, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.scale", "time_us": 7400000, "value": 1.36}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.y", "time_us": 0, "value": -0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_a0f4e6b2c83d", "property": "transform.y", "time_us": 7400000, "value": 0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.scale", "time_us": 0, "value": 1.36, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.scale", "time_us": 5300000, "value": 1.48}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.y", "time_us": 0, "value": 0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_3b9c1e7a5d02", "property": "transform.y", "time_us": 5300000, "value": -0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.scale", "time_us": 0, "value": 1.48, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.scale", "time_us": 4900000, "value": 1.36}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.y", "time_us": 0, "value": -0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_f6d8b0a4e297", "property": "transform.y", "time_us": 4900000, "value": 0.06}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.scale", "time_us": 0, "value": 1.36, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.scale", "time_us": 5800000, "value": 1.48}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.y", "time_us": 0, "value": 0.06, "easing": "ease_in_out"}},
+  {"command": "keyframe.add", "args": {"segment_id": "seg_81e3c7f9a5b0", "property": "transform.y", "time_us": 5800000, "value": -0.06}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="look">Dissolves, film look, title and credit</h3>
+<p><code class="cmd">transition.apply_all</code> puts a dissolve on every cut. <code class="cmd">filter.add</code> grades everything below it with <code>mono_soft</code>, which evens out prints of different quality. <code class="cmd">effect.add</code> then lays <code>film_frame</code> on top — sprocket borders, gate weave, dust and scratches; because its track is added later it sits above the filter track and is applied after it. The title and the source credit go on a text track.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_d4a1c9e3b702 --type dissolve --duration_us 0.6s
+kadrctl run filter.add --project_id prj_d4a1c9e3b702 --filter_id mono_soft --at_us 0 --duration_us 28.7s --intensity 0.8
+kadrctl --% run effect.add --project_id prj_d4a1c9e3b702 --effect_id film_frame --at_us 0 --duration_us 28.7s --params "{\"intensity\":0.8,\"dirt\":0.6}"
+kadrctl run text.add --project_id prj_d4a1c9e3b702 --text "6 червня 1944" --template_id cinematic --at_us 0.3s --duration_us 3.6s
+kadrctl run text.add --project_id prj_d4a1c9e3b702 --text "Кадри: Internet Archive, суспільне надбання" --template_id plain_white --at_us 26.7s --duration_us 2s
+kadrctl run text.update --project_id prj_d4a1c9e3b702 --segment_id seg_b7f1a3c9e5d2 --size 8
+kadrctl run segment.set_transform --project_id prj_d4a1c9e3b702 --segment_id seg_b7f1a3c9e5d2 --y 0.82</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_d4a1c9e3b702", "type": "dissolve", "duration_us": 600000}}
+{"name": "filter_add", "arguments": {"project_id": "prj_d4a1c9e3b702", "filter_id": "mono_soft", "at_us": 0, "duration_us": 28700000, "intensity": 0.8}}
+{"name": "effect_add", "arguments": {"project_id": "prj_d4a1c9e3b702", "effect_id": "film_frame", "at_us": 0, "duration_us": 28700000, "params": {"intensity": 0.8, "dirt": 0.6}}}
+{"name": "text_add", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "6 червня 1944", "template_id": "cinematic", "at_us": 300000, "duration_us": 3600000}}
+{"name": "text_add", "arguments": {"project_id": "prj_d4a1c9e3b702", "text": "Кадри: Internet Archive, суспільне надбання", "template_id": "plain_white", "at_us": 26700000, "duration_us": 2000000}}
+{"name": "text_update", "arguments": {"project_id": "prj_d4a1c9e3b702", "segment_id": "seg_b7f1a3c9e5d2", "size": 8}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_d4a1c9e3b702", "segment_id": "seg_b7f1a3c9e5d2", "y": 0.82}}</code></pre></div>
+</li>
+<li>
+<h3 id="captions">Ukrainian captions, then fix them</h3>
+<p><code class="cmd">captions.auto</code> with <code>language</code> <code>uk</code> transcribes only the narration clips (<code>segment_ids</code>), locally with Whisper. Then <code class="cmd">captions.list</code> shows the cues — compare them with the script.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run captions.auto --project_id prj_d4a1c9e3b702 --segment_ids "[\"seg_0c6e2b8f1a93\",\"seg_5a1d9e7c3b04\",\"seg_e83f0a4d6c21\",\"seg_29b7c5e1f0a8\",\"seg_c4e0a8f2d917\"]" --language uk --model small --style_id cap_cinema --wait
+kadrctl run captions.list --project_id prj_d4a1c9e3b702 --include_words false</code></pre><pre data-lang="mcp"><code>{"name": "captions_auto", "arguments": {"project_id": "prj_d4a1c9e3b702", "segment_ids": ["seg_0c6e2b8f1a93", "seg_5a1d9e7c3b04", "seg_e83f0a4d6c21", "seg_29b7c5e1f0a8", "seg_c4e0a8f2d917"], "language": "uk", "model": "small", "style_id": "cap_cinema", "wait": true}}
+{"name": "captions_list", "arguments": {"project_id": "prj_d4a1c9e3b702", "include_words": false}}</code></pre></div>
+<pre><code class="lang-text">seg_6c2f8a0e4d17  0.60 s  6 червня 1944 року. Світанок над Ламаншем.
+seg_d93a7e1b5c60  5.50 s  Близько 7 тисяч суден везуть до узбережжя Нормандії
+…</code></pre>
+<p>Whisper writes numbers as digits and can glue names together. <code class="cmd">captions.update</code> fixes the text (word timings are kept where words match) and, if needed, the cue’s end:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.update --project_id prj_d4a1c9e3b702 --segment_id seg_6c2f8a0e4d17 --text "6 червня 1944 року. Світанок над Ла-Маншем."
+kadrctl run captions.update --project_id prj_d4a1c9e3b702 --segment_id seg_d93a7e1b5c60 --text "Близько семи тисяч суден везуть до узбережжя Нормандії" --end_us 9.2s</code></pre><pre data-lang="mcp"><code>{"name": "captions_update", "arguments": {"project_id": "prj_d4a1c9e3b702", "segment_id": "seg_6c2f8a0e4d17", "text": "6 червня 1944 року. Світанок над Ла-Маншем."}}
+{"name": "captions_update", "arguments": {"project_id": "prj_d4a1c9e3b702", "segment_id": "seg_d93a7e1b5c60", "text": "Близько семи тисяч суден везуть до узбережжя Нормандії", "end_us": 9200000}}</code></pre></div>
+</li>
+<li>
+<h3 id="check">Check the cut while the human watches</h3>
+<p><code class="cmd">ui.toast</code> narrates what the agent is doing in the open window; <code class="cmd">preview.contact_sheet</code> shows the whole film at a glance (as an image through MCP).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ui.toast --title "Перевіряю монтаж" --body "Контактний аркуш і кадр із титром"
+kadrctl run preview.contact_sheet --project_id prj_d4a1c9e3b702 --count 12 --columns 4 --tile_width 320
+kadrctl run preview.frame --project_id prj_d4a1c9e3b702 --time_us 1.5s --width 960</code></pre><pre data-lang="mcp"><code>{"name": "ui_toast", "arguments": {"title": "Перевіряю монтаж", "body": "Контактний аркуш і кадр із титром"}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_d4a1c9e3b702", "count": 12, "columns": 4, "tile_width": 320}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_d4a1c9e3b702", "time_us": 1500000, "width": 960}}</code></pre></div>
+</li>
+<li>
+<h3 id="export">Export</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_d4a1c9e3b702 --resolution 1080p --path C:/Users/you/Videos/Kadr/dday-1944.mp4
+kadrctl run export.status --job_id exp_e2a6c0b9f4d7</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_d4a1c9e3b702", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/dday-1944.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_e2a6c0b9f4d7"}}</code></pre></div>
+<p>When <code>state</code> is <code>done</code>, <code>path</code> and <code>size_bytes</code> describe the file. See <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Verifying results</a> for checking the exported video itself.</p>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>No ElevenLabs key.</strong> Use <code>espeak:uk</code> (or any voice from <code class="cmd">tts.voices</code>) in <code class="cmd">tts.speak</code>; everything else stays the same. Remove a stored key with <code class="cmd">tts.set_api_key</code> and <code>clear</code>.</li>
+  <li><strong>Longer films.</strong> Narrate paragraph by paragraph (up to 5000 characters per call) and keep one shot per sentence; build the shot list as one <code>dday-shots.json</code> batch.</li>
+  <li><strong>Music bed.</strong> Public-domain or CC0 music from the same archive, added with <code class="cmd">timeline.segment.add</code> at −20 dB (<code class="cmd">segment.set_volume</code>) under the voice.</li>
+  <li><strong>Projector sound.</strong> <code class="cmd">sfx.add</code> with <code>film_advance</code> at 0 s adds a projector start.</li>
+  <li><strong>Vertical cut.</strong> Duplicate the project, switch it to 9:16 and reframe each shot — see <a href="{{root}}{{lang_root}}docs/ai/batch-export-variants.html">One project, three formats</a>.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li><code class="cmd">tts.speak</code> fails with <code>not_found</code> “voice … is not installed” when the ElevenLabs key is missing or the voice id is not in your account’s list — run <code class="cmd">tts.voices</code> with <code>refresh</code> and copy an id from there.</li>
+  <li>Speech speed for ElevenLabs is limited to 0.7–1.2 (<code>rate</code>); slow narration down there rather than by stretching the clip.</li>
+  <li>Text you synthesise is sent to ElevenLabs; everything else — footage, edits, captions — stays on your PC.</li>
+  <li><strong>Plan shots as data.</strong> Keep a small <code>shots.json</code> next to the clips — scene, order, file, duration — and name each file after its source and timecode (for example <code>s2_1_B991.mp4</code> = scene 2, first shot, source B at 991 s). The plan turns straight into the <code>dday-shots.json</code> batch, and the names make re-cuts and credits easy. A long narration line can be covered by two shots that share its time (say 4.0 s + 3.95 s).</li>
+  <li>Keep the archive identifiers and timecodes in your notes; the end credit should name the source.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

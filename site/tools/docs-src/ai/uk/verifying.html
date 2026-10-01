@@ -1,0 +1,60 @@
+<!--meta {"title":"Перевірка результату","nav":"Перевірка результату","order":230,"description":"Перевіряйте монтаж, як це зробив би монтажер: читайте таймлайн, дивіться кадри й контактні аркуші, вимірюйте компонування й гучність, а потім підтвердьте сам експортований файл.","group":"Посібники"} -->
+<p class="lead">Успішна команда доводить лише те, що виклик був коректним. Щоб знати, що відео правильне, агент має робити те, що робить монтажер: прочитати таймлайн, подивитися на картинку, виміряти те, що можна виміряти, і нарешті перевірити експортований файл.</p>
+
+<h2 id="structure">1. Прочитайте структуру</h2>
+<p><code class="cmd">timeline.get</code> — компактний вигляд «під агента»: доріжки згори донизу, кожен кліп із <code>start_us</code>, <code>end_us</code>, вихідним діапазоном, швидкістю, гучністю, групою зв’язку, переходом і ефектами, плюс <code>duration_us</code> усього монтажу й скільки разів використано кожен матеріал. Звірте з планом: правильний порядок, жодних несподіваних проміжків на немагнітних доріжках, загальна довжина як задумано.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.get --project_id prj_e5a2c8f1d940</code></pre><pre data-lang="mcp"><code>{"name": "timeline_get", "arguments": {"project_id": "prj_e5a2c8f1d940"}}</code></pre></div>
+<p>Щоб детально оглянути один кліп, <code class="cmd">segment.get</code> з <code>time_us</code> повертає всі властивості плюс <code>evaluated</code> — значення ключових кадрів у цей момент.</p>
+
+<h2 id="look">2. Подивіться на картинку</h2>
+<p><code class="cmd">preview.frame</code> рендерить один кадр рендерером експорту. <code class="cmd">preview.contact_sheet</code> рендерить сітку рівномірно розподілених кадрів (<code>times_us</code> — час кожної плитки); <code>start_us</code>/<code>end_us</code> наближають фрагмент. Через MCP обидва приходять як зображення, які бачить модель.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_e5a2c8f1d940 --time_us 1s --width 960
+kadrctl run preview.contact_sheet --project_id prj_e5a2c8f1d940 --count 8 --columns 4 --tile_width 240</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_e5a2c8f1d940", "time_us": 1000000, "width": 960}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_e5a2c8f1d940", "count": 8, "columns": 4, "tile_width": 240}}</code></pre></div>
+<figure><img src="{{root}}assets/img/ai/promo-contact-sheet.webp" alt="Контактний аркуш: шість кадрів промо в сітці 3 на 2" width="976" height="372" loading="lazy"><figcaption>Контактний аркуш (6 плиток, 3 колонки) з рецепта промо продукту — одне зображення показує весь монтаж.</figcaption></figure>
+<p>Без MCP декодуйте <code>png_base64</code> самі або візьміть JPEG з <a href="{{root}}{{lang_root}}docs/ai/rest.html#binary">ендпоінта кадру</a>:</p>
+<pre><code class="lang-powershell">$r = Invoke-Kadr preview.frame @{ project_id = 'prj_e5a2c8f1d940'; time_us = 1000000; width = 960 }
+[IO.File]::WriteAllBytes("$PWD\frame.png", [Convert]::FromBase64String($r.png_base64))</code></pre>
+<table>
+  <thead><tr><th>Що шукати</th><th>Де</th></tr></thead>
+  <tbody>
+    <tr><td>Чорні смуги чи краї під час наближень</td><td>Контактний аркуш, потім кадри на початку й наприкінці руху</td></tr>
+    <tr><td>Обрізаний текст, перекриті субтитри, стікери на обличчях</td><td>Кадри шириною 960 px і більше</td></tr>
+    <tr><td>Чорні кадри між кліпами</td><td>Темні плитки; проміжки в <code class="cmd">timeline.get</code></td></tr>
+    <tr><td>Слабкий перший кадр (мініатюра)</td><td><code class="cmd">preview.frame</code> з <code>time_us</code> 0 або задайте обкладинку через <code class="cmd">project.set_cover</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="measure">3. Виміряйте</h2>
+<p><code class="cmd">preview.layout</code> повертає рамку кожного видимого кліпу, тексту й стікера в заданий момент у пікселях полотна (<code>x</code>, <code>y</code>, <code>w</code>, <code>h</code>, <code>rotation</code>, <code>corners</code>, <code>z</code>). Кліп покриває кадр, коли <code>x</code> ≤ 0, <code>y</code> ≤ 0, <code>x + w</code> ≥ <code>canvas_width</code> і <code>y + h</code> ≥ <code>canvas_height</code>; текст уміщається, коли його рамка в цих межах.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_e5a2c8f1d940 --time_us 1s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_e5a2c8f1d940", "time_us": 1000000}}</code></pre></div>
+<p>Для звуку <code class="cmd">audio.loudness</code> вимірює кліп (інтегральні LUFS, діапазон гучності, істинний пік і <code>effective_lufs</code> з урахуванням гучності кліпу). Мову під музикою добре чути, коли музика на 10–15 LU нижча. Для слів порівняйте <code class="cmd">captions.list</code> (текст і час реплік) з <code class="cmd">transcript.get</code> (що розпізнано).</p>
+
+<h2 id="export">4. Перевірте експортований файл</h2>
+<p><code class="cmd">export.start</code> одразу повертає <code>job_id</code>; опитуйте <code class="cmd">export.status</code> кожні секунду-дві, доки <code>state</code> не стане <code>done</code> (або <code>failed</code> з <code>error</code>). Кінцевий <code>path</code> може відрізнятися від запитаного: наявний файл ніколи не перезаписується без <code>overwrite</code>, тож Kadr додає « (1)».</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_e5a2c8f1d940 --resolution 720p --path C:/Users/you/Videos/Kadr/check.mp4 --overwrite
+kadrctl run export.status --job_id exp_2d7f9b1e4c06</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_e5a2c8f1d940", "resolution": "720p", "path": "C:/Users/you/Videos/Kadr/check.mp4", "overwrite": true}}
+{"name": "export_status", "arguments": {"job_id": "exp_2d7f9b1e4c06"}}</code></pre></div>
+<pre><code class="lang-json">{ "job_id": "exp_2d7f9b1e4c06", "state": "done", "progress": 1, "path": "C:\\Users\\you\\Videos\\Kadr\\check.mp4",
+  "size_bytes": 117503, "encoder": "h264_nvenc", "settings": { "width": 1280, "height": 720, "fps": 30, "duration_us": 4000000, … } }</code></pre>
+<p>Потім підтвердьте сам файл. Якщо є оболонка, <code>ffprobe</code> відповість одним рядком. Якщо немає — Kadr сам може його проаналізувати: імпортуйте експорт у чернетковий проєкт (матеріал покаже тривалість, розмір, кодеки й наявність звуку), подивіться на нього й видаліть чернетковий проєкт (імпортовані файли ніколи не видаляються).</p>
+<pre><code class="lang-powershell">ffprobe -v error -show_entries format=duration:stream=codec_type,codec_name,width,height -of compact "C:\Users\you\Videos\Kadr\check.mp4"</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Scratch: check export" --ratio 16:9
+kadrctl --% run media.import --project_id prj_4f9a1c7e0b38 --paths "[\"C:/Users/you/Videos/Kadr/check.mp4\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Scratch: check export", "ratio": "16:9"}}
+{"name": "media_import", "arguments": {"project_id": "prj_4f9a1c7e0b38", "paths": ["C:/Users/you/Videos/Kadr/check.mp4"]}}</code></pre></div>
+<pre><code class="lang-json">{ "id": "mat_a6e0c3b9d752", "type": "video", "duration_us": 4000000, "width": 1280, "height": 720, "fps": 30,
+  "video_codec": "h264", "has_audio": true, "audio_codec": "aac", … }</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_4f9a1c7e0b38 --material_id mat_a6e0c3b9d752
+kadrctl run preview.contact_sheet --project_id prj_4f9a1c7e0b38 --count 4 --columns 4 --tile_width 240
+kadrctl run project.delete --project_id prj_4f9a1c7e0b38</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_4f9a1c7e0b38", "material_id": "mat_a6e0c3b9d752"}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_4f9a1c7e0b38", "count": 4, "columns": 4, "tile_width": 240}}
+{"name": "project_delete", "arguments": {"project_id": "prj_4f9a1c7e0b38"}}</code></pre></div>
+<h2 id="checklist">Чекліст перед тим, як сказати «готово»</h2>
+<ul>
+  <li><code class="cmd">timeline.get</code>: порядок, довжини й загальна тривалість відповідають плану.</li>
+  <li>Контактний аркуш усього монтажу плюс кадри в кожен ризикований момент (наближення, титри, перший кадр).</li>
+  <li><code class="cmd">preview.layout</code> підтверджує покриття кадру й те, що текст уміщається; <code class="cmd">audio.loudness</code> — баланс голосу й музики.</li>
+  <li>Субтитри відповідають сценарію (<code class="cmd">captions.list</code>); виправлення зроблено через <code class="cmd">captions.update</code>.</li>
+  <li><code class="cmd">export.status</code> — <code>done</code>; тривалість, розмір і звук файлу підтверджено.</li>
+  <li>Короткий звіт людині: що змінено, де файл, у чому ви не були певні.</li>
+</ul>

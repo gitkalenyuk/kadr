@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/ai/index.html" data-alt-uk="../../../uk/docs/ai/index.html" data-section="ai">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kadr для ШІ-агентів — Kadr</title>
+<meta name="description" content="Що ШІ-агент може робити в Kadr, як влаштована модель редактора, як під’єднатися через MCP, REST або CLI і як Kadr береже ваш комп’ютер.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/ai/">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Kadr для ШІ-агентів — Kadr">
+<meta property="og:description" content="Що ШІ-агент може робити в Kadr, як влаштована модель редактора, як під’єднатися через MCP, REST або CLI і як Kadr береже ваш комп’ютер.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/ai/">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kadr для ШІ-агентів — Kadr">
+<meta name="twitter:description" content="Що ШІ-агент може робити в Kadr, як влаштована модель редактора, як під’єднатися через MCP, REST або CLI і як Kadr береже ваш комп’ютер.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-ai section-index" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/">Для людей</a>
+      <a href="../../../uk/docs/ai/" aria-current="page">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/ai/index.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/ai/index.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/#download"><svg aria-hidden="true"><use href="#i-download"/></svg><span class="label-long">Завантажити</span><span class="sr-only">Завантажити Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">Kadr для ШІ-агентів</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai" aria-current="true"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/ai/index.html" aria-current="page"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/ai/claude-code.html"><span>Claude Code</span></a></li><li><a href="../../../uk/docs/ai/claude-desktop.html"><span>Claude Desktop</span></a></li><li><a href="../../../uk/docs/ai/other-mcp-clients.html"><span>Інші MCP-клієнти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Інтерфейси</p><ul><li><a href="../../../uk/docs/ai/mcp.html"><span>Інструменти MCP</span></a></li><li><a href="../../../uk/docs/ai/rest.html"><span>REST API</span></a></li><li><a href="../../../uk/docs/ai/cli.html"><span>CLI (kadrctl)</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Посібники</p><ul><li><a href="../../../uk/docs/ai/concepts.html"><span>Концепції</span></a></li><li><a href="../../../uk/docs/ai/working-visibly.html"><span>Робота на очах</span></a></li><li><a href="../../../uk/docs/ai/verifying.html"><span>Перевірка результату</span></a></li><li><a href="../../../uk/docs/ai/best-practices.html"><span>Найкращі практики</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Рецепти</p><ul><li><a href="../../../uk/docs/ai/recipes.html"><span>Усі рецепти</span></a></li><li><a href="../../../uk/docs/ai/vertical-tiktok.html"><span>Вертикальний TikTok</span></a></li><li><a href="../../../uk/docs/ai/beat-cut-music-video.html"><span>Монтаж під біт</span></a></li><li><a href="../../../uk/docs/ai/talking-head-cleanup.html"><span>Очищення «говорющої голови»</span></a></li><li><a href="../../../uk/docs/ai/photo-slideshow.html"><span>Слайдшоу з фото</span></a></li><li><a href="../../../uk/docs/ai/podcast-audiogram.html"><span>Аудіограма подкасту</span></a></li><li><a href="../../../uk/docs/ai/product-promo.html"><span>Промо продукту</span></a></li><li><a href="../../../uk/docs/ai/batch-export-variants.html"><span>Три формати</span></a></li><li><a href="../../../uk/docs/ai/ai-review-loop.html"><span>Цикл перевірки</span></a></li><li><a href="../../../uk/docs/ai/translate-and-reburn-captions.html"><span>Переклад субтитрів</span></a></li><li><a href="../../../uk/docs/ai/documentary-archive-footage.html"><span>Документалка з архіву</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідник команд</p><ul><li><a href="../../../uk/docs/ai/reference-intro.html"><span>Вступ</span></a></li><li><a href="../../../uk/docs/ai/reference/index.html"><span>Усі команди</span><span class="count">177</span></a></li><li><a href="../../../uk/docs/ai/reference/adjustment.html"><span>Корекція</span><span class="count">7</span></a></li><li><a href="../../../uk/docs/ai/reference/animation.html"><span>Анімація</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/app.html"><span>Застосунок</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/audio.html"><span>Аудіо</span><span class="count">12</span></a></li><li><a href="../../../uk/docs/ai/reference/audio-properties.html"><span>Властивості аудіо</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/captions.html"><span>Субтитри</span><span class="count">16</span></a></li><li><a href="../../../uk/docs/ai/reference/edit.html"><span>Редагування</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/effects.html"><span>Ефекти</span><span class="count">5</span></a></li><li><a href="../../../uk/docs/ai/reference/export.html"><span>Експорт</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/filters.html"><span>Фільтри</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/keyframes.html"><span>Ключові кадри</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/library.html"><span>Бібліотека</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/media.html"><span>Медіа</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/playback.html"><span>Відтворення</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/presets.html"><span>Пресети</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/projects.html"><span>Проєкти</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/smart-tools.html"><span>Розумні інструменти</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/speed.html"><span>Швидкість</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/stickers.html"><span>Стікери</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/text.html"><span>Текст</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/timeline.html"><span>Таймлайн</span><span class="count">23</span></a></li><li><a href="../../../uk/docs/ai/reference/tools.html"><span>Інструменти</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/transcript.html"><span>Транскрипт</span><span class="count">7</span></a></li><li><a href="../../../uk/docs/ai/reference/transitions.html"><span>Переходи</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/updates.html"><span>Оновлення</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/video.html"><span>Відео</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/video-properties.html"><span>Властивості відео</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/window.html"><span>Вікно</span><span class="count">4</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><span aria-current="page">Kadr для ШІ-агентів</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ-агентів</span></p><h1>Kadr для ШІ-агентів</h1></header><p class="lead">Kadr — це десктопний відеоредактор у стилі CapCut, у якому кожна кнопка, повзунок і пункт меню — задокументована <em>команда</em>. ШІ-агент виконує ті самі 170+ команд через MCP, локальний REST API або CLI <code>kadrctl</code>, а людина бачить кожну правку наживо у вікні редактора, зі спільною історією скасування.</p>
+
+<div class="cards">
+  <a class="card" href="../../../uk/docs/ai/claude-code.html"><b>Швидкий старт: Claude Code</b><span>Одна команда — і Kadr під’єднано; перші запити, які варто спробувати.</span></a>
+  <a class="card" href="../../../uk/docs/ai/claude-desktop.html"><b>Claude Desktop</b><span>Фрагмент конфігурації на чотири рядки.</span></a>
+  <a class="card" href="../../../uk/docs/ai/recipes.html"><b>Рецепти</b><span>Десять наскрізних сценаріїв, кожен виклик перевірено на справжньому рушії.</span></a>
+  <a class="card" href="../../../uk/docs/ai/reference-intro.html"><b>Довідник команд</b><span>Кожна команда з параметрами, одиницями, типовими значеннями й прикладами.</span></a>
+</div>
+
+<h2 id="what-agents-can-do">Що може агент<a class="anchor" href="#what-agents-can-do" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Сфера</th><th>Що робить агент</th><th>Приклади команд</th></tr></thead>
+  <tbody>
+    <tr><td>Збирання</td><td>Імпортує файли й папки, ставить кліпи на магнітну основну доріжку та доріжки накладання, обрізає, ріже, переміщує, дублює, робить стоп-кадри, змінює швидкість</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/media.html#media.import"><code>media.import</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/timeline.html#timeline.segment.add"><code>timeline.segment.add</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/timeline.html#timeline.segment.trim"><code>timeline.segment.trim</code></a></td></tr>
+    <tr><td>Вигляд</td><td>68 переходів, 70 фільтрів, 56 ефектів, корекція кольору з HSL і кривими, маски, хромакей, 136 анімацій кліпів, ключові кадри зі згладжуванням</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/transitions.html#transition.set"><code>transition.set</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/filters.html#filter.add"><code>filter.add</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/keyframes.html#keyframe.add"><code>keyframe.add</code></a></td></tr>
+    <tr><td>Текст і субтитри</td><td>46 текстових шаблонів, 22 ефекти word art, 39 анімацій літер; офлайн-субтитри Whisper приблизно 100 мовами з 15 стилями; монтаж відео через редагування транскрипту</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/text.html#text.add"><code>text.add</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/captions.html#captions.auto"><code>captions.auto</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/transcript.html#transcript.remove_fillers"><code>transcript.remove_fillers</code></a></td></tr>
+    <tr><td>Звук</td><td>Гучність у дБ, наростання й згасання, 25 голосових ефектів, шумозаглушення, нормалізація гучності, пошук долей, 47 синтезованих звукових ефектів, синтез мови локальними голосами або ElevenLabs</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/audio-properties.html#segment.set_volume"><code>segment.set_volume</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#audio.detect_beats"><code>audio.detect_beats</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#tts.speak"><code>tts.speak</code></a></td></tr>
+    <tr><td>Розумні інструменти</td><td>Автокадрування під будь-яке співвідношення, пошук і розрізання сцен, вирізання тиші, видалення фону</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/smart-tools.html#ai.auto_reframe"><code>ai.auto_reframe</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/smart-tools.html#ai.remove_silence"><code>ai.remove_silence</code></a></td></tr>
+    <tr><td>Генерація</td><td>Градієнти, текстури, відліки, сітки й тестові таблиці, що рендеряться локально — без стокових відео</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/media.html#media.generate"><code>media.generate</code></a></td></tr>
+    <tr><td>Зір</td><td>Рендер будь-якого кадру, контактний аркуш усього монтажу або рамка кожного кліпу на полотні; MCP повертає картинки як зображення</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/playback.html#preview.frame"><code>preview.frame</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/playback.html#preview.contact_sheet"><code>preview.contact_sheet</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/playback.html#preview.layout"><code>preview.layout</code></a></td></tr>
+    <tr><td>Видача</td><td>MP4/MOV у H.264 або HEVC до 4K (з апаратними кодерами GPU, якщо є), GIF, лише звук, субтитри SRT/VTT</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/export.html#export.start"><code>export.start</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/captions.html#captions.export"><code>captions.export</code></a></td></tr>
+    <tr><td>Показати людині</td><td>Відкрити проєкт у вікні, виділити кліп, перемкнути вкладку бібліотеки, показати сповіщення</td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/window.html#ui.open_project"><code>ui.open_project</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/window.html#ui.toast"><code>ui.toast</code></a></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="three-ways-in">Три способи під’єднатися<a class="anchor" href="#three-ways-in" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Усі три ведуть до того самого рушія — відкритого редактора (<code>Kadr.exe</code>) або «безголового» <code>kadr-server.exe</code> — за адресою <code>http://127.0.0.1:7777</code> і виконують ті самі команди.</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Інтерфейс</th><th>Для чого найкраще</th><th>Як називаються команди</th></tr></thead>
+  <tbody>
+    <tr><td><a href="../../../uk/docs/ai/mcp.html">MCP</a> (<code>kadr-mcp.exe</code>)</td><td>Claude Code, Claude Desktop та інші застосунки з агентами. Сам запускає рушій, якщо Kadr не відкритий; повертає кадри як зображення.</td><td>Крапки стають підкресленнями: <code>timeline_segment_split</code>; плюс <code>kadr_batch</code></td></tr>
+    <tr><td><a href="../../../uk/docs/ai/rest.html">REST</a></td><td>Власні скрипти й сервіси будь-якою мовою; події через WebSocket.</td><td><code>POST /api/v1/commands/timeline.segment.split</code></td></tr>
+    <tr><td><a href="../../../uk/docs/ai/cli.html">CLI</a> (<code>kadrctl.exe</code>)</td><td>Термінали, скрипти оболонки, швидкі перевірки; розуміє час на кшталт <code>2.5s</code>.</td><td><code>kadrctl run timeline.segment.split --at_us 2.5s …</code></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="mental-model">Модель редактора<a class="anchor" href="#mental-model" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="code-wrap"><pre class="code lang-text"><code>project          prj_…   полотно, налаштування, курсор
+├─ materials[]   mat_…   імпортовані чи згенеровані файли (у фото тривалість 0)
+├─ tracks[]      trk_…   tracks[0] малюється першою, найнижче
+│  ├─ main_video         магнітна: кліпи впритул, без проміжків
+│  ├─ video_overlay · text · sticker · effect · filter · adjustment
+│  └─ audio
+│     └─ segments[]  seg_…  діапазон на таймлайні + діапазон у матеріалі
+└─ markers[]     mrk_…</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<ul>
+  <li><strong>Час — ціле число мікросекунд</strong> усюди: 1 с = <code>1000000</code>. Параметри з часом закінчуються на <code>_us</code>.</li>
+  <li><strong>Ідентифікатори — непрозорі рядки</strong> з префіксом типу (<code>prj_</code>, <code>trk_</code>, <code>seg_</code>, <code>mat_</code>, <code>exp_</code>…). Беріть їх із результатів; ніколи не вигадуйте.</li>
+  <li><strong>Команди бувають проєктні</strong> (приймають <code>project_id</code>, зберігаються й скасовуються) <strong>або глобальні</strong> (список проєктів, бібліотека, завдання експорту, налаштування).</li>
+  <li><strong>Кожну правку можна скасувати</strong> через <a class="cmd-link" href="../../../uk/docs/ai/reference/edit.html#edit.undo"><code>edit.undo</code></a>; пакет правок — один крок скасування; правки з інтерфейсу й від агентів мають спільну історію.</li>
+</ul>
+<p>Усі правила — магніт, зв’язані кліпи, переходи, ключові кадри, координати, одиниці — у розділі <a href="../../../uk/docs/ai/concepts.html">Концепції</a>.</p>
+
+<h2 id="first-calls">Перші п’ять викликів<a class="anchor" href="#first-calls" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Повний монтаж: створити вертикальний проєкт, згенерувати тло, додати титр, подивитися, експортувати. Кожна вкладка показує ті самі виклики; вкладка MCP — це те, що надсилає агент.</p>
+<div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Приклади коду"><button type="button" role="tab" id="ct870-0" aria-controls="ct870-0p" aria-selected="true" data-tab="mcp">MCP</button><button type="button" role="tab" id="ct870-1" aria-controls="ct870-1p" aria-selected="false" tabindex="-1" data-tab="kadrctl">kadrctl</button><button type="button" role="tab" id="ct870-2" aria-controls="ct870-2p" aria-selected="false" tabindex="-1" data-tab="curl">curl</button></div><div class="ct-panel on" role="tabpanel" id="ct870-0p" aria-labelledby="ct870-0" data-tab="mcp" data-label="MCP"><div class="code-wrap"><pre class="code lang-mcp"><code><span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;project_create&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;Моє перше відео&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;ratio&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;9:16&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;media_generate&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;preset_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;sunset_gradient&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">5000000</span><span class="tok-o">,</span> <span class="tok-p">&quot;add_to_timeline&quot;</span><span class="tok-o">:</span> <span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;text_add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;text&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;Привіт від агента&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;template_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;title_bold&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;at_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">0</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">3000000</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;preview_frame&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;time_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">1000000</span><span class="tok-o">,</span> <span class="tok-p">&quot;width&quot;</span><span class="tok-o">:</span> <span class="tok-n">540</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;export_start&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;resolution&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;1080p&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct870-1p" aria-labelledby="ct870-1" data-tab="kadrctl" data-label="kadrctl"><div class="code-wrap"><pre class="code lang-kadrctl"><code><span class="tok-k">kadrctl</span> run project.create <span class="tok-p">--name</span> <span class="tok-s">&quot;Моє перше відео&quot;</span> <span class="tok-p">--ratio</span> 9:16
+<span class="tok-k">kadrctl</span> run media.generate <span class="tok-p">--project_id</span> prj_74f3bf737c17 <span class="tok-p">--preset_id</span> sunset_gradient <span class="tok-p">--duration_us</span> 5s <span class="tok-p">--add_to_timeline</span>
+<span class="tok-k">kadrctl</span> run text.add <span class="tok-p">--project_id</span> prj_74f3bf737c17 <span class="tok-p">--text</span> <span class="tok-s">&quot;Привіт від агента&quot;</span> <span class="tok-p">--template_id</span> title_bold <span class="tok-p">--at_us</span> 0 <span class="tok-p">--duration_us</span> 3s
+<span class="tok-k">kadrctl</span> run preview.frame <span class="tok-p">--project_id</span> prj_74f3bf737c17 <span class="tok-p">--time_us</span> 1s <span class="tok-p">--width</span> 540
+<span class="tok-k">kadrctl</span> run export.start <span class="tok-p">--project_id</span> prj_74f3bf737c17 <span class="tok-p">--resolution</span> 1080p</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct870-2p" aria-labelledby="ct870-2" data-tab="curl" data-label="curl"><div class="code-wrap"><pre class="code lang-curl"><code><span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/project.create</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;Моє перше відео&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;ratio&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;9:16&quot;</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/media.generate</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;preset_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;sunset_gradient&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span><span class="tok-n">5000000</span><span class="tok-o">,</span><span class="tok-p">&quot;add_to_timeline&quot;</span><span class="tok-o">:</span><span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/text.add</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;text&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;Привіт від агента&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;template_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;title_bold&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;at_us&quot;</span><span class="tok-o">:</span><span class="tok-n">0</span><span class="tok-o">,</span><span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span><span class="tok-n">3000000</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/preview.frame</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;time_us&quot;</span><span class="tok-o">:</span><span class="tok-n">1000000</span><span class="tok-o">,</span><span class="tok-p">&quot;width&quot;</span><span class="tok-o">:</span><span class="tok-n">540</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/export.start</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;prj_74f3bf737c17&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;resolution&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;1080p&quot;</span><span class="tok-o">}</span><span class="tok-s">'</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div></div>
+<p>Експорт іде у фоні; <a class="cmd-link" href="../../../uk/docs/ai/reference/export.html#export.status"><code>export.status</code></a> з отриманим <code>job_id</code> показує прогрес, доки <code>state</code> не стане <code>done</code>. Без <code>path</code> відео зберігаються в <code>%USERPROFILE%\Videos\Kadr</code>.</p>
+
+<h2 id="safety">Безпека і приватність<a class="anchor" href="#safety" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Лише локально.</strong> API слухає на <code>127.0.0.1</code>; запити, адресовані будь-якому іншому імені хоста, отримують <code>403 forbidden</code> (захист від DNS rebinding), а браузери можуть під’єднуватися лише з локальних origin.</li>
+  <li><strong>Токен.</strong> Кожен запит, крім перевірки стану й документації, потребує токена з <code>%APPDATA%\Kadr\api-token</code>. <code>kadr-mcp</code> і <code>kadrctl</code> читають його самі. Бережіть його, як пароль: він дає повний контроль над вашими проєктами.</li>
+  <li><strong>Усе можна скасувати</strong> — крім видалення цілого проєкту, яке MCP позначає як руйнівне, тож клієнти перепитують. Імпортовані медіафайли ніколи не змінюються й не видаляються.</li>
+  <li><strong>Kadr нічого не вивантажує.</strong> Команди читають і записують файли на вашому ПК за шляхами, які ви вказуєте. Мережевий трафік — лише необов’язковий: голоси ElevenLabs (текст, який ви синтезуєте), перевірка оновлень і одноразове завантаження FFmpeg. Кадри й дані потрапляють до вашого ШІ-провайдера лише тоді, коли агент просить їх через інструменти, які ви дозволили.</li>
+</ul>
+
+<h2 id="machine-readable">Машинозчитувані файли<a class="anchor" href="#machine-readable" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Файл</th><th>Що це</th></tr></thead>
+  <tbody>
+    <tr><td><a href="../../../llms.txt"><code>llms.txt</code></a></td><td>Покажчик цієї документації для LLM (формат llmstxt.org, англійською).</td></tr>
+    <tr><td><a href="../../../llms-full.txt"><code>llms-full.txt</code></a></td><td>Уся документація для ШІ в Markdown плюс повна специфікація кожної команди — можна вставити в контекст моделі.</td></tr>
+    <tr><td><a href="../../../openapi.json"><code>openapi.json</code></a></td><td>Опис OpenAPI 3.1 усіх команд. Запущений Kadr віддає власну копію за адресою <code>/api/v1/openapi.json</code> і HTML-довідник за <code>/docs</code>.</td></tr>
+  </tbody>
+</table></div>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><span></span><a class="pager-next" href="../../../uk/docs/ai/claude-code.html" rel="next"><span>Далі</span><b>Claude Code<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#what-agents-can-do">Що може агент</a></li><li class="lvl-2"><a href="#three-ways-in">Три способи під’єднатися</a></li><li class="lvl-2"><a href="#mental-model">Модель редактора</a></li><li class="lvl-2"><a href="#first-calls">Перші п’ять викликів</a></li><li class="lvl-2"><a href="#safety">Безпека і приватність</a></li><li class="lvl-2"><a href="#machine-readable">Машинозчитувані файли</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#download">Завантажити</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr/issues">Повідомити про помилку</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!--meta {"title":"Аудіограма з уривка подкасту","nav":"Аудіограма подкасту","order":350,"description":"Аудіоуривок подкасту стає квадратним відео-аудіограмою з згенерованим рухомим тлом, караоке-субтитрами, пульсуючою іконкою та плашкою з назвою шоу.","group":"Рецепти","summary":"Аудіоуривок подкасту стає квадратним відео з рухомим тлом, караоке-субтитрами, пульсуючою іконкою та назвою шоу.","time":"~2 хв","needs":"Аудіоуривок подкасту (WAV або MP3)","commands":["media.generate","timeline.segment.add","timeline.segment.trim","segment.set_audio","captions.auto","sticker.add","animation.set","effect.add","text.add","preview.layout","export.start"]} -->
+<p class="lead">Результат — відео 1080×1080 для соцмереж з аудіоуривка подкасту: плавне градієнтне тло, яке генерує сам Kadr, караоке-субтитри, що заповнюються слово за словом, іконка-нота, що пульсує раз на секунду, м’які вогники боке і плашка з назвою епізоду.</p>
+<ul>
+  <li><strong>Час:</strong> ~2 хв</li>
+  <li><strong>Що потрібно:</strong> Аудіоуривок подкасту (WAV або MP3)</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">media.generate</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">timeline.segment.trim</code>, <code class="cmd">segment.set_audio</code>, <code class="cmd">captions.auto</code>, <code class="cmd">sticker.add</code>, <code class="cmd">animation.set</code>, <code class="cmd">effect.add</code>, <code class="cmd">text.add</code>, <code class="cmd">preview.layout</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Зроби в Kadr квадратну аудіограму 1:1 з C:\Users\you\Podcast\ep12-clip.wav. Згенеруй тло aurora_flow на всю довжину аудіо, поклади аудіо зверху й нормалізуй гучність. Додай англійські субтитри стилем cap_karaoke_bar. Постав стікер music_note зверху посередині приблизно на 22% розміру з циклічною анімацією «серцебиття» раз на секунду, додай ефект bokeh_drift поверх усього, а вгорі — плашку «Night Shift | Ep. 12» шаблоном name_tag_podcast. Перевір через preview_layout, що ніщо не перекривається, покажи кадр на 5-й секунді, потім експортуй 1080p.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="create">Створіть квадратний проєкт та імпортуйте аудіо</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Night Shift ep 12 - clip" --ratio 1:1
+kadrctl --% run media.import --project_id prj_0bcf441b42a1 --paths "[\"C:/Users/you/Podcast/ep12-clip.wav\"]"</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Night Shift ep 12 - clip", "ratio": "1:1"}}
+{"name": "media_import", "arguments": {"project_id": "prj_0bcf441b42a1", "paths": ["C:/Users/you/Podcast/ep12-clip.wav"]}}</code></pre></div>
+<p><code>duration_us</code> матеріалу — 20855782 (20,9 с); наступні кроки підганяють усе під цю довжину.</p>
+</li>
+<li>
+<h3 id="background">Згенеруйте рухоме тло</h3>
+<p><code class="cmd">media.generate</code> рендерить тло на вашому ПК — без стокових відео, нічого не завантажується. <code>aurora_flow</code> — плавний градієнт у розмірі полотна (1080×1080). <code>add_to_timeline</code> кладе його на основну доріжку в тому самому кроці скасування. Рухоме тло може тривати до 60 с.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run media.generate --project_id prj_0bcf441b42a1 --preset_id aurora_flow --duration_us 21s --add_to_timeline --at_us 0</code></pre><pre data-lang="mcp"><code>{"name": "media_generate", "arguments": {"project_id": "prj_0bcf441b42a1", "preset_id": "aurora_flow", "duration_us": 21000000, "add_to_timeline": true, "at_us": 0}}</code></pre></div>
+</li>
+<li>
+<h3 id="audio">Додайте аудіо й вирівняйте довжини</h3>
+<p>Аудіо лягає на аудіодоріжку з 0 с. Тло обрізається рівно там, де закінчується аудіо (<code>snap</code> <code>false</code> — для точного краю), а голос нормалізується.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_0bcf441b42a1 --material_id mat_53712ca92932 --at_us 0
+kadrctl run timeline.segment.trim --project_id prj_0bcf441b42a1 --segment_id seg_6e315408791c --edge right --to_us 20855782 --snap false
+kadrctl run segment.set_audio --project_id prj_0bcf441b42a1 --segment_id seg_283eb97dc326 --normalize_loudness</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_0bcf441b42a1", "material_id": "mat_53712ca92932", "at_us": 0}}
+{"name": "timeline_segment_trim", "arguments": {"project_id": "prj_0bcf441b42a1", "segment_id": "seg_6e315408791c", "edge": "right", "to_us": 20855782, "snap": false}}
+{"name": "segment_set_audio", "arguments": {"project_id": "prj_0bcf441b42a1", "segment_id": "seg_283eb97dc326", "normalize_loudness": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="captions">Караоке-субтитри</h3>
+<p><code class="cmd">captions.auto</code> локально розпізнає голос. <code>cap_karaoke_bar</code> заповнює кожне слово зліва направо в момент вимови.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.auto --project_id prj_0bcf441b42a1 --language en --style_id cap_karaoke_bar --wait</code></pre><pre data-lang="mcp"><code>{"name": "captions_auto", "arguments": {"project_id": "prj_0bcf441b42a1", "language": "en", "style_id": "cap_karaoke_bar", "wait": true}}</code></pre></div>
+</li>
+<li>
+<h3 id="visuals">Додайте рух: пульсуючу іконку й вогники</h3>
+<p><code class="cmd">sticker.add</code> ставить вбудований стікер на весь кліп. <code class="cmd">segment.set_transform</code> піднімає його (−0.35 по осі y; від’ємне — вгору) і зменшує. Циклічна анімація через <code class="cmd">animation.set</code> повторюється весь кліп — тут один удар серця на секунду. <code class="cmd">effect.add</code> накладає <code>bokeh_drift</code> на все, що під ним.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run sticker.add --project_id prj_0bcf441b42a1 --sticker_id music_note --at_us 0 --duration_us 20855782
+kadrctl run segment.set_transform --project_id prj_0bcf441b42a1 --segment_id seg_6a38981dcbc1 --x 0 --y -0.35 --scale 0.22
+kadrctl run animation.set --project_id prj_0bcf441b42a1 --segment_id seg_6a38981dcbc1 --kind loop --id loop_heartbeat --duration_us 1s
+kadrctl run effect.add --project_id prj_0bcf441b42a1 --effect_id bokeh_drift --at_us 0 --duration_us 20855782</code></pre><pre data-lang="mcp"><code>{"name": "sticker_add", "arguments": {"project_id": "prj_0bcf441b42a1", "sticker_id": "music_note", "at_us": 0, "duration_us": 20855782}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_0bcf441b42a1", "segment_id": "seg_6a38981dcbc1", "x": 0, "y": -0.35, "scale": 0.22}}
+{"name": "animation_set", "arguments": {"project_id": "prj_0bcf441b42a1", "segment_id": "seg_6a38981dcbc1", "kind": "loop", "id": "loop_heartbeat", "duration_us": 1000000}}
+{"name": "effect_add", "arguments": {"project_id": "prj_0bcf441b42a1", "effect_id": "bokeh_drift", "at_us": 0, "duration_us": 20855782}}</code></pre></div>
+<div class="callout note"><p>Kadr не малює хвильову форму, що реагує на звук. Пульсуюча циклічна анімація іконки дає знайомий рух аудіограми; щоб пульс збігався з ритмом, задайте <code>duration_us</code> циклу рівним одній долі.</p></div>
+</li>
+<li>
+<h3 id="name-tag">Плашка з назвою шоу</h3>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.add --project_id prj_0bcf441b42a1 --text "Night Shift | Ep. 12" --template_id name_tag_podcast --at_us 0 --duration_us 20855782
+kadrctl run segment.set_transform --project_id prj_0bcf441b42a1 --segment_id seg_bb9e0f0b8692 --y -0.75</code></pre><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_0bcf441b42a1", "text": "Night Shift | Ep. 12", "template_id": "name_tag_podcast", "at_us": 0, "duration_us": 20855782}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_0bcf441b42a1", "segment_id": "seg_bb9e0f0b8692", "y": -0.75}}</code></pre></div>
+</li>
+<li>
+<h3 id="layout">Перевірте компонування</h3>
+<p><code class="cmd">preview.layout</code> повертає рамку кожного видимого кліпу й тексту в пікселях полотна, тож агент може переконатися, що ніщо не перекривається й не обрізане. На 5-й секунді:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_0bcf441b42a1 --time_us 5s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_0bcf441b42a1", "time_us": 5000000}}</code></pre></div>
+<pre><code class="lang-text">type     x    y    w     h
+video    0    0    1080  1080   background
+text     351  105  379   61     name tag
+sticker  420  231  239   239    music note
+text     213  815  654   98     caption</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_0bcf441b42a1 --time_us 5s --width 540</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_0bcf441b42a1", "time_us": 5000000, "width": 540}}</code></pre></div>
+<figure><img src="{{root}}assets/img/ai/podcast-audiogram-frame.webp" alt="Квадратний кадр аудіограми: плашка з назвою вгорі, іконка-нота, вогники боке і дворядкові караоке-субтитри на синьо-зеленому градієнті" width="720" height="720" loading="lazy"><figcaption>Кадр на 5-й секунді, відрендерений preview.frame під час нашого тестового прогону.</figcaption></figure>
+</li>
+<li>
+<h3 id="export">Експорт</h3>
+<p>На полотні 1:1 «1080p» означає 1080×1080.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_0bcf441b42a1 --resolution 1080p --path C:/Users/you/Videos/Kadr/night-shift-ep12.mp4</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_0bcf441b42a1", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/night-shift-ep12.mp4"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<ul>
+  <li><strong>По одному слову.</strong> <code class="cmd">captions.set_style</code> з <code>cap_pop_word</code> переділяє репліки на окремі слова, що «вистрибують».</li>
+  <li><strong>Довші уривки.</strong> Рухоме тло обмежене 60 с. Для довших уривків візьміть статичний пресет на кшталт <code>midnight_glow</code> чи <code>ocean_gradient</code>: з <code>add_to_timeline</code> його <code>duration_us</code> задає довжину кліпу довільно.</li>
+  <li><strong>Вертикальна аудіограма.</strong> Створіть проєкт 9:16 і рознесіть іконку та плашку далі одна від одної.</li>
+  <li><strong>Фото гостя.</strong> Імпортуйте портрет, додайте через <code class="cmd">timeline.segment.add</code> з <code>new_track</code> і зробіть круглим через <code class="cmd">segment.set_mask</code> (<code>type</code> <code>circle</code>).</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>Згенероване тло кешується: той самий пресет, розмір і довжина використовуються повторно миттєво.</li>
+  <li>Якщо ім’я гостя розпізнається з помилками, передайте його в <code class="cmd">captions.auto</code> як <code>prompt</code>.</li>
+  <li>Щоб отримати лише звукову доріжку уривка, викличте <code class="cmd">export.start</code> з <code>audio_only</code>.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

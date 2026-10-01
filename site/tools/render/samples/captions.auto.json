@@ -1,0 +1,59 @@
+{
+  "command": "captions.auto",
+  "request": {
+    "project_id": "prj_11fa65cf0285",
+    "wait": true,
+    "model": "small",
+    "language": "en",
+    "prompt": "Kadr",
+    "style_id": "cap_pill_active"
+  },
+  "response": {
+    "ok": true,
+    "result": {
+      "job_id": "cap_dea6d5c6a508",
+      "project_id": "prj_11fa65cf0285",
+      "kind": "captions",
+      "state": "done",
+      "phase": "finished",
+      "progress": 1,
+      "material_ids": [
+        "mat_69fb872ae8eb"
+      ],
+      "current_material_id": "mat_69fb872ae8eb",
+      "language": "en",
+      "detected_languages": [
+        "en"
+      ],
+      "model": "small",
+      "device": "cuda",
+      "media_s": 5.245771,
+      "result": {
+        "track_id": "trk_5111418e9975",
+        "count": 2,
+        "segment_ids": [
+          "seg_ca348383d43f",
+          "seg_54f5a8658a43"
+        ],
+        "words": 16,
+        "languages": [
+          "en"
+        ],
+        "style_id": "cap_pill_active",
+        "removed": 0,
+        "transcribed": [
+          {
+            "language": "en",
+            "material_id": "mat_69fb872ae8eb",
+            "model": "small",
+            "text": "Kadr writes your captions right on your computer. Every word lights up as it is spoken.",
+            "words": 16
+          }
+        ]
+      },
+      "created_at": "2026-10-01T14:57:39.918453Z",
+      "finished_at": "2026-10-01T14:57:47.6001124Z",
+      "elapsed_s": 7.681
+    }
+  }
+}

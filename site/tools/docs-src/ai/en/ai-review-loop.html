@@ -1,0 +1,96 @@
+<!--meta {"title":"Let Claude review and fix its own edit","nav":"Review loop","order":380,"description":"Ask Claude to look at the rendered video with contact sheets and frames, measure problems with preview.layout, fix them, confirm the fix, and undo anything that turns out worse.","group":"Recipes","summary":"Claude renders your edit, spots black edges and cut-off titles, measures them, fixes them, checks the fix and undoes anything that looks worse.","time":"~1 min","needs":"Any Kadr project","commands":["preview.contact_sheet","preview.layout","preview.frame","keyframe.list","keyframe.add","segment.set_transform","edit.undo","edit.history"]} -->
+<p class="lead">You get an edit that has been checked by eye, not just assembled. Claude renders the video, looks at the frames, measures what looks wrong, fixes it, renders again to confirm, and undoes any change that made things worse. Use it after any other recipe, or on a project you edited by hand.</p>
+<ul>
+  <li><strong>Time:</strong> ~1 min</li>
+  <li><strong>You need:</strong> Any Kadr project</li>
+  <li><strong>Main commands:</strong> <code class="cmd">preview.contact_sheet</code>, <code class="cmd">preview.layout</code>, <code class="cmd">preview.frame</code>, <code class="cmd">keyframe.list</code>, <code class="cmd">keyframe.add</code>, <code class="cmd">segment.set_transform</code>, <code class="cmd">edit.undo</code>, <code class="cmd">edit.history</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>Review my Kadr project "Summer recap" before I export it. Render a contact sheet of the whole video and look for black edges or bars, text cut off by the frame, text overlapping other text or stickers, and black frames between clips. For anything suspicious, measure it with preview_layout and look at that exact frame with preview_frame. Fix what you find, render the frame again to confirm each fix, and undo any change that doesn't look better. Then give me a short list of what you changed.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="overview">Look at the whole edit at once</h3>
+<div class="callout note"><p>Through MCP, <code>preview_contact_sheet</code> and <code>preview_frame</code> come back as images, so Claude actually sees the result. With <code>kadrctl</code> or REST you get the same PNG as base64 in <code>png_base64</code>, or a JPEG from the <a href="{{root}}{{lang_root}}docs/ai/rest.html#binary">frame endpoint</a>.</p></div>
+<p><code class="cmd">preview.contact_sheet</code> renders evenly spaced frames into one grid with the export renderer. <code>times_us</code> in the result gives the time of each tile, so anything spotted can be found again.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.list --query "Summer recap"
+kadrctl run preview.contact_sheet --project_id prj_b8d196d1dd0b --count 8 --columns 4 --tile_width 240</code></pre><pre data-lang="mcp"><code>{"name": "project_list", "arguments": {"query": "Summer recap"}}
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_b8d196d1dd0b", "count": 8, "columns": 4, "tile_width": 240}}</code></pre></div>
+<p>In this project the tiles from the first clip show a thin black strip along the right edge, and the title “Summer 2026” is cut off at the bottom of the frame.</p>
+</li>
+<li>
+<h3 id="measure">Measure the problem</h3>
+<p><code class="cmd">preview.layout</code> gives the exact box of every visible clip and text at a given time, in canvas pixels (1920×1080 here):</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_b8d196d1dd0b --time_us 0.3s</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000}}</code></pre></div>
+<pre><code class="lang-text">photo  seg_f04569603fd9  x -58    y 0      right 1863  bottom 1080
+text   seg_7f6cd623c899  x 693    y 1010   right 1228  bottom 1096</code></pre>
+<p>The photo ends at x = 1863, which leaves 57 px of black on the right. The title ends at y = 1096, 16 px below the bottom of the frame.</p>
+</li>
+<li>
+<h3 id="cause">Find the cause</h3>
+<p><code class="cmd">keyframe.list</code> shows the photo’s Ken Burns move: it starts at scale 1.0 while shifted to x = −0.06. At scale 1 the photo exactly fills the frame, so any sideways shift shows an edge — a photo can shift by at most <em>scale</em> − 1.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.list --project_id prj_b8d196d1dd0b --segment_id seg_f04569603fd9 --property transform</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_list", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_f04569603fd9", "property": "transform"}}</code></pre></div>
+</li>
+<li>
+<h3 id="fix">Fix both problems</h3>
+<p><code class="cmd">keyframe.add</code> at an existing keyframe’s time updates that keyframe, so the move now starts at 112%. <code class="cmd">segment.set_transform</code> moves the title up to y = 0.6 (+1 would put its centre on the bottom edge; +Y is down).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run keyframe.add --project_id prj_b8d196d1dd0b --segment_id seg_f04569603fd9 --property transform.scale --time_us 0 --value 1.12
+kadrctl run segment.set_transform --project_id prj_b8d196d1dd0b --segment_id seg_7f6cd623c899 --y 0.6</code></pre><pre data-lang="mcp"><code>{"name": "keyframe_add", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_f04569603fd9", "property": "transform.scale", "time_us": 0, "value": 1.12}}
+{"name": "segment_set_transform", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_7f6cd623c899", "y": 0.6}}</code></pre></div>
+</li>
+<li>
+<h3 id="confirm">Confirm the fix</h3>
+<p>Same time, measured and rendered again:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.layout --project_id prj_b8d196d1dd0b --time_us 0.3s
+kadrctl run preview.frame --project_id prj_b8d196d1dd0b --time_us 0.3s --width 960</code></pre><pre data-lang="mcp"><code>{"name": "preview_layout", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000, "width": 960}}</code></pre></div>
+<pre><code class="lang-text">photo  x -173   right 1978   bottom 1145     covers the frame
+text   x 693    right 1228   bottom 907      inside the frame</code></pre>
+</li>
+<li>
+<h3 id="undo">Try an idea, keep it only if it helps</h3>
+<p>Edits made in the editor and by Claude share one undo history. Claude tries a bolder title with <code class="cmd">text.apply_effect</code> (<code>fx_comic</code>), looks at the frame, decides it clashes with the photo, and takes it back with <code class="cmd">edit.undo</code>. <code class="cmd">edit.history</code> confirms what would be redone.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run text.apply_effect --project_id prj_b8d196d1dd0b --segment_id seg_7f6cd623c899 --effect_id fx_comic
+kadrctl run preview.frame --project_id prj_b8d196d1dd0b --time_us 0.3s --width 960
+kadrctl run edit.undo --project_id prj_b8d196d1dd0b
+kadrctl run edit.history --project_id prj_b8d196d1dd0b</code></pre><pre data-lang="mcp"><code>{"name": "text_apply_effect", "arguments": {"project_id": "prj_b8d196d1dd0b", "segment_id": "seg_7f6cd623c899", "effect_id": "fx_comic"}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_b8d196d1dd0b", "time_us": 300000, "width": 960}}
+{"name": "edit_undo", "arguments": {"project_id": "prj_b8d196d1dd0b"}}
+{"name": "edit_history", "arguments": {"project_id": "prj_b8d196d1dd0b"}}</code></pre></div>
+<pre><code class="lang-json">{ "can_undo": true, "can_redo": true, "undo_label": "Set transform", "redo_label": "Apply text effect" }</code></pre>
+</li>
+<li>
+<h3 id="final">Final pass</h3>
+<p>A last contact sheet confirms nothing else changed; <code class="cmd">export.estimate</code> reports the output size and length before the real export.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_b8d196d1dd0b --count 8 --columns 4 --tile_width 240
+kadrctl run export.estimate --project_id prj_b8d196d1dd0b --resolution 1080p</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_b8d196d1dd0b", "count": 8, "columns": 4, "tile_width": 240}}
+{"name": "export_estimate", "arguments": {"project_id": "prj_b8d196d1dd0b", "resolution": "1080p"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="what-to-check">What to ask Claude to check</h2>
+<table>
+  <thead>
+    <tr><th>Problem</th><th>How the agent finds it</th><th>Typical fix</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Black edges during zooms and pans</td><td>Contact sheet, then <code class="cmd">preview.layout</code>: the clip box does not cover 0…<code>canvas_width</code> × 0…<code>canvas_height</code></td><td>Raise the scale (<code class="cmd">keyframe.add</code> or <code class="cmd">segment.set_transform</code>)</td></tr>
+    <tr><td>Text cut off or too wide</td><td>Text box outside the canvas</td><td><code class="cmd">text.update</code> with a smaller <code>size</code>, or move it</td></tr>
+    <tr><td>Title covering captions or a sticker</td><td>Overlapping boxes at the same time</td><td>Move one with <code class="cmd">segment.set_transform</code>, or shift it in time with <code class="cmd">timeline.segment.move</code></td></tr>
+    <tr><td>Black frames between clips</td><td>A gap on a track in <code class="cmd">timeline.get</code>, or a dark tile</td><td>Turn the magnet on with <code class="cmd">timeline.settings.set</code>, or move the clip</td></tr>
+    <tr><td>Captions out of sync</td><td><code class="cmd">captions.list</code> times compared with <code class="cmd">transcript.get</code></td><td><code class="cmd">captions.shift</code> with a small <code>offset_us</code></td></tr>
+    <tr><td>Music too loud under speech</td><td><code class="cmd">audio.loudness</code> on both clips</td><td><code class="cmd">segment.set_volume</code> so the music sits 10–15 LU below the speech</td></tr>
+  </tbody>
+</table>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>Contact sheets are cheap: 8–12 tiles of 240–320 px are enough to judge composition and pacing. <code>start_us</code> and <code>end_us</code> zoom in on one section.</li>
+  <li><code class="cmd">preview.frame</code> with <code>width</code> 960 or more is the right tool for reading small text.</li>
+  <li>Ask for a short change log at the end. Every fix is in the undo history, so you can step back through them in the editor.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

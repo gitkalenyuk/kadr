@@ -1,0 +1,87 @@
+<!--meta {"title":"Найкращі практики й пастки","nav":"Найкращі практики","order":240,"description":"Як агенти отримують надійний результат у Kadr: спершу читати, потім писати, пакетувати атомарні правки, слухатися підказок у помилках, правильно працювати з довгими завданнями й відсутніми компонентами та оминати класичні пастки таймлайну.","group":"Посібники"} -->
+<p class="lead">Команди Kadr поблажливі — будь-яку правку можна скасувати, — але агент, що працює в правильному порядку, отримує кращі відео меншою кількістю викликів. Ось звички, які важать найбільше, і пастки, в які агенти потрапляють найчастіше.</p>
+
+<h2 id="read-first">Спершу читайте, потім пишіть</h2>
+<ul>
+  <li>Починайте кожну сесію з <code class="cmd">project.list</code> або <code class="cmd">project.get</code>/<code class="cmd">timeline.get</code>. Беріть id з результатів — ніколи не складайте й не вгадуйте їх.</li>
+  <li>Шукайте id бібліотеки через <code class="cmd">library.list</code> (<code>kind</code>: <code>transition</code>, <code>effect</code>, <code>filter</code>, <code>animation</code>, <code>text_template</code>, <code>text_effect</code>, <code>text_animation</code>, <code>caption_style</code>, <code>sticker</code>, <code>font</code>, <code>generated</code>, <code>sound_effect</code>, <code>voice_effect</code>), а незнайомі параметри перевіряйте через <code>kadrctl describe</code> чи довідник.</li>
+  <li><strong>Перечитуйте стан після правок, що створюють чи прибирають кліпи:</strong> розрізи, <code class="cmd">ai.remove_silence</code>, <code class="cmd">ai.split_scenes</code>, вирізання за транскриптом і зсуви магніту змінюють id і час. Результати зазвичай містять нові id (<code>segment_ids</code>, <code>left</code>/<code>right</code>); якщо ні — викличте <code class="cmd">timeline.get</code> знову.</li>
+</ul>
+
+<h2 id="batch">Плануйте, потім пакетуйте</h2>
+<ul>
+  <li>Об’єднуйте пов’язані правки в один <code>kadr_batch</code> (MCP), <code>POST /projects/{id}/batch</code> (REST) чи <code>kadrctl batch</code>: вони застосовуються атомарно, одним кроком скасування, а людина бачить одну чисту зміну.</li>
+  <li>Перевіряйте великий план через <code>dry_run</code> — він проганяє кожен виклик на копії й повідомляє першу помилку, нічого не зберігаючи.</li>
+  <li>Працюйте етапами: створіть об’єкти (і прочитайте їхні id) → пакетом зробіть наступні правки. Пакет не може посилатися на id, створені всередині нього ж.</li>
+  <li>Глобальні команди (експорт, завдання субтитрів, створення/дублювання/видалення проєктів, бібліотека, пресети) пакетувати не можна.</li>
+</ul>
+
+<h2 id="errors">Слухайтеся підказок у помилках</h2>
+<p>Помилки містять <code>code</code>, <code>message</code>, <code>hint</code> і часто <code>field</code>. Підказку написано для агентів — вона називає команду, що показує допустимі значення, або пояснює порушене правило:</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "transition_set", "arguments": {"project_id": "prj_c0d7a4e19b5f", "segment_id": "seg_f8a1d3c6e204", "type": "mix"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run transition.set --project_id prj_c0d7a4e19b5f --segment_id seg_f8a1d3c6e204 --type mix</code></pre></div>
+<pre><code class="lang-text">error [conflict]: segment seg_f8a1d3c6e204 is the last clip on its track; a transition needs a following clip
+hint: Transitions sit between two touching clips on the same track: pass the LEFT clip of the pair (the one that ends where the next one starts).</code></pre>
+<table>
+  <thead><tr><th>Помилка</th><th>Типова причина</th><th>Що робити</th></tr></thead>
+  <tbody>
+    <tr><td><code>not_found</code> + <code>field</code></td><td>Застарілий чи вигаданий id</td><td>Перечитайте через <code class="cmd">timeline.get</code> / <code class="cmd">library.list</code></td></tr>
+    <tr><td><code>invalid_argument</code></td><td>Неправильне значення переліку, число поза діапазоном, секунди замість мкс</td><td>Повідомлення перелічує допустимі значення; переведіть час у мкс</td></tr>
+    <tr><td><code>conflict</code></td><td>Заблокована доріжка, кліпи, що не торкаються (переходи), час реплік, що перекривається</td><td>Розблокуйте, зсуньте кліпи впритул, спершу виправте сусідів</td></tr>
+    <tr><td><code>not_available</code> (HTTP 503)</td><td>Бракує локального компонента</td><td>Див. <a href="#capabilities">нижче</a>; скажіть людині, що встановити</td></tr>
+    <tr><td>У результаті <code>clamped: true</code></td><td>Запит обмежено (кінець медіа, перехід на пів кліпу, мінімальна довжина)</td><td>Читайте фактичні значення в результаті</td></tr>
+  </tbody>
+</table>
+
+<h2 id="long-jobs">Довгі завдання: чекати чи опитувати</h2>
+<ul>
+  <li><strong>Фонові завдання:</strong> <code class="cmd">captions.auto</code>, <code class="cmd">transcript.transcribe</code>, <code class="cmd">ai.remove_background</code>, <code class="cmd">export.start</code>. Вони одразу повертають <code>job_id</code>.</li>
+  <li><code>wait: true</code> (субтитри, транскрипція, видалення фону) блокує виклик до завершення — нормально для кількох хвилин медіа, але MCP і <code>kadrctl</code> здаються через 5 хвилин.</li>
+  <li>Для довшого медіа запускайте без <code>wait</code> і робіть довге опитування <code class="cmd">captions.status</code> з <code>wait_s</code> (до 600 с за виклик); <code class="cmd">export.status</code> опитуйте кожні 1–2 с; або слухайте події <code>captions.done</code>/<code>export.done</code>.</li>
+  <li>Перший запуск Whisper завантажує модель і триває довше. Експорти виконуються по одному; зайві завдання — <code>queued</code>. Після перезапуску Kadr завдання забуваються.</li>
+</ul>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.auto --project_id prj_c0d7a4e19b5f --language en --style_id cap_clean
+kadrctl run captions.status --project_id prj_c0d7a4e19b5f --job_id cap_7e4b1a9d2c05 --wait_s 120</code></pre><pre data-lang="mcp"><code>{"name": "captions_auto", "arguments": {"project_id": "prj_c0d7a4e19b5f", "language": "en", "style_id": "cap_clean"}}
+{"name": "captions_status", "arguments": {"project_id": "prj_c0d7a4e19b5f", "job_id": "cap_7e4b1a9d2c05", "wait_s": 120}}</code></pre></div>
+<h2 id="capabilities">Спершу перевірте необов’язкові компоненти</h2>
+<table>
+  <thead><tr><th>Функція</th><th>Потребує</th><th>Перевірка</th></tr></thead>
+  <tbody>
+    <tr><td>Імпорт, перегляд, експорт (усе)</td><td>FFmpeg</td><td><code class="cmd">tools.status</code> (<code class="cmd">tools.install_ffmpeg</code> завантажує його)</td></tr>
+    <tr><td>Субтитри, транскрипти, вирізання паразитів і пауз</td><td>Python + faster-whisper + модель</td><td><code class="cmd">captions.asr_status</code></td></tr>
+    <tr><td>Видалення фону</td><td><code>rembg</code> або <code>onnxruntime</code> + модель матування</td><td><code class="cmd">ai.capabilities</code></td></tr>
+    <tr><td>Синтез мовлення</td><td>Голоси Windows SAPI, eSpeak NG або ключ ElevenLabs</td><td><code class="cmd">tts.voices</code> (<code>providers</code> пояснює, чого бракує)</td></tr>
+  </tbody>
+</table>
+<p>Якщо чогось бракує, <code>hint</code> підкаже, як це встановити. Kadr ніколи не завантажує моделі сам; скажіть людині, що встановити, замість повторних спроб.</p>
+
+<h2 id="timeline-traps">Пастки таймлайну</h2>
+<ul>
+  <li><strong>Не боріться з магнітом.</strong> На основній доріжці <code>at_us</code> притягується до найближчої межі кліпів, і все зсувається. Будуйте послідовності по порядку, для вільного розміщення беріть доріжки накладання або вимкніть магніт через <code class="cmd">timeline.settings.set</code>.</li>
+  <li><strong>Точні позиції потребують <code>snap: false</code></strong> у <code class="cmd">timeline.segment.move</code> і <code class="cmd">timeline.segment.trim</code> — інакше край у межах 100 мс від маркера, курсора чи іншого краю стрибне до нього.</li>
+  <li><strong>Властивості з ключовими кадрами:</strong> щойно властивість має ключові кадри, <code>segment.set_*</code> записує ключовий кадр у позиції курсора. Змінюйте анімовані значення через <code class="cmd">keyframe.add</code> з явним часом.</li>
+  <li><strong>Переходи</strong> ставляться на лівий кліп і потребують кліпів, що торкаються; тривалість обмежена половиною коротшого кліпу.</li>
+  <li><strong>Фільтри й ефекти на доріжках</strong> діють на все під ними — зокрема на текст, якщо текстова доріжка нижче. Додавайте їх до титрів або застосовуйте до кліпів.</li>
+  <li><strong>Одиниці:</strong> час у мкс; <code>volume_db</code> у дБ, але ключові кадри <code>volume</code> лінійні; позиції в частках полотна, +Y донизу; scale 1 — вписати, а не заповнити.</li>
+</ul>
+
+<h2 id="files">Файли й шляхи</h2>
+<ul>
+  <li>Шляхи абсолютні й стосуються ПК, на якому працює Kadr. У JSON пишіть прямі косі риски (<code>C:/Users/you/Videos</code>) або подвоєні зворотні.</li>
+  <li>Папка в <code class="cmd">media.import</code> імпортує медіафайли, що лежать безпосередньо в ній (без підпапок, до 500); файли, що вже є в проєкті, повертаються як <code>duplicates</code>.</li>
+  <li>Експорт ніколи не перезаписує файли без <code>overwrite</code> — читайте кінцевий <code>path</code> з результату. Без <code>path</code> файли йдуть у <code>%USERPROFILE%\Videos\Kadr\&lt;назва проєкту&gt;.mp4</code>.</li>
+</ul>
+
+<h2 id="small-results">Тримайте результати компактними</h2>
+<ul>
+  <li><code class="cmd">timeline.get</code> замість <code class="cmd">project.get</code> для орієнтації; <code class="cmd">segment.get</code> — для детального огляду одного кліпу.</li>
+  <li><code>include_words: false</code> у <code class="cmd">captions.list</code>; <code>include_words: false</code> у <code class="cmd">transcript.get</code>, коли потрібен лише текст.</li>
+  <li>Контактні аркуші на 8–12 плиток по 240–320 px; окремі кадри на 960 px — лише щоб прочитати дрібний текст.</li>
+</ul>
+
+<h2 id="people">Поважайте людину</h2>
+<ul>
+  <li>Відкрийте проєкт у вікні (<code class="cmd">ui.open_project</code>) і коментуйте етапи через <code class="cmd">ui.toast</code> — див. <a href="{{root}}{{lang_root}}docs/ai/working-visibly.html">Робота на очах у людини</a>.</li>
+  <li>Робіть варіанти через <code class="cmd">project.duplicate</code>, а не перезаписуйте готовий монтаж; ніколи не викликайте <code class="cmd">project.delete</code> без запиту.</li>
+  <li>Не вставляйте токен API чи ключі хмарних сервісів у запити, файли чи журнали; <code class="cmd">tts.set_api_key</code> зберігає ключі локально й ніколи їх не повертає.</li>
+  <li>Завершуйте коротким звітом: що змінено, де експорт, що не вдалося перевірити.</li>
+</ul>

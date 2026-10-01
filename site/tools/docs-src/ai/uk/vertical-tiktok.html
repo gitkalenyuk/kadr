@@ -1,0 +1,128 @@
+<!--meta {"title":"Вертикальний TikTok із папки кліпів","nav":"Вертикальний TikTok","order":310,"description":"Папка горизонтальних кліпів і пісня стають відео 9:16 для TikTok, Reels чи Shorts: кадрування за об’єктом, переходи whip pan, субтитри з підсвіткою слів і рівна фонова музика.","group":"Рецепти","summary":"Папка кліпів і пісня стають відео 9:16 з кадруванням за об’єктом, різкими переходами, субтитрами з підсвіткою слів і музикою на рівній гучності.","time":"~3 хв","needs":"Папка кліпів (в одному з них ви говорите) і музичний трек","commands":["project.create","media.import","timeline.segment.add","ai.auto_reframe","transition.apply_all","captions.auto","segment.set_volume","segment.set_fade","audio.loudness","preview.contact_sheet","export.start"]} -->
+<p class="lead">Результат — відео 1080×1920 для TikTok, Reels чи Shorts. Воно починається з кліпу, де ви говорите, далі йдуть короткі кадри b-roll, кожен горизонтальний кадр перекадровано на весь вертикальний екран, склейки — швидкі whip pan, субтитри підсвічують кожне слово в момент вимови, а під усім цим рівно звучить ваша пісня.</p>
+<ul>
+  <li><strong>Час:</strong> ~3 хв</li>
+  <li><strong>Що потрібно:</strong> Папка кліпів (в одному з них ви говорите) і музичний трек</li>
+  <li><strong>Основні команди:</strong> <code class="cmd">project.create</code>, <code class="cmd">media.import</code>, <code class="cmd">timeline.segment.add</code>, <code class="cmd">ai.auto_reframe</code>, <code class="cmd">transition.apply_all</code>, <code class="cmd">captions.auto</code>, <code class="cmd">segment.set_volume</code>, <code class="cmd">segment.set_fade</code>, <code class="cmd">audio.loudness</code>, <code class="cmd">preview.contact_sheet</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Попросіть Claude</h2>
+<blockquote><p>Зроби в Kadr вертикальний TikTok 9:16 з кліпів у C:\Users\you\Videos\tiktok. Почни з 01_intro.mp4 повністю (там говорю я), далі встав по 2,5 секунди з інших кліпів, починаючи з першої секунди кожного. Перекадруй кожен кліп так, щоб він заповнював вертикальний кадр і стежив за об’єктом. Між усіма кліпами — переходи whip pan по 0,3 с. Додай субтитри з підсвіткою слів, по 3 слова, для того, що я кажу в інтро. Вимкни власний звук b-roll і поклади під усе відео C:\Users\you\Music\beat.mp3 приблизно на 12 дБ тихіше, з коротким наростанням і згасанням. Покажи контактний аркуш, потім експортуй 1080p у C:\Users\you\Videos\Kadr\weekend-tiktok.mp4.</p></blockquote>
+
+<h2 id="steps">Крок за кроком</h2>
+<div class="callout note"><p>Кожен крок показує ті самі виклики двічі. Вкладка <strong>kadrctl</strong> — для PowerShell: рядок, що починається з <code>kadrctl --%</code>, передає JSON, а без <code>--%</code> той самий рядок працює і в командному рядку (cmd). Вкладка <strong>MCP</strong> — це виклик інструмента, який надсилає агент: назва інструмента та його аргументи. Ідентифікатори на кшталт <code>prj_…</code>, <code>mat_…</code> і <code>seg_…</code> беруться з результатів попередніх кроків, тож у вас вони будуть інші. Шляхи в <code>C:/Users/you</code> — лише приклад.</p></div>
+<ol class="steps">
+<li>
+<h3 id="create">Створіть проєкт 9:16</h3>
+<p><code class="cmd">project.create</code> зі співвідношенням <code>9:16</code> створює полотно 1080×1920 при 30 кадр/с. Результат — новий проєкт; його <code>id</code> потрібен для всіх наступних викликів.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.create --name "Вихідні в TikTok" --ratio 9:16</code></pre><pre data-lang="mcp"><code>{"name": "project_create", "arguments": {"name": "Вихідні в TikTok", "ratio": "9:16"}}</code></pre></div>
+</li>
+<li>
+<h3 id="import">Імпортуйте папку і пісню</h3>
+<p><code class="cmd">media.import</code> приймає файли й папки; з папки імпортуються всі медіафайли, що лежать безпосередньо в ній. У результаті — кожен матеріал із його <code>id</code>, <code>type</code> і <code>duration_us</code>. На таймлайн імпорт поки нічого не кладе.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl --% run media.import --project_id prj_8a3dc0a150b8 --paths "[\"C:/Users/you/Videos/tiktok\",\"C:/Users/you/Music/beat.mp3\"]"</code></pre><pre data-lang="mcp"><code>{"name": "media_import", "arguments": {"project_id": "prj_8a3dc0a150b8", "paths": ["C:/Users/you/Videos/tiktok", "C:/Users/you/Music/beat.mp3"]}}</code></pre></div>
+</li>
+<li>
+<h3 id="layout">Розкладіть кліпи одним кроком</h3>
+<p>Відеокліпи без <code>at_us</code> додаються в кінець магнітної основної доріжки, тож порядок викликів і є порядком монтажу. Інтро додається цілим; кожен кліп b-roll — шматком 2,5 с, що починається з першої секунди (<code>source_start_us</code> + <code>duration_us</code>). У пакеті чотири додавання — один крок скасування. Збережіть це як <code>tiktok-layout.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_708d08b25bae"}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_fccc03654420", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_9360221234d9", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_312fa58a675e", "source_start_us": 1000000, "duration_us": 2500000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_8a3dc0a150b8 tiktok-layout.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_8a3dc0a150b8", "calls": [
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_708d08b25bae"}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_fccc03654420", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_9360221234d9", "source_start_us": 1000000, "duration_us": 2500000}},
+  {"command": "timeline.segment.add", "args": {"material_id": "mat_312fa58a675e", "source_start_us": 1000000, "duration_us": 2500000}}
+]}}</code></pre></div>
+<p>Перевірте результат через <code class="cmd">timeline.get</code> — компактне дерево доріжок і сегментів із часом початку й кінця:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.get --project_id prj_8a3dc0a150b8</code></pre><pre data-lang="mcp"><code>{"name": "timeline_get", "arguments": {"project_id": "prj_8a3dc0a150b8"}}</code></pre></div>
+<pre><code class="lang-text">main_video  seg_f3a56bc31a8f  01_intro.mp4   0 s     → 7 s
+            seg_a01cb913dfa3  02_city.mp4    7 s     → 9.5 s
+            seg_4852e1afa8a7  03_beach.mp4   9.5 s   → 12 s
+            seg_4712217ee4d0  04_food.mp4    12 s    → 14.5 s</code></pre>
+</li>
+<li>
+<h3 id="reframe">Заповніть вертикальний кадр</h3>
+<p><code class="cmd">ai.auto_reframe</code> масштабує кожен горизонтальний кліп, щоб він заповнив 9:16 без смуг, і анімує позицію (ключовими кадрами), стежачи за об’єктом — за рухом, контурами й відтінками шкіри. Працює локально, приблизно секунда на хвилину відео. Усі чотири — одним пакетом, <code>tiktok-reframe.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_f3a56bc31a8f", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a01cb913dfa3", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4852e1afa8a7", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4712217ee4d0", "ratio": "9:16"}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_8a3dc0a150b8 tiktok-reframe.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_8a3dc0a150b8", "calls": [
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_f3a56bc31a8f", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_a01cb913dfa3", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4852e1afa8a7", "ratio": "9:16"}},
+  {"command": "ai.auto_reframe", "args": {"segment_id": "seg_4712217ee4d0", "ratio": "9:16"}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="transitions">Додайте різкі переходи</h3>
+<p><code class="cmd">transition.apply_all</code> ставить однаковий перехід на кожну склейку основної доріжки. Короткий <code>whip_pan</code> тримає темп. Кожен перехід зберігається на кліпі ліворуч від склейки.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.apply_all --project_id prj_8a3dc0a150b8 --type whip_pan --duration_us 0.3s</code></pre><pre data-lang="mcp"><code>{"name": "transition_apply_all", "arguments": {"project_id": "prj_8a3dc0a150b8", "type": "whip_pan", "duration_us": 300000}}</code></pre></div>
+</li>
+<li>
+<h3 id="captions">Субтитри для кліпу з мовою</h3>
+<p><code class="cmd">captions.auto</code> локально розпізнає мову за допомогою Whisper і створює репліки з таймінгом кожного слова. <code>segment_id</code> обмежує розпізнавання кліпом, де ви говорите, тож звук b-roll не транскрибується. <code>cap_highlight_word</code> підсвічує кожне слово в момент вимови; <code>max_words</code> 3 робить репліки короткими. <code>wait</code> змушує виклик повернутися, коли завдання завершене, а не одразу з ідентифікатором завдання.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.auto --project_id prj_8a3dc0a150b8 --segment_id seg_f3a56bc31a8f --language en --style_id cap_highlight_word --max_words 3 --wait</code></pre><pre data-lang="mcp"><code>{"name": "captions_auto", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_f3a56bc31a8f", "language": "en", "style_id": "cap_highlight_word", "max_words": 3, "wait": true}}</code></pre></div>
+<p>Завдання завершується з <code>"state": "done"</code>; репліки з’являються на новій текстовій доріжці «Captions».</p>
+</li>
+<li>
+<h3 id="music">Налаштуйте звук</h3>
+<p>Спершу вимкніть власний звук b-roll. <code class="cmd">segment.set_volume</code> приймає децибели; −60 дБ — низ повзунка (тиша). Збережіть як <code>tiktok-mute.json</code>:</p>
+<pre><code class="lang-json">[
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a01cb913dfa3", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4852e1afa8a7", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4712217ee4d0", "volume_db": -60}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_8a3dc0a150b8 tiktok-mute.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_8a3dc0a150b8", "calls": [
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_a01cb913dfa3", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4852e1afa8a7", "volume_db": -60}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_4712217ee4d0", "volume_db": -60}}
+]}}</code></pre></div>
+<p>Потім додайте пісню з 0 с на всю довжину відео (тут 14,5 с). Вона потрапить на аудіодоріжку. Зменште її гучність на сталі 12 дБ, щоб вона скрізь лежала під голосом, і додайте короткі наростання й згасання:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run timeline.segment.add --project_id prj_8a3dc0a150b8 --material_id mat_446985c2caf5 --at_us 0 --duration_us 14.5s
+kadrctl run segment.set_volume --project_id prj_8a3dc0a150b8 --segment_id seg_5223e6a5f677 --volume_db -12
+kadrctl run segment.set_fade --project_id prj_8a3dc0a150b8 --segment_id seg_5223e6a5f677 --fade_in_us 0.3s --fade_out_us 1.5s</code></pre><pre data-lang="mcp"><code>{"name": "timeline_segment_add", "arguments": {"project_id": "prj_8a3dc0a150b8", "material_id": "mat_446985c2caf5", "at_us": 0, "duration_us": 14500000}}
+{"name": "segment_set_volume", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_5223e6a5f677", "volume_db": -12}}
+{"name": "segment_set_fade", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_5223e6a5f677", "fade_in_us": 300000, "fade_out_us": 1500000}}</code></pre></div>
+<p>Щоб перевірити баланс, виміряйте обидва кліпи через <code class="cmd">audio.loudness</code>. Фонова музика звучить добре на 10–15 LU нижче мови: порівняйте <code>integrated_lufs</code> голосу з <code>effective_lufs</code> музики, де −12 дБ уже враховано.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run audio.loudness --project_id prj_8a3dc0a150b8 --segment_id seg_f3a56bc31a8f
+kadrctl run audio.loudness --project_id prj_8a3dc0a150b8 --segment_id seg_5223e6a5f677</code></pre><pre data-lang="mcp"><code>{"name": "audio_loudness", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_f3a56bc31a8f"}}
+{"name": "audio_loudness", "arguments": {"project_id": "prj_8a3dc0a150b8", "segment_id": "seg_5223e6a5f677"}}</code></pre></div>
+</li>
+<li>
+<h3 id="check">Перегляньте монтаж</h3>
+<p><code class="cmd">preview.contact_sheet</code> рендерить сітку кадрів з усього відео тим самим рендерером, що й експорт. Через MCP агент отримує її як зображення і може помітити чорні смуги, обрізані субтитри чи слабкий перший кадр ще до експорту.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_8a3dc0a150b8 --count 8 --columns 4 --tile_width 180</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_8a3dc0a150b8", "count": 8, "columns": 4, "tile_width": 180}}</code></pre></div>
+</li>
+<li>
+<h3 id="export">Експортуйте 1080p</h3>
+<p><code class="cmd">export.start</code> рендерить у фоні й одразу повертає <code>job_id</code>. 1080p на полотні 9:16 — це H.264 MP4 1080×1920; якщо на вашому ПК працює апаратний кодер GPU, Kadr ним скористається. Опитуйте <code class="cmd">export.status</code>, доки <code>state</code> не стане <code>done</code>.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run export.start --project_id prj_8a3dc0a150b8 --resolution 1080p --path C:/Users/you/Videos/Kadr/weekend-tiktok.mp4
+kadrctl run export.status --job_id exp_ca964467da2a</code></pre><pre data-lang="mcp"><code>{"name": "export_start", "arguments": {"project_id": "prj_8a3dc0a150b8", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/weekend-tiktok.mp4"}}
+{"name": "export_status", "arguments": {"job_id": "exp_ca964467da2a"}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="variations">Варіації</h2>
+<ul>
+  <li><strong>Зберегти весь кадр.</strong> Замість перекадрування показуйте кожен горизонтальний кліп повністю на тлі його ж розмитої копії: <code class="cmd">segment.set_background</code> з <code>type</code> <code>blur</code>, <code>blur</code> 0.75 і <code>apply_to_all</code> на будь-якому кліпі основної доріжки.</li>
+  <li><strong>Інший вигляд субтитрів.</strong> <code>cap_pop_word</code> показує по одному слову, <code>cap_pill_active</code> бере активне слово в «пігулку», <code>cap_karaoke_bar</code> заливає слова зліва направо. Перемкнути можна будь-коли через <code class="cmd">captions.set_style</code>.</li>
+  <li><strong>Звук на склейках.</strong> Додайте <code>whoosh_fast</code> трохи перед кожною склейкою через <code class="cmd">sfx.add</code> (тут на 6,8 с, 9,3 с і 11,8 с).</li>
+  <li><strong>Монтаж під музику.</strong> Ріжте b-roll по долях пісні, а не кожні 2,5 с — див. <a href="{{root}}{{lang_root}}docs/ai/beat-cut-music-video.html">Кліп під біт</a>.</li>
+  <li><strong>Обкладинка.</strong> <code class="cmd">project.set_cover</code> з <code>time_us</code> задає кадр-мініатюру.</li>
+</ul>
+
+<h2 id="tips">Поради</h2>
+<ul>
+  <li>Перше завдання субтитрів завантажує модель Whisper і триває довше за наступні. На GPU NVIDIA типова модель <code>small</code> працює приблизно вп’ятеро швидше за реальний час; <code>model</code> <code>base</code> — швидша і трохи менш точна.</li>
+  <li>Якщо субтитри падають із <code>not_available</code>, викличте <code class="cmd">captions.asr_status</code>: його <code>hint</code> підкаже, що встановити.</li>
+  <li>Щоб змінити порядок пізніше, перемістіть кліп через <code class="cmd">timeline.segment.move</code> на новий <code>start_us</code>; магнітна основна доріжка закриє проміжки.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

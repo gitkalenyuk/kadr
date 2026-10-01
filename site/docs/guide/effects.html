@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/guide/effects.html" data-alt-uk="../../uk/docs/guide/effects.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Effects, transitions &amp; colour — Kadr</title>
+<meta name="description" content="Add transitions between clips, video effects and filters, grade colour with basic sliders, HSL and curves, animate anything with keyframes and save your favourite looks to My kit.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/guide/effects.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/effects.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/effects.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/effects.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Effects, transitions &amp; colour — Kadr">
+<meta property="og:description" content="Add transitions between clips, video effects and filters, grade colour with basic sliders, HSL and curves, animate anything with keyframes and save your favourite looks to My kit.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/guide/effects.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Effects, transitions &amp; colour — Kadr">
+<meta name="twitter:description" content="Add transitions between clips, video effects and filters, grade colour with basic sliders, HSL and curves, animate anything with keyframes and save your favourite looks to My kit.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-effects" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/" aria-current="page">For humans</a>
+      <a href="../../docs/ai/">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/guide/effects.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/guide/effects.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../#download"><svg aria-hidden="true"><use href="#i-download"/></svg><span class="label-long">Download</span><span class="sr-only">Download Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">Effects &amp; colour</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/guide/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/guide/getting-started.html"><span>Getting started</span></a></li><li><a href="../../docs/guide/interface.html"><span>Interface tour</span></a></li><li><a href="../../docs/guide/projects.html"><span>Projects</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Editing</p><ul><li><a href="../../docs/guide/import-media.html"><span>Import media</span></a></li><li><a href="../../docs/guide/timeline.html"><span>Timeline editing</span></a></li><li><a href="../../docs/guide/player.html"><span>Player &amp; preview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Creating</p><ul><li><a href="../../docs/guide/text.html"><span>Text &amp; titles</span></a></li><li><a href="../../docs/guide/captions.html"><span>Captions &amp; transcript</span></a></li><li><a href="../../docs/guide/effects.html" aria-current="page"><span>Effects &amp; colour</span></a></li><li><a href="../../docs/guide/audio.html"><span>Audio</span></a></li><li><a href="../../docs/guide/stickers.html"><span>Stickers &amp; generated media</span></a></li><li><a href="../../docs/guide/ai-tools.html"><span>AI tools</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Finishing</p><ul><li><a href="../../docs/guide/export.html"><span>Export</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Help</p><ul><li><a href="../../docs/guide/shortcuts.html"><span>Keyboard shortcuts</span></a></li><li><a href="../../docs/guide/settings.html"><span>Settings &amp; updates</span></a></li><li><a href="../../docs/guide/troubleshooting.html"><span>Troubleshooting &amp; FAQ</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/guide/index.html">User guide</a></li><li><span aria-current="page">Effects &amp; colour</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Creating</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 min read</span></p><h1>Effects, transitions &amp; colour</h1></header><p class="lead">Transitions smooth out cuts, effects add movement and atmosphere, filters and colour tools set the mood. Everything in this page is original to Kadr and rendered on your computer.</p>
+
+<h2 id="transitions">Transitions<a class="anchor" href="#transitions" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<figure><img decoding="async" src="../../assets/img/guide/transitions.webp" alt="The Transitions tab with preview cards, the player, and the Transition panel on the right with duration, Apply to all, Remove and a grid of replacements" width="1280" height="428" loading="lazy"><figcaption>The Transitions tab and the Transition panel of a selected transition.</figcaption></figure>
+<p>A transition plays between two clips that touch each other on the same track (usually the main track). There are 68 of them, from simple fades and slides to 3D cubes, iris shapes, light leaks and glitches.</p>
+<h3 id="add-transition">Add a transition<a class="anchor" href="#add-transition" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<ol>
+  <li>On the timeline, click the <strong>left</strong> clip of the two clips you want to join.</li>
+  <li>Open the <strong>Transitions</strong> tab. The hint at the top confirms “Applies to the cut after the selected clip”.</li>
+  <li>Click <strong>+</strong> on a transition (or double-click it). You can also simply drag a transition onto the cut on the timeline.</li>
+</ol>
+<p>The transition appears as a small badge on the cut. <strong>Apply to all</strong> (next to the hint) puts the highlighted transition on every cut of the main track at once.</p>
+<h3 id="adjust-transition">Adjust or remove it<a class="anchor" href="#adjust-transition" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<p>Click the badge on the timeline to open the <strong>Transition</strong> panel in the inspector (or select the left clip and click the transition's name under <strong>Video → Transition to next clip</strong>). There you can set the <strong>Duration</strong>, the <strong>Direction</strong> and <strong>Softness</strong> where a transition supports them, swap it for another under <strong>Replace</strong>, <strong>Apply to all</strong>, or <strong>Remove</strong> it. With the badge selected, <kbd>Delete</kbd> removes it too. A transition can be at most half as long as the shorter of the two clips.</p>
+
+<h2 id="effects">Video effects<a class="anchor" href="#effects" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<figure><img decoding="async" src="../../assets/img/guide/effects.webp" alt="The Effects tab with categories, the player showing a bokeh effect, and the Effect panel with Intensity, Speed, Density and Size sliders" width="1280" height="428" loading="lazy"><figcaption>An effect layer selected: its own sliders appear in the inspector.</figcaption></figure>
+<p>The <strong>Effects</strong> tab has 56 effects in categories such as Party, Retro, Glitch, Lens, Light, Sparkle, Comics, Nature and Split screen. Use them in two ways:</p>
+<ul>
+  <li><strong>As a layer:</strong> click <strong>+</strong> (or drag the card to the timeline). The effect goes on its own effect track at the playhead and affects <em>everything below it</em> for as long as the effect clip lasts. Drag its edges to change when it starts and ends.</li>
+  <li><strong>On one clip:</strong> select a clip, click an effect card to highlight it, then click <strong>Apply to clip</strong> in the hint bar. Only that clip gets the effect; you'll find it under <strong>Effects</strong> in the clip's Video tab.</li>
+</ul>
+<p>Select the effect (the layer, or the clip's effect list) to tune it: every effect has its own sliders — <strong>Intensity</strong>, <strong>Speed</strong>, size, density and so on. The circular-arrow button resets them, the bin removes the effect.</p>
+
+<h2 id="filters">Filters<a class="anchor" href="#filters" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="grid-2">
+  <div>
+    <p>Filters change the colours of the picture in one click — warm, cool, film, black-and-white, vintage and 70 more, in 18 categories.</p>
+    <ul>
+      <li><strong>On one clip:</strong> select the clip, click a filter card, then <strong>Apply “…” to clip</strong>.</li>
+      <li><strong>On a stretch of the video:</strong> click <strong>+</strong> on a card. A filter layer is added at the playhead and colours everything below it.</li>
+    </ul>
+    <p>With a filtered clip or a filter layer selected, the panel at the top of the Filters tab shows its <strong>Intensity</strong> (lower it for a subtler look), a <strong>Replace with …</strong> button for the highlighted card, and a bin to remove it.</p>
+  </div>
+  <figure><img decoding="async" src="../../assets/img/guide/filters.webp" alt="The Filters tab with a Golden hour filter layer selected and its Intensity at 80 percent, above a grid of filter previews" width="640" height="536" loading="lazy"><figcaption>A filter layer and its intensity.</figcaption></figure>
+</div>
+
+<h2 id="color">Colour adjustment<a class="anchor" href="#color" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Select a video or photo clip and open the <strong>Adjustment</strong> tab of the inspector. It has three pages:</p>
+<div class="grid-2">
+  <figure><img decoding="async" src="../../assets/img/guide/color-basic.webp" alt="Basic colour sliders: temperature, tint, saturation, hue, exposure, brightness, contrast, shine, highlights, shadows, sharpen, vignette and fade" width="342" height="676" loading="lazy"><figcaption>Adjustment → Basic.</figcaption></figure>
+  <div>
+    <h3 id="basic">Basic<a class="anchor" href="#basic" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <ul>
+      <li><strong>Color</strong>: Temperature (warmer/cooler), Tint, Saturation, Hue.</li>
+      <li><strong>Lightness</strong>: Exposure, Brightness, Contrast, Shine, Highlights, Shadows.</li>
+      <li><strong>Effects</strong>: Sharpen, Vignette (dark corners), Fade, Grain.</li>
+      <li><strong>LUT</strong>: type the path of a <code>.cube</code> colour-grading file and set its intensity.</li>
+    </ul>
+    <p><strong>Auto adjust</strong> analyses the frame and fixes exposure, contrast, white balance and saturation in one click. <strong>Reset</strong> clears all colour settings, including HSL and curves.</p>
+  </div>
+</div>
+<div class="grid-2">
+  <div>
+    <h3 id="hsl">HSL<a class="anchor" href="#hsl" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Change one colour without touching the others. Click one of the eight colour dots (red, orange, yellow, green, cyan, blue, purple, magenta) and move <strong>Hue</strong>, <strong>Saturation</strong> and <strong>Lightness</strong> — for example make the sky deeper blue or the grass less yellow. A small dot marks the bands you have changed.</p>
+  </div>
+  <figure><img decoding="async" src="../../assets/img/guide/color-hsl.webp" alt="The HSL page with eight colour dots, the blue band selected and its Hue, Saturation and Lightness sliders" width="342" height="380" loading="lazy"><figcaption>Adjustment → HSL with the blue band adjusted.</figcaption></figure>
+</div>
+<div class="grid-2">
+  <figure><img decoding="async" src="../../assets/img/guide/color-curves.webp" alt="The Curves page with presets and an S-shaped luma curve with five points" width="342" height="676" loading="lazy"><figcaption>Adjustment → Curves with the Contrast preset.</figcaption></figure>
+  <div>
+    <h3 id="curves">Curves<a class="anchor" href="#curves" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>For precise control of brightness and colour. Start from a preset — <em>Lighten</em>, <em>Darken</em>, <em>Fade</em>, <em>Contrast</em>, <em>Cool tone</em>, <em>Warm tone</em>, <em>Vintage</em> — or shape the curve yourself:</p>
+    <ul>
+      <li>choose <strong>Luma</strong> (overall brightness), <strong>Red</strong>, <strong>Green</strong> or <strong>Blue</strong>;</li>
+      <li>click the grid to add a point (up to 16), drag points to bend the curve;</li>
+      <li>double-click or right-click a point to remove it.</li>
+    </ul>
+    <p>Pulling the middle up brightens; an S-shape adds contrast.</p>
+  </div>
+</div>
+<div class="callout tip"><p><strong>Grade several clips at once</strong> with an adjustment layer: open the library's <strong>Adjustment</strong> tab and add <strong>Custom adjustment</strong>. It appears on its own track and every colour setting you give it affects all tracks below it for its duration.</p></div>
+
+<h2 id="animations">Clip animations<a class="anchor" href="#animations" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>The <strong>Animation</strong> tab of the inspector makes a clip move as it appears or disappears. It works for videos, photos, stickers and text:</p>
+<ul>
+  <li><strong>In</strong> and <strong>Out</strong> — fades, slides, zooms, spins and more at the start or end of the clip;</li>
+  <li><strong>Combo</strong> — an in-and-out pair in one (it replaces separate In/Out animations);</li>
+  <li><strong>Loop</strong> — a movement that repeats for the whole clip, such as floating, swinging or pulsing.</li>
+</ul>
+<p>Click a card to apply it and set the <strong>Duration</strong> slider above the grid.</p>
+
+<h2 id="keyframes">Keyframes: animate any value<a class="anchor" href="#keyframes" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Keyframes make a setting change over time — a slow zoom, a title that slides in, music that gets quieter, a colour that warms up. Any slider with a small <strong>diamond</strong> next to it can be animated: position, scale, rotation, opacity, volume, every colour slider and filter intensity.</p>
+<figure><img decoding="async" src="../../assets/img/guide/keyframes.webp" alt="The Video tab of a clip with a filled keyframe diamond next to Scale at 125 percent" width="1176" height="536" loading="lazy"><figcaption>A filled diamond means there is a keyframe exactly at the playhead.</figcaption></figure>
+<ol class="steps">
+  <li><h3 id="kf-first">Set the starting point<a class="anchor" href="#kf-first" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Move the playhead to where the change should begin (it must be over the selected clip). Set the value, then click the diamond — it fills in.</p></li>
+  <li><h3 id="kf-second">Set the end point<a class="anchor" href="#kf-second" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Move the playhead later and change the value. Because the setting is now animated, Kadr adds a second keyframe automatically.</p></li>
+  <li><h3 id="kf-play">Play it back<a class="anchor" href="#kf-play" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Kadr smoothly blends the values between keyframes. Add as many as you like.</p></li>
+</ol>
+<p>The diamond tells you the state: <strong>outlined</strong> — no animation; <strong>coloured outline</strong> — the setting is animated, but not at this moment; <strong>filled</strong> — a keyframe at the playhead (click it to remove that keyframe). If you move the playhead outside the clip, the diamond is disabled.</p>
+<div class="callout note"><p>Keyframes added with the mouse change at an even pace. Ease-in and ease-out movement is available to AI assistants and scripts via <a class="cmd-link" href="../../docs/ai/reference/keyframes.html#keyframe.add"><code>keyframe.add</code></a> — see the <a href="../../docs/ai/index.html">AI documentation</a>.</p></div>
+
+<h2 id="my-kit">My kit: save your favourite looks<a class="anchor" href="#my-kit" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Found a text style, colour grade, filter, effect, transition or animation you love? Select the clip and click the <strong>bookmark</strong> button in its panel (for example next to the Text sub-tabs, in the Adjustment header, or <strong>Add to kit</strong> in the Transition panel). It is saved under a name in <strong>My kit</strong>, the last library tab, and works in every project.</p>
+<p>In <strong>My kit</strong>, pick a kind on the left, search by name, and click <strong>Apply</strong> to put a saved look on the selected clip. The pencil renames a preset; the bin deletes it (click twice to confirm).</p>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/guide/captions.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Captions &amp; transcript</b></a><a class="pager-next" href="../../docs/guide/audio.html" rel="next"><span>Next</span><b>Audio<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#transitions">Transitions</a></li><li class="lvl-3"><a href="#add-transition">Add a transition</a></li><li class="lvl-3"><a href="#adjust-transition">Adjust or remove it</a></li><li class="lvl-2"><a href="#effects">Video effects</a></li><li class="lvl-2"><a href="#filters">Filters</a></li><li class="lvl-2"><a href="#color">Colour adjustment</a></li><li class="lvl-3"><a href="#basic">Basic</a></li><li class="lvl-3"><a href="#hsl">HSL</a></li><li class="lvl-3"><a href="#curves">Curves</a></li><li class="lvl-2"><a href="#animations">Clip animations</a></li><li class="lvl-2"><a href="#keyframes">Keyframes: animate any value</a></li><li class="lvl-3"><a href="#kf-first">Set the starting point</a></li><li class="lvl-3"><a href="#kf-second">Set the end point</a></li><li class="lvl-3"><a href="#kf-play">Play it back</a></li><li class="lvl-2"><a href="#my-kit">My kit: save your favourite looks</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#download">Download</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr/issues">Report a bug</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

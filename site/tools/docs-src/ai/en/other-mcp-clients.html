@@ -1,0 +1,59 @@
+<!--meta {"title":"Other MCP clients","nav":"Other MCP clients","order":40,"description":"Connect Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI or any other MCP client to Kadr, test the bridge by hand, and use agents without MCP.","group":"Start"} -->
+<p class="lead">Any client that can start a local stdio MCP server can drive Kadr. The server is a single executable with no arguments; everything else is optional.</p>
+
+<h2 id="settings">The settings every client needs</h2>
+<table>
+  <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>Transport</td><td>stdio</td></tr>
+    <tr><td>Command</td><td>Full path to <code>kadr-mcp.exe</code> (or <code>kadr-mcp</code> when it is on <code>PATH</code>), no arguments</td></tr>
+    <tr><td>Environment</td><td>Optional: <code>KADR_ADDR</code>, <code>KADR_DATA_DIR</code>, <code>KADR_TOKEN</code></td></tr>
+    <tr><td>Protocol version</td><td><code>2025-06-18</code></td></tr>
+    <tr><td>Tools</td><td>178: one per command plus <code>kadr_batch</code>; read-only commands carry <code>readOnlyHint</code>, <code>project_delete</code> carries <code>destructiveHint</code></td></tr>
+  </tbody>
+</table>
+<p>When the engine is not running, <code>kadr-mcp</code> starts <code>kadr-server.exe</code> from its own folder and waits up to 10 seconds for it. It reads the API token from the Kadr data folder, so no secret goes into the client’s config.</p>
+
+<h2 id="snippets">Config snippets</h2>
+<p>The file names and shapes below are what these clients use at the time of writing — check your client’s documentation if a key has changed. Comments are for orientation; remove them if your client rejects comments in JSON.</p>
+<div class="code-tabs"><pre data-lang="cursor"><code>// %USERPROFILE%\.cursor\mcp.json (all projects) or .cursor\mcp.json (one project)
+{
+  "mcpServers": {
+    "kadr": { "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre><pre data-lang="vscode"><code>// .vscode\mcp.json (VS Code agent mode)
+{
+  "servers": {
+    "kadr": { "type": "stdio", "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre><pre data-lang="windsurf"><code>// %USERPROFILE%\.codeium\windsurf\mcp_config.json
+{
+  "mcpServers": {
+    "kadr": { "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre><pre data-lang="codex"><code># %USERPROFILE%\.codex\config.toml (Codex CLI)
+[mcp_servers.kadr]
+command = 'C:\Users\you\AppData\Local\Programs\Kadr\kadr-mcp.exe'</code></pre><pre data-lang="gemini"><code>// %USERPROFILE%\.gemini\settings.json (Gemini CLI)
+{
+  "mcpServers": {
+    "kadr": { "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre></div>
+
+<h2 id="test-by-hand">Test the bridge by hand</h2>
+<p>MCP over stdio is one JSON-RPC message per line, so PowerShell can talk to the bridge directly — useful when a client only says “failed to start”:</p>
+<pre><code class="lang-powershell">@'
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"project_list","arguments":{}}}
+'@ | &amp; "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code></pre>
+<p>The second line of output is the <code>project_list</code> result. Errors come back as tool results with <code>"isError": true</code> and the engine’s JSON error (code, message, hint, field), so agents can read the hint and retry.</p>
+
+<h2 id="without-mcp">Agents without MCP</h2>
+<ul>
+  <li><strong>Function calling.</strong> Generate tool definitions from <a href="{{root}}openapi.json"><code>openapi.json</code></a> (each command’s request body is a JSON Schema) and execute calls with <code>POST /api/v1/commands/&lt;name&gt;</code> — see <a href="{{root}}{{lang_root}}docs/ai/rest.html">REST API</a>.</li>
+  <li><strong>Shell-only agents.</strong> Let the agent run <code>kadrctl describe &lt;command&gt;</code> to read documentation and <code>kadrctl run</code> to execute — see <a href="{{root}}{{lang_root}}docs/ai/cli.html">kadrctl</a>.</li>
+  <li><strong>Context.</strong> Give the model <a href="{{root}}llms.txt"><code>llms.txt</code></a> or the complete <a href="{{root}}llms-full.txt"><code>llms-full.txt</code></a>.</li>
+</ul>
+
+<h2 id="remote">Kadr on another machine</h2>
+<p>The API only accepts requests addressed to <code>localhost</code>, by design. To drive Kadr on another PC, forward a local port to it (for example <code>ssh -L 7777:127.0.0.1:7777 user@editing-pc</code>), copy that PC’s <code>api-token</code> into <code>KADR_TOKEN</code>, and keep in mind that file paths refer to the remote disk.</p>

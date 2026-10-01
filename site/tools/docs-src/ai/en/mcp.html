@@ -1,0 +1,70 @@
+<!--meta {"title":"MCP tools","nav":"MCP tools","order":110,"description":"How Kadr’s commands appear as MCP tools: naming, annotations, kadr_batch for atomic edits, images from preview tools, errors and timeouts.","group":"Interfaces"} -->
+<p class="lead"><code>kadr-mcp.exe</code> turns every Kadr command into an MCP tool with the command’s full documentation, and adds one extra tool, <code>kadr_batch</code>. Calls are forwarded to the running engine, so edits show up live in the editor and land in the same undo history.</p>
+<div class="callout tip"><p>Setting up a client? See <a href="{{root}}{{lang_root}}docs/ai/claude-code.html">Claude Code</a>, <a href="{{root}}{{lang_root}}docs/ai/claude-desktop.html">Claude Desktop</a> or <a href="{{root}}{{lang_root}}docs/ai/other-mcp-clients.html">other MCP clients</a>. This page explains what the agent gets once connected.</p></div>
+
+<h2 id="naming">Tool names and arguments</h2>
+<p>Many clients reject dots in tool names, so dots become underscores. Arguments are exactly the command’s parameters; project commands need <code>project_id</code>.</p>
+<table>
+  <thead><tr><th>Command</th><th>MCP tool</th><th>Typical arguments</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">project.create</code></td><td><code>project_create</code></td><td><code>{"name": "Trip", "ratio": "9:16"}</code></td></tr>
+    <tr><td><code class="cmd">timeline.segment.split</code></td><td><code>timeline_segment_split</code></td><td><code>{"project_id": "prj_…", "segment_id": "seg_…", "at_us": 2500000}</code></td></tr>
+    <tr><td><code class="cmd">captions.auto</code></td><td><code>captions_auto</code></td><td><code>{"project_id": "prj_…", "language": "uk", "wait": true}</code></td></tr>
+    <tr><td><code class="cmd">preview.frame</code></td><td><code>preview_frame</code></td><td><code>{"project_id": "prj_…", "time_us": 1000000, "width": 960}</code></td></tr>
+    <tr><td><code class="cmd">edit.undo</code></td><td><code>edit_undo</code></td><td><code>{"project_id": "prj_…"}</code></td></tr>
+  </tbody>
+</table>
+<p>In these docs the <strong>MCP</strong> tab of a code block shows the parameters of a <code>tools/call</code> request: <code>{"name": "&lt;tool&gt;", "arguments": {…}}</code>. Each line is one call.</p>
+
+<h2 id="descriptions">What each tool tells the model</h2>
+<ul>
+  <li><strong>Description</strong> — what the command does, how it behaves like CapCut, edge cases, then the UI location and hotkey, “Undoable with edit.undo.” for edits, and a <code>Returns:</code> line describing the result.</li>
+  <li><strong>Input schema</strong> — JSON Schema with types, enums, ranges, defaults and a description per parameter; units are spelled out (“Unit: microseconds”).</li>
+  <li><strong>Annotations</strong> — <code>readOnlyHint</code> on queries such as <code>timeline_get</code>, <code>preview_frame</code> or <code>library_list</code>; <code>destructiveHint</code> on <code>project_delete</code>, so cautious clients confirm it.</li>
+</ul>
+<p>Library ids (transitions, effects, filters, animations, fonts, stickers, caption styles, generated presets, sound effects…) are discovered with <code>library_list</code> and <code>library_get</code> rather than guessed.</p>
+
+<h2 id="kadr-batch">kadr_batch — several edits, one undo step</h2>
+<p><code>kadr_batch</code> runs a list of project commands in order as <strong>one atomic step</strong>: either every call succeeds and the project is saved once, with a single undo entry “Batch (N actions)”, or nothing changes. Calls use <em>dotted</em> command names, and <code>project_id</code> is filled in for every call. <code>dry_run: true</code> runs the whole list on a copy and returns the results without saving.</p>
+<pre><code class="lang-json">[
+  {"command": "transition.set", "args": {"segment_id": "seg_8f2a61c04b9e", "type": "whip_pan", "duration_us": 300000}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_1d93b7e5a0c2", "volume_db": -12}},
+  {"command": "text.add", "args": {"text": "Day one", "template_id": "title_bold", "at_us": 0, "duration_us": 2000000}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_5c1e7a9d3b20", "calls": [
+  {"command": "transition.set", "args": {"segment_id": "seg_8f2a61c04b9e", "type": "whip_pan", "duration_us": 300000}},
+  {"command": "segment.set_volume", "args": {"segment_id": "seg_1d93b7e5a0c2", "volume_db": -12}},
+  {"command": "text.add", "args": {"text": "Day one", "template_id": "title_bold", "at_us": 0, "duration_us": 2000000}}
+]}}</code></pre><pre data-lang="kadrctl"><code>kadrctl batch prj_5c1e7a9d3b20 demo-batch.json</code></pre><pre data-lang="curl"><code>curl -s http://127.0.0.1:7777/api/v1/projects/prj_5c1e7a9d3b20/batch -H "Authorization: Bearer $KADR_TOKEN" \
+  -d '{"dry_run":false,"calls":[{"command":"transition.set","args":{"segment_id":"seg_8f2a61c04b9e","type":"whip_pan","duration_us":300000}},{"command":"segment.set_volume","args":{"segment_id":"seg_1d93b7e5a0c2","volume_db":-12}},{"command":"text.add","args":{"text":"Day one","template_id":"title_bold","at_us":0,"duration_us":2000000}}]}'</code></pre></div>
+<p>The result holds one entry per call, in order: <code>{"results": [ … ], "dry_run": false}</code>.</p>
+<ul>
+  <li><strong>No references between calls.</strong> Arguments are fixed before the batch runs, so a call cannot use an id created by an earlier call in the same batch. Create things first, read their ids, then batch the follow-up edits.</li>
+  <li><strong>Project commands only.</strong> Global commands (for example <code>export.start</code>, <code>project.create</code>, <code>library.list</code>) and <code>edit.undo</code>/<code>edit.redo</code> are rejected: <code>call 0: export.start is not a project command and cannot be batched</code> (call numbers start at 0).</li>
+  <li><strong>Runtime errors</strong> return the failing command’s own error (with its hint); the working copy is discarded.</li>
+  <li><strong>Side effects outside the project</strong> (generated media files, speech files in the cache) are not rolled back by a failed batch or a dry run — they are only files.</li>
+</ul>
+
+<h2 id="images">Pictures the model can see</h2>
+<p>Results that contain a <code>png_base64</code> field are returned as an MCP <strong>image</strong> block plus a text block with the remaining fields. That applies to <code>preview_frame</code> (one composited frame, exactly as exported) and <code>preview_contact_sheet</code> (a grid of frames across the edit, with <code>times_us</code> for each tile). For measurements use <code>preview_layout</code>: it returns the box of every visible clip, text and sticker in canvas pixels. See <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Verifying results</a>.</p>
+
+<h2 id="errors">Errors</h2>
+<p>A failed call is a tool result with <code>"isError": true</code> whose text is the engine’s error as JSON:</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "segment_set_volume", "arguments": {"project_id": "prj_5c1e7a9d3b20", "segment_id": "seg_nope", "volume_db": -6}}</code></pre></div>
+<pre><code class="lang-json">Error: {
+  "code": "not_found",
+  "message": "segment \"seg_nope\" not found",
+  "hint": "Call project.get (tracks[].segments[].id) or timeline.get to list valid segment ids.",
+  "field": "segment_id"
+}</code></pre>
+<p>Read the <code>hint</code>: it says how to fix the call. Codes are listed in <a href="{{root}}{{lang_root}}docs/ai/rest.html#errors">REST API → Errors</a>; <code>not_available</code> means an optional local component (Whisper, a matting model, a speech engine, FFmpeg) is missing on this PC.</p>
+
+<h2 id="timeouts">Long-running tools</h2>
+<ul>
+  <li>The bridge waits up to <strong>5 minutes</strong> for a call. Captions, transcription, background removal and exports run as background jobs: call them without <code>wait</code> and poll <code>captions_status</code> (supports <code>wait_s</code> long polling), <code>ai_jobs</code> or <code>export_status</code>.</li>
+  <li><code>export_start</code> always returns immediately with a <code>job_id</code>; exports run one at a time and extra jobs wait in state <code>queued</code>.</li>
+</ul>
+
+<h2 id="engine">Engine discovery and auto-start</h2>
+<p>The bridge connects to <code>KADR_ADDR</code> (default <code>127.0.0.1:7777</code>) with the token from <code>KADR_TOKEN</code> or the data folder. If nothing answers, it starts <code>kadr-server.exe</code> from its own folder and waits up to 10 seconds. That headless engine keeps running after the client exits, so later sessions start instantly; quit it in Task Manager before opening the editor if you want to watch edits live.</p>
+<p>The tool list comes from the running engine, so it always matches the installed version. On <code>initialize</code> the server also sends short instructions: projects contain tracks, tracks contain segments, times are microseconds, read state first, use <code>kadr_batch</code> for multi-step edits, look at <code>preview_frame</code> after visual edits, and follow error hints.</p>

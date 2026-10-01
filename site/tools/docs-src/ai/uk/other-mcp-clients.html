@@ -1,0 +1,59 @@
+<!--meta {"title":"Інші MCP-клієнти","nav":"Інші MCP-клієнти","order":40,"description":"Під’єднайте Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI чи будь-який інший MCP-клієнт до Kadr, перевірте міст уручну й використовуйте агентів без MCP.","group":"Початок"} -->
+<p class="lead">Будь-який клієнт, що вміє запускати локальний stdio MCP-сервер, може керувати Kadr. Сервер — це один виконуваний файл без аргументів; усе інше необов’язкове.</p>
+
+<h2 id="settings">Налаштування, потрібні будь-якому клієнту</h2>
+<table>
+  <thead><tr><th>Параметр</th><th>Значення</th></tr></thead>
+  <tbody>
+    <tr><td>Транспорт</td><td>stdio</td></tr>
+    <tr><td>Команда</td><td>Повний шлях до <code>kadr-mcp.exe</code> (або <code>kadr-mcp</code>, якщо він у <code>PATH</code>), без аргументів</td></tr>
+    <tr><td>Середовище</td><td>Необов’язково: <code>KADR_ADDR</code>, <code>KADR_DATA_DIR</code>, <code>KADR_TOKEN</code></td></tr>
+    <tr><td>Версія протоколу</td><td><code>2025-06-18</code></td></tr>
+    <tr><td>Інструменти</td><td>178: по одному на команду плюс <code>kadr_batch</code>; команди лише для читання мають <code>readOnlyHint</code>, <code>project_delete</code> — <code>destructiveHint</code></td></tr>
+  </tbody>
+</table>
+<p>Якщо рушій не запущено, <code>kadr-mcp</code> запускає <code>kadr-server.exe</code> зі своєї папки й чекає на нього до 10 секунд. Токен API він читає з папки даних Kadr, тож жодних секретів у конфігурації клієнта.</p>
+
+<h2 id="snippets">Фрагменти конфігурації</h2>
+<p>Імена файлів і структура нижче — такі, як у цих клієнтах на момент написання; якщо ключ змінився, звірте з документацією свого клієнта. Коментарі — для орієнтації; приберіть їх, якщо клієнт не приймає коментарів у JSON.</p>
+<div class="code-tabs"><pre data-lang="cursor"><code>// %USERPROFILE%\.cursor\mcp.json (all projects) or .cursor\mcp.json (one project)
+{
+  "mcpServers": {
+    "kadr": { "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre><pre data-lang="vscode"><code>// .vscode\mcp.json (VS Code agent mode)
+{
+  "servers": {
+    "kadr": { "type": "stdio", "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre><pre data-lang="windsurf"><code>// %USERPROFILE%\.codeium\windsurf\mcp_config.json
+{
+  "mcpServers": {
+    "kadr": { "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre><pre data-lang="codex"><code># %USERPROFILE%\.codex\config.toml (Codex CLI)
+[mcp_servers.kadr]
+command = 'C:\Users\you\AppData\Local\Programs\Kadr\kadr-mcp.exe'</code></pre><pre data-lang="gemini"><code>// %USERPROFILE%\.gemini\settings.json (Gemini CLI)
+{
+  "mcpServers": {
+    "kadr": { "command": "C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe" }
+  }
+}</code></pre></div>
+
+<h2 id="test-by-hand">Перевірка мосту вручну</h2>
+<p>MCP через stdio — це одне JSON-RPC повідомлення на рядок, тож PowerShell може говорити з мостом напряму. Це корисно, коли клієнт пише лише «failed to start»:</p>
+<pre><code class="lang-powershell">@'
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"project_list","arguments":{}}}
+'@ | &amp; "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"</code></pre>
+<p>Другий рядок виводу — результат <code>project_list</code>. Помилки повертаються як результати інструментів з <code>"isError": true</code> і JSON-помилкою рушія (code, message, hint, field), тож агент може прочитати підказку й повторити.</p>
+
+<h2 id="without-mcp">Агенти без MCP</h2>
+<ul>
+  <li><strong>Function calling.</strong> Згенеруйте описи інструментів з <a href="{{root}}openapi.json"><code>openapi.json</code></a> (тіло запиту кожної команди — JSON Schema) і виконуйте виклики через <code>POST /api/v1/commands/&lt;name&gt;</code> — див. <a href="{{root}}{{lang_root}}docs/ai/rest.html">REST API</a>.</li>
+  <li><strong>Агенти лише з оболонкою.</strong> Нехай агент читає документацію через <code>kadrctl describe &lt;command&gt;</code> і виконує команди через <code>kadrctl run</code> — див. <a href="{{root}}{{lang_root}}docs/ai/cli.html">kadrctl</a>.</li>
+  <li><strong>Контекст.</strong> Дайте моделі <a href="{{root}}llms.txt"><code>llms.txt</code></a> або повний <a href="{{root}}llms-full.txt"><code>llms-full.txt</code></a>.</li>
+</ul>
+
+<h2 id="remote">Kadr на іншому комп’ютері</h2>
+<p>API навмисно приймає лише запити, адресовані <code>localhost</code>. Щоб керувати Kadr на іншому ПК, прокиньте до нього локальний порт (наприклад, <code>ssh -L 7777:127.0.0.1:7777 user@editing-pc</code>), скопіюйте <code>api-token</code> того ПК у <code>KADR_TOKEN</code> і пам’ятайте, що шляхи до файлів стосуються віддаленого диска.</p>

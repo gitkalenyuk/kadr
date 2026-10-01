@@ -1,0 +1,122 @@
+<!--meta {"title":"Translate and re-burn captions","nav":"Translate captions","order":390,"description":"Have Claude translate a video’s captions, write them into a copy of the project with the word timing kept, export SRT files and render a burned-in version in the new language.","group":"Recipes","summary":"Claude translates your captions, keeps their timing, and you get a burned-in version plus SRT files in both languages.","time":"~2 min","needs":"A Kadr project with captions (for example from the talking-head recipe)","commands":["captions.list","project.duplicate","captions.update","captions.set_style","captions.export","captions.import","export.start"]} -->
+<p class="lead">You get your captioned video in another language: a copy of the project with translated captions burned in, plus <code>.srt</code> files in both languages for YouTube or a player. Claude does the translation; Kadr keeps every caption on its original timing. The English page translates into Spanish — ask for any language Claude knows.</p>
+<ul>
+  <li><strong>Time:</strong> ~2 min</li>
+  <li><strong>You need:</strong> A Kadr project with captions (for example from the talking-head recipe)</li>
+  <li><strong>Main commands:</strong> <code class="cmd">captions.list</code>, <code class="cmd">project.duplicate</code>, <code class="cmd">captions.update</code>, <code class="cmd">captions.set_style</code>, <code class="cmd">captions.export</code>, <code class="cmd">captions.import</code>, <code class="cmd">export.start</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>My Kadr project "Tips short" has English captions. Make a Spanish version: duplicate the project as "Tips short (ES)", translate every caption cue into natural, informal Spanish (keep each cue about as long as the original so the timing still works) and write the translations into the copy in one batch. Switch the copy's captions to the cap_yellow_outline style. Export both caption tracks as SRT files next to the video, check one frame to make sure accents like ñ and ¡ render, then export the Spanish video at 1080p to C:\Users\you\Videos\Kadr\tips-short-es.mp4.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code>, <code>mat_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. Paths under <code>C:/Users/you</code> are examples.</p></div>
+<ol class="steps">
+<li>
+<h3 id="read">Read the captions</h3>
+<p><code class="cmd">captions.list</code> returns every cue with its id, time and text. <code>include_words</code> <code>false</code> leaves out the per-word timing to keep the answer small.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.list --project_id prj_ed95831b1bf0 --include_words false</code></pre><pre data-lang="mcp"><code>{"name": "captions_list", "arguments": {"project_id": "prj_ed95831b1bf0", "include_words": false}}</code></pre></div>
+<pre><code class="lang-text">seg_483cf05d7a3b   0.27 s   Hi everyone.
+seg_c7a21e8ac557   1.69 s   today I want
+seg_ec36b42dbeee   2.39 s   to show you
+seg_a21d88954c6f   2.99 s   three quick editing
+seg_14ffc67763f3   3.73 s   tips.
+seg_5e25780f9000   4.49 s   the first one
+seg_48cfd7689428   5.15 s   is simple, cut
+seg_1327457fba80   6.33 s   your pauses.
+seg_ec03fba25f1e   7.31 s   The second one
+seg_c6366ca86e46   8.06 s   is, add captions
+seg_3d5811649601   9.38 s   to every video.
+seg_f3d6135af313  10.62 s   And the third
+seg_e5b458b4c0fc  11.15 s   is to keep
+seg_3ccba6e05890  11.67 s   it short and
+seg_013e43033a05  12.31 s   punchy.
+seg_09aae4e3c1d2  12.95 s   Thanks for watching.</code></pre>
+</li>
+<li>
+<h3 id="duplicate">Work on a copy</h3>
+<p><code class="cmd">project.duplicate</code> copies the project with the same cue ids, so the list from step 1 still applies. The original is not touched.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run project.duplicate --project_id prj_ed95831b1bf0 --name "Tips short (ES)"</code></pre><pre data-lang="mcp"><code>{"name": "project_duplicate", "arguments": {"project_id": "prj_ed95831b1bf0", "name": "Tips short (ES)"}}</code></pre></div>
+</li>
+<li>
+<h3 id="write">Write the translations in one batch</h3>
+<p>Claude translates the cues itself, then writes them with <code class="cmd">captions.update</code> — one call per cue, all as one undo step. Words that change share the cue’s time between them, so word highlighting still follows the speech. Save as <code>captions-es.json</code> (UTF-8 without a byte-order mark — see the <a href="{{root}}{{lang_root}}docs/ai/cli.html#batch">CLI page</a>):</p>
+<pre><code class="lang-json">[
+  {"command": "captions.update", "args": {"segment_id": "seg_483cf05d7a3b", "text": "¡Hola a todos!"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c7a21e8ac557", "text": "hoy quiero"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec36b42dbeee", "text": "enseñaros"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_a21d88954c6f", "text": "tres trucos rápidos"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_14ffc67763f3", "text": "de edición."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_5e25780f9000", "text": "El primero"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_48cfd7689428", "text": "es sencillo: cortad"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_1327457fba80", "text": "las pausas."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec03fba25f1e", "text": "El segundo"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c6366ca86e46", "text": "es: poned subtítulos"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3d5811649601", "text": "en cada vídeo."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_f3d6135af313", "text": "Y el tercero"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_e5b458b4c0fc", "text": "es hacerlos"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3ccba6e05890", "text": "cortos y"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_013e43033a05", "text": "con ritmo."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_09aae4e3c1d2", "text": "¡Gracias por verlo!"}}
+]</code></pre>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl batch prj_0ae446772d4b captions-es.json</code></pre><pre data-lang="mcp"><code>{"name": "kadr_batch", "arguments": {"project_id": "prj_0ae446772d4b", "calls": [
+  {"command": "captions.update", "args": {"segment_id": "seg_483cf05d7a3b", "text": "¡Hola a todos!"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c7a21e8ac557", "text": "hoy quiero"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec36b42dbeee", "text": "enseñaros"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_a21d88954c6f", "text": "tres trucos rápidos"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_14ffc67763f3", "text": "de edición."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_5e25780f9000", "text": "El primero"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_48cfd7689428", "text": "es sencillo: cortad"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_1327457fba80", "text": "las pausas."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_ec03fba25f1e", "text": "El segundo"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_c6366ca86e46", "text": "es: poned subtítulos"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3d5811649601", "text": "en cada vídeo."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_f3d6135af313", "text": "Y el tercero"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_e5b458b4c0fc", "text": "es hacerlos"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_3ccba6e05890", "text": "cortos y"}},
+  {"command": "captions.update", "args": {"segment_id": "seg_013e43033a05", "text": "con ritmo."}},
+  {"command": "captions.update", "args": {"segment_id": "seg_09aae4e3c1d2", "text": "¡Gracias por verlo!"}}
+]}}</code></pre></div>
+</li>
+<li>
+<h3 id="style">Give the new version its own look</h3>
+<p><code class="cmd">captions.set_style</code> changes the look of every cue and keeps the text and timing.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.set_style --project_id prj_0ae446772d4b --style_id cap_yellow_outline</code></pre><pre data-lang="mcp"><code>{"name": "captions_set_style", "arguments": {"project_id": "prj_0ae446772d4b", "style_id": "cap_yellow_outline"}}</code></pre></div>
+</li>
+<li>
+<h3 id="srt">Export subtitle files</h3>
+<p><code class="cmd">captions.export</code> writes SRT, VTT, TXT or LRC; missing folders are created. Without <code>path</code> the text comes back in <code>content</code> instead.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.export --project_id prj_0ae446772d4b --format srt --path C:/Users/you/Videos/Kadr/tips-short-es.srt
+kadrctl run captions.export --project_id prj_ed95831b1bf0 --format srt --path C:/Users/you/Videos/Kadr/tips-short-en.srt</code></pre><pre data-lang="mcp"><code>{"name": "captions_export", "arguments": {"project_id": "prj_0ae446772d4b", "format": "srt", "path": "C:/Users/you/Videos/Kadr/tips-short-es.srt"}}
+{"name": "captions_export", "arguments": {"project_id": "prj_ed95831b1bf0", "format": "srt", "path": "C:/Users/you/Videos/Kadr/tips-short-en.srt"}}</code></pre></div>
+</li>
+<li>
+<h3 id="check-export">Check the characters, then export</h3>
+<p>Kadr falls back to a system font for any character the caption font lacks, so accents, Cyrillic and CJK all render. One frame confirms it:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.frame --project_id prj_0ae446772d4b --time_us 2s --width 540
+kadrctl run export.start --project_id prj_0ae446772d4b --resolution 1080p --path C:/Users/you/Videos/Kadr/tips-short-es.mp4</code></pre><pre data-lang="mcp"><code>{"name": "preview_frame", "arguments": {"project_id": "prj_0ae446772d4b", "time_us": 2000000, "width": 540}}
+{"name": "export_start", "arguments": {"project_id": "prj_0ae446772d4b", "resolution": "1080p", "path": "C:/Users/you/Videos/Kadr/tips-short-es.mp4"}}</code></pre></div>
+</li>
+<li>
+<h3 id="bilingual">Optional: both languages on screen</h3>
+<p>Import the translated SRT into the <em>original</em> project as a second caption track in another style. <code>replace</code> <code>false</code> keeps the English track and adds a new one.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.import --project_id prj_ed95831b1bf0 --path C:/Users/you/Videos/Kadr/tips-short-es.srt --style_id cap_box_dark --replace false</code></pre><pre data-lang="mcp"><code>{"name": "captions_import", "arguments": {"project_id": "prj_ed95831b1bf0", "path": "C:/Users/you/Videos/Kadr/tips-short-es.srt", "style_id": "cap_box_dark", "replace": false}}</code></pre></div>
+</li>
+</ol>
+
+<h2 id="more-ideas">More ideas</h2>
+<ul>
+  <li><strong>Subtitles only.</strong> Skip the burned-in export and upload the SRT files; YouTube shows them as selectable subtitles.</li>
+  <li><strong>Re-split long translations.</strong> If translated lines get long, run <code class="cmd">captions.relayout</code> on the copy with <code>max_words</code> 3 or <code>max_chars</code> 24. Cues are regrouped from their word timings.</li>
+  <li><strong>A script from the captions.</strong> <code class="cmd">captions.export</code> with <code>format</code> <code>txt</code> and no <code>path</code> returns the plain text — ask Claude to turn it into a blog post or a video description.</li>
+  <li><strong>No captions yet?</strong> Run <code class="cmd">captions.auto</code> first; Whisper recognises about 100 languages.</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>Ask Claude to keep each translated cue roughly as long as the original: captions that suddenly need three lines are hard to read.</li>
+  <li><code class="cmd">captions.shift</code> nudges every cue earlier or later if the subtitles feel a few frames off.</li>
+  <li>Several languages: repeat steps 2–6 per language; each copy is independent.</li>
+</ul>
+
+<!-- verified: 2026-10-01 against kadr-server 0.1.0-dev -->

@@ -1,0 +1,87 @@
+<!--meta {"title":"Best practices and pitfalls","nav":"Best practices","order":240,"description":"How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.","group":"Guides"} -->
+<p class="lead">Kadr’s commands are forgiving — every edit can be undone — but an agent that works in the right order gets better videos with fewer calls. These are the habits that matter most, and the traps that catch agents most often.</p>
+
+<h2 id="read-first">Read before you write</h2>
+<ul>
+  <li>Start every session with <code class="cmd">project.list</code> or <code class="cmd">project.get</code>/<code class="cmd">timeline.get</code>. Take ids from results — never construct or guess them.</li>
+  <li>Find library ids with <code class="cmd">library.list</code> (<code>kind</code>: <code>transition</code>, <code>effect</code>, <code>filter</code>, <code>animation</code>, <code>text_template</code>, <code>text_effect</code>, <code>text_animation</code>, <code>caption_style</code>, <code>sticker</code>, <code>font</code>, <code>generated</code>, <code>sound_effect</code>, <code>voice_effect</code>) and check unknown parameters with <code>kadrctl describe</code> or the reference.</li>
+  <li><strong>Re-read after edits that create or remove clips:</strong> splits, <code class="cmd">ai.remove_silence</code>, <code class="cmd">ai.split_scenes</code>, transcript cuts and magnet ripples change ids and times. Results usually list the new ids (<code>segment_ids</code>, <code>left</code>/<code>right</code>); otherwise call <code class="cmd">timeline.get</code> again.</li>
+</ul>
+
+<h2 id="batch">Plan, then batch</h2>
+<ul>
+  <li>Group related edits into one <code>kadr_batch</code> (MCP), <code>POST /projects/{id}/batch</code> (REST) or <code>kadrctl batch</code>: they apply atomically, as one undo step, and the person watching sees one clean change.</li>
+  <li>Use <code>dry_run</code> to validate a big plan — it runs every call on a copy and reports the first failure without saving.</li>
+  <li>Work in phases: create things (and read their ids) → batch the follow-up edits. A batch cannot reference ids created inside the same batch.</li>
+  <li>Global commands (exports, captions jobs, project create/duplicate/delete, library, presets) cannot be batched.</li>
+</ul>
+
+<h2 id="errors">Follow the error hints</h2>
+<p>Errors carry <code>code</code>, <code>message</code>, <code>hint</code> and often <code>field</code>. The hint is written for agents — it names the command that lists valid values or explains the rule that was broken:</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "transition_set", "arguments": {"project_id": "prj_c0d7a4e19b5f", "segment_id": "seg_f8a1d3c6e204", "type": "mix"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run transition.set --project_id prj_c0d7a4e19b5f --segment_id seg_f8a1d3c6e204 --type mix</code></pre></div>
+<pre><code class="lang-text">error [conflict]: segment seg_f8a1d3c6e204 is the last clip on its track; a transition needs a following clip
+hint: Transitions sit between two touching clips on the same track: pass the LEFT clip of the pair (the one that ends where the next one starts).</code></pre>
+<table>
+  <thead><tr><th>Error</th><th>Usual cause</th><th>What to do</th></tr></thead>
+  <tbody>
+    <tr><td><code>not_found</code> + <code>field</code></td><td>A stale or invented id</td><td>Re-read with <code class="cmd">timeline.get</code> / <code class="cmd">library.list</code></td></tr>
+    <tr><td><code>invalid_argument</code></td><td>Wrong enum value, out-of-range number, seconds instead of µs</td><td>The message lists the allowed values; convert times to µs</td></tr>
+    <tr><td><code>conflict</code></td><td>Locked track, clips that don’t touch (transitions), overlapping caption times</td><td>Unlock, move clips together, adjust neighbours first</td></tr>
+    <tr><td><code>not_available</code> (HTTP 503)</td><td>A missing local component</td><td>See <a href="#capabilities">below</a>; tell the person what to install</td></tr>
+    <tr><td>Result has <code>clamped: true</code></td><td>The request was limited (media end, half-clip transition, minimum length)</td><td>Read the actual values in the result</td></tr>
+  </tbody>
+</table>
+
+<h2 id="long-jobs">Long jobs: wait or poll</h2>
+<ul>
+  <li><strong>Background jobs:</strong> <code class="cmd">captions.auto</code>, <code class="cmd">transcript.transcribe</code>, <code class="cmd">ai.remove_background</code>, <code class="cmd">export.start</code>. They return a <code>job_id</code> immediately.</li>
+  <li><code>wait: true</code> (captions, transcription, background removal) blocks until done — fine for a few minutes of media, but MCP and <code>kadrctl</code> give up after 5 minutes.</li>
+  <li>For longer media, start without <code>wait</code> and long-poll <code class="cmd">captions.status</code> with <code>wait_s</code> (up to 600 s per call); poll <code class="cmd">export.status</code> every 1–2 s; or listen to <code>captions.done</code>/<code>export.done</code> events.</li>
+  <li>The first Whisper run loads the model and is slower. Exports run one at a time; extra jobs are <code>queued</code>. Jobs are forgotten when Kadr restarts.</li>
+</ul>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run captions.auto --project_id prj_c0d7a4e19b5f --language en --style_id cap_clean
+kadrctl run captions.status --project_id prj_c0d7a4e19b5f --job_id cap_7e4b1a9d2c05 --wait_s 120</code></pre><pre data-lang="mcp"><code>{"name": "captions_auto", "arguments": {"project_id": "prj_c0d7a4e19b5f", "language": "en", "style_id": "cap_clean"}}
+{"name": "captions_status", "arguments": {"project_id": "prj_c0d7a4e19b5f", "job_id": "cap_7e4b1a9d2c05", "wait_s": 120}}</code></pre></div>
+<h2 id="capabilities">Check optional components first</h2>
+<table>
+  <thead><tr><th>Feature</th><th>Needs</th><th>Check with</th></tr></thead>
+  <tbody>
+    <tr><td>Import, preview, export (everything)</td><td>FFmpeg</td><td><code class="cmd">tools.status</code> (<code class="cmd">tools.install_ffmpeg</code> downloads it)</td></tr>
+    <tr><td>Captions, transcripts, filler/pause removal</td><td>Python + faster-whisper + a model</td><td><code class="cmd">captions.asr_status</code></td></tr>
+    <tr><td>Background removal</td><td><code>rembg</code> or <code>onnxruntime</code> + a matting model</td><td><code class="cmd">ai.capabilities</code></td></tr>
+    <tr><td>Text-to-speech</td><td>Windows SAPI voices, eSpeak NG, or an ElevenLabs key</td><td><code class="cmd">tts.voices</code> (<code>providers</code> says why one is missing)</td></tr>
+  </tbody>
+</table>
+<p>If something is missing, the <code>hint</code> says how to install it. Kadr never downloads models by itself; tell the person what to install instead of retrying.</p>
+
+<h2 id="timeline-traps">Timeline traps</h2>
+<ul>
+  <li><strong>Don’t fight the magnet.</strong> On the main track <code>at_us</code> snaps to the nearest clip boundary and everything ripples. Build sequences in order, use overlay tracks for free placement, or switch the magnet off with <code class="cmd">timeline.settings.set</code>.</li>
+  <li><strong>Exact positions need <code>snap: false</code></strong> on <code class="cmd">timeline.segment.move</code> and <code class="cmd">timeline.segment.trim</code> — otherwise an edge within 100 ms of a marker, the playhead or another edge jumps to it.</li>
+  <li><strong>Keyframed properties:</strong> once a property has keyframes, <code>segment.set_*</code> writes a keyframe at the playhead. Edit animated values with <code class="cmd">keyframe.add</code> at explicit times.</li>
+  <li><strong>Transitions</strong> go on the left clip and need clips that touch; durations are capped at half the shorter clip.</li>
+  <li><strong>Filters and effects on tracks</strong> affect everything below them — including text if the text track is lower. Add them before titles, or apply them to clips.</li>
+  <li><strong>Units:</strong> times in µs; <code>volume_db</code> in dB but <code>volume</code> keyframes linear; positions in canvas fractions with +Y down; scale 1 = fit, not fill.</li>
+</ul>
+
+<h2 id="files">Files and paths</h2>
+<ul>
+  <li>Paths are absolute and refer to the PC where Kadr runs. In JSON use forward slashes (<code>C:/Users/you/Videos</code>) or doubled backslashes.</li>
+  <li>A folder in <code class="cmd">media.import</code> imports the media files directly inside it (not subfolders, up to 500); files already in the project are reported as <code>duplicates</code>.</li>
+  <li>Exports never overwrite unless <code>overwrite</code> is true — read the final <code>path</code> from the result. Without <code>path</code> they go to <code>%USERPROFILE%\Videos\Kadr\&lt;project name&gt;.mp4</code>.</li>
+</ul>
+
+<h2 id="small-results">Keep results small</h2>
+<ul>
+  <li><code class="cmd">timeline.get</code> instead of <code class="cmd">project.get</code> for orientation; <code class="cmd">segment.get</code> for one clip in depth.</li>
+  <li><code>include_words: false</code> on <code class="cmd">captions.list</code>; <code>include_words: false</code> on <code class="cmd">transcript.get</code> when you only need text.</li>
+  <li>Contact sheets of 8–12 tiles at 240–320 px; single frames at 960 px only when reading small text.</li>
+</ul>
+
+<h2 id="people">Respect the person</h2>
+<ul>
+  <li>Open the project in the window (<code class="cmd">ui.open_project</code>) and narrate phases with <code class="cmd">ui.toast</code> — see <a href="{{root}}{{lang_root}}docs/ai/working-visibly.html">Working visibly</a>.</li>
+  <li>Make variants with <code class="cmd">project.duplicate</code> instead of overwriting a finished edit; never <code class="cmd">project.delete</code> without asking.</li>
+  <li>Don’t put the API token or cloud keys into prompts, files or logs; <code class="cmd">tts.set_api_key</code> stores keys locally and never returns them.</li>
+  <li>Finish with a short report: what changed, where the export is, what you could not verify.</li>
+</ul>

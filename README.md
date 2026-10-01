@@ -1,113 +1,114 @@
+<p align="center"><b>English</b> · <a href="README.uk.md">Українська</a></p>
+
 <p align="center">
-  <img src="assets/logo.svg" width="112" height="112" alt="Kadr logo">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
+    <img src="assets/logo-light.svg" width="300" alt="Kadr">
+  </picture>
 </p>
 
-<h1 align="center">Kadr</h1>
+<h3 align="center">The video editor your AI agent can drive.</h3>
 
 <p align="center">
-  <b>The video editor your AI agent can drive.</b><br>
-  A CapCut-style desktop editor for Windows where every button, every hotkey and every menu item is also an API call:
-  REST, MCP for AI agents, a CLI and live WebSocket events.
-</p>
-
-<p align="center">
-  <a href="https://github.com/gitkalenyuk/kadr/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/gitkalenyuk/kadr?include_prereleases&sort=semver&display_name=tag&label=release&color=7c5cff"></a>
-  <a href="https://github.com/gitkalenyuk/kadr/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/gitkalenyuk/kadr/total?label=downloads&color=00c2a8"></a>
-  <a href="#system-requirements"><img alt="Platform: Windows 10 | 11 x64" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20x64-0078d6"></a>
-  <a href="LICENSE"><img alt="Licence: freeware, closed source" src="https://img.shields.io/badge/licence-freeware%20%C2%B7%20closed%20source-555555"></a>
-  <a href="#quick-start-for-ai-agents"><img alt="API: REST, MCP, CLI" src="https://img.shields.io/badge/API-REST%20%C2%B7%20MCP%20%C2%B7%20CLI-ff4d6d"></a>
+  A CapCut-style desktop editor in which every button, hotkey and menu item is also an API call.<br>
+  Edit by hand, or let Claude and other AI agents edit through <b>MCP</b>, <b>REST</b> and the <b>CLI</b>, and watch them work live.
 </p>
 
 <p align="center">
-  <a href="https://github.com/gitkalenyuk/kadr/releases"><b>Download</b></a> ·
-  <a href="https://gitkalenyuk.github.io/kadr/"><b>Website &amp; docs</b></a> ·
-  <a href="#quick-start-for-ai-agents">Quick start for AI agents</a> ·
-  <a href="https://gitkalenyuk.github.io/kadr/docs/recipes/">AI recipes</a> ·
-  <a href="https://gitkalenyuk.github.io/kadr/docs/reference/">Command reference</a> ·
+  <a href="https://github.com/gitkalenyuk/kadr/releases"><img alt="Latest release, including betas" src="https://img.shields.io/github/v/release/gitkalenyuk/kadr?include_prereleases&sort=semver&display_name=tag&label=latest&color=1fd1db"></a>
+  <a href="https://github.com/gitkalenyuk/kadr/releases"><img alt="Release date, including betas" src="https://img.shields.io/github/release-date-pre/gitkalenyuk/kadr?label=released&color=6c55ff"></a>
+  <a href="https://github.com/gitkalenyuk/kadr/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/gitkalenyuk/kadr/total?label=downloads&color=ff3d8b"></a>
+  <a href="#install"><img alt="Windows 10 and 11, x64" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20x64-0078d6"></a>
+  <a href="#macos-coming-soon"><img alt="macOS: coming soon" src="https://img.shields.io/badge/macOS-coming%20soon-555555"></a>
+  <br>
+  <a href="#quick-start-for-ai-agents"><img alt="MCP ready" src="https://img.shields.io/badge/MCP-ready-ff3d8b"></a>
+  <a href="#how-it-works"><img alt="API: REST, MCP, CLI" src="https://img.shields.io/badge/API-REST%20%C2%B7%20MCP%20%C2%B7%20CLI-6c55ff"></a>
+  <a href="https://gitkalenyuk.github.io/kadr/docs/ai/"><img alt="170+ documented commands" src="https://img.shields.io/badge/commands-170%2B%20documented-1fd1db"></a>
+  <a href="#privacy"><img alt="Works offline" src="https://img.shields.io/badge/works-offline-2ea44f"></a>
+  <a href="LICENSE"><img alt="Licence: freeware, closed source" src="https://img.shields.io/badge/licence-freeware-555555"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/gitkalenyuk/kadr/releases"><img alt="Download for Windows" src="https://img.shields.io/badge/Download-Windows%20x64-1fd1db?style=for-the-badge"></a>
+  &nbsp;
+  <a href="https://gitkalenyuk.github.io/kadr/docs/guide/"><img alt="User guide" src="https://img.shields.io/badge/Docs-for%20people-6c55ff?style=for-the-badge"></a>
+  &nbsp;
+  <a href="https://gitkalenyuk.github.io/kadr/docs/ai/"><img alt="Docs for AI agents" src="https://img.shields.io/badge/Docs-for%20AI%20agents-ff3d8b?style=for-the-badge"></a>
+</p>
+
+<p align="center">
+  <a href="https://gitkalenyuk.github.io/kadr/"><b>Website</b></a> ·
+  <a href="#features">Features</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#quick-start-for-ai-agents">AI quick start</a> ·
+  <a href="#documentation">Docs</a> ·
   <a href="CHANGELOG.md">Changelog</a> ·
   <a href="#faq">FAQ</a> ·
   <a href="https://github.com/gitkalenyuk/kadr/issues/new/choose">Report a bug</a>
 </p>
 
 <p align="center">
-  <img src="assets/screenshot-editor.png" alt="The Kadr editor: media library on the left, player in the middle, inspector on the right and a multi-track timeline below" width="100%">
+  <img src="assets/screenshot-editor.png" width="100%" alt="The Kadr editor: media library on the left, player in the middle, inspector on the right and a multi-track timeline below">
 </p>
 
 > [!NOTE]
-> Kadr is in **public beta**. Releases are published as pre-releases (`0.1.0-beta.1` and up) until 0.1.0 is final.
-> Expect rough edges, and please [report them](https://github.com/gitkalenyuk/kadr/issues/new/choose).
-> This repository holds **releases, documentation and the website only**. Kadr is closed-source freeware.
-
----
-
-## Contents
-
-- [What is Kadr?](#what-is-kadr)
-- [Why Kadr](#why-kadr)
-- [See it in action](#see-it-in-action)
-- [Features](#features)
-- [Download and install](#download-and-install)
-- [Automatic updates](#automatic-updates)
-- [Quick start for AI agents](#quick-start-for-ai-agents)
-- [System requirements](#system-requirements)
-- [Privacy](#privacy)
-- [FAQ](#faq)
-- [Roadmap](#roadmap)
-- [Support](#support)
-- [Licence and third-party notices](#licence-and-third-party-notices)
-
-## What is Kadr?
-
-Kadr (from *kadr*, a film frame) is a desktop video editor with the workflow people already know from
-CapCut: a media library, a player, an inspector and a magnetic multi-track timeline, plus transitions, effects, filters,
-text templates, stickers, auto captions and export presets for TikTok, Reels, Shorts and YouTube.
-
-What makes it different is underneath. Kadr is built around **one command registry**. Every action is a documented
-command with typed parameters, units, examples and error hints. The UI buttons, the keyboard shortcuts, the REST API,
-the OpenAPI spec, the MCP tools for AI agents, the `kadrctl` CLI and the docs are all generated from that registry, so
-they can never drift apart. Whatever you can do with the mouse, a script or an AI agent can do too, and you watch the
-edit happen live in the window.
+> Kadr is in **public beta** (`0.1.0-beta.N` pre-releases until 0.1.0 is final). Expect rough edges and please
+> [report them](https://github.com/gitkalenyuk/kadr/issues/new/choose). This repository holds **releases,
+> documentation and the website only**: Kadr is closed-source freeware.
 
 ## Why Kadr
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-### API-first
+**Edit like in CapCut**
 
-160+ commands cover projects, media, timeline, text, captions, colour, audio, AI tools, export, updates and more.
-They are exposed through a local **REST API** with an **OpenAPI 3.1** spec, a **WebSocket** event stream and the
-**`kadrctl`** CLI. Several edits can run as one atomic, undoable **batch** with an optional **dry run**.
+A magnetic multi-track timeline, a media library, a live player with on-canvas handles and an inspector.
+Split with <kbd>Ctrl</kbd>+<kbd>B</kbd>, drop a transition on a cut, add captions, export for TikTok, Reels,
+Shorts or YouTube.
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-### Made for AI agents (MCP)
+**Built for AI agents**
 
-`kadr-mcp.exe` turns every command into an MCP tool for Claude Desktop, Claude Code or any other MCP client.
-Agents get detailed tool descriptions, errors that explain how to fix the call, and **eyes**: `preview_frame`
-returns the rendered frame as an image, and `preview_contact_sheet` shows the whole edit in a single picture.
+`kadr-mcp` turns every command into an MCP tool for Claude Desktop, Claude Code and other clients. Agents get
+detailed tool docs, errors with fix-it hints and **eyes**: `preview_frame` and `preview_contact_sheet` return images.
+
+</td>
+<td width="33%" valign="top">
+
+**One registry, every interface**
+
+170+ documented commands drive the UI, hotkeys, REST, OpenAPI, MCP, `kadrctl` and the docs, so they never drift
+apart. Many edits run as one atomic, undoable **batch**, with a **dry run**.
 
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-### Offline
+**Offline by design**
 
-No account and no cloud. Rendering, export, Whisper auto captions, text-to-speech, background removal, scene
-detection and silence removal all run **on your PC**. Sound effects, stickers and generated backgrounds are
-synthesised by Kadr's own engine. Nothing is streamed from a server.
+Rendering, export, Whisper auto captions, text-to-speech, background removal and scene detection run on your PC.
+No account, no telemetry, no cloud. The local API listens on `127.0.0.1` and needs a token.
 
 </td>
-<td width="50%" valign="top">
+<td width="33%" valign="top">
 
-### Private
+**An original library**
 
-Your media never leaves your machine. The API listens on `127.0.0.1` only and requires a per-user token. Kadr has
-no telemetry, no analytics and no ads. Its only network traffic is the update check against this repository (which
-you can switch off) and the optional one-time FFmpeg download.
+68 transitions, 56 effects, 70 filters, 136 clip animations, 46 text templates, 82 stickers and 47 sound effects,
+all generated by Kadr's own engine. No CapCut assets.
+
+</td>
+<td width="33%" valign="top">
+
+**Safe updates**
+
+Updates come from this repository and install only when an **Ed25519 signature** and the installer's
+**SHA-256** both check out. Stable and Beta channels, skip a version, or switch checks off.
 
 </td>
 </tr>
@@ -115,218 +116,250 @@ you can switch off) and the optional one-time FFmpeg download.
 
 ## See it in action
 
-| Per-letter text animations & word-art | A short edit rendered by the engine |
+| Per-letter text animations and word art | A short edit rendered by the engine |
 |---|---|
-| <img src="assets/demo-agent.gif" alt="Per-letter text animations and word-art rendered by the Kadr engine" width="100%"> | <img src="assets/demo-editing.gif" alt="A short edit rendered by Kadr: transitions, filters, text and stickers" width="100%"> |
+| <img src="assets/demo-agent.gif" alt="Per-letter text animations and word art rendered by the Kadr engine" width="100%"> | <img src="assets/demo-editing.gif" alt="A short edit rendered by Kadr: transitions, filters, text and stickers" width="100%"> |
 | **Offline auto captions with word highlight** | **68 original transitions, rendered by the engine** |
-| <img src="assets/demo-captions.gif" alt="Speech made with tts.speak, captioned by captions.auto (local Whisper) with word highlighting" width="100%"> | <img src="assets/contact-sheet-transitions.png" alt="A contact sheet of Kadr transitions rendered with preview.contact_sheet" width="100%"> |
+| <img src="assets/demo-captions.gif" alt="Speech made with tts.speak and captioned by captions.auto (local Whisper) with word highlighting" width="100%"> | <img src="assets/contact-sheet-transitions.png" alt="A contact sheet of Kadr transitions rendered with preview.contact_sheet" width="100%"> |
+
+## How it works
+
+Every way into Kadr ends in the same command registry and the same engine, so a person, a script and an AI agent can
+do exactly the same things, and every change shows up live in the window.
+
+```mermaid
+flowchart LR
+    you["You<br/>mouse and keyboard"] --> ui["Kadr window"]
+    agent["AI agent<br/>Claude Desktop, Claude Code,<br/>any MCP client"] --> mcp["kadr-mcp<br/>MCP over stdio"]
+    scripts["Scripts and pipelines"] --> cli["kadrctl CLI"]
+    scripts --> rest
+    mcp --> rest["REST API + WebSocket<br/>127.0.0.1:7777"]
+    cli --> rest
+    subgraph engine["Kadr engine"]
+        registry["Command registry<br/>170+ documented commands"] --> model["Projects, timeline,<br/>undo and redo"]
+        model --> renderer["Renderer<br/>preview = export"]
+    end
+    ui --> registry
+    rest --> registry
+    renderer --> preview["Live preview<br/>frames and contact sheets"]
+    renderer --> output["Export via FFmpeg<br/>MP4, MOV, GIF, audio"]
+    preview -. the agent sees its edit .-> agent
+```
 
 ## Features
 
-Every row below is available in the UI **and** through the API (the matching commands are in parentheses). The full command reference
-with parameters, units and examples is built into the app at `http://127.0.0.1:7777/docs` and published on the
-website as the [command reference](https://gitkalenyuk.github.io/kadr/docs/reference/).
+Every feature is available in the UI **and** through the API. Expand a section for details; the full command reference
+with parameters, units and examples is in the [docs for AI agents](https://gitkalenyuk.github.io/kadr/docs/ai/) and
+built into the app at `http://127.0.0.1:7777/docs`.
 
-### Editing and timeline
-
-| Feature | Details |
-|---|---|
-| Projects | 10 canvas ratios: 16:9, 9:16, 1:1, 4:3, 3:4, 21:9, 2.35:1, 2:1, 1.85:1 and 5.8-inch. Frame rate, canvas background (colour, blur or image), cover frame, duplicate (`project.create`, `project.set_canvas`, `project.set_cover`) |
-| Media | Import video, photo, audio and animated GIF files or whole folders; duplicate detection; thumbnails, filmstrips and waveforms; **proxies** for smooth 4K/HEVC editing; relink moved files (`media.import`, `media.create_proxy`, `media.relink`) |
-| Generated media | Gradients, film grain and noise, drifting shapes, countdowns, grids, checkers, stripes and test cards, all rendered locally: 9 kinds, 32 presets (`media.generate`) |
-| Multi-track timeline | Main track with **magnet**, video overlays (picture-in-picture), text, sticker, effect, filter, adjustment and audio tracks; snapping; linkage; markers with colour and label; lock, hide and mute tracks |
-| Clip tools | Split `Ctrl+B`, delete left/right `Q`/`W`, duplicate, replace, freeze frame, reverse, mirror, rotate, crop with ratio presets, copy/cut/paste |
-| Speed | 0.1× to 100× with *keep pitch*, plus speed curves: 6 presets (montage, hero, bullet, jump cut, flash in, flash out) or your own 2 to 20 point curve (`segment.set_speed_curve`) |
-| Transform and compositing | Position, scale and rotation with on-canvas handles and snapping guides, opacity, **14 blend modes**, masks (linear, mirror, circle, rectangle, heart, star) with feather, rounding and invert, **chroma key** |
-| Keyframes | 22 animatable properties (position, scale, rotation, opacity, volume, 15 colour controls, filter intensity) with linear, ease-in, ease-out and ease-in-out easing (`keyframe.add`) |
-| Undo and history | Every edit is one undo step, whether it came from the UI, the API or an agent. Batches are one step too (`edit.undo`, `edit.redo`) |
-| My kit | Save text styles, colour settings, filters, effects, transitions and animations as reusable presets for all projects (`presets.save`, `presets.apply`) |
-
-### Colour
+<details>
+<summary><b>Editing and timeline</b>: magnetic main track, overlays, keyframes, speed curves, masks, chroma key</summary>
 
 | Feature | Details |
 |---|---|
-| Basic adjustments | 14 sliders: brightness, contrast, saturation, exposure, temperature, tint, highlights, shadows, sharpen, vignette, hue, fade, grain and shine (`segment.set_adjust`) |
-| HSL | 8 colour bands (red to magenta) × hue, saturation and lightness, with smooth band blending (`segment.set_hsl`) |
-| Curves | Master, R, G and B curves with up to 16 points, plus 7 presets: lighten, darken, fade, contrast, cool, warm, vintage (`segment.set_curves`) |
-| LUTs | Load any `.cube` LUT, with an intensity control |
-| Auto adjust | One click analyses the frame and fixes exposure, contrast, white balance and saturation (`adjustment.auto_enhance`) |
-| Filters | 70 original filters in 18 categories, each with a keyframable intensity (`filter.apply`, `filter.add`) |
-| Adjustment layers | Grade everything below a time range at once (`adjustment.add`) |
-| Clean-up | Video denoise and deflicker (`segment.set_video_cleanup`) |
+| Projects | 10 canvas ratios (16:9, 9:16, 1:1, 4:3, 3:4, 21:9, 2.35:1, 2:1, 1.85:1, 5.8-inch), any frame rate, canvas background (colour, blur or image), cover frame, duplicate and rename |
+| Media | Video, photo, audio and animated GIF files or whole folders, by button, native dialog or drag and drop; duplicate detection; thumbnails, filmstrips and waveforms; **proxies** for smooth 4K/HEVC editing; relink moved files |
+| Generated media | Gradients, film grain and noise, drifting shapes, countdowns, grids, checkers, stripes and test cards: 9 kinds, 32 presets |
+| Timeline | Magnetic main track, video overlays (picture-in-picture), text, sticker, effect, filter, adjustment and audio tracks; snapping; linkage; markers with colour and label; lock, hide and mute |
+| Clip tools | Split <kbd>Ctrl</kbd>+<kbd>B</kbd>, delete left/right <kbd>Q</kbd>/<kbd>W</kbd>, duplicate, replace, freeze frame, reverse, mirror, rotate, crop with ratio presets, copy, cut and paste |
+| Speed | 0.1× to 100× with *keep pitch*; speed curves: 6 presets (montage, hero, bullet, jump cut, flash in, flash out) or your own 2 to 20 point curve |
+| Compositing | Position, scale and rotation with on-canvas handles and snapping guides, opacity, **14 blend modes**, 6 mask shapes (linear, mirror, circle, rectangle, heart, star) with feather, rounding and invert, **chroma key** |
+| Keyframes | 22 animatable properties (transform, opacity, volume, 15 colour controls, filter intensity) with linear, ease-in, ease-out and ease-in-out |
+| Undo and history | Every edit is one undo step, whoever made it; a batch is one step too |
+| My kit | Save text styles, colour settings, filters, effects, transitions and animations as presets for every project |
 
-### Text and captions
+</details>
+
+<details>
+<summary><b>Colour</b>: 14 adjustments, HSL, curves, LUTs, auto adjust, 70 filters</summary>
 
 | Feature | Details |
 |---|---|
-| Text styling | 4 built-in fonts plus every font installed on your PC, with fallback for Cyrillic and CJK. Stroke and extra outlines, shadow, background box, glow, linear or radial gradient fill, 3D extrude, curved text, letter case (`text.add`, `text.update`) |
-| Templates and word art | 46 text templates in 9 categories and 22 word-art effects (gradient, metal, glow, 3D, outline, retro) (`text.apply_template`, `text.apply_effect`) |
-| Per-letter animation | 39 text animations: 17 in, 11 out and 11 loop. Typewriter, letter rise, karaoke sweep, scramble, word pop, wave and more. They combine with clip animations (`text.set_glyph_animation`) |
-| **Auto captions** | Offline speech recognition with Whisper (faster-whisper): about 100 languages plus auto-detect, word-level timestamps, model choice from `tiny` to `large-v3`, NVIDIA GPU acceleration (`captions.auto`) |
-| Caption styles | 15 styles, including **word highlight** and karaoke looks that follow the spoken words (`captions.set_style`) |
-| Caption editor | Edit, split, merge, shift and restyle cues (`captions.update`, `captions.split`, `captions.merge`, `captions.shift`) |
-| Subtitle files | Import SRT, VTT, ASS/SSA and LRC. Export SRT, VTT, TXT and LRC (`captions.import`, `captions.export`) |
-| **Transcript editing** | Delete words from the transcript and the video is cut to match. One-click *remove filler words* (English, Ukrainian and Russian lists, plus your own) and *remove pauses* (`transcript.delete_words`, `transcript.remove_fillers`, `transcript.remove_pauses`) |
-| Text to speech | Local voices (Windows SAPI voices and eSpeak NG in about 130 languages), loudness-normalised, with an option to fit the text clip to the speech (`tts.speak`, `tts.from_text`) |
+| Basic adjustments | 14 sliders: brightness, contrast, saturation, exposure, temperature, tint, highlights, shadows, sharpen, vignette, hue, fade, grain and shine |
+| HSL | 8 colour bands × hue, saturation and lightness |
+| Curves | Master, R, G and B with up to 16 points, plus 7 presets |
+| LUTs | Any `.cube` LUT, with intensity |
+| Auto adjust | Analyses the frame and fixes exposure, contrast, white balance and saturation |
+| Filters | 70 original filters in 18 categories, with keyframable intensity, plus adjustment layers |
+| Clean-up | Video denoise and deflicker |
+
+</details>
+
+<details>
+<summary><b>Text, captions and voice</b>: templates, word art, letter animations, Whisper captions, transcript editing, TTS</summary>
+
+| Feature | Details |
+|---|---|
+| Text styling | 4 built-in fonts plus every installed font (Cyrillic and CJK fallback); stroke and extra outlines, shadow, background box, glow, gradient fill, 3D extrude, curved text, letter case |
+| Templates and word art | 46 text templates in 9 categories, 22 word-art effects |
+| Letter animations | 39 per-letter and per-word animations (17 in, 11 out, 11 loop): typewriter, letter rise, karaoke sweep, scramble, word pop, wave and more |
+| **Auto captions** | Offline Whisper (faster-whisper): about 100 languages plus auto-detect, word-level timing, models from `tiny` to `large-v3`, NVIDIA GPU acceleration |
+| Caption styles and editor | 15 styles incl. **word highlight** and karaoke; edit, split, merge, shift and restyle cues; import SRT, VTT, ASS/SSA, LRC; export SRT, VTT, TXT, LRC |
+| **Transcript editing** | Delete words to cut the video; remove filler words (English, Ukrainian, Russian, plus your own) and pauses |
+| Text to speech | Local voices (Windows SAPI, eSpeak NG in about 130 languages), loudness-normalised; optional ElevenLabs voices with your own API key |
+
+</details>
+
+<details>
+<summary><b>Audio</b>: mixing, 25 voice effects, loudness, beats, 47 sound effects</summary>
+
+| Feature | Details |
+|---|---|
+| Mixing | Volume in dB with keyframes, fade in/out, track mute |
+| Voice changer | 25 voice effects, from chipmunk, robot and megaphone to cathedral, lo-fi and vocal enhance |
+| Clean-up | Noise reduction and loudness normalisation to −14 LUFS with a true-peak limit |
+| Analysis | EBU R128 loudness meter and beat detection with BPM and automatic beat markers |
+| Separate audio | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> moves a clip's sound to a linked audio clip; restore it any time |
+| Sound effects | 47 synthesised SFX in 9 categories with hover preview |
+
+</details>
+
+<details>
+<summary><b>AI and smart tools</b>: all local</summary>
+
+| Tool | What it does |
+|---|---|
+| Auto captions | Whisper speech-to-text with word timings, then styled caption cues |
+| Remove background | Cuts out the person or subject without a green screen (`rembg`, `onnxruntime` or `torch` on your machine) |
+| Split scenes | Detects shot changes and splits the clip at every cut |
+| Remove silence | Cuts silent stretches from talking-head videos and podcasts and closes the gaps |
+| Auto reframe | Turns 16:9 into 9:16 (or any ratio) by following the subject with smoothed keyframes |
+| Capability check | `ai.capabilities` and `captions.asr_status` report what is installed and how to add the rest |
+
+</details>
+
+<details>
+<summary><b>Export</b>: up to 4K60, H.264/HEVC, GPU encoding, GIF and audio</summary>
+
+| Feature | Details |
+|---|---|
+| Video | 480p, 720p, 1080p, 2K and 4K; 24, 25, 30, 50 and 60 fps; **H.264** or **HEVC** in MP4 or MOV; quality presets or a custom bitrate |
+| GPU encoding | NVIDIA NVENC, Intel Quick Sync and AMD AMF when available, with a software fallback |
+| More formats | Animated **GIF**; audio-only **MP3, WAV, AAC, FLAC**; export of a time range |
+| Workflow | Size estimate, background queue with progress and cancel, *open folder* |
+
+</details>
+
+<details>
+<summary><b>Automation</b>: REST, OpenAPI, batches, events, MCP, CLI, headless</summary>
+
+| Interface | Details |
+|---|---|
+| REST API | `POST http://127.0.0.1:7777/api/v1/commands/<name>`, bearer token, JSON in and out, errors with a code, message and **hint** |
+| OpenAPI | `GET /api/v1/openapi.json` (OpenAPI 3.1) and an HTML reference at `/docs` |
+| Batches | `POST /api/v1/projects/{id}/batch` runs many commands as **one atomic undo step**; `dry_run: true` only validates |
+| Events | WebSocket `/api/v1/events`: project changes, playhead, import, export, captions and AI progress |
+| MCP | `kadr-mcp` (stdio) exposes every command as a tool, plus `kadr_batch`; images come back as image content |
+| Watch mode | `ui.open_project`, `ui.select` and `ui.toast` let an agent show you what it is doing |
+| CLI | `kadrctl commands`, `describe`, `run`, `batch`; human time formats such as `2.5s` and `00:01:02.5` |
+| Headless | `kadr-server` runs the same engine and API without a window |
+
+</details>
 
 ### Library
 
-Everything in the library is **original**: it is generated or rendered by Kadr's own engine. No CapCut assets are used.
+Everything is **original**: generated or rendered by Kadr's own engine.
 
 | Library | Items | Categories |
 |---|---:|---:|
-| Transitions, including 3D cube and flip, iris shapes, blinds, ripple, swirl and zoom blur, with direction and softness options | **68** | 11 |
-| Video effects, each with its own parameter sliders | **56** | 14 |
+| Transitions (3D cube and flip, iris shapes, blinds, ripple, swirl, zoom blur…) | **68** | 11 |
+| Video effects, each with its own sliders | **56** | 14 |
 | Filters | **70** | 18 |
-| Clip animations: 44 in, 44 out, 28 combo and 20 loop | **136** | 4 |
+| Clip animations: 44 in, 44 out, 28 combo, 20 loop | **136** | 4 |
 | Text templates | **46** | 9 |
 | Text effects (word art) | **22** | 7 |
 | Text animations, per letter and per word | **39** | 3 |
 | Caption styles | **15** | 5 |
-| Stickers: callouts, doodles, frames, countdowns, social, sale tags, weather and more | **82** | 14 |
-| Sound effects, synthesised offline | **47** | 9 |
+| Stickers | **82** | 14 |
+| Sound effects, synthesised | **47** | 9 |
 | Voice effects | **25** | 5 |
 | Generated media presets | **32** | 7 |
 
-### Audio
+## Install
 
-| Feature | Details |
+### Windows (available now)
+
+| Download | For |
 |---|---|
-| Mixing | Volume in dB with keyframes, fade in/out, track mute (`segment.set_volume`, `segment.set_fade`) |
-| Voice changer | 25 voice effects, from chipmunk, robot and megaphone to cathedral, lo-fi and vocal enhance (`segment.set_audio`) |
-| Clean-up | Noise reduction and loudness normalisation to −14 LUFS with a true-peak limit (`segment.set_audio`) |
-| Analysis | EBU R128 loudness meter (LUFS, LRA, true peak) and beat detection with BPM that can drop markers on every beat (`audio.loudness`, `audio.detect_beats`) |
-| Separate audio | `Ctrl+Shift+S` moves a clip's sound to its own linked audio clip. Restore it any time (`audio.separate`, `audio.restore`) |
-| Sound effects | 47 built-in SFX (whooshes, pops, impacts, UI clicks, risers, countdowns, ambience) with hover preview (`sfx.add`) |
+| **`Kadr-Setup-<version>-x64.exe`** | Recommended. Per-user install, no administrator rights, automatic updates |
+| `Kadr-<version>-windows-x64-portable.zip` | Run from any folder or USB drive; tells you about updates but does not install them |
 
-### AI and smart tools (all local)
+1. Get the file from [**Releases**](https://github.com/gitkalenyuk/kadr/releases) and run it. It installs to
+   `%LOCALAPPDATA%\Programs\Kadr` (an all-users install is optional). Optional tasks: a desktop shortcut and
+   **Add kadrctl and kadr-mcp to PATH**.
+2. **SmartScreen.** The installer is not code-signed yet, so Windows may say *"Windows protected your PC"*: click
+   **More info → Run anyway**. Compare the hash with `SHA256SUMS.txt` if you want to be sure (below).
+3. **WebView2.** Preinstalled on Windows 11 and most Windows 10 PCs; the installer points you to Microsoft's
+   download if it is missing.
+4. **FFmpeg on first launch.** Kadr uses FFmpeg for all decoding and encoding but does not ship it. Choose
+   **Download now** to fetch the official BtbN GPL build of FFmpeg 7.1 (about 100 MB, SHA-256 verified), or
+   **I have FFmpeg** to pick your own. An `ffmpeg` on your `PATH` is found automatically.
 
-| Tool | What it does |
-|---|---|
-| Auto captions | Whisper speech-to-text with word timings, then styled caption cues (`captions.auto`) |
-| Remove background | Cuts out the person or main subject without a green screen, using `rembg`, `onnxruntime` or `torch` on your machine (`ai.remove_background`) |
-| Split scenes | Detects shot changes and splits the clip at every cut (`ai.detect_scenes`, `ai.split_scenes`) |
-| Remove silence | Cuts silent stretches out of talking-head videos and podcasts and closes the gaps (`ai.remove_silence`) |
-| Auto reframe | Turns 16:9 footage into 9:16 (or any ratio) by following the subject with smoothed keyframes (`ai.auto_reframe`) |
-| Auto adjust | Automatic exposure, contrast and white balance (`adjustment.auto_enhance`) |
-| Capability check | `ai.capabilities` and `captions.asr_status` report what is installed and how to enable what is missing |
-
-### Export
-
-| Feature | Details |
-|---|---|
-| Video | 480p, 720p, 1080p, 2K and 4K; 24, 25, 30, 50 and 60 fps; **H.264** or **HEVC** in MP4 or MOV; quality presets (lower, recommended, higher) or a custom bitrate |
-| GPU encoding | NVIDIA NVENC, Intel Quick Sync and AMD AMF are used automatically when available, with a software fallback (libx264/libx265) |
-| More formats | Animated **GIF**, audio-only **MP3, WAV, AAC, FLAC**, export of a time range |
-| Workflow | Size estimate before export, background queue with progress, cancel and *open folder* (`export.estimate`, `export.start`, `export.status`) |
-
-### Automation
-
-| Interface | Details |
-|---|---|
-| REST API | `http://127.0.0.1:7777/api/v1/commands/<name>`. Bearer-token auth, JSON in and out, errors with a code, a message and a **hint** |
-| OpenAPI | `GET /api/v1/openapi.json` (OpenAPI 3.1). The full HTML command reference at `http://127.0.0.1:7777/docs` |
-| Batches | `POST /api/v1/projects/{id}/batch` runs many commands as **one atomic undo step**. `dry_run: true` validates without saving |
-| Events | WebSocket `ws://127.0.0.1:7777/api/v1/events`: project changes, playhead, import, export, captions and AI progress |
-| MCP | `kadr-mcp.exe` (stdio) exposes every command as a tool, plus `kadr_batch`. Images come back as real image content |
-| CLI | `kadrctl commands`, `kadrctl describe <command>`, `kadrctl run <command> --param value`, `kadrctl batch`. Human time formats such as `2.5s` and `00:01:02.5` |
-| Headless | `kadr-server.exe` runs the same engine and API without a window, for pipelines and batch jobs |
-
-## Download and install
-
-### Installer (recommended)
-
-1. Open the [**Releases**](https://github.com/gitkalenyuk/kadr/releases) page and download
-   **`Kadr-Setup-<version>-x64.exe`**, for example `Kadr-Setup-0.1.0-beta.1-x64.exe`.
-2. Run it. The default is a per-user install into `%LOCALAPPDATA%\Programs\Kadr`, which **needs no administrator
-   rights**. You can also choose an all-users install. Optional tasks: a desktop shortcut, and **Add kadrctl and
-   kadr-mcp to PATH** (handy for terminals and AI agents).
-3. **Windows SmartScreen.** Kadr builds are not code-signed yet, so Windows may show *"Windows protected your PC"*.
-   Click **More info → Run anyway**. You can confirm the file is the one we published by checking its hash
-   ([below](#verify-your-download)).
-4. The installer checks for the **Microsoft Edge WebView2 Runtime**, which is preinstalled on Windows 11 and most
-   Windows 10 PCs, and points you to Microsoft's installer if it is missing.
-5. **First launch: FFmpeg.** Kadr uses FFmpeg for all decoding and encoding but does not ship it. On first launch
-   choose **Download now** and Kadr fetches the official GPL build of FFmpeg 7.1 from the
-   [BtbN FFmpeg builds](https://github.com/BtbN/FFmpeg-Builds) (about 100 MB), checks its SHA-256, and extracts only
-   `ffmpeg.exe` and `ffprobe.exe` into `%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin`. If you already have FFmpeg, choose
-   **I have FFmpeg** and pick its folder. An `ffmpeg` on your `PATH` is detected automatically.
-
-What gets installed:
+<details>
+<summary>What gets installed, where your data lives, verifying and uninstalling</summary>
 
 | File | Purpose |
 |---|---|
 | `Kadr.exe` | The editor |
-| `kadr-server.exe` | Headless engine and API, no window |
+| `kadr-server.exe` | Headless engine and API |
 | `kadr-mcp.exe` | MCP server for AI agents (stdio) |
 | `kadrctl.exe` | Command-line client |
 | `licenses\` | EULA and third-party notices |
 
-Where your data lives:
-
 | Path | Contents |
 |---|---|
-| `%APPDATA%\Kadr\` | Projects, settings, presets (*My kit*), the API token (`api-token`), library caches |
-| `%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin\` | `ffmpeg.exe` and `ffprobe.exe`, if Kadr downloaded them for you |
+| `%APPDATA%\Kadr\` | Projects, settings, presets (*My kit*), the API token (`api-token`), caches |
+| `%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin\` | `ffmpeg.exe` and `ffprobe.exe`, if Kadr downloaded them |
 | `%USERPROFILE%\Videos\Kadr\` | Default export folder |
 
-### Portable zip
-
-Download **`Kadr-<version>-windows-x64-portable.zip`**, extract it anywhere (for example to a USB drive) and run
-`Kadr.exe`. The portable build has the same features. It still keeps projects in `%APPDATA%\Kadr` and needs WebView2.
-It tells you when a new version is out but does not install updates itself: extract the new zip over the old folder.
-
-### Verify your download
-
-Each release includes `SHA256SUMS.txt`. In PowerShell:
+Verify a download in PowerShell and compare with the matching line of `SHA256SUMS.txt`:
 
 ```powershell
 Get-FileHash .\Kadr-Setup-0.1.0-beta.1-x64.exe -Algorithm SHA256
-# compare the Hash value with the matching line in SHA256SUMS.txt
 ```
 
-### Uninstall
+Uninstall from **Settings → Apps → Installed apps → Kadr**. The uninstaller asks before deleting your projects and
+the downloaded FFmpeg; answer **No** to keep them.
 
-Use **Settings → Apps → Installed apps → Kadr → Uninstall**. The uninstaller asks whether to also delete your projects
-and settings (`%APPDATA%\Kadr`) and the tools Kadr downloaded, such as FFmpeg. Answer **No** to keep them for a later
-installation.
+</details>
 
-## Automatic updates
+### macOS (coming soon)
 
-Kadr can update itself from the releases in this repository:
+A universal build for Apple Silicon and Intel Macs (macOS 12 or later) is being prepared: a DMG to drag into
+Applications, the same API, MCP server and CLI inside the app bundle, and signed automatic updates. Watch the
+[releases](https://github.com/gitkalenyuk/kadr/releases) (**Watch → Custom → Releases**) to hear about it first.
 
-- **When it checks.** In the background at most once a day, without slowing down startup, and whenever you click
-  **Settings → Updates → Check now** (or **Check for updates…** in the menu). You can turn automatic checks off, or
-  skip a version, there.
-- **What it downloads.** Every release has a small manifest, `latest.json`, with the version, release notes, and the
-  SHA-256 hash and size of the installer.
-- **How it is verified.** The manifest is signed with an **Ed25519** key (`latest.json.sig`), and the matching
-  public key is built into Kadr. Kadr installs an update only if **the signature is valid and the installer's
-  SHA-256 matches the manifest**. If either check fails, nothing is installed. Development builds without a key only
-  offer a link to the download page.
-- **How it installs.** The new installer runs silently, closes Kadr, upgrades in place, keeps your projects and
-  settings, and starts Kadr again.
-- **Channels.** **Stable** gets final releases. **Beta** also gets pre-releases. Choose the channel in
-  **Settings → Updates**. A pre-release build such as `0.1.0-beta.1` uses the Beta channel by default, so during the
-  public beta you get every new beta automatically. A pre-release is never offered on the Stable channel.
-- **Portable and development builds** only tell you about new versions and link to the release page.
-- **For agents.** Updates are commands too: `update.check`, `update.status`, `update.download`, `update.install`,
-  `update.skip` and `update.settings`. FFmpeg setup works the same way with `tools.status`, `tools.install_ffmpeg`
-  and `tools.set_ffmpeg_dir`.
+### Automatic updates
 
-See [SECURITY.md](SECURITY.md) for the details and for how to verify a release by hand.
+Kadr checks this repository in the background at most once a day (or when you click **Settings → Updates → Check
+now**). Every release carries a manifest, `latest.json`, signed with Ed25519 (`latest.json.sig`); the public key is
+built into Kadr. An update installs only if **the signature is valid and the installer's SHA-256 matches**, then
+Kadr upgrades in place, keeps your projects and restarts. **Stable** gets final releases, **Beta** also gets
+pre-releases (beta builds use Beta by default). Agents can do the same with `update.check`, `update.install` and
+friends. Details and manual verification: [SECURITY.md](SECURITY.md).
 
 ## Quick start for AI agents
 
-### 1. Start Kadr
+**1. Start Kadr** (the app, or `kadr-server` for no window). The API listens on `http://127.0.0.1:7777`; the token
+is created on first run in `%APPDATA%\Kadr\api-token`, and `kadr-mcp` and `kadrctl` read it automatically.
 
-Open the Kadr app, or run `kadr-server.exe` for a headless engine. The API listens on `http://127.0.0.1:7777`.
-On first run Kadr creates a random API token in **`%APPDATA%\Kadr\api-token`**. `kadr-mcp` and `kadrctl` read it
-automatically, so you never paste it into a config file.
+**2. Connect your agent.**
 
-### 2a. Claude Desktop
+<table>
+<tr><th>Claude Code</th><th>Claude Desktop</th></tr>
+<tr>
+<td valign="top">
 
-Open **Settings → Developer → Edit Config**, which opens `%APPDATA%\Claude\claude_desktop_config.json`, and add:
+```powershell
+claude mcp add --scope user kadr -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"
+```
+
+Then run `/mcp` to check that `kadr` is connected.
+
+</td>
+<td valign="top">
+
+**Settings → Developer → Edit Config**, then add:
 
 ```json
 {
@@ -338,54 +371,35 @@ Open **Settings → Developer → Edit Config**, which opens `%APPDATA%\Claude\c
 }
 ```
 
-Restart Claude Desktop. The Kadr tools appear in the tools menu.
+</td>
+</tr>
+</table>
 
-### 2b. Claude Code
+Any other MCP client: a **stdio** server with the command `kadr-mcp.exe` and no arguments. Tool names use
+underscores (`timeline_segment_split` for `timeline.segment.split`). If neither the app nor `kadr-server` is running,
+`kadr-mcp` starts the engine itself.
 
-```powershell
-claude mcp add --scope user kadr -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.exe"
-```
-
-Run `/mcp` inside Claude Code to check that `kadr` is connected.
-
-### 2c. Any other MCP client
-
-Use a **stdio** server with the command `kadr-mcp.exe` and no arguments. Tool names use underscores
-(`timeline_segment_split` for `timeline.segment.split`). The extra `kadr_batch` tool applies many edits as one undo
-step. The Kadr app (or `kadr-server.exe`) must be running.
-
-### 3. Ask for an edit
+**3. Ask for an edit.**
 
 > *Create a 9:16 project from the clips in `C:\Users\me\Videos\Trip`, remove the silences, add auto captions in the
 > word-highlight style, put a whoosh on every cut, show me a contact sheet, then export 1080p.*
 
-A typical agent session looks like this, and you can watch every step land on the timeline:
-
 ```text
-project_create {name, ratio: "9:16"}  →  media_import {paths}  →  timeline_segment_add …
-ai_remove_silence  →  captions_auto {style_id: "cap_highlight_word", wait: true}
-sfx_add …  →  preview_contact_sheet  (the agent looks at the result)  →  export_start {resolution: "1080p"}
+project_create {name, ratio: "9:16"} → media_import {paths} → timeline_segment_add …
+ai_remove_silence → captions_auto {style_id: "cap_highlight_word", wait: true}
+sfx_add … → preview_contact_sheet (the agent looks at the result) → export_start {resolution: "1080p"}
 ```
 
-More end-to-end [AI recipes](https://gitkalenyuk.github.io/kadr/docs/recipes/) are on the website, along with the
-full guides for [MCP setup](https://gitkalenyuk.github.io/kadr/docs/mcp.html), the
-[REST API](https://gitkalenyuk.github.io/kadr/docs/rest.html) and [kadrctl](https://gitkalenyuk.github.io/kadr/docs/cli.html).
-
-### REST in 60 seconds
-
-PowerShell:
+<details>
+<summary><b>REST in 60 seconds</b> (PowerShell and curl)</summary>
 
 ```powershell
 $token = (Get-Content "$env:APPDATA\Kadr\api-token" -Raw).Trim()
 $h     = @{ Authorization = "Bearer $token" }
 $api   = "http://127.0.0.1:7777/api/v1"
-
-$p = (Invoke-RestMethod -Method Post "$api/commands/project.create" -Headers $h `
-        -ContentType 'application/json' -Body '{"name":"My TikTok","ratio":"9:16"}').result
-$p.id
+(Invoke-RestMethod -Method Post "$api/commands/project.create" -Headers $h `
+   -ContentType 'application/json' -Body '{"name":"My TikTok","ratio":"9:16"}').result.id
 ```
-
-Bash (Git Bash or WSL with the token copied over):
 
 ```bash
 TOKEN=$(cat "$APPDATA/Kadr/api-token")
@@ -401,10 +415,12 @@ curl -s -X POST http://127.0.0.1:7777/api/v1/projects/prj_…/batch -H "Authoriz
   ]}'
 ```
 
-Times are **integers in microseconds** (`1 s = 1000000`). Every error carries a `hint` that tells you, or your
-agent, how to fix the call.
+Times are **integers in microseconds** (`1 s = 1000000`). Every error carries a `hint` that says how to fix the call.
 
-### kadrctl
+</details>
+
+<details>
+<summary><b>kadrctl</b></summary>
 
 ```powershell
 kadrctl commands timeline                 # list the commands of a category
@@ -414,191 +430,185 @@ kadrctl run timeline.segment.split --project_id prj_123 --segment_id seg_4 --at_
 kadrctl batch prj_123 edits.json --dry-run
 ```
 
-If you didn't tick *Add kadrctl and kadr-mcp to PATH* in the installer, call it as
-`& "$env:LOCALAPPDATA\Programs\Kadr\kadrctl.exe"`. Set `KADR_ADDR` and `KADR_TOKEN` to target another instance.
+Without the PATH option, call `& "$env:LOCALAPPDATA\Programs\Kadr\kadrctl.exe"`. `KADR_ADDR` and `KADR_TOKEN` target
+another instance.
+
+</details>
+
+## Documentation
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### For people
+
+How to use the editor: interface tour, timeline editing, text and captions, effects and colour, audio, AI tools,
+export, keyboard shortcuts, settings and troubleshooting.
+
+**[User guide →](https://gitkalenyuk.github.io/kadr/docs/guide/)** · [Українською](https://gitkalenyuk.github.io/kadr/uk/docs/guide/)
+
+</td>
+<td width="50%" valign="top">
+
+### For AI agents
+
+How an agent drives Kadr: MCP, REST and CLI set-up, concepts (projects, tracks, segments, µs time), recipes, best
+practices, the full command reference and machine-readable files ([`llms.txt`](https://gitkalenyuk.github.io/kadr/llms.txt)).
+
+**[AI docs →](https://gitkalenyuk.github.io/kadr/docs/ai/)** · [Українською](https://gitkalenyuk.github.io/kadr/uk/docs/ai/)
+
+</td>
+</tr>
+</table>
 
 ## System requirements
 
 | | Minimum | Recommended |
 |---|---|---|
-| OS | Windows 10 version 1809 (64-bit) | Windows 11 (64-bit) |
-| CPU | 64-bit (x64) processor | 6 or more cores |
+| OS | Windows 10 1809 (64-bit) | Windows 11 (64-bit) |
+| CPU | x64 processor | 6 or more cores |
 | Memory | 4 GB | **8 GB** or more (16 GB for 4K) |
 | Graphics | Any GPU supported by Windows | NVIDIA, Intel or AMD GPU with a hardware video encoder |
-| Runtime | Microsoft Edge WebView2 Runtime (preinstalled on Windows 11) | |
-| FFmpeg | Downloaded by Kadr on first launch, or your own FFmpeg | |
-| Disk | About 1 GB for Kadr and FFmpeg, plus room for projects, caches and proxies | SSD |
+| Runtime | Microsoft Edge WebView2 (preinstalled on Windows 11) | |
+| FFmpeg | Downloaded by Kadr on first launch, or your own | |
+| Disk | About 1 GB for Kadr and FFmpeg, plus projects, caches and proxies | SSD |
 
-Optional extras unlock more features. Kadr detects them at run time and tells you how to enable anything that is
-missing.
+Optional extras, detected at run time (Kadr tells you how to enable anything missing):
 
 | Optional | Enables |
 |---|---|
-| **NVIDIA GPU** (NVENC; CUDA for Whisper) | Fast H.264/HEVC export and GPU-accelerated auto captions. Intel Quick Sync and AMD AMF are used for export too |
-| **Python 3.9+ and `faster-whisper`** (`pip install faster-whisper`, then download a model once) | Auto captions and transcript editing |
-| **`rembg` / `onnxruntime`** (`pip install rembg onnxruntime`) or an ONNX matting model | AI background removal |
+| **NVIDIA GPU** (NVENC; CUDA for Whisper) | Fast H.264/HEVC export and GPU-accelerated captions (Quick Sync and AMF are used for export too) |
+| **Python 3.9+ with `faster-whisper`** (download a model once) | Auto captions and transcript editing |
+| **`rembg` / `onnxruntime`** or an ONNX matting model | Background removal |
 | **eSpeak NG** | Text-to-speech in about 130 languages, in addition to the Windows voices |
 
-Run `captions.asr_status` and `ai.capabilities` (or open the matching panels in the app) to see what Kadr found.
-`KADR_PYTHON` selects a specific Python interpreter.
+`KADR_PYTHON` selects a specific Python interpreter; `captions.asr_status` and `ai.capabilities` show what Kadr found.
 
 ## Privacy
 
-- **Your media stays on your PC.** Kadr does not upload, sync or analyse your files anywhere else. Speech recognition,
-  background removal and every other AI tool run locally.
+- **Your media stays on your computer.** Kadr does not upload, sync or analyse your files anywhere else; every AI
+  tool runs locally.
 - **No account, no telemetry, no analytics, no ads.**
-- **Network access** is limited to the update check (an HTTPS request to GitHub for `latest.json`, at most once a day,
-  and you can switch it off), downloading an update you accepted, and the optional one-time FFmpeg download (about 100 MB) from
-  GitHub. Python packages and Whisper or matting models that *you* install may download their own model files
-  when you set them up.
-- **The local API is private to your machine.** It binds to `127.0.0.1`, accepts only loopback origins and requires
-  the token stored in `%APPDATA%\Kadr\api-token`. To revoke access for every tool, delete that file and restart
-  Kadr to get a new token.
-- **AI agents act with your permissions.** An MCP client connected to Kadr can edit and delete your Kadr projects
-  and write exported files. Connect only agents you trust. Every edit can be undone.
+- **Network access** is limited to the update check (at most once a day; you can switch it off), downloading an
+  update you accepted, the optional one-time FFmpeg download, and ElevenLabs voices only if you add your own key
+  (the text you synthesise is then sent to ElevenLabs).
+- **The local API is private.** It binds to `127.0.0.1`, accepts only loopback origins and requires the token in
+  `%APPDATA%\Kadr\api-token`; delete that file and restart Kadr to revoke every tool's access.
+- **Agents act with your permissions.** A connected MCP client can edit and delete Kadr projects and write exports.
+  Connect only agents you trust; every edit can be undone.
 
 ## FAQ
 
 <details>
 <summary><b>Is Kadr free?</b></summary>
 
-Yes. Kadr is **freeware**: free to use on any number of your computers, including for commercial work, with no
-watermark, no subscription and no account. The videos you make are yours. Kadr is closed source, so this repository
-contains releases and documentation but no code. The full terms are in [LICENSE](LICENSE).
+Yes. Kadr is **freeware**: free on any number of your computers, including for commercial work, with no watermark,
+subscription or account. Your videos are yours. Kadr is closed source; the terms are in [LICENSE](LICENSE).
 </details>
 
 <details>
-<summary><b>Is Kadr CapCut? Is it affiliated with CapCut or ByteDance?</b></summary>
+<summary><b>Is Kadr CapCut, or affiliated with CapCut or ByteDance?</b></summary>
 
-No. Kadr is an independent editor that follows a familiar CapCut-style workflow. All of its transitions, effects,
-filters, templates, stickers, sounds and caption styles are original, and none are copied from CapCut. *CapCut* is a
-trademark of its owner.
+No. Kadr is an independent editor with a familiar CapCut-style workflow. All transitions, effects, filters,
+templates, stickers, sounds and caption styles are original. *CapCut* is a trademark of its owner.
 </details>
 
 <details>
 <summary><b>Windows says "Windows protected your PC". Is it safe?</b></summary>
 
-The installer is not yet signed with a paid code-signing certificate, so SmartScreen does not recognise it. Click
-**More info → Run anyway**. To be sure you have the genuine file, compare its SHA-256 with `SHA256SUMS.txt` from
-the same release. Updates installed by Kadr itself are always verified (Ed25519 signature plus SHA-256).
+The installer is not signed with a paid certificate yet, so SmartScreen does not recognise it. Click
+**More info → Run anyway**, and compare the SHA-256 with `SHA256SUMS.txt` from the same release. Updates installed by
+Kadr itself are always verified (Ed25519 signature plus SHA-256).
 </details>
 
 <details>
 <summary><b>Why does Kadr need FFmpeg, and why isn't it included?</b></summary>
 
 FFmpeg decodes and encodes every video and audio file. Kadr runs it as a separate program and does not bundle it.
-On first launch Kadr can download the official BtbN GPL build (FFmpeg 7.1, about 100 MB, SHA-256 verified) for you.
-Or use an FFmpeg you already have: choose its folder, put it on your `PATH`, or set `KADR_FFMPEG_DIR`. See
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+On first launch it can download the official BtbN GPL build for you, or you can use your own: pick its folder, put it
+on `PATH`, or set `KADR_FFMPEG_DIR`. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 </details>
 
 <details>
-<summary><b>Which AI agents can use Kadr?</b></summary>
+<summary><b>Which AI agents can use Kadr? Can they see what they made?</b></summary>
 
-Any MCP client (Claude Desktop, Claude Code and other MCP-capable tools) through `kadr-mcp.exe`, and anything that can
-make HTTP requests through the REST API. Scripts can use `kadrctl`.
-</details>
-
-<details>
-<summary><b>Can the agent see what it made?</b></summary>
-
-Yes. `preview_frame` returns the rendered frame as an image, the exact picture the export will contain.
-`preview_contact_sheet` puts many moments of the timeline into one image, so the agent can review pacing, captions and
-overlays at a glance.
+Any MCP client (Claude Desktop, Claude Code and others) through `kadr-mcp`, anything that speaks HTTP through the REST
+API, and scripts through `kadrctl`. `preview_frame` returns the exact frame the export will contain, and
+`preview_contact_sheet` shows many moments of the timeline in one picture.
 </details>
 
 <details>
 <summary><b>What if the agent makes a mess?</b></summary>
 
-Press `Ctrl+Z`. Every edit an agent makes is a normal undo step, and a `kadr_batch` is a single step. Agents can
-also do a **dry run** of a batch to check it before anything changes.
+Press <kbd>Ctrl</kbd>+<kbd>Z</kbd>. Every agent edit is a normal undo step and a `kadr_batch` is a single step. Agents
+can also dry-run a batch before anything changes.
 </details>
 
 <details>
-<summary><b>Auto captions say "not available".</b></summary>
+<summary><b>Auto captions or background removal say "not available".</b></summary>
 
-Install Python 3.9+ and run `pip install faster-whisper`, then download a model once, for example
-`python -c "from faster_whisper import WhisperModel; WhisperModel('small')"`. If Python is not on your `PATH`, set
-`KADR_PYTHON`. `captions.asr_status` shows what Kadr detects. An NVIDIA GPU makes recognition several times faster.
+Captions: install Python 3.9+, run `pip install faster-whisper`, then download a model once, e.g.
+`python -c "from faster_whisper import WhisperModel; WhisperModel('small')"`. Background removal:
+`pip install rembg onnxruntime`, or put an ONNX matting model at `%APPDATA%\Kadr\models\matting.onnx`. If Python is
+not on `PATH`, set `KADR_PYTHON`. `captions.asr_status` and `ai.capabilities` show what Kadr detects.
 </details>
 
 <details>
-<summary><b>Background removal says "not available".</b></summary>
+<summary><b>Can I run Kadr without a window, or on another port?</b></summary>
 
-Run `pip install rembg onnxruntime`. rembg downloads its model on first use. Alternatively, put an ONNX matting model at
-`%APPDATA%\Kadr\models\matting.onnx`. Check the result with `ai.capabilities`.
-</details>
-
-<details>
-<summary><b>Can I run Kadr without a window, on a server or in a pipeline?</b></summary>
-
-Yes. `kadr-server.exe` runs the same engine and API headless. Use `KADR_DATA_DIR` and `KADR_ADDR` to run isolated
-instances side by side.
-</details>
-
-<details>
-<summary><b>Port 7777 is already in use.</b></summary>
-
-Set the environment variable `KADR_ADDR`, for example `127.0.0.1:7788`, for Kadr and for the tools that talk to it
-(`kadr-mcp`, `kadrctl`).
+Yes. `kadr-server` runs the same engine and API headless. `KADR_ADDR` (e.g. `127.0.0.1:7788`) changes the port for
+Kadr and the tools that talk to it; `KADR_DATA_DIR` runs isolated instances side by side.
 </details>
 
 <details>
 <summary><b>Which files can I import?</b></summary>
 
-Video: MP4, MOV, M4V, MKV, WebM, AVI, WMV, FLV, MTS/M2TS, TS, 3GP, MPEG, OGV, MXF and animated GIF.
-Audio: MP3, WAV, AAC, M4A, FLAC, OGG, Opus, WMA and AIFF. Images: JPEG, PNG, BMP, WebP, TIFF, HEIC/HEIF and AVIF.
-Files are decoded by FFmpeg, so the codecs inside them must be supported by your FFmpeg build. The official GPL build
-Kadr downloads covers all common ones.
+Video: MP4, MOV, M4V, MKV, WebM, AVI, WMV, FLV, MTS/M2TS, TS, 3GP, MPEG, OGV, MXF and animated GIF. Audio: MP3, WAV,
+AAC, M4A, FLAC, OGG, Opus, WMA and AIFF. Images: JPEG, PNG, BMP, WebP, TIFF, HEIC/HEIF and AVIF. The codecs inside
+must be supported by your FFmpeg build; the build Kadr downloads covers all common ones.
 </details>
 
 <details>
 <summary><b>macOS or Linux?</b></summary>
 
-Not yet. The engine is cross-platform and native builds are on the [roadmap](#roadmap).
+A universal macOS build (Apple Silicon and Intel) is coming next; see [macOS](#macos-coming-soon). Linux is on the
+roadmap. The engine is cross-platform.
 </details>
 
 ## Roadmap
 
-These are plans, not promises. Vote for what you need with a thumbs-up reaction on
+Plans, not promises. Vote with a thumbs-up on
 [feature requests](https://github.com/gitkalenyuk/kadr/issues?q=is%3Aissue+label%3Aenhancement).
 
-- **macOS and Linux builds**
-- **Code-signed installer**, so SmartScreen stops warning
-- **winget** and **Scoop** packages
-- **Project templates** with replaceable media slots
-- **Original music library** of royalty-free loops and beds
-- Animated stickers and more generated media
-- Body effects based on person segmentation (outline, aura, clone)
-- Motion tracking (text and stickers that follow an object) and camera tracking
-- Optical-flow slow motion and frame interpolation
-- Retouch tools
-- More languages for filler-word removal
+- **macOS** (next) and **Linux** builds
+- Code-signed installer; **winget** and **Scoop** packages
+- Project templates with replaceable media slots
+- An original library of royalty-free music loops and beds
+- Animated stickers, body effects (outline, aura, clone), motion and camera tracking
+- Optical-flow slow motion, retouch tools, more filler-word languages
 - A plugin API for third-party asset providers
 
 ## Support
 
-- **Questions and how-tos:** see the [website and docs](https://gitkalenyuk.github.io/kadr/) and the [FAQ](#faq).
-- **Bugs:** [open a bug report](https://github.com/gitkalenyuk/kadr/issues/new?template=bug_report.yml). Include your
-  Kadr version (**Settings → About**).
+- **Questions:** the [user guide](https://gitkalenyuk.github.io/kadr/docs/guide/), the
+  [AI docs](https://gitkalenyuk.github.io/kadr/docs/ai/) and the [FAQ](#faq).
+- **Bugs:** [open a bug report](https://github.com/gitkalenyuk/kadr/issues/new?template=bug_report.yml) with your Kadr
+  version (**Settings → About**).
 - **Ideas:** [request a feature](https://github.com/gitkalenyuk/kadr/issues/new?template=feature_request.yml).
-- **Security issues:** please report them privately. See [SECURITY.md](SECURITY.md).
+- **Security issues:** report privately, see [SECURITY.md](SECURITY.md). More in [SUPPORT.md](SUPPORT.md).
 
-More in [SUPPORT.md](SUPPORT.md).
+## Licence
 
-## Licence and third-party notices
-
-Kadr is **freeware, closed source**. It is free to use under the terms of the [End User Licence Agreement](LICENSE),
-which also defines what you may and may not do with the binaries.
-
-Kadr is built with open-source components (Go, Wails, React and others) whose licences are listed in
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and in the `licenses\` folder of every installation. **FFmpeg** is
-not distributed with Kadr. It is downloaded on request from the official BtbN builds under the GNU GPL, and Kadr
-runs it as a separate program.
+Kadr is **freeware, closed source**, under the [End User Licence Agreement](LICENSE). It is built with open-source
+components (Go, Wails, React and others) listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and in the
+`licenses\` folder of every installation. **FFmpeg** is not distributed with Kadr: it is downloaded on request from the
+official BtbN builds under the GNU GPL and runs as a separate program.
 
 ---
 
 <p align="center">
   <a href="https://gitkalenyuk.github.io/kadr/">gitkalenyuk.github.io/kadr</a> ·
-  <i>CapCut is a trademark of its respective owner. Kadr is not affiliated with or endorsed by CapCut or ByteDance.</i>
+  <a href="README.uk.md">Українська</a><br>
+  <sub>CapCut is a trademark of its respective owner. Kadr is not affiliated with or endorsed by CapCut or ByteDance.</sub>
 </p>

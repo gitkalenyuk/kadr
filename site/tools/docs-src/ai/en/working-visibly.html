@@ -1,0 +1,51 @@
+<!--meta {"title":"Working visibly with a human watching","nav":"Working visibly","order":220,"description":"Let a person follow an agent’s work in the Kadr window: open the project, select the clip being edited, switch library tabs, move the playhead and narrate with notifications.","group":"Guides"} -->
+<p class="lead">Every edit an agent makes appears in the open Kadr window immediately. The <code>ui.*</code> commands go one step further: they steer what the window <em>shows</em> — which project, which clip, which library tab — and put short notes on screen, so a person can follow along, learn, and step in.</p>
+
+<h2 id="requirements">When the window can follow</h2>
+<ul>
+  <li>The agent must be talking to the <strong>editor</strong> (<code>Kadr.exe</code>), not to a headless <code>kadr-server.exe</code>. <code class="cmd">app.version</code> tells which: its <code>executable</code> ends in <code>Kadr.exe</code> for the editor.</li>
+  <li><code>ui.*</code> commands change no project data, are not undoable, and simply do nothing when no window is open — they are always safe to call.</li>
+  <li>Edits from the agent and from the person land in one undo history. The person can press <kbd>Ctrl</kbd>+<kbd>Z</kbd> on any agent edit; an agent can <code class="cmd">edit.undo</code> a human edit.</li>
+</ul>
+
+<h2 id="commands">The commands</h2>
+<table>
+  <thead><tr><th>Command</th><th>What the person sees</th></tr></thead>
+  <tbody>
+    <tr><td><code class="cmd">ui.open_project</code></td><td>The window switches to that project, as if it was opened from Home.</td></tr>
+    <tr><td><code class="cmd">ui.select</code></td><td>A clip is selected on the timeline and its properties appear in the inspector. <code>segment_id</code> <code>""</code> clears the selection.</td></tr>
+    <tr><td><code class="cmd">ui.library_tab</code></td><td>The left panel switches to <code>media</code>, <code>audio</code>, <code>text</code>, <code>stickers</code>, <code>effects</code>, <code>transitions</code>, <code>captions</code>, <code>transcript</code>, <code>filters</code>, <code>adjustment</code> or <code>templates</code> (My kit).</td></tr>
+    <tr><td><code class="cmd">ui.toast</code></td><td>A short notification at the top of the window: a bold <code>title</code> and an optional <code>body</code>.</td></tr>
+    <tr><td><code class="cmd">playback.seek</code>, <code class="cmd">playback.play</code>, <code class="cmd">playback.pause</code></td><td>The playhead moves and the player shows that frame, or plays from there.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="session">A narrated edit</h2>
+<p>Open the project, announce the step, show where the feature lives, select the clip, make the edit, then play the result:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run ui.open_project --project_id prj_6b0e4d2a9c71
+kadrctl run ui.toast --title "Adding a transition" --body "Cube turn between the two shots"
+kadrctl run ui.library_tab --tab transitions
+kadrctl run ui.select --project_id prj_6b0e4d2a9c71 --segment_id seg_d02f7b9e3a64
+kadrctl run transition.set --project_id prj_6b0e4d2a9c71 --segment_id seg_d02f7b9e3a64 --type cube_turn_left --duration_us 0.6s
+kadrctl run playback.play --project_id prj_6b0e4d2a9c71 --from_us 2s
+kadrctl run playback.pause --project_id prj_6b0e4d2a9c71
+kadrctl run ui.select --project_id prj_6b0e4d2a9c71 --segment_id=</code></pre><pre data-lang="mcp"><code>{"name": "ui_open_project", "arguments": {"project_id": "prj_6b0e4d2a9c71"}}
+{"name": "ui_toast", "arguments": {"title": "Adding a transition", "body": "Cube turn between the two shots"}}
+{"name": "ui_library_tab", "arguments": {"tab": "transitions"}}
+{"name": "ui_select", "arguments": {"project_id": "prj_6b0e4d2a9c71", "segment_id": "seg_d02f7b9e3a64"}}
+{"name": "transition_set", "arguments": {"project_id": "prj_6b0e4d2a9c71", "segment_id": "seg_d02f7b9e3a64", "type": "cube_turn_left", "duration_us": 600000}}
+{"name": "playback_play", "arguments": {"project_id": "prj_6b0e4d2a9c71", "from_us": 2000000}}
+{"name": "playback_pause", "arguments": {"project_id": "prj_6b0e4d2a9c71"}}
+{"name": "ui_select", "arguments": {"project_id": "prj_6b0e4d2a9c71", "segment_id": ""}}</code></pre></div>
+<h2 id="habits">Good habits</h2>
+<ul>
+  <li><strong>Open the project first.</strong> Call <code class="cmd">ui.open_project</code> right after creating or choosing a project, before the edits start.</li>
+  <li><strong>Narrate phases, not calls.</strong> One toast per meaningful step (“Cutting to the beat”, “Adding captions — about a minute”) is enough; dozens of toasts are noise.</li>
+  <li><strong>Batch visual edits.</strong> A <code>kadr_batch</code> lands as one update and one undo step, so the person sees a clean change instead of flicker.</li>
+  <li><strong>Point at what changed.</strong> <code class="cmd">ui.select</code> the clip and <code class="cmd">playback.seek</code> to the moment you edited, so the player shows it.</li>
+  <li><strong>Ask before big moves.</strong> If the person is editing at the same time, agree who edits what: every command is atomic, but there is no locking between people and agents.</li>
+  <li><strong>Long jobs.</strong> Toast when a caption job or an export starts and when it ends; the window also shows export progress itself.</li>
+</ul>
+
+<h2 id="events">Under the hood</h2>
+<p>The <code>ui.*</code> commands publish <code>ui.open_project</code>, <code>ui.select</code>, <code>ui.library_tab</code> and <code>ui.toast</code> events. Every open window — the desktop app or the editor in web mode — follows them, and any other client can see them on the <a href="{{root}}{{lang_root}}docs/ai/rest.html#events">event stream</a>.</p>

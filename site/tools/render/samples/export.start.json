@@ -1,0 +1,32 @@
+{
+  "command": "export.start",
+  "request": {
+    "project_id": "prj_b54c09c92d24",
+    "path": "C:\\Users\\you\\Videos\\Kadr\\hero.mp4",
+    "resolution": "720p",
+    "fps": 30,
+    "codec": "h264",
+    "bitrate": "higher",
+    "overwrite": true,
+    "range_start_us": 0,
+    "range_end_us": 10000000
+  },
+  "response": {
+    "ok": true,
+    "result": {
+      "job_id": "exp_64100b74df3c",
+      "state": "running",
+      "path": "C:\\Users\\you\\Videos\\Kadr\\hero.mp4",
+      "kind": "video",
+      "width": 1280,
+      "height": 720,
+      "fps": 30,
+      "frames": 300,
+      "duration_us": 10000000,
+      "bitrate_kbps": 7500,
+      "codec": "h264",
+      "format": "mp4",
+      "estimated_size_bytes": 9743918
+    }
+  }
+}

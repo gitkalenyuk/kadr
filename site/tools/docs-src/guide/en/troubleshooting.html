@@ -1,0 +1,100 @@
+<!--meta {"title":"Troubleshooting & FAQ","nav":"Troubleshooting & FAQ","order":160,"description":"Fixes for common Kadr problems — SmartScreen, missing FFmpeg, slow preview, captions or background removal not available — and answers to frequent questions.","group":"Help"} -->
+<p class="lead">Something not working? Find your problem below. Most issues are solved in a minute.</p>
+
+<h2 id="install-problems">Installing</h2>
+
+<h3 id="smartscreen">“Windows protected your PC”</h3>
+<p>This is Windows SmartScreen. It warns about new apps that aren't code-signed yet, which is the case for Kadr during the beta. Click <strong>More info</strong>, then <strong>Run anyway</strong>. To make sure the file is genuine, compare its checksum with <code>SHA256SUMS.txt</code> from the release page: in PowerShell, <code>Get-FileHash .\Kadr-Setup-X.Y.Z-x64.exe</code>.</p>
+
+<h3 id="browser-blocks">The browser blocks the download</h3>
+<p>Browsers are cautious with programs that few people have downloaded yet. In Microsoft Edge, open the <strong>…</strong> menu next to the download and choose <strong>Keep</strong> → <strong>Show more</strong> → <strong>Keep anyway</strong>. In Chrome, open the downloads list and choose <strong>Keep</strong>.</p>
+
+<h3 id="webview2">The window stays empty or Kadr asks for WebView2</h3>
+<p>Kadr's window uses the Microsoft Edge WebView2 Runtime. Windows 11 has it built in; on Windows 10 install the free “Evergreen” WebView2 Runtime from Microsoft's website, then start Kadr again.</p>
+
+<h2 id="ffmpeg-problems">FFmpeg</h2>
+
+<h3 id="missing-ffmpeg">“Set up FFmpeg” keeps appearing, or import, preview and export don't work</h3>
+<p>Kadr can't find FFmpeg. Open <strong>Settings → FFmpeg</strong> and click <strong>Download FFmpeg</strong>, or point Kadr to an FFmpeg you already have (the folder with <code>ffmpeg.exe</code> and <code>ffprobe.exe</code>). See <a href="{{root}}{{lang_root}}docs/guide/settings.html#ffmpeg">Settings → FFmpeg</a>.</p>
+
+<h3 id="ffmpeg-download-fails">The FFmpeg download fails</h3>
+<p>Check your internet connection and click <strong>Retry</strong>. On networks that block GitHub (some offices and schools), download a Windows build of FFmpeg on another connection, unzip it, and choose its <code>bin</code> folder with <strong>Use my FFmpeg</strong>.</p>
+
+<h2 id="editing-problems">Editing</h2>
+
+<h3 id="slow-preview">The preview is slow or stutters</h3>
+<ol>
+  <li>Lower the preview quality: click <strong>Full</strong> under the player and choose <strong>Half</strong> or <strong>Quarter</strong>. This doesn't affect the export. See <a href="{{root}}{{lang_root}}docs/guide/player.html#quality">Preview quality</a>.</li>
+  <li>For 4K, HEVC or other heavy footage, create <a href="{{root}}{{lang_root}}docs/guide/import-media.html#proxies">proxies</a> (right-click the video in Media → <strong>Create proxy</strong>).</li>
+  <li>Close other heavy programs, and keep projects and media on an SSD if you can.</li>
+</ol>
+
+<h3 id="import-fails">A file won't import</h3>
+<p>Make sure FFmpeg is set up (see above). Check that the file plays in another player — damaged or incomplete downloads can't be read. Very unusual formats can be converted to MP4 first. The <a href="{{root}}{{lang_root}}docs/guide/import-media.html#formats">list of supported formats</a> covers almost every camera and phone.</p>
+
+<h3 id="missing-media">A clip shows as missing</h3>
+<p>The original file was moved, renamed or deleted. Right-click it in the <strong>Media</strong> tab, choose <strong>Link media…</strong> and enter its new location. See <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">Missing files</a>.</p>
+
+<h3 id="cant-edit">I can't select or move a clip</h3>
+<p>Its track is probably locked — click the padlock at the start of the track. Also check that the Select tool is active (press <kbd>A</kbd>) and, in the player, the Move tool (<kbd>V</kbd>), and that playback is paused.</p>
+
+<h3 id="shortcuts-layout">Keyboard shortcuts don't work</h3>
+<p>Click an empty part of the timeline first: while the cursor is in a text box, shortcuts are switched off so you can type. If you use a non-Latin keyboard layout (for example Ukrainian), switch to the English layout — letter shortcuts such as <kbd>Ctrl</kbd>+<kbd>B</kbd>, <kbd>Q</kbd> and <kbd>M</kbd> follow the active layout. See <a href="{{root}}{{lang_root}}docs/guide/shortcuts.html">Keyboard shortcuts</a>.</p>
+
+<h3 id="edited-by">A message says “Edited via API” or “Edited via MCP”</h3>
+<p>Another program — usually an AI assistant you connected, or a script — changed the project. That is expected when you use Kadr with AI. Any such change can be undone with <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</p>
+
+<h2 id="smart-problems">Smart features</h2>
+
+<h3 id="captions-not-available">Auto captions say “Speech recognition is not set up”</h3>
+<p>Auto captions and the transcript need Python with faster-whisper and a downloaded model. Follow <a href="{{root}}{{lang_root}}docs/guide/captions.html#requirements">Captions → What you need</a>, then click <strong>Check again</strong>. Common causes:</p>
+<ul>
+  <li><strong>Python isn't found.</strong> Re-run the Python installer, choose <em>Modify</em> and enable <em>Add Python to environment variables</em>, then restart Kadr.</li>
+  <li><strong>Several Pythons are installed</strong> and Kadr uses another one than you installed faster-whisper into. Tell Kadr which one to use: create a user environment variable named <code>KADR_PYTHON</code> containing the full path of the right <code>python.exe</code> (Start menu → “Edit environment variables for your account”), then restart Kadr.</li>
+  <li><strong>A model is greyed out as “not downloaded”.</strong> Download it once, as in step 3 of the setup, replacing <code>small</code> with the model name.</li>
+  <li><strong>It is very slow.</strong> Use the <em>small</em> or <em>base</em> model; <em>large-v3</em> really needs an NVIDIA graphics card.</li>
+</ul>
+
+<h3 id="bg-not-available">“Auto removal is not available on this computer”</h3>
+<p>Background removal needs Python with <em>rembg</em>. The message tells you exactly what is missing. Install it with <code>pip install rembg onnxruntime</code> (see <a href="{{root}}{{lang_root}}docs/guide/ai-tools.html#remove-background-requirements">AI tools → What you need</a>) and click <strong>Check again</strong>. The <code>KADR_PYTHON</code> tip above applies here too. For a green-screen recording you don't need any of this — use <strong>Chroma key</strong>.</p>
+
+<h3 id="no-voices">Text to speech shows “No speech voices found”</h3>
+<p>Add a voice in Windows: <strong>Settings → Time &amp; language → Speech → Add voices</strong>, then click <strong>Detect again</strong> in Kadr. For ElevenLabs voices that don't appear, check that the key file is named exactly <code>elevenlabs.key</code> (not <code>elevenlabs.key.txt</code>), that it is in the data folder, and that you clicked the refresh arrow — see <a href="{{root}}{{lang_root}}docs/guide/audio.html#elevenlabs">Use ElevenLabs voices</a>.</p>
+
+<h2 id="faq">Frequently asked questions</h2>
+
+<h3 id="free">Is Kadr really free?</h3>
+<p>Yes. Kadr is freeware: free to use on any number of computers, also for commercial work, with no account, no watermark, no ads and no telemetry.</p>
+
+<h3 id="offline">Does Kadr work offline?</h3>
+<p>Yes. Editing, export, auto captions, background removal and the other smart tools all run on your computer. The internet is only used for the one-time FFmpeg download, update checks (which you can switch off) and — only if you choose them — ElevenLabs voices.</p>
+
+<h3 id="where-projects">Where are my projects stored?</h3>
+<table>
+  <thead><tr><th>What</th><th>Where</th></tr></thead>
+  <tbody>
+    <tr><td>Projects, settings, My kit</td><td><code>%APPDATA%\Kadr</code> — projects are in its <code>projects</code> folder, one folder each</td></tr>
+    <tr><td>Portable version</td><td>the <code>data</code> folder next to <code>Kadr.exe</code></td></tr>
+    <tr><td>Exported videos</td><td><code>Videos\Kadr</code> in your user folder, unless you chose another folder</td></tr>
+    <tr><td>FFmpeg downloaded by Kadr</td><td><code>%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin</code></td></tr>
+  </tbody>
+</table>
+<p>To open <code>%APPDATA%\Kadr</code>, paste it into the address bar of File Explorer. <strong>Settings → About → Data folder</strong> always shows the folder your copy of Kadr uses.</p>
+
+<h3 id="move-computer">How do I move a project to another computer?</h3>
+<p>Copy the project's folder from <code>%APPDATA%\Kadr\projects</code> to the same place on the other computer, and copy your media files too. If the media ends up in a different folder there, <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">relink</a> it. For the cleanest hand-over, export the finished video instead.</p>
+
+<h3 id="lost-work">Kadr closed unexpectedly. Is my work lost?</h3>
+<p>No. Kadr saves after every change, so your project is exactly as you left it. Only an export that was running needs to be started again.</p>
+
+<h3 id="language">Is the editor available in Ukrainian?</h3>
+<p>The editor's buttons and menus are in English for now; this guide and the website are also available in Ukrainian. Auto captions and text to speech work in Ukrainian and about a hundred other languages.</p>
+
+<h3 id="mac">Is there a Mac version?</h3>
+<p>Kadr currently runs on Windows 10 and 11 (64-bit). A macOS version is in preparation; watch the releases page.</p>
+
+<h3 id="ai-agent">Can an AI assistant edit for me?</h3>
+<p>Yes — that is what makes Kadr special. Claude and other AI assistants can use every Kadr feature while you watch. See the <a href="{{root}}{{lang_root}}docs/ai/index.html">documentation for AI agents</a>.</p>
+
+<h3 id="report">How do I report a bug or suggest a feature?</h3>
+<p>Open an issue on <a href="https://github.com/gitkalenyuk/kadr/issues">GitHub</a>. Mention your Kadr version from <strong>Settings → About</strong> and describe the steps that lead to the problem.</p>

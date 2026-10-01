@@ -1,0 +1,60 @@
+<!--meta {"title":"Settings & updates","nav":"Settings & updates","order":150,"description":"Kadr settings explained: automatic updates and the beta channel, FFmpeg setup, API information, portable mode and uninstalling.","group":"Help"} -->
+<p class="lead">Kadr has very few settings — most choices live where you use them. The Settings window covers updates, FFmpeg and information about your installation.</p>
+
+<h2 id="open">Open Settings</h2>
+<ul>
+  <li>On the home screen: <strong>Settings</strong> at the bottom left.</li>
+  <li>In the editor: <strong>Menu → Settings…</strong>, or <strong>Menu → Check for updates…</strong> to jump straight to updates.</li>
+</ul>
+<p>The window has four sections: <strong>About</strong>, <strong>Updates</strong>, <strong>FFmpeg</strong> and <strong>API &amp; automation</strong>.</p>
+
+<h2 id="about">About</h2>
+<p>Shows your Kadr <strong>Version</strong> (with a <em>Beta</em> or <em>Portable</em> label when that applies), the build, the platform and the FFmpeg version. Two lines are especially useful:</p>
+<ul>
+  <li><strong>Data folder</strong> — where your projects, settings and saved presets are stored. The copy button copies the path.</li>
+  <li><strong>Program</strong> — where Kadr itself is installed.</li>
+</ul>
+<p>Below are links to the website, release notes, the licence and third-party notices. When you report a problem, mention the version shown here.</p>
+
+<h2 id="updates">Updates</h2>
+<figure><img src="{{root}}assets/img/guide/settings-updates.webp" alt="Settings, Updates section: current version, Check now button, Automatic checks switch and the Channel choice" width="852" height="340" loading="lazy"><figcaption>Settings → Updates.</figcaption></figure>
+<p>Kadr can update itself. It checks GitHub in the background after start-up, at most once a day, without slowing anything down. When a new version is ready, a dot appears on <strong>Menu</strong> (and on <strong>Settings</strong> on the home screen) and the menu item changes to <strong>Update available…</strong>.</p>
+<ol class="steps">
+  <li><h3 id="update-read">Read what's new</h3><p>Open <strong>Settings → Updates</strong>. The new version is shown with its date, size and release notes. <strong>Check now</strong> checks immediately.</p></li>
+  <li><h3 id="update-download">Download</h3><p>Click <strong>Download &amp; install</strong>. A progress bar shows the download. Kadr then verifies the file's digital signature and checksum — an update that fails the check is never installed.</p></li>
+  <li><h3 id="update-install">Install</h3><p>Click <strong>Install &amp; restart</strong> and confirm. Kadr closes, installs the new version and starts again. Your projects are already saved; only a running export would be stopped — so wait for exports to finish first. Choose <strong>Later</strong> to install another time.</p></li>
+</ol>
+<ul>
+  <li><strong>Skip this version</strong> hides a particular update until a newer one comes out (<strong>Don't skip</strong> undoes that).</li>
+  <li><strong>Automatic checks</strong> — switch off if you prefer to check by hand.</li>
+  <li><strong>Channel</strong> — <em>Stable releases</em>, or <em>Beta (includes pre-releases)</em> to get new features earlier. While Kadr is in public beta, beta builds use the Beta channel by default.</li>
+</ul>
+
+<h2 id="ffmpeg">FFmpeg</h2>
+<figure><img src="{{root}}assets/img/guide/settings-ffmpeg-missing.webp" alt="Settings, FFmpeg section warning that FFmpeg is not installed, with a Download FFmpeg button, a Use my FFmpeg field and the download folder" width="852" height="470" loading="lazy"><figcaption>Settings → FFmpeg when FFmpeg is missing.</figcaption></figure>
+<p>Kadr needs FFmpeg to import, preview and export. This section shows whether it was found and where:</p>
+<ul>
+  <li><strong>Download FFmpeg (~100 MB)</strong> — downloads it into Kadr's own tools folder (<code>%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin</code>). Once installed, the button offers <strong>Download again</strong>.</li>
+  <li><strong>Choose folder…</strong> or <strong>Use my FFmpeg</strong> — use an FFmpeg you already have: pick or type the folder that contains <code>ffmpeg.exe</code> and <code>ffprobe.exe</code> and click <strong>Use folder</strong>. <strong>Forget</strong> removes that choice.</li>
+</ul>
+<p>When FFmpeg is found, the status line shows its version and where it came from: <em>Downloaded by Kadr</em>, <em>Folder you chose</em>, <em>Next to Kadr</em> or <em>System PATH</em>. FFmpeg is free software under the GPL licence; it is a separate program, not part of Kadr.</p>
+
+<h2 id="api">API &amp; automation</h2>
+<p>Everything you click in Kadr can also be done by scripts and AI assistants. This section shows the local <strong>API address</strong> (<code>http://127.0.0.1:7777</code>), a link to the built-in <strong>Documentation</strong>, the <strong>Token file</strong> that protects the API, and ready-to-copy settings for connecting Claude Desktop and Claude Code. The API only listens on your own computer. You don't need any of this to edit videos — but if you're curious, read the <a href="{{root}}{{lang_root}}docs/ai/index.html">AI documentation</a>.</p>
+
+<h2 id="portable">Portable mode</h2>
+<p>The portable zip (<code>Kadr-X.Y.Z-windows-x64-portable.zip</code>) runs without installation — from any folder or a USB stick. Unzip it and run <code>Kadr.exe</code>.</p>
+<ul>
+  <li>The file <code>portable.txt</code> next to <code>Kadr.exe</code> marks the copy as portable; Settings shows a <em>Portable</em> label.</li>
+  <li>Your projects and settings are kept in a <code>data</code> folder next to <code>Kadr.exe</code>, so they travel with it. Check <strong>Settings → About → Data folder</strong> to be sure.</li>
+  <li>A portable copy tells you when there is a new version but doesn't install it. Download the new zip and extract it over the old folder, keeping the <code>data</code> folder.</li>
+  <li>The portable version still needs the Microsoft Edge WebView2 Runtime (part of Windows 11) and FFmpeg.</li>
+</ul>
+
+<h2 id="uninstall">Uninstall</h2>
+<p>Open Windows <strong>Settings → Apps → Installed apps</strong>, find <strong>Kadr</strong> and choose <strong>Uninstall</strong>. The uninstaller asks two questions:</p>
+<ul>
+  <li><em>Also delete my projects and settings?</em> — answer <strong>No</strong> to keep them for a later installation.</li>
+  <li><em>Also delete tools Kadr downloaded, such as FFmpeg?</em></li>
+</ul>
+<p>Your original media files are never touched. To remove a portable copy, just delete its folder.</p>

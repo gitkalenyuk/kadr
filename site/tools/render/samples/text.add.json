@@ -1,0 +1,76 @@
+{
+  "command": "text.add",
+  "request": {
+    "project_id": "prj_b54c09c92d24",
+    "text": "Edit by hand.",
+    "at_us": 250000,
+    "duration_us": 2900000,
+    "style": {
+      "font": "sys_segoe_ui_black",
+      "size": 56,
+      "effect_id": "fx_neon_outline",
+      "color": "#F0FFFF",
+      "glyph_in": {
+        "id": "in_letter_rise",
+        "duration_us": 900000
+      },
+      "glyph_out": {
+        "id": "out_letter_fade",
+        "duration_us": 350000
+      }
+    }
+  },
+  "response": {
+    "ok": true,
+    "result": {
+      "segment_id": "seg_8ce2832025e4",
+      "track_id": "trk_3b9ed8f10afa",
+      "segment": {
+        "id": "seg_8ce2832025e4",
+        "source": {
+          "start_us": 0,
+          "duration_us": 2900000
+        },
+        "target": {
+          "start_us": 250000,
+          "duration_us": 2900000
+        },
+        "speed": 1,
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "rotation": 0
+        },
+        "opacity": 1,
+        "animations": {},
+        "volume": 1,
+        "text": {
+          "content": "Edit by hand.",
+          "font": "sys_segoe_ui_black",
+          "size": 56,
+          "color": "#F0FFFF",
+          "align": "center",
+          "stroke": {
+            "color": "#3DF5FF",
+            "width": 0.12
+          },
+          "glow": {
+            "color": "#00D9FF",
+            "intensity": 0.8,
+            "radius": 0.45
+          },
+          "effect_id": "fx_neon_outline",
+          "glyph_in": {
+            "id": "in_letter_rise",
+            "duration_us": 900000
+          },
+          "glyph_out": {
+            "id": "out_letter_fade",
+            "duration_us": 350000
+          }
+        }
+      }
+    }
+  }
+}
