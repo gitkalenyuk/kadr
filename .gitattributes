@@ -1,0 +1,40 @@
+# Normalise line endings in the repository; check out with the platform default unless set below.
+* text=auto
+
+# Scripts keep the line endings their interpreters expect.
+*.sh   text eol=lf
+*.ps1  text eol=crlf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Text formats
+*.md   text
+*.txt  text
+*.json text
+*.html text
+*.css  text
+*.js   text
+*.mjs  text
+*.svg  text
+*.xml  text
+*.webmanifest text
+
+# Binary assets (never diffed or normalised)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.mp4   binary
+*.webm  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.zip   binary
+*.exe   binary
+
+# The prebuilt website is documentation, not source code: keep it out of GitHub's language statistics.
+site/** linguist-documentation

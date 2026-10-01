@@ -1,0 +1,156 @@
+name: Bug report
+description: Something in Kadr crashes, looks wrong or doesn't work as documented.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please **search existing issues** first and make sure you are on the
+        latest version (**Settings → Updates → Check now**).
+
+        **Security problems must not be reported here.** Use [private vulnerability reporting](https://github.com/gitkalenyuk/kadr/security/advisories/new) instead.
+        Issues are public: don't attach private videos or your `api-token` file.
+
+  - type: input
+    id: version
+    attributes:
+      label: Kadr version
+      description: Open **Settings → About** and copy the version, e.g. `0.1.0-beta.1` (or run `kadrctl run app.version`).
+      placeholder: 0.1.0-beta.1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: build
+    attributes:
+      label: Build
+      options:
+        - Installer (per-user)
+        - Installer (all users)
+        - Portable zip
+        - kadr-server.exe (headless)
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Press `Win+R`, type `winver` and press Enter. Copy the edition, version and OS build.
+      placeholder: Windows 11 Pro 24H2 (OS Build 26100.4061)
+    validations:
+      required: true
+
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU and driver
+      description: Open Task Manager → Performance → GPU, or run `dxdiag`. Include the driver version if you know it.
+      placeholder: NVIDIA GeForce RTX 3060, driver 576.52 / Intel UHD 620 / none
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Where does the problem happen? Pick all that apply.
+      multiple: true
+      options:
+        - Installer / uninstaller
+        - Auto-update
+        - First launch / FFmpeg setup
+        - Home screen / projects
+        - Media import / proxies
+        - Timeline editing
+        - Player / preview
+        - Inspector (video, audio, speed, animation, colour)
+        - Text / templates / text animations
+        - Captions / transcript (Whisper)
+        - Effects / transitions / filters / stickers
+        - Audio / voice effects / text-to-speech / sound effects
+        - AI tools (background removal, scenes, silence, reframe)
+        - Export
+        - REST API / WebSocket events
+        - MCP (kadr-mcp) / AI agents
+        - kadrctl CLI
+        - Website / docs
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug. Screenshots or a short screen recording help a lot.
+      placeholder: When I split a clip that has a speed curve, the right part plays at the wrong speed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Ideally starting from a new project. For API/MCP issues include the exact command and arguments.
+      placeholder: |
+        1. Create a 9:16 project
+        2. Import a 30 s MP4 (H.264, 1080p, 60 fps)
+        3. Apply the "hero" speed curve
+        4. Split at 00:05
+        5. Play the right part
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-error
+    attributes:
+      label: Error message / API error JSON
+      description: Paste the error dialog text, or the full error object (`code`, `message`, `hint`) for API, MCP or kadrctl calls.
+      render: json
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Kadr keeps its data in `%APPDATA%\Kadr`. Paste the relevant part of any `*.log` file from there, or drag the file
+        into this box. For a problem in one project, zipping `%APPDATA%\Kadr\projects\<project id>` (without private media) helps too.
+        **Never include the `api-token` file.**
+      render: text
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Media details (if relevant)
+      description: Container, codec, resolution, frame rate and duration of the files involved. `ffprobe -hide_banner <file>` output is perfect.
+      render: text
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: Optional components (if relevant)
+      description: |
+        For captions, background removal or text-to-speech problems, paste the output of `kadrctl run captions.asr_status`,
+        `kadrctl run ai.capabilities` or `kadrctl run tts.voices`.
+      render: json
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I am using the latest Kadr version (or the bug still happens on it).
+          required: true
+        - label: I removed private information (media, paths, tokens) from what I attached.
+          required: true

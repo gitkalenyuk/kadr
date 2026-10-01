@@ -1,0 +1,26 @@
+# This repository never contains source code or binaries.
+# Installers, zips and manifests are attached to GitHub Releases by scripts/publish.*, never committed.
+dist/
+*.exe
+*.msi
+*.zip
+*.7z
+latest.json
+latest.json.sig
+SHA256SUMS.txt
+
+# Private signing keys must never be committed (only the public key lives here, in keys/*.pub).
+*.key
+*.pem
+
+# Temporary files from scripts/publish.*
+.publish-tmp/
+*.tmp
+
+# OS and editor clutter
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+.vscode/
+.idea/

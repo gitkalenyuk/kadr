@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation and AI recipes
+    url: https://gitkalenyuk.github.io/kadr/
+    about: Getting started, MCP setup for Claude Desktop and Claude Code, the REST quick start and the full command reference.
+  - name: Questions and ideas (Discussions)
+    url: https://github.com/gitkalenyuk/kadr/discussions
+    about: Ask how to do something, share your workflows and agent recipes, or show what you made with Kadr.
+  - name: Report a security vulnerability
+    url: https://github.com/gitkalenyuk/kadr/security/advisories/new
+    about: Please report security problems privately, never in a public issue.

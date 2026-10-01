@@ -1,0 +1,89 @@
+name: Feature request
+description: Suggest a new feature, effect, command or improvement for Kadr.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Please **search existing requests** first. If your idea is already there, add a thumbs-up
+        reaction to that issue instead of opening a new one: reactions are how we prioritise.
+
+        Kadr only ships **original** assets. Please don't attach effects, templates, music, fonts or artwork from
+        other editors. Describe the behaviour instead.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Editing / timeline
+        - Player / canvas
+        - Text / templates / text animations
+        - Captions / transcript
+        - Effects / transitions / filters / stickers / animations
+        - Colour
+        - Audio / voice / text-to-speech / sound effects
+        - AI / smart tools
+        - Export
+        - API / OpenAPI / WebSocket events
+        - MCP / AI agents
+        - kadrctl CLI
+        - Installer / updates
+        - Website / docs
+        - macOS / Linux
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: What are you trying to do, and what gets in the way today?
+      placeholder: I make vertical videos from long podcasts and have to find the best moments by hand…
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should it work in the UI? If you have an idea for the API, describe the command (name, parameters, result).
+      placeholder: |
+        A "highlights" smart tool that scores segments of the transcript and creates a 60 s cut.
+        API: ai.find_highlights {segment_id, target_duration_us} → [{start_us, end_us, score, text}]
+    validations:
+      required: true
+
+  - type: textarea
+    id: agents
+    attributes:
+      label: How would an AI agent use it? (optional)
+      description: Kadr is API-first. Tell us whether this matters for automation or MCP workflows, and how.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and workarounds
+      description: Other ways to get the same result today, including how other editors handle it (in your own words).
+
+  - type: dropdown
+    id: importance
+    attributes:
+      label: How important is this for you?
+      options:
+        - Nice to have
+        - Important. I work around it regularly
+        - Blocking. I can't use Kadr for my work without it
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this has not been requested yet.
+          required: true

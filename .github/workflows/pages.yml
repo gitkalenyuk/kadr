@@ -1,0 +1,56 @@
+# Deploys the static website in site/ to GitHub Pages.
+# The site is plain HTML/CSS/JS (no build step); scripts/publish.* refresh site/ from the app build before a release.
+# One-time setup: Settings → Pages → Build and deployment → Source = "GitHub Actions"
+# (or see scripts/first-time-setup.md for the gh api call).
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+# GITHUB_TOKEN permissions needed to publish to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one deployment at a time; don't cancel a running deployment so it can finish cleanly.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check the site
+        run: |
+          if [ ! -f site/index.html ]; then
+            echo "::error::site/index.html is missing. Run scripts/publish with the app build to copy the site first."
+            exit 1
+          fi
+          echo "Site size: $(du -sh site | cut -f1), files: $(find site -type f | wc -l)"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
