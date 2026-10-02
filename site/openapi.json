@@ -2372,7 +2372,7 @@
     },
     "/api/v1/commands/captions.set_style": {
       "post": {
-        "description": "Applies a caption style (library.list kind=caption_style) to every cue of every caption track, or to track_id / segment_ids — like picking a style in CapCut's caption panel. The look (font, size, colours, outline, shadow, box, glow, gradient, letter case and the active-word highlight: color, box/pill, scale, underline or karaoke) is replaced; text and word timings are kept; cues move to the style's vertical position unless keep_position=true. Styles that show a fixed number of words at a time (cap_pop_word = 1, cap_sunset_gradient = 3) re-split the cues from their word timings (relayout); switching back to a normal style re-joins them. The highlight is drawn by the text renderer from text.words + text.highlight.\nUI: Library/Captions/Styles.\nUndoable with edit.undo.\nReturns: {style_id, count (cues styled), relayout: bool, segment_ids (cue ids after the change)}.",
+        "description": "Applies a caption style (library.list kind=caption_style) to every cue of every caption track, or to track_id / segment_ids — like picking a style in CapCut's caption panel. The look (font, size, colours, outline, shadow, box, glow, gradient, letter case and the active-word highlight: color, box/pill, scale, underline, karaoke, pop, bounce, reveal, dim, glow, sweep_line or slide_box) is replaced; text and word timings are kept; cues move to the style's vertical position unless keep_position=true. Styles that show a fixed number of words at a time (cap_pop_word = 1, cap_sunset_gradient = 3) re-split the cues from their word timings (relayout); switching back to a normal style re-joins them. The highlight is drawn by the text renderer from text.words + text.highlight.\nUI: Library/Captions/Styles.\nUndoable with edit.undo.\nReturns: {style_id, count (cues styled), relayout: bool, segment_ids (cue ids after the change)}.",
         "operationId": "captions.set_style",
         "requestBody": {
           "content": {
@@ -4205,6 +4205,312 @@
         "x-undoable": true
       }
     },
+    "/api/v1/commands/font.catalog": {
+      "post": {
+        "description": "Lists Kadr's curated catalogue of downloadable font families — the \"More fonts\" section of the Text → Font picker. Every family is free and open-source (SIL Open Font License 1.1) from the google/fonts repository; most support Cyrillic (cyrillic=true; ukrainian is verified after installation). Each entry has an id (also the font id to use in text.update font once installed), name, style category (sans, serif, display, handwriting, monospace, pixel), a short note on its look and best use, download size, the exact file URLs, licence and specimen page, and installed=true when it is already available (downloaded into the Kadr data folder or bundled with the app). Use it to pick a font by mood, then call font.install {id} and text.update {font: id}. Read-only and offline: nothing is downloaded. Filters: query (name, id or note), category, cyrillic, installed.\nUI: Inspector/Text/Font/More fonts.\nReturns: {count, total, families:[{id, name, category, cyrillic, ukrainian? (after install), note, license, license_url, page_url, repo_path, variable, size_bytes, files:[{style, file, url, size_bytes}], installed, source?, font_id, job?{state, progress, error}}], categories, base_url, folders{downloaded, bundled[], system[]}}.",
+        "operationId": "font.catalog",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "example1": {
+                  "summary": "All handwriting fonts with Cyrillic",
+                  "value": {
+                    "category": "handwriting",
+                    "cyrillic": true
+                  }
+                },
+                "example2": {
+                  "summary": "Search for a pixel font",
+                  "value": {
+                    "query": "pixel"
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "category": {
+                    "description": "Only families of this style: sans, serif, display, handwriting, monospace or pixel.",
+                    "enum": [
+                      "sans",
+                      "serif",
+                      "display",
+                      "handwriting",
+                      "monospace",
+                      "pixel"
+                    ],
+                    "type": "string"
+                  },
+                  "cyrillic": {
+                    "description": "true = only families with Cyrillic letters (Ukrainian/Russian text); false = only Latin-only ones.",
+                    "type": "boolean"
+                  },
+                  "installed": {
+                    "description": "true = only families that are already installed; false = only those that still need font.install.",
+                    "type": "boolean"
+                  },
+                  "query": {
+                    "description": "Case-insensitive search in the family name, id and note, e.g. \"script\", \"retro\", \"mono\".",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Font catalogue",
+        "tags": [
+          "Fonts"
+        ],
+        "x-read-only": true,
+        "x-scope": "global",
+        "x-undoable": false
+      }
+    },
+    "/api/v1/commands/font.import": {
+      "post": {
+        "description": "Installs a font file from this computer into the Kadr data folder so it can be used in texts — \"Import font file\" in the Text → Font picker. Accepts TrueType (.ttf), OpenType (.otf) and collections (.ttc/.otc); the file is checked (it must parse and draw Latin, digit or Cyrillic glyphs; web fonts .woff/.woff2 and CFF2 variable fonts are rejected with a hint) and copied — the original stays where it is. The family name inside the font becomes the font id (\"My Brand Sans\" → \"my_brand_sans\"); importing the other styles of the same family (Bold, Italic…) adds them to that family. The category (sans, serif, display, handwriting, monospace, pixel) is inferred from the font unless given. Publishes fonts.changed. Make sure the font's licence allows the use you plan.\nUI: Inspector/Text/Font/Import font file.\nReturns: {font_id, family, style, category, cyrillic, ukrainian, variable, path (the stored copy), replaced}.",
+        "operationId": "font.import",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "example1": {
+                  "summary": "Import a downloaded font",
+                  "value": {
+                    "path": "C:\\Users\\me\\Downloads\\MyBrandSans-Regular.ttf"
+                  }
+                },
+                "example2": {
+                  "summary": "Import as a handwriting font",
+                  "value": {
+                    "category": "handwriting",
+                    "path": "/Users/me/Downloads/MyHand.otf"
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "category": {
+                    "description": "Only families of this style: sans, serif, display, handwriting, monospace or pixel.",
+                    "enum": [
+                      "sans",
+                      "serif",
+                      "display",
+                      "handwriting",
+                      "monospace",
+                      "pixel"
+                    ],
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "Absolute path of the .ttf/.otf/.ttc file to import.",
+                    "type": "string"
+                  },
+                  "replace": {
+                    "default": false,
+                    "description": "Replace an already imported file of the same family and style (or a catalogue install of that family).",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Import font file",
+        "tags": [
+          "Fonts"
+        ],
+        "x-read-only": false,
+        "x-scope": "global",
+        "x-undoable": false
+      }
+    },
+    "/api/v1/commands/font.install": {
+      "post": {
+        "description": "Downloads a font family from font.catalog into the Kadr data folder (\u003cDataDir\u003e/fonts/\u003cid\u003e/) so it can be used in any text — the Install button in the Text → Font picker. Fetches the family's font files and its OFL.txt licence over HTTPS from the google/fonts repository, checks every file (size limits, TrueType/OpenType signature, the font must draw), checks that the licence is the SIL Open Font License, then moves the folder into place atomically — a failed or interrupted download leaves nothing behind. Variable fonts get real Regular and Bold weights. Runs in the background and returns at once unless wait=true; progress arrives as font.progress events (state queued → downloading → verifying → installing → done | failed, with downloaded_bytes/total_bytes/progress), and fonts.changed when the font is ready. Afterwards use font_id with text.update {font}. An already installed family is not downloaded again (already_installed=true) unless force=true. Fails with not_found for unknown ids and not_available when the internet cannot be reached.\nUI: Inspector/Text/Font/More fonts.\nReturns: {started, already_installed, font_id, message, job{id, font_id, state, file, downloaded_bytes, total_bytes, progress, error, hint}}.",
+        "operationId": "font.install",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "example1": {
+                  "summary": "Install Montserrat in the background",
+                  "value": {
+                    "id": "montserrat"
+                  }
+                },
+                "example2": {
+                  "summary": "Install Caveat and wait until it is ready",
+                  "value": {
+                    "id": "caveat",
+                    "wait": true
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "force": {
+                    "default": false,
+                    "description": "Download and reinstall even when the family is already installed.",
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "description": "Catalogue id from font.catalog, e.g. \"montserrat\", \"caveat\", \"press_start_2p\".",
+                    "type": "string"
+                  },
+                  "wait": {
+                    "default": false,
+                    "description": "Block until the font is installed (or failed) instead of returning immediately.",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Install font",
+        "tags": [
+          "Fonts"
+        ],
+        "x-read-only": false,
+        "x-scope": "global",
+        "x-undoable": false
+      }
+    },
+    "/api/v1/commands/font.remove": {
+      "post": {
+        "description": "Deletes a font family that was installed with font.install or font.import (library.list kind=font category=Downloaded) from the Kadr data folder. Built-in, bundled and operating-system fonts cannot be removed here (conflict). Texts that use the removed font fall back to Go Sans until it is installed again (font.install restores catalogue fonts with the same id). Publishes fonts.changed.\nUI: Inspector/Text/Font/Remove font.\nReturns: {font_id, family, dir}.",
+        "operationId": "font.remove",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "example1": {
+                  "summary": "Remove Montserrat",
+                  "value": {
+                    "font_id": "montserrat"
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "font_id": {
+                    "description": "Font id of a downloaded/imported family, e.g. \"montserrat\".",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "font_id"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Remove font",
+        "tags": [
+          "Fonts"
+        ],
+        "x-read-only": false,
+        "x-scope": "global",
+        "x-undoable": false
+      }
+    },
+    "/api/v1/commands/font.rescan": {
+      "post": {
+        "description": "Re-reads every font folder — the Kadr data folder (downloaded/imported fonts), the folders bundled with the app (\u003cexe dir\u003e/fonts, Kadr.app/Contents/Resources/fonts on macOS, KADR_FONTS_DIR) and, with system=true, the operating system's font folders — so fonts copied there while Kadr runs appear in library.list kind=font without a restart. Returns the number of families per source and the folders that were scanned. Publishes fonts.changed.\nUI: Inspector/Text/Font/Rescan.\nReturns: {downloaded, bundled, system, total (family counts), folders{downloaded, bundled[], system[]}}.",
+        "operationId": "font.rescan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "example1": {
+                  "summary": "Pick up newly installed fonts",
+                  "value": {}
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "system": {
+                    "default": true,
+                    "description": "Also rescan the operating-system font folders (slower; a few seconds with thousands of fonts).",
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Rescan fonts",
+        "tags": [
+          "Fonts"
+        ],
+        "x-read-only": true,
+        "x-scope": "global",
+        "x-undoable": false
+      }
+    },
     "/api/v1/commands/keyframe.add": {
       "post": {
         "description": "Adds (or updates) a keyframe of one animatable property — the diamond button next to a slider in the CapCut inspector. Once a property has two or more keyframes its value is interpolated between them; before the first / after the last keyframe it holds that keyframe's value. If a keyframe of the same property already exists within half a frame of time_us it is updated instead of duplicated. value defaults to the property's current (interpolated) value at that time, so calling it without value just 'pins' what is on screen. Values use the stored units: transform.x/y in canvas fractions (-2..2), transform.scale as multiplier (0.01..4), transform.rotation in degrees (-360..360), opacity 0..1, volume as LINEAR gain 0..10 (1 = 0 dB, 0.5 ≈ -6 dB; gain = 10^(dB/20)), adjust.* -1..1 (sharpen, fade, grain and lut_intensity 0..1; adjust.hue -1..1 = -180..180 degrees; adjust.shine -1..1 local contrast), filter.intensity 0..1 (strength of the clip's or filter segment's filter — CapCut's filter Intensity keyframe). easing shapes the motion from this keyframe to the next one. While a property has keyframes, segment.set_transform / set_opacity / set_volume / set_adjust record their value as a keyframe at the playhead instead of changing the static value. Picture properties need a video, photo, sticker or text segment; volume needs sound; adjust.* needs a video/photo clip or adjustment segment; filter.intensity needs a segment that has a filter (a clip after filter.apply, or a filter-track segment).\nUI: Inspector/◇ keyframe button.\nUndoable with edit.undo.\nReturns: {segment_id, keyframe: {property, time_us, timeline_us, value, easing}, keyframes: all keyframes of that property}.",
@@ -4642,7 +4948,7 @@
     },
     "/api/v1/commands/library.get": {
       "post": {
-        "description": "Returns one library item with all its details: name, categories, description, default parameters (effect intensity/speed, filter intensity, voice-effect ffmpeg filter), default duration, the full TextStyle of a text template, or the available styles of a font. Use it to inspect an id found in library.list or stored in a project (e.g. segment.transition_out.type).\nUI: Library.\nReturns: The item: {kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style?, thumbnail}.",
+        "description": "Returns one library item with all its details: name, categories, description, default parameters (effect intensity/speed, filter intensity, voice-effect ffmpeg filter), default duration, the full TextStyle of a text template, or the available styles of a font. Use it to inspect an id found in library.list or stored in a project (e.g. segment.transition_out.type). Animated items include preview {url, frames, fps, width, height} (the hover sprite strip); call library.preview to look at the motion as one image.\nUI: Library.\nReturns: The item: {kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style?, thumbnail, preview?}.",
         "operationId": "library.get",
         "requestBody": {
           "content": {
@@ -4712,7 +5018,7 @@
     },
     "/api/v1/commands/library.list": {
       "post": {
-        "description": "Lists the built-in library of one kind — exactly what the left panel tabs show: transitions, video effects, colour filters, clip animations (In/Out/Combo/Loop), text templates (style presets), fonts (embedded Go fonts plus fonts installed on this computer), stickers and voice effects. Every item has a stable id to pass to the matching command (transition.set type, effect.add effect_id, filter.add filter_id, animation.set id, text.add template_id, text.update font, sticker.add sticker_id, segment.set_audio voice_effect), a display name, CapCut-style categories, default parameters/durations and a thumbnail path (GET it with the API token for a PNG preview rendered by the engine). Filter by category tab and/or a case-insensitive search query, like the search box in the panel. More kinds: sound_effect (sfx.add), caption_style (captions.set_style), text_effect (text.apply_effect), text_animation (text.set_glyph_animation), generated (media.generate preset_id). Effects carry params.schema — the named sliders accepted by effect.set_params ({id, label, min, max, default}); transitions list their direction/softness options (see transition.set and transition.get).\nUI: Library.\nReturns: {kind, categories: [category tab names in display order], total, items: [{kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style? (text templates), thumbnail}]}.",
+        "description": "Lists the built-in library of one kind — exactly what the left panel tabs show: transitions, video effects, colour filters, clip animations (In/Out/Combo/Loop), text templates (style presets), fonts (embedded Go fonts, fonts installed on this computer, fonts bundled with Kadr and fonts downloaded with font.install — see font.catalog), stickers and voice effects. Every item has a stable id to pass to the matching command (transition.set type, effect.add effect_id, filter.add filter_id, animation.set id, text.add template_id, text.update font, sticker.add sticker_id, segment.set_audio voice_effect), a display name, CapCut-style categories, default parameters/durations and a thumbnail path (GET it with the API token for a PNG preview rendered by the engine). Filter by category tab and/or a case-insensitive search query, like the search box in the panel. More kinds: sound_effect (sfx.add), caption_style (captions.set_style), text_effect (text.apply_effect), text_animation (text.set_glyph_animation), generated (media.generate preset_id). Effects carry params.schema — the named sliders accepted by effect.set_params ({id, label, min, max, default}); transitions list their direction/softness options (see transition.set and transition.get). Items that move (transitions, effects, filters, clip animations, animated text templates/word art, text animations, caption styles with word highlight, animated stickers and generated clips) also carry preview {url, frames, fps, width, height}: GET url for a JPEG sprite strip (frames side by side, one seamless loop) — the app's hover preview; items without it are static. To SEE how an item plays, call library.preview (a PNG contact sheet).\nUI: Library.\nReturns: {kind, categories: [category tab names in display order], total, items: [{kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style? (text templates), thumbnail, preview? {url, frames, fps, width, height}}]}.",
         "operationId": "library.list",
         "requestBody": {
           "content": {
@@ -4788,6 +5094,115 @@
           }
         },
         "summary": "List library items",
+        "tags": [
+          "Library"
+        ],
+        "x-read-only": true,
+        "x-scope": "global",
+        "x-undoable": false
+      }
+    },
+    "/api/v1/commands/library.preview": {
+      "post": {
+        "description": "Renders how a library item PLAYS as one PNG contact sheet (frames left to right, top to bottom) so an AI agent can see a transition, effect, filter, clip animation, animated text template, text animation, caption style highlight, animated sticker or animated generated clip before applying it. Uses the same engine and sample pictures as the hover previews of the app: transitions go from a sunny landscape (clip A, progress 0) to a night city (clip B, progress 1); effects run over time on the landscape (static effects such as vignette show a before/after divider); filters show a before/after divider; clip animations move a small clip on a dark stage (dashed outline = rest position); text kinds render sample text. Static items (fonts, voice effects, non-animated templates/word art/stickers) return their thumbnail as a single tile with animated=false. Every item that animates has a preview field in library.list / library.get (the app's hover sprite: GET preview.url for a JPEG strip). Read-only.\nUI: Library.\nReturns: {kind, id, name, animated, frames, columns, rows, tile_width, tile_height, width, height, phases[] (0..1 position of each tile in the preview loop), times_us[] (the same in microseconds), loop_us (length of the hover loop), preview? ({url, frames, fps, width, height} of the JPEG sprite), png_base64, note (what the tiles show for this kind)}.",
+        "operationId": "library.preview",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "example1": {
+                  "summary": "See how a transition plays",
+                  "value": {
+                    "id": "mix",
+                    "kind": "transition"
+                  }
+                },
+                "example2": {
+                  "summary": "An In animation in 8 steps",
+                  "value": {
+                    "columns": 4,
+                    "frames": 8,
+                    "id": "in_pop",
+                    "kind": "animation"
+                  }
+                },
+                "example3": {
+                  "summary": "Before/after of a filter",
+                  "value": {
+                    "columns": 4,
+                    "frames": 4,
+                    "id": "film",
+                    "kind": "filter"
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "columns": {
+                    "default": 3,
+                    "description": "Tiles per row; rows are added as needed.",
+                    "maximum": 6,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "frames": {
+                    "default": 6,
+                    "description": "Number of moments (tiles) to render; more tiles show the motion in finer steps.",
+                    "maximum": 12,
+                    "minimum": 2,
+                    "type": "integer"
+                  },
+                  "id": {
+                    "description": "Item id from library.list, e.g. \"cube_turn_left\", \"vhs\", \"film\", \"in_pop\".",
+                    "type": "string"
+                  },
+                  "kind": {
+                    "description": "Library kind of the item: transition, effect, filter, animation, text_template, text_effect, text_animation, caption_style, sticker, generated (others are static).",
+                    "enum": [
+                      "transition",
+                      "effect",
+                      "filter",
+                      "animation",
+                      "text_template",
+                      "font",
+                      "sticker",
+                      "voice_effect",
+                      "caption_style",
+                      "generated",
+                      "text_effect",
+                      "text_animation",
+                      "sound_effect"
+                    ],
+                    "type": "string"
+                  },
+                  "tile_width": {
+                    "default": 256,
+                    "description": "Width of each tile; the height follows the preview's aspect ratio (16:9 for most kinds, square for stickers and text animations). Unit: pixels.",
+                    "maximum": 480,
+                    "minimum": 64,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        },
+        "summary": "Preview library item",
         "tags": [
           "Library"
         ],
@@ -4913,7 +5328,7 @@
     },
     "/api/v1/commands/media.generate": {
       "post": {
-        "description": "Creates a procedural media file — a background, texture, pattern, test card or countdown drawn by the engine itself (no stock footage, nothing downloaded) — and adds it to the project as a normal material, like CapCut's generated/stock backgrounds but fully original and offline. Still kinds (solid colours, still gradients, grids, checkers, stripes, paper texture, colour bars without tone) are written as a PNG (material type photo, duration 0: it can be stretched to any length on the timeline); kinds that move (speed \u003e 0, noise, countdowns) or make sound (colour-bar tone, countdown beeps) are rendered frame by frame and encoded to an H.264 MP4 of duration_us (material type video). Files go to \u003cproject\u003e/cache/generated/ and are reused when the same kind, params, size, duration and fps are asked again (cached = true; the existing material is returned instead of a duplicate). Pick a ready-made look with preset_id (ids from library.list kind=generated, e.g. \"sunset_gradient\", \"neon_floor\", \"countdown_5\", \"film_grain\") — params then override single preset values — or give kind + params yourself. Size defaults to the project canvas; videos use the canvas fps (or 30) and even pixel sizes. With add_to_timeline the new material is also placed in the same undo step, exactly like timeline.segment.add: on the main track at the clip boundary nearest at_us (magnet), or appended to the end of the main track when at_us is omitted; track_id / new_track choose another track (e.g. an overlay track for grain or confetti on top of a clip — then use segment.set_blend / segment.set_opacity). Rendering runs while the command executes (typically 2-10 s for 5 s of 1080p video); duration_us is limited to 60 s — for longer backgrounds use a still kind or add the clip several times. Undo removes the material (and the placed clip); the cached file stays on disk. Kinds: • solid — a flat colour card (PNG) — backgrounds, chroma-key plates, fade cards. Params: color (color, default \"#000000\"): Fill colour.. • gradient — a smooth linear or radial colour gradient (PNG, or a flowing video when speed \u003e 0). Params: colors (colors, 2-6, default [\"#FF7A59\",\"#7B2FF7\"]): Colour stops, evenly spaced, from start to end (2-6).; type (enum linear|radial, default \"linear\"): linear = along angle; radial = from the centre outwards.; angle (number -360..360, default 135): Direction of a linear gradient in degrees: 0 = left to right, 90 = top to bottom.; speed (number 0..5, default 0): Colour flow speed in back-and-forth cycles per 10 seconds. 0 = a still picture (PNG).. • color_bars — a test card of vertical colour bars (PNG, or a video with a sine tone when tone = true). Params: style (enum classic|rainbow|retro, default \"classic\"): classic = broadcast-style 75% bars with a lower calibration row; rainbow = 12 hues over a grey step wedge; retro = muted 70s palette.; tone (boolean, default false): Add a continuous sine test tone (the output becomes a video with sound).; tone_hz (number 100..8000, default 1000): Frequency of the test tone in hertz.. • noise — film grain, TV static, paper and soft cloudy textures from value noise (video while speed \u003e 0, else PNG). Params: color (color, default \"#808080\"): Base colour; the noise brightens and darkens it.; color2 (color): Optional second colour: the noise blends between color and color2 instead of brightening/darkening.; amount (number 0..1, default 0.5): Strength (contrast) of the noise.; scale (number 1..400, default 1): Grain size in pixels at 1080p height: 1-2 = fine grain/static, 100+ = soft clouds.; octaves (integer 1..5, default 1): Layers of finer detail added on top (fractal noise); 3-4 for paper and smoke.; monochrome (boolean, default true): Same noise in R, G and B (false = coloured RGB noise).; speed (number 0..4, default 1): How fast the noise changes: 1 = 24 new grain patterns per second (soft noise drifts smoothly). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 1): Random seed: another number gives another pattern.. • shapes — circles, rounded squares, triangles and rings drifting over a colour (video while speed \u003e 0, else PNG). Params: shape (enum mixed|circle|square|triangle|ring, default \"mixed\"): Which shapes to draw.; count (integer 1..80, default 18): Number of shapes.; colors (colors, 1-8, default [\"#FF5C8A\",\"#FFD23F\",\"#3EC1D3\",\"#9B5DE5\",\"#00F5D4\"]): Shape colours, used in turn.; background (color, default \"#16161D\"): Background colour.; size (number 0.01..0.5, default 0.07): Average shape radius as a fraction of the frame height.; opacity (number 0.1..1, default 0.9): Shape opacity.; speed (number 0..5, default 1): Drift speed (1 = calm). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 7): Random seed for positions, sizes and directions.. • countdown — a numeric countdown (from N to 1, one number per second by default) as a video. Params: from (integer 1..60, default 5): First number; the clip counts down to 1. Default length = from seconds.; style (enum ring|plain|film, default \"ring\"): ring = number inside an emptying progress ring; plain = big fading numbers; film = projector-leader look with a sweeping wedge and crosshair (use a light background).; background (color, default \"#111114\"): Background colour.; color (color, default \"#FFFFFF\"): Colour of the numbers (and of the film-style circles).; accent (color, default \"#FF3B5C\"): Colour of the progress ring / sweeping wedge.; beep (boolean, default false): Add a short beep at every number (the video gets a sound track).. • grid — a line grid — flat (blueprint, graph paper) or a perspective floor running to the horizon (video while speed \u003e 0, else PNG). Params: style (enum flat|perspective, default \"flat\"): flat = square grid; perspective = floor grid towards a horizon with a sky above.; color (color, default \"#FFFFFF\"): Line colour.; background (color, default \"#101018\"): Background (floor) colour.; color2 (color): Sky colour at the top of a perspective grid (default: the background colour).; cells (integer 2..64, default 12): Number of grid cells across the frame width.; thickness (number 0.5..20, default 2): Line thickness in pixels at 1080p height.; glow (boolean, default false): Soft neon glow around the lines (and on the horizon).; speed (number 0..5, default 0): Scroll speed in cells per second (towards the viewer). 0 = a still picture (PNG).. • checker — a two-colour checkerboard, optionally rotated and scrolling (video while speed \u003e 0, else PNG). Params: color (color, default \"#FFFFFF\"): First square colour.; color2 (color, default \"#D9D9E0\"): Second square colour.; cells (integer 2..128, default 8): Number of squares across the frame width.; angle (number -180..180, default 0): Rotation of the pattern in degrees.; speed (number 0..5, default 0): Diagonal scroll speed in squares per second. 0 = a still picture (PNG).. • stripes — diagonal or straight stripes in 2-6 colours, optionally moving like a barber pole (video while speed \u003e 0, else PNG). Params: colors (colors, 2-6, default [\"#FFD23F\",\"#1B1B1F\"]): Stripe colours, repeated in order.; width (number 0.005..0.5, default 0.06): Width of one stripe as a fraction of the frame height.; angle (number -180..180, default 45): Stripe direction in degrees: 0 = vertical stripes, 90 = horizontal.; speed (number 0..10, default 0): Movement in stripes per second. 0 = a still picture (PNG)..\nUI: Library/Stickers/Generated.\nUndoable with edit.undo.\nReturns: {material_id, material, kind, preset_id?, params (all values incl. defaults), output: \"png\"|\"mp4\", path, width, height, duration_us (0 for a still picture), fps?, has_audio, cached, track_id?, segment_id?, segment?} — the generated material, and the placed clip when add_to_timeline is true.",
+        "description": "Creates a procedural media file — a background, texture, pattern, test card or countdown drawn by the engine itself (no stock footage, nothing downloaded) — and adds it to the project as a normal material, like CapCut's generated/stock backgrounds but fully original and offline. Still kinds (solid colours, still gradients, grids, checkers, stripes, textures, patterns, colour bars without tone) are written as a PNG (material type photo, duration 0: it can be stretched to any length on the timeline); banner and frame are PNGs with a transparent background meant for an overlay track; kinds that move (speed \u003e 0, noise, countdowns, timers) or make sound (colour-bar tone, countdown beeps) are rendered frame by frame and encoded to an H.264 MP4 of duration_us (material type video). Files go to \u003cproject\u003e/cache/generated/ and are reused when the same kind, params, size, duration and fps are asked again (cached = true; the existing material is returned instead of a duplicate). Pick a ready-made look with preset_id (ids from library.list kind=generated, e.g. \"sunset_gradient\", \"neon_floor\", \"countdown_5\", \"film_grain\") — params then override single preset values — or give kind + params yourself. Size defaults to the project canvas; videos use the canvas fps (or 30) and even pixel sizes. With add_to_timeline the new material is also placed in the same undo step, exactly like timeline.segment.add: on the main track at the clip boundary nearest at_us (magnet), or appended to the end of the main track when at_us is omitted; track_id / new_track choose another track (e.g. an overlay track for grain, confetti, light leaks, film dust, banners or frames on top of a clip — light_leak and film_dust are drawn on black for segment.set_blend mode screen). Moving backgrounds with a loop param (mesh, aurora, lava, plasma, bokeh, particles, light_leak) repeat seamlessly every loop seconds, which is also their default length. Rendering runs while the command executes (typically 2-10 s for 5 s of 1080p video); duration_us is limited to 60 s — for longer backgrounds use a still kind or add the clip several times. Undo removes the material (and the placed clip); the cached file stays on disk. Kinds: • solid — a flat colour card (PNG) — backgrounds, chroma-key plates, fade cards. Params: color (color, default \"#000000\"): Fill colour.. • gradient — a smooth linear or radial colour gradient (PNG, or a flowing video when speed \u003e 0). Params: colors (colors, 2-6, default [\"#FF7A59\",\"#7B2FF7\"]): Colour stops, evenly spaced, from start to end (2-6).; type (enum linear|radial, default \"linear\"): linear = along angle; radial = from the centre outwards.; angle (number -360..360, default 135): Direction of a linear gradient in degrees: 0 = left to right, 90 = top to bottom.; speed (number 0..5, default 0): Colour flow speed in back-and-forth cycles per 10 seconds. 0 = a still picture (PNG).. • color_bars — a test card of vertical colour bars (PNG, or a video with a sine tone when tone = true). Params: style (enum classic|rainbow|retro, default \"classic\"): classic = broadcast-style 75% bars with a lower calibration row; rainbow = 12 hues over a grey step wedge; retro = muted 70s palette.; tone (boolean, default false): Add a continuous sine test tone (the output becomes a video with sound).; tone_hz (number 100..8000, default 1000): Frequency of the test tone in hertz.. • noise — film grain, TV static, paper and soft cloudy textures from value noise (video while speed \u003e 0, else PNG). Params: color (color, default \"#808080\"): Base colour; the noise brightens and darkens it.; color2 (color): Optional second colour: the noise blends between color and color2 instead of brightening/darkening.; amount (number 0..1, default 0.5): Strength (contrast) of the noise.; scale (number 1..400, default 1): Grain size in pixels at 1080p height: 1-2 = fine grain/static, 100+ = soft clouds.; octaves (integer 1..5, default 1): Layers of finer detail added on top (fractal noise); 3-4 for paper and smoke.; monochrome (boolean, default true): Same noise in R, G and B (false = coloured RGB noise).; speed (number 0..4, default 1): How fast the noise changes: 1 = 24 new grain patterns per second (soft noise drifts smoothly). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 1): Random seed: another number gives another pattern.. • shapes — circles, rounded squares, triangles and rings drifting over a colour (video while speed \u003e 0, else PNG). Params: shape (enum mixed|circle|square|triangle|ring, default \"mixed\"): Which shapes to draw.; count (integer 1..80, default 18): Number of shapes.; colors (colors, 1-8, default [\"#FF5C8A\",\"#FFD23F\",\"#3EC1D3\",\"#9B5DE5\",\"#00F5D4\"]): Shape colours, used in turn.; background (color, default \"#16161D\"): Background colour.; size (number 0.01..0.5, default 0.07): Average shape radius as a fraction of the frame height.; opacity (number 0.1..1, default 0.9): Shape opacity.; speed (number 0..5, default 1): Drift speed (1 = calm). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 7): Random seed for positions, sizes and directions.. • countdown — a numeric countdown (from N to 1, one number per second by default) as a video. Params: from (integer 1..60, default 5): First number; the clip counts down to 1. Default length = from seconds.; style (enum ring|plain|film, default \"ring\"): ring = number inside an emptying progress ring; plain = big fading numbers; film = projector-leader look with a sweeping wedge and crosshair (use a light background).; background (color, default \"#111114\"): Background colour.; color (color, default \"#FFFFFF\"): Colour of the numbers (and of the film-style circles).; accent (color, default \"#FF3B5C\"): Colour of the progress ring / sweeping wedge.; beep (boolean, default false): Add a short beep at every number (the video gets a sound track).. • grid — a line grid — flat (blueprint, graph paper) or a perspective floor running to the horizon (video while speed \u003e 0, else PNG). Params: style (enum flat|perspective, default \"flat\"): flat = square grid; perspective = floor grid towards a horizon with a sky above.; color (color, default \"#FFFFFF\"): Line colour.; background (color, default \"#101018\"): Background (floor) colour.; color2 (color): Sky colour at the top of a perspective grid (default: the background colour).; cells (integer 2..64, default 12): Number of grid cells across the frame width.; thickness (number 0.5..20, default 2): Line thickness in pixels at 1080p height.; glow (boolean, default false): Soft neon glow around the lines (and on the horizon).; speed (number 0..5, default 0): Scroll speed in cells per second (towards the viewer). 0 = a still picture (PNG).. • checker — a two-colour checkerboard, optionally rotated and scrolling (video while speed \u003e 0, else PNG). Params: color (color, default \"#FFFFFF\"): First square colour.; color2 (color, default \"#D9D9E0\"): Second square colour.; cells (integer 2..128, default 8): Number of squares across the frame width.; angle (number -180..180, default 0): Rotation of the pattern in degrees.; speed (number 0..5, default 0): Diagonal scroll speed in squares per second. 0 = a still picture (PNG).. • stripes — diagonal or straight stripes in 2-6 colours, optionally moving like a barber pole (video while speed \u003e 0, else PNG). Params: colors (colors, 2-6, default [\"#FFD23F\",\"#1B1B1F\"]): Stripe colours, repeated in order.; width (number 0.005..0.5, default 0.06): Width of one stripe as a fraction of the frame height.; angle (number -180..180, default 45): Stripe direction in degrees: 0 = vertical stripes, 90 = horizontal.; speed (number 0..10, default 0): Movement in stripes per second. 0 = a still picture (PNG).. • mesh — a soft modern mesh gradient: colour clouds blended into each other, slowly drifting in a seamless loop (video while speed \u003e 0, else PNG). Params: colors (colors, 2-6, default [\"#FF9A8B\",\"#FF6A88\",\"#FF99AC\",\"#FAD0C4\",\"#A18CD1\"]): Colours of the blended clouds (2-6).; softness (number 0..1, default 0.5): 0 = distinct colour patches, 1 = very soft, misty blending.; grain (number 0..0.3, default 0.04): Fine film grain on top (0 = clean).; speed (number 0..3, default 1): How far the colour clouds drift (1 = calm). 0 = a still picture (PNG).; loop (number 2..30, default 8): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 3): Random seed: another number gives another arrangement.. • aurora — northern lights: glowing curtains of light waving over a starry night sky (video while speed \u003e 0, else PNG). Params: colors (colors, 2-4, default [\"#00FFA3\",\"#00C2FF\",\"#B026FF\"]): Curtain colours from the bottom edge of the light upwards.; background (color, default \"#040714\"): Night sky colour at the top.; color2 (color, default \"#0A2A3C\"): Sky colour near the horizon (bottom).; stars (boolean, default true): Twinkling stars in the sky.; landscape (boolean, default true): Dark mountain and forest silhouette along the bottom.; speed (number 0..3, default 1): Wave speed of the curtains. 0 = a still picture (PNG).; loop (number 2..30, default 10): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 5): Random seed: another number gives another arrangement.. • lava — glossy blobs that rise, sink, merge and split like a lava lamp (video while speed \u003e 0, else PNG). Params: colors (colors, 1-4, default [\"#FFB000\",\"#FF3D6E\",\"#B5179E\"]): Blob colours from top to bottom of the frame.; background (color, default \"#1B0B2E\"): Background colour at the top.; color2 (color, default \"#3A0D4F\"): Background colour at the bottom.; count (integer 2..16, default 7): Number of blobs.; size (number 0.04..0.3, default 0.13): Blob radius as a fraction of the frame height.; speed (number 0..3, default 1): Rise/sink speed. 0 = a still picture (PNG).; loop (number 2..30, default 10): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 11): Random seed: another number gives another arrangement.. • plasma — a retro demo-scene plasma: interfering colour waves cycling through a palette (video while speed \u003e 0, else PNG). Params: colors (colors, 2-6, default [\"#120458\",\"#7A04EB\",\"#FF00A0\",\"#FE75FE\",\"#00F0FF\"]): Palette the waves cycle through.; scale (number 0.3..6, default 1.5): Wave density: higher = more, smaller ripples.; speed (number 0..3, default 1): Wave speed. 0 = a still picture (PNG).; loop (number 2..30, default 8): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 2): Random seed: another number gives another arrangement.. • bokeh — out-of-focus light discs drifting and twinkling over a dark gradient, like city lights behind a lens (video while speed \u003e 0, else PNG). Params: colors (colors, 1-6, default [\"#FFD27A\",\"#FF9F5A\",\"#FFF2C4\"]): Light colours.; background (color, default \"#120E1C\"): Background colour at the top.; color2 (color, default \"#2B1B2E\"): Background colour at the bottom.; count (integer 4..150, default 36): Number of light discs.; size (number 0.01..0.3, default 0.08): Average disc radius as a fraction of the frame height.; softness (number 0..1, default 0.35): Edge softness: 0 = crisp discs, 1 = very blurry.; speed (number 0..3, default 1): Drift speed. 0 = a still picture (PNG).; loop (number 2..30, default 10): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 8): Random seed: another number gives another arrangement.. • particles — light particles: floating dust, fireflies, falling snow, twinkling stars or rising embers (video while speed \u003e 0, else PNG). Params: style (enum dust|fireflies|snow|stars|embers, default \"dust\"): dust = slow glowing motes; fireflies = wandering pulsing green-gold lights; snow = flakes falling with a sway; stars = twinkling starfield; embers = sparks rising and flickering.; color (color, default \"#FFFFFF\"): Particle colour (fireflies and embers tint it warmer).; background (color, default \"#0B0F1A\"): Background colour at the top.; color2 (color): Optional background colour at the bottom (vertical gradient).; count (integer 10..800, default 160): Number of particles.; size (number 0.2..5, default 1): Particle size multiplier.; speed (number 0..3, default 1): Movement speed. 0 = a still picture (PNG).; loop (number 2..30, default 8): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 4): Random seed: another number gives another arrangement.. • light_leak — film light leaks, burns, prism streaks and lens flares on black — put it on an overlay track with the Screen (or Add) blend mode (video while speed \u003e 0, else PNG). Params: style (enum leak|burn|prism|flare, default \"leak\"): leak = soft warm glows drifting in from the edges; burn = hot film burn flaring from one side; prism = rainbow streaks sweeping across; flare = lens flare with a moving source, streak and ghost rings.; colors (colors, 1-5, default [\"#FF3D00\",\"#FF8A00\",\"#FFC14D\"]): Light colours (prism uses a rainbow when only defaults are given).; intensity (number 0.2..1.5, default 1): Brightness of the light.; speed (number 0..3, default 1): Movement speed. 0 = a still picture (PNG).; loop (number 2..30, default 6): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 9): Random seed: another number gives another arrangement.. • film_dust — old-film dirt on black: dust specks, hairs and vertical scratches flickering every frame — use the Screen blend mode on top of a clip (video while speed \u003e 0, else PNG). Params: color (color, default \"#FFFFFF\"): Colour of the dirt.; amount (number 0..1, default 0.5): How much dirt.; speed (number 0..2, default 1): 1 = new dirt 12 times per second, like a projector. 0 = a still picture (PNG).; seed (integer 0..1e+06, default 6): Random seed: another number gives another arrangement.. • texture — a still material texture: paper, kraft paper, grunge wall, concrete, canvas, denim, marble, watercolour paper or wood (PNG). Params: style (enum paper|kraft|grunge|concrete|canvas|denim|marble|watercolor|wood, default \"paper\"): Material to imitate.; color (color): Base colour (default depends on the style).; color2 (color): Accent colour: fibres, stains, veins, watercolour blooms or grain (default depends on the style).; amount (number 0..1, default 0.5): Strength of the texture detail.; scale (number 0.25..4, default 1): Size of the texture features.; seed (integer 0..1e+06, default 7): Random seed: another number gives another arrangement.. • pattern — a decorative repeating pattern — memphis, waves, polka dots, halftone, terrazzo, chevron, honeycomb, gingham, scales, dot grid, isometric cubes or triangle mosaic (PNG, or a slowly scrolling video when speed \u003e 0). Params: style (enum memphis|waves|dots|halftone|terrazzo|chevron|honeycomb|gingham|scales|dot_grid|cubes|triangles, default \"memphis\"): Pattern design.; colors (colors, 2-6, default [\"#FFF4E6\",\"#FF6B6B\",\"#4ECDC4\",\"#FFD93D\",\"#6A4C93\"]): Background colour first, then the pattern colours.; scale (number 2..64, default 8): Pattern repeats across the frame width.; angle (number -180..180, default 0): Rotation of the pattern in degrees.; speed (number 0..5, default 0): Diagonal scroll speed in repeats per second. 0 = a still picture (PNG).; seed (integer 0..1e+06, default 12): Random seed: another number gives another arrangement.. • timer — a styled countdown video from N to 1 — flip clock, neon ring, progress bar, vanishing dots or pop-art bursts. Params: from (integer 1..60, default 5): First number; the clip counts down to 1. Default length = from seconds.; style (enum flip|neon|bar|dots|pop, default \"flip\"): flip = split-flap clock cards that flip every second; neon = glowing ring and digits; bar = big number over a shrinking progress bar; dots = a ring of dots that go out one by one; pop = the number punches in over a coloured starburst.; background (color, default \"#121216\"): Background colour.; color (color, default \"#FFFFFF\"): Colour of the numbers.; accent (color, default \"#FF3B5C\"): Accent colour (cards, ring, bar, dots, bursts).; beep (boolean, default false): Add a short beep at every number (the video gets a sound track).. • banner — a text-free banner shape on a transparent background — lower third, pill, tab, ribbon, glass panel, news bar or brush stroke — to put your own text on (PNG with alpha). Params: style (enum lower_third|pill|tab|ribbon|glass|news|brush, default \"lower_third\"): Banner design.; color (color, default \"#FFFFFF\"): Main panel colour.; color2 (color, default \"#FF3B5C\"): Accent colour (bars, tags, ribbon ends, icon slot).; position (enum bottom|center|top, default \"bottom\"): Vertical position in the frame.; width (number 0.2..1, default 0.6): Banner width as a fraction of the frame width.. • frame — a border overlay with a transparent centre — film strip, neon, instant photo, vignette, torn paper, viewfinder, rounded, postage stamp or double line (PNG with alpha). Params: style (enum film|neon|polaroid|vignette|torn|viewfinder|rounded|stamp|double, default \"rounded\"): Frame design.; color (color, default \"#FFFFFF\"): Main frame colour (vignette: the shadow colour).; color2 (color, default \"#FF3B5C\"): Accent colour (neon glow, viewfinder REC dot, inner line).; thickness (number 0.01..0.25, default 0.05): Border thickness as a fraction of the frame height..\nUI: Library/Stickers/Generated.\nUndoable with edit.undo.\nReturns: {material_id, material, kind, preset_id?, params (all values incl. defaults), output: \"png\"|\"mp4\", path, width, height, duration_us (0 for a still picture), fps?, has_audio, cached, track_id?, segment_id?, segment?} — the generated material, and the placed clip when add_to_timeline is true.",
         "operationId": "media.generate",
         "requestBody": {
           "content": {
@@ -4978,6 +5393,26 @@
                     },
                     "project_id": "prj_1a2b3c4d5e6f"
                   }
+                },
+                "example6": {
+                  "summary": "Seamless northern-lights background (10 s loop)",
+                  "value": {
+                    "add_to_timeline": true,
+                    "at_us": 0,
+                    "preset_id": "aurora_north",
+                    "project_id": "prj_1a2b3c4d5e6f"
+                  }
+                },
+                "example7": {
+                  "summary": "Neon border frame (transparent PNG) on a new overlay track",
+                  "value": {
+                    "add_to_timeline": true,
+                    "at_us": 0,
+                    "duration_us": 5000000,
+                    "new_track": true,
+                    "preset_id": "frame_neon",
+                    "project_id": "prj_1a2b3c4d5e6f"
+                  }
                 }
               },
               "schema": {
@@ -5012,7 +5447,7 @@
                     "type": "integer"
                   },
                   "kind": {
-                    "description": "What to generate: solid, gradient, color_bars, noise, shapes, countdown, grid, checker or stripes. Required unless preset_id is given (must then match the preset's kind).",
+                    "description": "What to generate: solid, gradient, color_bars, noise, shapes, countdown, grid, checker, stripes, mesh, aurora, lava, plasma, bokeh, particles, light_leak, film_dust, texture, pattern, timer, banner, frame. Required unless preset_id is given (must then match the preset's kind).",
                     "enum": [
                       "solid",
                       "gradient",
@@ -5022,7 +5457,20 @@
                       "countdown",
                       "grid",
                       "checker",
-                      "stripes"
+                      "stripes",
+                      "mesh",
+                      "aurora",
+                      "lava",
+                      "plasma",
+                      "bokeh",
+                      "particles",
+                      "light_leak",
+                      "film_dust",
+                      "texture",
+                      "pattern",
+                      "timer",
+                      "banner",
+                      "frame"
                     ],
                     "type": "string"
                   },
@@ -8967,7 +9415,7 @@
     },
     "/api/v1/commands/sticker.add": {
       "post": {
-        "description": "Adds a built-in sticker to a sticker track, like clicking a card in the Stickers tab. The sticker PNG (512×512, transparent, generated by the engine) is registered once per project as a material of type \"sticker\" and a segment using it is placed at at_us (default: playhead) for duration_us (default 3 s) on the first free sticker track, or a new sticker track above all visual tracks. The sticker starts centred at 30% of the canvas height (transform scale 0.3); move/resize it with segment.set_transform. Sticker ids come from library.list kind=sticker.\nUI: Library/Stickers.\nUndoable with edit.undo.\nReturns: {segment_id, track_id, segment, material_id} — the sticker segment and the sticker material it uses.",
+        "description": "Adds a built-in sticker to a sticker track, like clicking a card in the Stickers tab. The sticker PNG (512×512, transparent, generated by the engine) is registered once per project as a material of type \"sticker\" and a segment using it is placed at at_us (default: playhead) for duration_us (default 3 s) on the first free sticker track, or a new sticker track above all visual tracks. The sticker starts centred at 30% of the canvas height (transform scale 0.3); move/resize it with segment.set_transform. Sticker ids come from library.list kind=sticker. Animated stickers (the \"Animated\" tab; their library item has params.loop_anim, optional params.in_anim and params.loop_us) get that loop animation (period loop_us) and entrance animation applied automatically, exactly as animation.set would; pass animate=false to place them still. Change or remove the animations later with animation.set / animation.remove.\nUI: Library/Stickers.\nUndoable with edit.undo.\nReturns: {segment_id, track_id, segment, material_id} — the sticker segment and the sticker material it uses.",
         "operationId": "sticker.add",
         "requestBody": {
           "content": {
@@ -8988,11 +9436,24 @@
                     "project_id": "prj_1a2b3c4d5e6f",
                     "sticker_id": "badge_subscribe"
                   }
+                },
+                "example3": {
+                  "summary": "Animated grin face placed without its default animation",
+                  "value": {
+                    "animate": false,
+                    "project_id": "prj_1a2b3c4d5e6f",
+                    "sticker_id": "emoji_grin"
+                  }
                 }
               },
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "animate": {
+                    "default": true,
+                    "description": "Apply the sticker's default loop/entrance animation when it has one (animated stickers only); false places it without animation.",
+                    "type": "boolean"
+                  },
                   "at_us": {
                     "description": "Timeline time where the new segment starts (1 second = 1000000). Defaults to the playhead position. Unit: microseconds.",
                     "minimum": 0,
@@ -9120,7 +9581,7 @@
                     "type": "string"
                   },
                   "style": {
-                    "description": "Optional TextStyle overrides: {font, size, color, bold, italic, underline, align, line_spacing, letter_spacing, stroke{color,width}, shadow{color,opacity,blur,distance,angle}, box{color,opacity,radius}, case, glow{color,intensity,radius}, fill{type,colors,angle}, extra_strokes[{color,width}], extrude{color,depth,angle}, effect_id, curve, glyph_in/glyph_out/glyph_loop{id,duration_us}, words[{text,start_us,end_us}], highlight{style,color,scale}} — same units as text.update.",
+                    "description": "Optional TextStyle overrides: {font, size, color, bold, italic, underline, align, line_spacing, letter_spacing, stroke{color,width}, shadow{color,opacity,blur,distance,angle}, box{color,opacity,radius}, case, glow{color,intensity,radius}, fill{type,colors,angle}, extra_strokes[{color,width}], extrude{color,depth,angle}, effect_id, curve, glyph_in/glyph_out/glyph_loop{id,duration_us}, words[{text,start_us,end_us}], highlight{style,color,scale,text_color}} — same units as text.update. Wave 4: stroke_fill{type,colors,angle,stops}, fill.stops[], pattern{type,colors,scale,angle,opacity,speed}, bevel{depth,angle,strength,gloss,highlight,shade,round}, inner_shadow{color,opacity,blur,distance,angle}, inner_glow{color,intensity,radius}, echo{colors,distance,angle,hollow}, distress{type,amount,scale}, sparkle{color,amount,size,speed}, drip{amount,length}, rough, pixelate, box{…, fill, border{color,width}, shadow{…}, per_line, skew, pad, knockout}, highlight.text_color.",
                     "type": "object"
                   },
                   "template_id": {
@@ -9164,7 +9625,7 @@
     },
     "/api/v1/commands/text.apply_effect": {
       "post": {
-        "description": "Applies a word-art preset (\"text effect\": gradient, metal, neon, outline, 3D and retro looks from library.list kind=text_effect) to a text segment, like clicking a card in the Text → Effects grid. The preset WRITES its fields into the TextStyle — fill gradient, glow, extra_strokes, extrude and, where the preset uses them, stroke, shadow and color — after clearing the previous preset's fill/glow/extra outlines/extrusion, and records its id in effect_id. Rendering uses only the stored fields, so every value stays editable with text.update afterwards. Words, font, size, alignment, animations and timing are kept. effect_id \"none\" removes the preset's fill, glow, extra outlines and extrusion (a transparent hollow colour becomes white).\nUI: Library/Text/Effects.\nUndoable with edit.undo.\nReturns: The new TextStyle of the segment.",
+        "description": "Applies a word-art preset (\"text effect\": gradient, metal, luxury, neon, candy, texture, sticker, hand-made, outline, 3D, retro, spooky, gaming and cute looks from library.list kind=text_effect) to a text segment, like clicking a card in the Text → Effects grid. The preset WRITES its fields into the TextStyle — fill gradient, glow, extra_strokes, extrude, the wave-4 pattern / bevel / inner shadow / inner glow / echo / distress / sparkle / drip / rough / pixelate fields and, where the preset uses them, stroke, shadow and color — after clearing the previous preset's fill/glow/extra outlines/extrusion, and records its id in effect_id. Rendering uses only the stored fields, so every value stays editable with text.update afterwards. Words, font, size, alignment, animations and timing are kept. effect_id \"none\" removes the preset's fill, glow, extra outlines and extrusion (a transparent hollow colour becomes white).\nUI: Library/Text/Effects.\nUndoable with edit.undo.\nReturns: The new TextStyle of the segment.",
         "operationId": "text.apply_effect",
         "requestBody": {
           "content": {
@@ -9182,6 +9643,14 @@
                   "summary": "Remove the effect",
                   "value": {
                     "effect_id": "none",
+                    "project_id": "prj_1a2b3c4d5e6f",
+                    "segment_id": "seg_9a8b7c6d5e4f"
+                  }
+                },
+                "example3": {
+                  "summary": "Holographic sticker look",
+                  "value": {
+                    "effect_id": "fx4_holo_sticker",
                     "project_id": "prj_1a2b3c4d5e6f",
                     "segment_id": "seg_9a8b7c6d5e4f"
                   }
@@ -9467,7 +9936,7 @@
     },
     "/api/v1/commands/text.update": {
       "post": {
-        "description": "Changes the content and look of a text segment — the Text tab of the inspector (Basic: font, size, style, colour, case, alignment, spacing; Stroke; Extra outlines; Shadow; Background box; Glow; Gradient fill; 3D extrude; Curve; Word-art effect; caption highlight). Only the parameters you pass change. Units: size is CapCut's scale (15 = default, font height ≈ size/300 of the canvas height); letter_spacing and line_spacing are in em (0.1 = 10% of the font size) added to the normal spacing; stroke_width, shadow_blur and shadow_distance are 0..1 (stroke up to 0.25 em thick, shadow offset/blur up to 0.5 em); shadow_angle, fill_angle and extrude_angle are in degrees counter-clockwise from the right (-45 = down-right, -90 = downwards / top→bottom); box_radius 0..1 rounds the corners (1 = pill). Stroke, shadow, box, glow and extrude are enabled by setting any of their parameters (missing ones get defaults: black stroke width 0.3, black shadow opacity 0.6/blur 0.3/distance 0.15/angle -45, black box opacity 0.6/radius 0.2, glow in the text colour intensity 0.6/radius 0.35, dark-grey extrude depth 0.15/angle -45) and removed with stroke_width=0, shadow_opacity=0, box_opacity=0, glow_intensity=0 or extrude_depth=0. Gradient fill: fill_type linear|radial with 2–4 fill_colors (evenly spaced; radial goes centre→edge), fill_type=solid removes it (the text colour is used again); passing only fill_colors turns on a linear gradient. A color with alpha 00 (\"#FFFFFF00\") plus a stroke gives hollow outline text. curve -1..1 bends the lines into an arc (1 = half circle arch, -1 = smile). case upper|lower|title converts letters when rendering (the stored content is unchanged; none = as typed). effect_id applies a word-art preset from library.list kind=text_effect FIRST (it writes fill, glow, extra_strokes, extrude and the stroke/shadow/color it uses — the rendered look comes only from the stored fields), so other parameters in the same call override it; effect_id \"\" or \"none\" removes the preset's fill/glow/extra outlines/extrusion. Captions: words (timings relative to the segment start) plus highlight_style color|box|scale|underline|karaoke highlight the spoken word (highlight_style=none removes it). Per-letter animations are set with text.set_glyph_animation.\nUI: Inspector/Text.\nUndoable with edit.undo.\nReturns: The updated TextStyle object of the segment.",
+        "description": "Changes the content and look of a text segment — the Text tab of the inspector (Basic: font, size, style, colour, case, alignment, spacing; Stroke; Extra outlines; Shadow; Background box; Glow; Gradient fill; 3D extrude; Curve; Word-art effect; caption highlight). Only the parameters you pass change. Units: size is CapCut's scale (15 = default, font height ≈ size/300 of the canvas height); letter_spacing and line_spacing are in em (0.1 = 10% of the font size) added to the normal spacing; stroke_width, shadow_blur and shadow_distance are 0..1 (stroke up to 0.25 em thick, shadow offset/blur up to 0.5 em); shadow_angle, fill_angle and extrude_angle are in degrees counter-clockwise from the right (-45 = down-right, -90 = downwards / top→bottom); box_radius 0..1 rounds the corners (1 = pill). Stroke, shadow, box, glow and extrude are enabled by setting any of their parameters (missing ones get defaults: black stroke width 0.3, black shadow opacity 0.6/blur 0.3/distance 0.15/angle -45, black box opacity 0.6/radius 0.2, glow in the text colour intensity 0.6/radius 0.35, dark-grey extrude depth 0.15/angle -45) and removed with stroke_width=0, shadow_opacity=0, box_opacity=0, glow_intensity=0 or extrude_depth=0. Gradient fill: fill_type linear|radial with 2–4 fill_colors (evenly spaced; radial goes centre→edge), fill_type=solid removes it (the text colour is used again); passing only fill_colors turns on a linear gradient. A color with alpha 00 (\"#FFFFFF00\") plus a stroke gives hollow outline text. curve -1..1 bends the lines into an arc (1 = half circle arch, -1 = smile). case upper|lower|title converts letters when rendering (the stored content is unchanged; none = as typed). effect_id applies a word-art preset from library.list kind=text_effect FIRST (it writes fill, glow, extra_strokes, extrude and the stroke/shadow/color it uses — the rendered look comes only from the stored fields), so other parameters in the same call override it; effect_id \"\" or \"none\" removes the preset's fill/glow/extra outlines/extrusion. Captions: words (timings relative to the segment start) plus highlight_style color|box|scale|underline|karaoke|pop|bounce|reveal|dim|glow|sweep_line|slide_box highlight the spoken word (highlight_style=none removes it). Per-letter animations are set with text.set_glyph_animation. Wave-4 word art (all optional; each group is enabled by any of its parameters and removed by its zero amount): fill_stops (hard-edged chrome/duotone gradients, up to 8 fill_colors); stroke_fill_* (gradient outline); pattern_* (procedural texture over the fill: stripes, checker, dots, halftone, hearts, stars, grain, glitter, holo, foil, brushed metal, marble, camo, galaxy, lava flow, aurora, rainbow…, pattern_speed animates the moving ones); bevel_* (emboss lighting; bevel_round + bevel_gloss = puffy glossy letters); inner_shadow_* and inner_glow_* (inside the letters); echo_* (stacked offset copies, retro 3D stacks / trails); distress_* (grunge, chalk, stamp, spray, scratch, worn); sparkle_* (star glints, sparkle_speed twinkles); drip_* (paint or slime drips); rough (hand-made wobble); pixelate (pixel-art blocks); box_* extras (gradient box, border, card shadow, one box per line, skew, padding, knockout stencil); highlight_text_color (letter colour of the active caption word). Highlight styles also include pop, bounce, reveal, dim, glow, sweep_line and slide_box.\nUI: Inspector/Text.\nUndoable with edit.undo.\nReturns: The updated TextStyle object of the segment.",
         "operationId": "text.update",
         "requestBody": {
           "content": {
@@ -9595,6 +10064,73 @@
                     "project_id": "prj_1a2b3c4d5e6f",
                     "segment_id": "seg_9a8b7c6d5e4f"
                   }
+                },
+                "example;": {
+                  "summary": "Glossy puffy glitter letters with twinkling stars",
+                  "value": {
+                    "bevel_depth": 0.8,
+                    "bevel_gloss": 0.8,
+                    "bevel_round": true,
+                    "pattern_colors": [
+                      "#E2B23C"
+                    ],
+                    "pattern_speed": 0.8,
+                    "pattern_type": "glitter",
+                    "project_id": "prj_1a2b3c4d5e6f",
+                    "segment_id": "seg_9a8b7c6d5e4f",
+                    "sparkle_amount": 0.5,
+                    "sparkle_speed": 1.2
+                  }
+                },
+                "example\u003c": {
+                  "summary": "Retro 70s stack on a slanted card",
+                  "value": {
+                    "box_color": "#1B1B1B",
+                    "box_opacity": 1,
+                    "box_pad": 0.2,
+                    "box_shadow_blur": 0,
+                    "box_shadow_opacity": 1,
+                    "box_skew": 0.3,
+                    "echo_angle": -45,
+                    "echo_colors": [
+                      "#F7B32B",
+                      "#F26B1D",
+                      "#C0392B"
+                    ],
+                    "echo_distance": 0.16,
+                    "project_id": "prj_1a2b3c4d5e6f",
+                    "segment_id": "seg_9a8b7c6d5e4f"
+                  }
+                },
+                "example=": {
+                  "summary": "Chrome with a hard horizon",
+                  "value": {
+                    "fill_angle": -90,
+                    "fill_colors": [
+                      "#FFFFFF",
+                      "#5B86B5",
+                      "#2A1E14",
+                      "#F3D9B5"
+                    ],
+                    "fill_stops": [
+                      0,
+                      0.5,
+                      0.5,
+                      1
+                    ],
+                    "project_id": "prj_1a2b3c4d5e6f",
+                    "segment_id": "seg_9a8b7c6d5e4f"
+                  }
+                },
+                "example\u003e": {
+                  "summary": "Black text on a yellow box under the spoken word",
+                  "value": {
+                    "highlight_color": "#FFE14D",
+                    "highlight_style": "slide_box",
+                    "highlight_text_color": "#111111",
+                    "project_id": "prj_1a2b3c4d5e6f",
+                    "segment_id": "seg_9a8b7c6d5e4f"
+                  }
                 }
               },
               "schema": {
@@ -9609,13 +10145,76 @@
                     ],
                     "type": "string"
                   },
+                  "bevel_angle": {
+                    "description": "Direction the bevel light comes from, counter-clockwise from the right (135 = upper left, the default). Unit: degrees.",
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number"
+                  },
+                  "bevel_depth": {
+                    "description": "Bevel / emboss lighting: width of the lit edge 0..1 (1 = 0.25 em); 0 removes the bevel.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "bevel_gloss": {
+                    "description": "Sharp specular highlight on the bevel (glossy plastic / puffy balloon look) 0..1.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "bevel_highlight": {
+                    "description": "Bevel light colour #RRGGBB (default white; gold-ish for warm metal).",
+                    "type": "string"
+                  },
+                  "bevel_round": {
+                    "description": "Rounded pillow profile (puffy, inflated letters) instead of a flat chisel.",
+                    "type": "boolean"
+                  },
+                  "bevel_shade": {
+                    "description": "Bevel shade colour #RRGGBB (default black).",
+                    "type": "string"
+                  },
+                  "bevel_strength": {
+                    "description": "Contrast of the bevel light and shade 0..1 (default 0.8).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
                   "bold": {
                     "description": "Bold style (a real bold face when the font has one, otherwise synthesised).",
                     "type": "boolean"
                   },
+                  "box_border_color": {
+                    "description": "Colour #RRGGBB of an outline drawn inside the edge of the background box.",
+                    "type": "string"
+                  },
+                  "box_border_width": {
+                    "description": "Box outline thickness 0..1 (1 = 0.25 em); 0 removes it.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
                   "box_color": {
                     "description": "Background box colour #RRGGBB. Enables the box if it was off.",
                     "type": "string"
+                  },
+                  "box_fill_angle": {
+                    "description": "Direction of the box gradient, counter-clockwise from the right. Unit: degrees.",
+                    "maximum": 360,
+                    "minimum": -360,
+                    "type": "number"
+                  },
+                  "box_fill_colors": {
+                    "description": "2–8 colours of a gradient background box (left→right unless box_fill_angle); [] removes the gradient. Enables the box if it was off.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "box_knockout": {
+                    "description": "Cut the letters out of the box so the video shows through them (stencil look).",
+                    "type": "boolean"
                   },
                   "box_opacity": {
                     "description": "Background box opacity 0..1; 0 removes the box.",
@@ -9623,10 +10222,54 @@
                     "minimum": 0,
                     "type": "number"
                   },
+                  "box_pad": {
+                    "description": "Extra padding around the text inside the box 0..1 (1 = 0.5 em).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "box_per_line": {
+                    "description": "One box per text line (ribbon / highlighter captions) instead of one box around the block.",
+                    "type": "boolean"
+                  },
                   "box_radius": {
                     "description": "Corner roundness 0..1 (fraction of half the box height; 1 = pill).",
                     "maximum": 1,
                     "minimum": 0,
+                    "type": "number"
+                  },
+                  "box_shadow_angle": {
+                    "description": "Box shadow direction, counter-clockwise from the right (-45 = down-right). Unit: degrees.",
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number"
+                  },
+                  "box_shadow_blur": {
+                    "description": "Box shadow softness 0..1 (1 = 0.25 em).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "box_shadow_color": {
+                    "description": "Colour #RRGGBB of a drop shadow under the background box (blur 0 = flat offset \"card\" shadow).",
+                    "type": "string"
+                  },
+                  "box_shadow_distance": {
+                    "description": "Box shadow offset 0..1 (1 = 0.5 em).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "box_shadow_opacity": {
+                    "description": "Box shadow opacity 0..1; 0 removes it.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "box_skew": {
+                    "description": "Slants the box into a parallelogram (-1..1; positive leans right) — sports and news lower thirds.",
+                    "maximum": 1,
+                    "minimum": -1,
                     "type": "number"
                   },
                   "case": {
@@ -9652,6 +10295,66 @@
                     "maximum": 1,
                     "minimum": -1,
                     "type": "number"
+                  },
+                  "distress_amount": {
+                    "description": "How much is eroded 0..1; 0 removes the distress.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "distress_scale": {
+                    "description": "Texture size multiplier (0 = 1).",
+                    "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "distress_type": {
+                    "description": "Erodes the whole text with a texture: grunge (rough print), chalk (chalkboard), stamp (rubber stamp), spray (speckled spray paint), scratch (scratched lines), worn (faded vintage print); none removes it.",
+                    "enum": [
+                      "none",
+                      "grunge",
+                      "chalk",
+                      "stamp",
+                      "spray",
+                      "scratch",
+                      "worn"
+                    ],
+                    "type": "string"
+                  },
+                  "drip_amount": {
+                    "description": "Paint / slime drips hanging from the letters 0..1 (horror, slime, melting looks); 0 removes them.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "drip_length": {
+                    "description": "Longest drip 0..1 (1 = 1.2 em; default 0.5).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "echo_angle": {
+                    "description": "Direction of the echo copies, counter-clockwise from the right (-45 = down-right). Unit: degrees.",
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number"
+                  },
+                  "echo_colors": {
+                    "description": "Echo: 1–6 colours #RRGGBB(AA) of offset copies of the letters stacked behind the text, nearest first (retro 70s/80s stacks, motion trails with fading alpha); [] removes the echo.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "echo_distance": {
+                    "description": "Distance between echo copies 0..1 (1 = 0.5 em); 0 removes the echo.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "echo_hollow": {
+                    "description": "Draw the echo copies as thin outlines instead of solid shapes.",
+                    "type": "boolean"
                   },
                   "effect_id": {
                     "description": "Word-art preset from library.list kind=text_effect (e.g. \"fx_gold_metal\", \"fx_neon_outline\"), applied before the other parameters; \"\" or \"none\" removes the preset's fill/glow/extra outlines/extrusion.",
@@ -9693,6 +10396,13 @@
                     },
                     "type": "array"
                   },
+                  "fill_stops": {
+                    "description": "Positions 0..1 of the fill_colors stops (one per colour, ascending; two equal neighbours make a hard edge such as a chrome horizon); [] = evenly spaced.",
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
                   "fill_type": {
                     "description": "Fill of the letters: solid (the text colour; removes a gradient), linear or radial gradient through fill_colors.",
                     "enum": [
@@ -9703,7 +10413,7 @@
                     "type": "string"
                   },
                   "font": {
-                    "description": "Font id from library.list kind=font (e.g. \"go_sans\", \"go_mono\", \"sys_arial\"). Characters the font lacks (Cyrillic, CJK…) fall back to system fonts automatically.",
+                    "description": "Font id from library.list kind=font (e.g. \"go_sans\", \"go_mono\", \"sys_arial\", or a downloaded font such as \"montserrat\" — install free fonts with font.catalog + font.install). Characters the font lacks (Cyrillic, CJK…) fall back to system fonts automatically.",
                     "type": "string"
                   },
                   "glow_color": {
@@ -9733,16 +10443,71 @@
                     "type": "number"
                   },
                   "highlight_style": {
-                    "description": "How the spoken word is highlighted when words are set: color (word turns highlight_color), box (rounded box behind it), scale (word grows), underline, karaoke (fills left→right as spoken); none removes the highlight.",
+                    "description": "How the spoken word is highlighted when words are set: color (word turns highlight_color), box (rounded box behind it), scale (word grows), underline, karaoke (fills left→right as spoken), pop (springs up with an overshoot), bounce (hops once), reveal (later words hidden until spoken), dim (later words dimmed), glow (halo behind the word), sweep_line (underline grows while spoken), slide_box (box glides from word to word); none removes the highlight.",
                     "enum": [
                       "none",
                       "color",
                       "box",
                       "scale",
                       "underline",
-                      "karaoke"
+                      "karaoke",
+                      "pop",
+                      "bounce",
+                      "reveal",
+                      "dim",
+                      "glow",
+                      "sweep_line",
+                      "slide_box"
                     ],
                     "type": "string"
+                  },
+                  "highlight_text_color": {
+                    "description": "Colour #RRGGBB of the active word's letters for the box / slide_box / underline / sweep_line / glow highlight styles (e.g. black text on a yellow box); \"\" keeps the text colour.",
+                    "type": "string"
+                  },
+                  "inner_glow_color": {
+                    "description": "Inner glow colour #RRGGBB: light seeping in from the letter edges (neon tube, lit-from-within). Enables it if it was off.",
+                    "type": "string"
+                  },
+                  "inner_glow_intensity": {
+                    "description": "Inner glow strength 0..1; 0 removes it.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "inner_glow_radius": {
+                    "description": "How far the inner glow reaches into the letters 0..1 (1 = 0.3 em).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "inner_shadow_angle": {
+                    "description": "Inner shadow offset direction, counter-clockwise from the right (-60 = down, slightly right). Unit: degrees.",
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number"
+                  },
+                  "inner_shadow_blur": {
+                    "description": "Inner shadow softness 0..1 (1 = 0.25 em).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "inner_shadow_color": {
+                    "description": "Inner shadow colour #RRGGBB: a shadow cast INSIDE the letters (debossed / cut-out look). Enables it if it was off.",
+                    "type": "string"
+                  },
+                  "inner_shadow_distance": {
+                    "description": "Inner shadow offset 0..1 (1 = 0.25 em).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "inner_shadow_opacity": {
+                    "description": "Inner shadow opacity 0..1; 0 removes it.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
                   },
                   "italic": {
                     "description": "Italic style (real italic face or a synthetic slant).",
@@ -9760,9 +10525,87 @@
                     "minimum": -0.5,
                     "type": "number"
                   },
+                  "pattern_angle": {
+                    "description": "Rotates the pattern from its default orientation. Unit: degrees.",
+                    "maximum": 360,
+                    "minimum": -360,
+                    "type": "number"
+                  },
+                  "pattern_colors": {
+                    "description": "Pattern colours #RRGGBB(AA); their meaning depends on pattern_type (see its list); omitted = the type's defaults, \"\" = use the text fill.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "pattern_opacity": {
+                    "description": "How strongly the pattern covers the fill, 0..1 (0 = fully, same as 1).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "pattern_scale": {
+                    "description": "Pattern feature size multiplier (1 = default size relative to the font, 2 = twice as big; 0 = default).",
+                    "maximum": 20,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "pattern_speed": {
+                    "description": "Animation speed of moving patterns (holo shimmer, glitter twinkle, flowing lava, rainbow sweep, scrolling stripes…), cycles per second; 0 = still.",
+                    "maximum": 10,
+                    "minimum": -10,
+                    "type": "number"
+                  },
+                  "pattern_type": {
+                    "description": "Procedural texture painted over the letter fill: stripes (diagonal two-colour stripes (candy cane / barber pole); colors [stripe, gap] (gap defaults to the fill); speed scrolls them); pinstripe (thin vertical pinstripes over the fill; colors [line]); checker (checkerboard (racing flag); colors [a, b]); gingham (picnic gingham: translucent crossing bands, darker where they overlap; colors [band, background]); plaid (woven tartan with a twill texture; colors [main, dark band, secondary, thin accent]); dots (polka dots on a staggered grid; colors [dot, background]); halftone (comic halftone dots growing from the top to the bottom of the text; colors [dot] (default: a darker shade of the fill)); hearts (tiny repeating hearts (kawaii, love); colors [heart, background]); stars (tiny repeating five-point stars; colors [star, background]); grain (film grain / risograph noise that roughens flat colour; speed makes it flicker); static (black-and-white TV static noise; speed animates it); scanlines (dark horizontal CRT scanlines; speed rolls them); brushed (brushed-metal streaks along the pattern angle (shades the fill)); foil (crinkled metal foil facets of random brightness (gold leaf, tinsel); speed makes facets glint); carbon (woven carbon fibre; colors [dark, highlight]); glitter (glitter flakes of varying brightness with bright sparkles; colors [glitter] (default: the fill); speed twinkles); holo (holographic / iridescent pastel rainbow with a soft sheen; colors = palette (2–8); speed shimmers); rainbow (saturated rainbow bands; speed sweeps them across the letters); aurora (northern-lights curtains of green, teal and violet; colors = palette; speed drifts them); flow (flowing lava / fire plasma; colors = palette from dark to bright; speed makes it flow); galaxy (deep-space nebula with tiny stars; colors = palette; speed twinkles the stars); marble (polished marble with thin veins; colors [stone, vein] (stone defaults to the fill)); wood (wood grain rings; colors [light, dark]); camo (camouflage blobs in four colours; colors [1..4]); leopard (leopard rosettes; colors [fur, ring, spot centre] (fur defaults to the fill)); zebra (wavy zebra stripes; colors [stripe, background]); frost (frosted ice cracks and rime; colors [frost]); grid (glowing synthwave grid lines; colors [line]; speed scrolls the grid). none removes it.",
+                    "enum": [
+                      "none",
+                      "stripes",
+                      "pinstripe",
+                      "checker",
+                      "gingham",
+                      "plaid",
+                      "dots",
+                      "halftone",
+                      "hearts",
+                      "stars",
+                      "grain",
+                      "static",
+                      "scanlines",
+                      "brushed",
+                      "foil",
+                      "carbon",
+                      "glitter",
+                      "holo",
+                      "rainbow",
+                      "aurora",
+                      "flow",
+                      "galaxy",
+                      "marble",
+                      "wood",
+                      "camo",
+                      "leopard",
+                      "zebra",
+                      "frost",
+                      "grid"
+                    ],
+                    "type": "string"
+                  },
+                  "pixelate": {
+                    "description": "Blocky pixel-art rendering 0..1 (1 = 0.2 em pixels); 0 = smooth.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
                   "project_id": {
                     "description": "ID of the project to operate on (e.g. \"prj_8f3a...\"). Get it from project.list or project.create.",
                     "type": "string"
+                  },
+                  "rough": {
+                    "description": "Hand-made wobble: shaky outlines and slightly tilted letters 0..1 (marker, crayon, doodle looks); 0 = clean.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
                   },
                   "segment_id": {
                     "description": "ID of the target segment (clip). Get it from project.get → tracks[].segments[].id.",
@@ -9802,8 +10645,52 @@
                     "minimum": 1,
                     "type": "number"
                   },
+                  "sparkle_amount": {
+                    "description": "How many four-point star glints sit on the letters 0..1; 0 removes them.",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "sparkle_color": {
+                    "description": "Colour of the star glints #RRGGBB (default white). Enables sparkles if they were off.",
+                    "type": "string"
+                  },
+                  "sparkle_size": {
+                    "description": "Star size 0..1 (1 = 0.6 em rays).",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  "sparkle_speed": {
+                    "description": "Twinkles per second; 0 = still stars.",
+                    "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                  },
                   "stroke_color": {
                     "description": "Outline colour #RRGGBB. Enables the stroke if it was off.",
+                    "type": "string"
+                  },
+                  "stroke_fill_angle": {
+                    "description": "Direction of a linear stroke gradient, counter-clockwise from the right (0 = left→right, -90 = top→bottom). Unit: degrees.",
+                    "maximum": 360,
+                    "minimum": -360,
+                    "type": "number"
+                  },
+                  "stroke_fill_colors": {
+                    "description": "2–8 colour stops #RRGGBB(AA) of the stroke gradient; passing them alone turns on a linear stroke gradient (and a stroke if there was none).",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "stroke_fill_type": {
+                    "description": "Gradient along the main stroke: linear or radial through stroke_fill_colors; solid removes it (stroke_color is used again).",
+                    "enum": [
+                      "solid",
+                      "linear",
+                      "radial"
+                    ],
                     "type": "string"
                   },
                   "stroke_width": {
@@ -12308,7 +13195,7 @@
                 "additionalProperties": false,
                 "properties": {
                   "direction": {
-                    "description": "Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*) it selects the sibling id.",
+                    "description": "Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*, whip_*) it selects the sibling id.",
                     "enum": [
                       "left",
                       "right",
@@ -12332,7 +13219,7 @@
                     "type": "string"
                   },
                   "softness": {
-                    "description": "Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, checkerboard, luma/ink dissolves, burns, light sweep).",
+                    "description": "Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, shape reveals, checkerboard, luma/ink dissolves, burns, light sweep).",
                     "maximum": 1,
                     "minimum": 0,
                     "type": "number"
@@ -12531,7 +13418,7 @@
                 "additionalProperties": false,
                 "properties": {
                   "direction": {
-                    "description": "Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*) it selects the sibling id.",
+                    "description": "Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*, whip_*) it selects the sibling id.",
                     "enum": [
                       "left",
                       "right",
@@ -12556,7 +13443,7 @@
                     "type": "string"
                   },
                   "softness": {
-                    "description": "Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, checkerboard, luma/ink dissolves, burns, light sweep).",
+                    "description": "Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, shape reveals, checkerboard, luma/ink dissolves, burns, light sweep).",
                     "maximum": 1,
                     "minimum": 0,
                     "type": "number"
@@ -13512,6 +14399,9 @@
     },
     {
       "name": "Filters"
+    },
+    {
+      "name": "Fonts"
     },
     {
       "name": "Keyframes"

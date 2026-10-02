@@ -1,8 +1,8 @@
 # Kadr — complete documentation for AI agents
 
-> Kadr is a free, offline CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 177 commands with parameters, units and examples — while a human watches the edits live in the editor.
+> Kadr is a free, offline CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 183 commands with parameters, units and examples — while a human watches the edits live in the editor.
 
-Generated 2026-10-01 from https://gitkalenyuk.github.io/kadr/ for Kadr 0.1.0-dev. Part 1 contains the 23 English AI docs pages; part 2 the specification of all 177 commands, generated from the engine's command registry (docs/openapi.json). A running Kadr serves the same specification at http://127.0.0.1:7777/api/v1/commands.
+Generated 2026-10-02 from https://gitkalenyuk.github.io/kadr/ for Kadr 0.1.0-dev. Part 1 contains the 25 English AI docs pages; part 2 the specification of all 183 commands, generated from the engine's command registry (docs/openapi.json). A running Kadr serves the same specification at http://127.0.0.1:7777/api/v1/commands.
 
 ## Contents
 
@@ -14,6 +14,7 @@ Generated 2026-10-01 from https://gitkalenyuk.github.io/kadr/ for Kadr 0.1.0-dev
 - REST API
 - Command line: kadrctl
 - Concepts
+- Library, previews and fonts
 - Working visibly with a human watching
 - Verifying results
 - Best practices and pitfalls
@@ -28,8 +29,9 @@ Generated 2026-10-01 from https://gitkalenyuk.github.io/kadr/ for Kadr 0.1.0-dev
 - Let Claude review and fix its own edit
 - Translate and re-burn captions
 - Documentary from public-domain archive footage
+- Choose a transition and an effect by looking at them
 - Command reference
-- Command specifications (28 categories)
+- Command specifications (29 categories)
 
 ---
 
@@ -39,11 +41,11 @@ Source: https://gitkalenyuk.github.io/kadr/docs/ai/index.html
 
 *What an AI agent can do in Kadr, how the editor is modelled, how to connect over MCP, REST or the CLI, and how Kadr keeps your machine safe.*
 
-Kadr is a CapCut-style desktop video editor in which every button, slider and menu item is a documented *command*. An AI agent runs the same 170+ commands over MCP, a local REST API or the `kadrctl` CLI — and a human sees every edit appear live in the editor window, with one shared undo history.
+Kadr is a CapCut-style desktop video editor in which every button, slider and menu item is a documented *command*. An AI agent runs the same 180+ commands over MCP, a local REST API or the `kadrctl` CLI — and a human sees every edit appear live in the editor window, with one shared undo history.
 
 - [Quick start: Claude Code](https://gitkalenyuk.github.io/kadr/docs/ai/claude-code.html): One command connects Kadr; first prompts to try.
 - [Claude Desktop](https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html): A four-line config snippet.
-- [Recipes](https://gitkalenyuk.github.io/kadr/docs/ai/recipes.html): Ten end-to-end workflows, every call verified against a real engine.
+- [Recipes](https://gitkalenyuk.github.io/kadr/docs/ai/recipes.html): Eleven end-to-end workflows, every call verified against a real engine.
 - [Command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html): Every command with parameters, units, defaults and examples.
 
 ## What an agent can do
@@ -51,12 +53,12 @@ Kadr is a CapCut-style desktop video editor in which every button, slider and me
 | Area | What the agent does | Example commands |
 | --- | --- | --- |
 | Assemble | Import files and folders, place clips on a magnetic main track and overlay tracks, trim, split, move, duplicate, freeze, change speed | `media.import`, `timeline.segment.add`, `timeline.segment.trim` |
-| Look | 68 transitions, 70 filters, 56 effects, colour adjustments with HSL and curves, masks, chroma key, 136 clip animations, keyframes with easing | `transition.set`, `filter.add`, `keyframe.add` |
-| Text & captions | 46 text templates, 22 word-art effects, 39 letter animations; offline Whisper captions in about 100 languages with 15 caption styles; edit the video by editing its transcript | `text.add`, `captions.auto`, `transcript.remove_fillers` |
+| Look | 221 transitions, 227 filters, 195 effects with named sliders, colour adjustments with HSL and curves, masks, chroma key, 310 clip animations, keyframes with easing — and a contact sheet of how any of them plays before choosing | `transition.set`, `filter.add`, `keyframe.add`, `library.preview` |
+| Text & captions | 175 text templates, 114 word-art effects (patterns, bevels, sparkles, drips…), 137 letter animations, 146 free fonts to install on demand; offline Whisper captions in about 100 languages with 55 caption styles; edit the video by editing its transcript | `text.add`, `font.install`, `captions.auto`, `transcript.remove_fillers` |
 | Audio | Volume in dB, fades, 25 voice effects, noise reduction, loudness normalisation, beat detection, 47 synthesised sound effects, text-to-speech with local or ElevenLabs voices | `segment.set_volume`, `audio.detect_beats`, `tts.speak` |
 | Smart tools | Auto reframe to any ratio, scene detection and splitting, silence removal, background removal | `ai.auto_reframe`, `ai.remove_silence` |
-| Generate | Gradients, textures, countdowns, grids and test cards rendered locally — no stock footage | `media.generate` |
-| See | Render any frame, a contact sheet of the whole edit, or the on-canvas box of every clip; MCP returns pictures as images | `preview.frame`, `preview.contact_sheet`, `preview.layout` |
+| Generate | 98 presets of 22 kinds rendered locally — mesh gradients, aurora, bokeh, particles, light leaks, film dust, textures, patterns, timers, banners, frames, test cards — plus 394 stickers, 73 of them animated; no stock footage | `media.generate`, `sticker.add` |
+| See | Render any frame, a contact sheet of the whole edit, the on-canvas box of every clip, or how a library item plays; MCP returns pictures as images | `preview.frame`, `preview.contact_sheet`, `preview.layout` |
 | Deliver | MP4/MOV in H.264 or HEVC up to 4K (GPU encoders when available), GIF, audio only, SRT/VTT captions | `export.start`, `captions.export` |
 | Show the human | Open a project in the window, select a clip, switch the library tab, show a notification | `ui.open_project`, `ui.toast` |
 
@@ -88,7 +90,7 @@ project          prj_…   canvas, settings, playhead
 - **Commands are either project-scoped** (they take `project_id`, are saved and are undoable) **or global** (projects list, library, export jobs, settings).
 - **Every edit is undoable** with `edit.undo`; a batch of edits is one undo step; edits from the UI and from agents share the history.
 
-The full rules — magnet, linked clips, transitions, keyframes, coordinates, units — are in [Concepts](https://gitkalenyuk.github.io/kadr/docs/ai/concepts.html).
+The full rules — magnet, linked clips, transitions, keyframes, coordinates, units — are in [Concepts](https://gitkalenyuk.github.io/kadr/docs/ai/concepts.html). How to find, preview and apply library items and fonts is in [Library, previews and fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html).
 
 ## The first five calls
 
@@ -131,7 +133,7 @@ The export runs in the background; `export.status` with the returned `job_id` re
 - **Local only.** The API listens on `127.0.0.1`; requests addressed to any other host name get `403 forbidden` (DNS-rebinding protection), and browsers may only connect from local origins.
 - **Token.** Every request except health and documentation needs the token from `%APPDATA%\Kadr\api-token`. `kadr-mcp` and `kadrctl` read it themselves. Treat it like a password: it gives full control over your projects.
 - **Everything is undoable** — except deleting a whole project, which MCP marks as destructive so clients ask first. Imported media files are never modified or deleted.
-- **Nothing is uploaded by Kadr.** Commands read and write files on your PC at paths you give. The only network traffic is optional: ElevenLabs voices (the text you synthesise), update checks, and the one-time FFmpeg download. Frames and data reach your AI provider only when the agent asks for them through tools you allow.
+- **Nothing is uploaded by Kadr.** Commands read and write files on your PC at paths you give. The only network traffic is optional: ElevenLabs voices (the text you synthesise), update checks, the one-time FFmpeg download, and font files from the google/fonts repository when `font.install` runs. Frames and data reach your AI provider only when the agent asks for them through tools you allow.
 
 ## Machine-readable files
 
@@ -525,7 +527,7 @@ The result holds one entry per call, in order: `{"results": [ … ], "dry_run": 
 
 ## Pictures the model can see
 
-Results that contain a `png_base64` field are returned as an MCP **image** block plus a text block with the remaining fields. That applies to `preview_frame` (one composited frame, exactly as exported) and `preview_contact_sheet` (a grid of frames across the edit, with `times_us` for each tile). For measurements use `preview_layout`: it returns the box of every visible clip, text and sticker in canvas pixels. See [Verifying results](https://gitkalenyuk.github.io/kadr/docs/ai/verifying.html).
+Results that contain a `png_base64` field are returned as an MCP **image** block plus a text block with the remaining fields. That applies to `preview_frame` (one composited frame, exactly as exported), `preview_contact_sheet` (a grid of frames across the edit, with `times_us` for each tile) and `library_preview` (how a transition, effect, filter, animation, text look, caption style, animated sticker or generated clip plays — look before you choose; see [Library, previews and fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html#preview)). For measurements use `preview_layout`: it returns the box of every visible clip, text and sticker in canvas pixels. See [Verifying results](https://gitkalenyuk.github.io/kadr/docs/ai/verifying.html).
 
 ## Errors
 
@@ -772,6 +774,7 @@ Connect to `ws://127.0.0.1:7777/api/v1/events?token=<token>` to receive a JSON m
 | `ai.progress` | A background-removal job advanced or finished. | `state`, `progress`, `frames`, `eta_s` |
 | `presets.changed` | A My kit preset was saved, renamed or deleted. | `{action, preset_id, kind}` |
 | `ui.open_project`, `ui.select`, `ui.library_tab`, `ui.toast` | An agent asked the window to show something. | `{segment_id}`, `{tab}`, `{title, body}` |
+| `font.progress`, `fonts.changed` | A `font.install` download advanced; fonts were installed, imported, removed or rescanned. | `{font_id, state, downloaded_bytes, total_bytes, progress, error}`, `{reason, font_id}` |
 | `tools.progress` | The FFmpeg download advanced. | `{tool, state, downloaded_bytes, total_bytes, progress, error}` |
 | `update.available`, `update.progress`, `update.ready`, `update.failed` | Update check and download. | Version, progress or error |
 
@@ -801,7 +804,9 @@ Pictures and sound are served as files. They need the token too (header or `?tok
 | `/api/v1/projects/{id}/media/{mid}/thumbnail?h=` | JPEG poster frame of a material. |
 | `/api/v1/projects/{id}/media/{mid}/frame?t_us=&h=` | JPEG frame of the source file at `t_us`. |
 | `/api/v1/projects/{id}/media/{mid}/waveform?pps=` | JSON `{"peaks_per_second": N, "peaks": [0..1, …]}` |
-| `/api/v1/library/{kind}/{id}/thumbnail` | Preview image of a library item. |
+| `/api/v1/library/{kind}/{id}/thumbnail` | Still preview image (PNG) of a library item. |
+| `/api/v1/library/{kind}/{id}/preview` | Animated preview of an item that moves: a JPEG sprite strip, frames side by side, one seamless loop. Size and rate are in the item’s `preview` field; 404 for static items. For a PNG grid an agent can look at, call `library.preview`. |
+| `/api/v1/fonts/{id}/preview?text=&h=&color=` | Transparent PNG of sample text in an installed font. |
 | `/api/v1/library/sound_effect/{id}/audio` | WAV preview of a sound effect. |
 | `/api/v1/exports/{job}/file` | The finished export file. |
 
@@ -1196,6 +1201,272 @@ The first call sets a static −12 dB (gain 0.25); the two keyframes then hold 0
 
 ---
 
+# Library, previews and fonts
+
+Source: https://gitkalenyuk.github.io/kadr/docs/ai/library.html
+
+*How an agent finds transitions, effects, filters, animations, text looks, stickers and generated media in Kadr's library, looks at them with library.preview before choosing, installs free fonts and uses the word-art fields of TextStyle.*
+
+Everything an agent can add to a video — transitions, effects, filters, animations, text looks, stickers, generated backgrounds, fonts, sounds — comes from the built-in library. Discover ids with `library.list`, *look* at the candidates with `library.preview`, then apply the one that fits. Never guess an id.
+
+## What is in the library
+
+| `kind` | Items | Use the id with | Notes |
+| --- | --- | --- | --- |
+| `transition` | 221 in 19 tabs | `transition.set` `type`, `transition.apply_all` | Tabs include Wipe, Zoom, Spin, Liquid, Particles, Film, Retro, Split; directional families such as `whip_*`, `wipe_*`, `slide_*`; options in `params.directions` / `params.softness`. |
+| `effect` | 195 in 20 tabs | `effect.add`, `effect.apply`, `effect.set_params` | Every effect has `intensity` and `speed`; most add 1–4 named sliders listed in `params.schema` and in the description. |
+| `filter` | 227 in 25 tabs | `filter.add`, `filter.apply` | New tabs Cinematic, Vintage, Aesthetic, Mood, Seasons, Duotone, Special; Portrait looks keep skin tones natural. |
+| `animation` | 310: 105 in, 105 out, 53 combo, 47 loop | `animation.set` `kind` + `id` | All of them work on video, photo, sticker and text segments. |
+| `text_template` | 175 in 22 tabs | `text.add` `template_id` | Templates use built-in fonts, so they never need a download. |
+| `text_effect` | 114 in 16 tabs | `text.apply_effect` | Word art; writes fill, outlines, glow, 3D and the [word-art fields](https://gitkalenyuk.github.io/kadr/docs/ai/library.html#text-style) into the style. |
+| `text_animation` | 137: 55 in, 45 out, 37 loop | `text.set_glyph_animation` | Per letter / word / line, e.g. `in_decrypt`, `in_split_flap`, `in_terminal`, `loop_neon_buzz`. |
+| `caption_style` | 55 in 12 tabs | `captions.set_style` | Highlight styles now include `pop`, `bounce`, `reveal`, `dim`, `glow`, `sweep_line`, `slide_box`. |
+| `sticker` | 394 in 25 tabs, 73 animated | `sticker.add` | See [animated stickers](https://gitkalenyuk.github.io/kadr/docs/ai/library.html#stickers). |
+| `generated` | 98 presets of 22 kinds | `media.generate` `preset_id` | See [generated media](https://gitkalenyuk.github.io/kadr/docs/ai/library.html#generated). |
+| `font` | 4 built-in + this computer's + installed | `text.update` `font` | More with `font.catalog` + `font.install` — see [fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html#fonts). |
+| `sound_effect`, `voice_effect` | 47, 25 | `sfx.add`, `segment.set_audio` `voice_effect` | Static items (no preview). |
+
+## Find candidates
+
+`library.list` takes a `kind`, an optional `category` (a tab name from the result's `categories`) and an optional `query` that searches names, ids, categories and descriptions. Narrow the list instead of reading 300 items: descriptions are written for agents — what the item looks like and when to use it.
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "library_list", "arguments": {"kind": "transition", "category": "Liquid"}}
+{"name": "library_list", "arguments": {"kind": "effect", "query": "rain"}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run library.list --kind transition --category Liquid
+kadrctl run library.list --kind effect --query rain
+```
+
+```text
+tide_wipe   Tide        A rolling wave front with a sparkling white foam crest washes the new clip in…
+                        params: directions [right left down up], softness true, default_softness 0.2
+paint_drip  Paint drip  The new clip pours down from the top like thick glossy paint…
+ink_bleed   Ink bleed   Dark ink blots spread with organic tendrils from a few drops…
+```
+
+## Look before you choose: library.preview
+
+Names and descriptions only go so far. `library.preview` renders how an item *plays* as one PNG contact sheet — over MCP it comes back as an image the model can see. Use it to compare two or three candidates before applying one.
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "library_preview", "arguments": {"kind": "transition", "id": "tide_wipe", "frames": 6, "columns": 6, "tile_width": 160}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run library.preview --kind transition --id tide_wipe --frames 6 --columns 6 --tile_width 160
+```
+
+```json
+{"kind": "transition", "id": "tide_wipe", "name": "Tide", "animated": true,
+ "frames": 6, "columns": 6, "rows": 1, "tile_width": 160, "tile_height": 90,
+ "phases": [0.159, 0.227, 0.295, 0.364, 0.432, 0.5], "times_us": [344697, …], "loop_us": 2166667,
+ "preview": {"url": "/api/v1/library/transition/tide_wipe/preview", "frames": 26, "fps": 12, "width": 192, "height": 108},
+ "note": "Tiles run from transition progress 0 (outgoing clip A, a sunny landscape) to 1 (incoming clip B, a night city)…",
+ "png_base64": "…"}
+```
+
+| Kind | What the tiles show |
+| --- | --- |
+| Transitions | From a sunny landscape (clip A) to a night city (clip B), left to right, top to bottom. |
+| Effects | Evenly spaced moments of the effect on the landscape; static effects such as a vignette show a before/after divider. |
+| Filters | A before/after divider sweeping across the picture. |
+| Clip animations | A small clip moving on a dark stage; a dashed outline marks its rest position. |
+| Text templates, word art, text animations, caption styles | Sample text as it animates, or the spoken-word highlight moving through a caption. |
+| Animated stickers, moving generated media | One loop of the sticker's default animation or of the background. |
+
+- `frames` 2–12 (default 6) sets how many moments you see; `columns` (≤ 6) and `tile_width` set the layout. A one-row strip of 6 tiles at 160 px is cheap and easy to compare.
+- `note` says what the tiles show for this kind; `times_us` and `phases` place each tile in the preview loop.
+- Static items (fonts, voice effects, still stickers and templates) return their thumbnail as one tile with `"animated": false`.
+- The sample pictures are not your footage. To see the item *in your edit*, apply it and check with `preview.frame` or `preview.contact_sheet` — see [Verifying results](https://gitkalenyuk.github.io/kadr/docs/ai/verifying.html).
+
+A complete walk-through is the recipe [Choose a transition and an effect by looking at them](https://gitkalenyuk.github.io/kadr/docs/ai/preview-before-applying.html).
+
+## The preview field and thumbnails
+
+Every item that moves carries `preview` in `library.list` and `library.get` results — the editor uses it for its hover previews:
+
+```json
+"preview": {"url": "/api/v1/library/transition/mix/preview", "frames": 24, "fps": 12, "width": 192, "height": 108}
+```
+
+`GET` the `url` (with the API token) for a JPEG sprite strip: `frames` tiles of `width`×`height` side by side, left to right, one seamless loop at `fps`. No `preview` field means a static item. Every item also has a `thumbnail` path (a still PNG). Agents normally prefer `library.preview`; the strip is for your own UI. Strips are cached in memory and under `<DataDir>/library/previews/`.
+
+## Options: directions, softness and effect sliders
+
+A transition item lists what it accepts: `params.directions` and `default_direction`, `params.softness` and `default_softness`. Pass them to `transition.set` (`direction` = the way the motion travels; `softness` 0–1). An effect item lists its sliders in `params.schema` (`{id, label, min, max, default}`); pass values in `params` of `effect.add` / `effect.apply`, or later with `effect.set_params`.
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "transition_set", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_3ccd6c9e2cbe", "type": "tide_wipe", "duration_us": 800000, "direction": "left", "softness": 0.3}}
+{"name": "effect_add", "arguments": {"project_id": "prj_e21b467917e3", "effect_id": "rain_glass", "at_us": 3000000, "duration_us": 3000000, "params": {"density": 0.7, "fog": 0.3}}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run transition.set --project_id prj_e21b467917e3 --segment_id seg_3ccd6c9e2cbe --type tide_wipe --duration_us 0.8s --direction left --softness 0.3
+kadrctl --% run effect.add --project_id prj_e21b467917e3 --effect_id rain_glass --at_us 3s --duration_us 3s --params "{\"density\":0.7,\"fog\":0.3}"
+```
+
+## Fonts: catalogue, install, import
+
+`library.list` with `kind: "font"` lists the fonts that are ready to use. Category tabs say where a font comes from — `Built-in` (4 Go fonts, identical everywhere), `Downloaded` (installed through Kadr), `Bundled` (shipped next to the app), `System` (installed in the OS) — and its style: `Sans`, `Serif`, `Display`, `Handwriting`, `Monospace`, `Pixel`, `Symbol`. `params` has `source`, `styles`, `cyrillic`, `ukrainian` (Ґ Є І Ї) and `variable`.
+
+More fonts come from `font.catalog`: 146 free SIL-OFL families from the google/fonts repository, 123 of them with Cyrillic, each with a note on its look and best use. The catalogue is read-only and offline; `font.install` downloads a family into `<DataDir>/fonts/<id>/`, after which its id works in `text.update` `font`.
+
+### 1. Pick a family
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "font_catalog", "arguments": {"category": "handwriting", "cyrillic": true}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run font.catalog --category handwriting --cyrillic
+```
+
+```text
+13 of 146 families
+caveat        Caveat        Natural quick handwriting with Cyrillic; notes, annotations and vlogs.   394 KB  installed: false
+marck_script  Marck Script  Casual flowing script with Cyrillic; greetings and personal stories.      82 KB
+bad_script    Bad Script    Thin lively handwriting with Cyrillic; diaries and travel notes.          180 KB
+```
+
+### 2. Install it
+
+The download runs in the background and reports `font.progress` events, then `fonts.changed`. With `wait: true` the call returns when the font is ready. Without internet it fails with `not_available`; an already installed family returns `already_installed: true`.
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "font_install", "arguments": {"id": "caveat", "wait": true}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run font.install --id caveat --wait
+```
+
+### 3. Use it
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "text_update", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_c39f3546d148", "font": "caveat"}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run text.update --project_id prj_e21b467917e3 --segment_id seg_c39f3546d148 --font caveat
+```
+
+- **An id from the catalogue is not usable until it is installed.** `text.update` with an unknown font fails with `not_found` and a hint to call `font.catalog` / `font.install`. Check `installed` in the catalogue first.
+- **Fonts travel with the computer, not the project.** A project (or a My kit text preset) that names a font this machine lacks renders with Go Sans. Catalogue fonts are reproducible — one `font.install` on the other machine; `sys_*` fonts depend on that OS.
+- `font.import` `{path}` installs a local `.ttf`/`.otf`/`.ttc` (the family name becomes the id); `font.remove` deletes only fonts installed through Kadr; `font.rescan` picks up fonts copied into font folders while Kadr runs.
+- For Ukrainian text prefer fonts with `ukrainian: true`; missing letters are borrowed from a system font, which works but may not match.
+- `GET /api/v1/fonts/{id}/preview?text=&h=&color=` returns a transparent PNG of sample text in that font.
+
+## Word-art fields of TextStyle
+
+Beyond fill, stroke, shadow, box, glow, gradient, 3D extrude and curve, a text style has optional word-art fields (absent or zero = off). `text.add` accepts them inside `style`; `text.update` has flat parameters for each (`pattern_type`, `bevel_depth`, `sparkle_amount`…); `text.apply_effect` sets them from a word-art preset.
+
+| Field | What it does |
+| --- | --- |
+| `fill.stops` | Positions 0–1 of up to 8 gradient colours; equal neighbours make a hard edge (chrome horizon). |
+| `stroke_fill` | Gradient along the outline `{type, colors, angle}`. |
+| `pattern` | `{type, colors, scale, angle, opacity, speed}` — 28 types: stripes, pinstripe, checker, gingham, plaid, dots, halftone, hearts, stars, grain, static, scanlines, brushed, foil, carbon, glitter, holo, rainbow, aurora, flow, galaxy, marble, wood, camo, leopard, zebra, frost, grid. |
+| `bevel` | `{depth, angle, strength, gloss, highlight, shade, round}` — embossed or puffy lighting. |
+| `inner_shadow`, `inner_glow` | Shadow or light inside the letters (`inner_glow`: `{color, intensity, radius}`). |
+| `echo` | `{colors (1–6), distance, angle, hollow}` — stacked offset copies behind the text. |
+| `distress` | `{type: grunge\|chalk\|stamp\|spray\|scratch\|worn, amount, scale}`. |
+| `sparkle`, `drip` | Star glints `{color, amount, size, speed}`; paint drips `{amount, length}`. |
+| `rough`, `pixelate` | 0–1: hand-made wobble; blocky pixel art. |
+| `box` extras | `fill` (gradient), `border`, `shadow`, `per_line`, `skew`, `pad`, `knockout` (letters cut out of the box). |
+| `highlight.text_color` | Letter colour of the spoken caption word for box-like highlight styles. |
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "text_add", "arguments": {"project_id": "prj_e21b467917e3", "text": "SUMMER SALE", "at_us": 3000000, "style": {
+  "size": 26, "bold": true, "color": "#FFD84D",
+  "stroke": {"color": "#FFFFFF", "width": 0.25},
+  "stroke_fill": {"type": "linear", "colors": ["#FFFFFF", "#FF3D7F"], "angle": -90},
+  "pattern": {"type": "glitter", "speed": 0.6},
+  "bevel": {"depth": 0.35, "angle": 135, "gloss": 0.6, "round": true},
+  "echo": {"colors": ["#FF3D7F", "#7B2FF7"], "distance": 0.25, "angle": -45},
+  "sparkle": {"amount": 0.4, "speed": 1.5}}}}
+{"name": "text_update", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_c39f3546d148", "distress_type": "worn", "distress_amount": 0.3, "inner_shadow_opacity": 0.5}}
+```
+
+> **Note:** A pattern with `speed` > 0 or sparkles with `speed` > 0 make the text animate by itself, so a single `preview.frame` shows only one moment of it.
+
+## Animated stickers
+
+Stickers whose library item has `params.loop_anim` (plus optional `params.in_anim` and `params.loop_us`) are animated — the 73 in the `Animated` tab. `sticker.add` applies those animations automatically, exactly as `animation.set` would; pass `animate: false` to place the sticker still. Change them later with `animation.set` / `animation.remove`.
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "sticker_add", "arguments": {"project_id": "prj_e21b467917e3", "sticker_id": "emoji_grin", "at_us": 0}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run sticker.add --project_id prj_e21b467917e3 --sticker_id emoji_grin --at_us 0
+```
+
+```text
+segment.animations: {"in": {"id": "in_pop", "duration_us": 500000}, "loop": {"id": "loop_jelly", "duration_us": 1200000}}
+```
+
+## Generated media
+
+`media.generate` draws backgrounds and overlays locally — 22 kinds, 98 presets (`library.list kind=generated`). The newer kinds:
+
+| Kinds | What they make |
+| --- | --- |
+| `mesh`, `aurora`, `lava`, `plasma`, `bokeh`, `particles` | Moving backgrounds that loop seamlessly every `loop` seconds (also their default length), so copies can be placed back to back. |
+| `light_leak`, `film_dust` | Light leaks, film burns, prism streaks, lens flares and old-film dirt drawn on black — put them on an overlay track and set `segment.set_blend` `mode: "screen"`. |
+| `texture`, `pattern` | Paper, kraft, grunge, concrete, canvas, denim, marble, watercolour, wood; memphis, waves, dots, halftone, terrazzo, chevron, honeycomb, gingham, scales, cubes, triangles. |
+| `timer` | Styled countdowns: flip clock, neon ring, progress bar, dots, pop bursts (optional beeps). |
+| `banner`, `frame` | Transparent PNGs for an overlay track: text-free lower thirds, pills, ribbons, glass panels, news bars, brush strokes; film, neon, instant photo, vignette, torn paper, viewfinder and other borders. |
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "media_generate", "arguments": {"project_id": "prj_e21b467917e3", "preset_id": "leak_warm", "add_to_timeline": true, "new_track": true, "at_us": 0, "duration_us": 3000000}}
+{"name": "segment_set_blend", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_978c06ee7ef6", "mode": "screen"}}
+```
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run media.generate --project_id prj_e21b467917e3 --preset_id leak_warm --add_to_timeline --new_track --at_us 0 --duration_us 3s
+kadrctl run segment.set_blend --project_id prj_e21b467917e3 --segment_id seg_978c06ee7ef6 --mode screen
+```
+
+The full parameter list of every kind is in the description of [media.generate](https://gitkalenyuk.github.io/kadr/docs/ai/reference/media.html).
+
+---
+
 # Working visibly with a human watching
 
 Source: https://gitkalenyuk.github.io/kadr/docs/ai/working-visibly.html
@@ -1431,6 +1702,7 @@ Kadr’s commands are forgiving — every edit can be undone — but an agent th
 
 - Start every session with `project.list` or `project.get`/`timeline.get`. Take ids from results — never construct or guess them.
 - Find library ids with `library.list` (`kind`: `transition`, `effect`, `filter`, `animation`, `text_template`, `text_effect`, `text_animation`, `caption_style`, `sticker`, `font`, `generated`, `sound_effect`, `voice_effect`) and check unknown parameters with `kadrctl describe` or the reference.
+- **Look before you choose a look.** Narrow candidates with `category` or `query`, then compare two or three with `library.preview` — a contact sheet of how each one plays — instead of picking by name. Fonts from `font.catalog` must be installed with `font.install` before `text.update` accepts their id. See [Library, previews and fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html).
 - **Re-read after edits that create or remove clips:** splits, `ai.remove_silence`, `ai.split_scenes`, transcript cuts and magnet ripples change ids and times. Results usually list the new ids (`segment_ids`, `left`/`right`); otherwise call `timeline.get` again.
 
 ## Plan, then batch
@@ -1535,7 +1807,7 @@ If something is missing, the `hint` says how to install it. Kadr never downloads
 
 Source: https://gitkalenyuk.github.io/kadr/docs/ai/recipes.html
 
-*End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions and an archive documentary — with every call as kadrctl and MCP.*
+*End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions, an archive documentary and picking looks by eye — with every call as kadrctl and MCP.*
 
 Each recipe is a complete job: a prompt you can paste into Claude, then every call the agent makes, in order, as `kadrctl` and as an MCP tool call. All of them were run end to end against a real Kadr engine — with generated stand-in media — before publishing.
 
@@ -1549,6 +1821,7 @@ Each recipe is a complete job: a prompt you can paste into Claude, then every ca
 - [Let Claude review and fix its own edit](https://gitkalenyuk.github.io/kadr/docs/ai/ai-review-loop.html): Claude renders your edit, spots black edges and cut-off titles, measures them, fixes them, checks the fix and undoes anything that looks worse. · ~1 min
 - [Translate and re-burn captions](https://gitkalenyuk.github.io/kadr/docs/ai/translate-and-reburn-captions.html): Claude translates your captions, keeps their timing, and you get a burned-in version plus SRT files in both languages. · ~2 min
 - [Documentary from public-domain archive footage](https://gitkalenyuk.github.io/kadr/docs/ai/documentary-archive-footage.html): Public-domain newsreels from archive.org, Ukrainian ElevenLabs narration, shots timed to the voice, Ken Burns moves, a film-strip look and fixed captions. · ~10 min (mostly downloading)
+- [Choose a transition and an effect by looking at them](https://gitkalenyuk.github.io/kadr/docs/ai/preview-before-applying.html): Claude shortlists transitions and effects, actually looks at how each one moves, picks the one that suits your footage and checks it in your edit. · ~1 min
 
 ## How to use a recipe
 
@@ -1572,6 +1845,7 @@ Each recipe is a complete job: a prompt you can paste into Claude, then every ca
 | [Review loop](https://gitkalenyuk.github.io/kadr/docs/ai/ai-review-loop.html) | Any Kadr project | `preview.contact_sheet`, `preview.layout`, `preview.frame`, `keyframe.list` |
 | [Translate captions](https://gitkalenyuk.github.io/kadr/docs/ai/translate-and-reburn-captions.html) | A Kadr project with captions (for example from the talking-head recipe) | `captions.list`, `project.duplicate`, `captions.update`, `captions.set_style` |
 | [Archive documentary](https://gitkalenyuk.github.io/kadr/docs/ai/documentary-archive-footage.html) | ffmpeg on PATH, an ElevenLabs API key (optional — local voices work too), internet for the footage | `media.import`, `tts.set_api_key`, `tts.voices`, `tts.speak` |
+| [Pick by looking](https://gitkalenyuk.github.io/kadr/docs/ai/preview-before-applying.html) | A Kadr project with two clips that touch | `library.list`, `library.preview`, `transition.set`, `preview.contact_sheet` |
 
 ---
 
@@ -3925,13 +4199,156 @@ When `state` is `done`, `path` and `size_bytes` describe the file. See [Verifyin
 
 ---
 
+# Choose a transition and an effect by looking at them
+
+Source: https://gitkalenyuk.github.io/kadr/docs/ai/preview-before-applying.html
+
+*Narrow Kadr's 221 transitions and 195 effects to a few candidates with library.list, look at how each one plays with library.preview contact sheets, apply the best with its direction, softness or sliders, and confirm it in the edit.*
+
+You get a transition and an effect chosen by eye, not by name. Claude narrows the library to a few candidates, renders each one as a contact sheet to see how it moves, applies the best one with the right direction and sliders, and checks the result in your own edit.
+
+- **Time:** ~1 min
+- **You need:** A Kadr project with two clips that touch
+- **Main commands:** `library.list`, `library.preview`, `transition.set`, `preview.contact_sheet`, `effect.add`, `preview.frame`
+
+## Ask Claude
+
+> In my Kadr project "Travel teaser", pick a calm, flowing transition for the cut between the two clips — look at a few liquid transitions with library_preview before you decide, and tell me why you chose it. Then add a weather effect over the second clip that suits a rainy evening, again comparing a couple of options visually. Show me a contact sheet of the cut when you're done.
+
+## Step by step
+
+> **Note:** Each step shows the same calls twice. The **kadrctl** tab is for PowerShell: a line that starts with `kadrctl --%` passes JSON, and without `--%` the same line also works in Command Prompt. The **MCP** tab is the tool call an agent sends — the tool name and its arguments. Ids such as `prj_…` and `seg_…` come from the results of earlier steps, so yours will differ. In this example the project holds two generated 3-second clips: a sunset mesh gradient and a city-lights bokeh.
+
+### 1. Shortlist candidates
+
+A category tab is the quickest filter: *Liquid* has 14 transitions. The descriptions say what each one looks like and when to use it.
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run library.list --kind transition --category Liquid
+```
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "library_list", "arguments": {"kind": "transition", "category": "Liquid"}}
+```
+
+```text
+tide_wipe     Tide          A rolling wave front with a sparkling white foam crest washes the new clip in. Great for beach, travel and summer footage…
+ink_bleed     Ink bleed     Dark ink blots spread with organic tendrils from a few drops; the ink clears behind its front to reveal the new clip…
+paint_splash  Paint splash  A spiky paint splash with flying droplets bursts from near the centre and floods into the new clip…
+```
+
+### 2. Look at each one
+
+> **Note:** Through MCP, `library_preview` comes back as an image, so Claude actually sees the motion. With `kadrctl` or REST you get the same PNG as base64 in `png_base64`.
+
+A one-row strip of six tiles is enough to compare. The tiles run from clip A (a sunny landscape) to clip B (a night city).
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run library.preview --kind transition --id tide_wipe --frames 6 --columns 6 --tile_width 160
+kadrctl run library.preview --kind transition --id ink_bleed --frames 6 --columns 6 --tile_width 160
+kadrctl run library.preview --kind transition --id paint_splash --frames 6 --columns 6 --tile_width 160
+```
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "library_preview", "arguments": {"kind": "transition", "id": "tide_wipe", "frames": 6, "columns": 6, "tile_width": 160}}
+{"name": "library_preview", "arguments": {"kind": "transition", "id": "ink_bleed", "frames": 6, "columns": 6, "tile_width": 160}}
+{"name": "library_preview", "arguments": {"kind": "transition", "id": "paint_splash", "frames": 6, "columns": 6, "tile_width": 160}}
+```
+
+Tide sweeps a wavy foam line across the frame; Ink bleed grows dark blots that would muddy a bright sunset; Paint splash is loud. For a calm travel teaser Claude picks **Tide**.
+
+### 3. Read its options
+
+The item from step 1 lists what `tide_wipe` accepts: `"directions": ["right","left","down","up"]`, `"softness": true`, `"default_softness": 0.2`. A wave coming in from the right reads as forward motion, and a slightly softer edge suits the gradient.
+
+### 4. Apply it to the cut
+
+The transition goes on the **left** clip of the cut. `direction` is the way the motion travels.
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run transition.set --project_id prj_e21b467917e3 --segment_id seg_3ccd6c9e2cbe --type tide_wipe --duration_us 0.8s --direction left --softness 0.3
+```
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "transition_set", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_3ccd6c9e2cbe", "type": "tide_wipe", "duration_us": 800000, "direction": "left", "softness": 0.3}}
+```
+
+```text
+type tide_wipe?direction=left&softness=0.3   duration_us 800000   clamped false   max_duration_us 1500000
+```
+
+### 5. Check it in the edit
+
+The library preview used sample pictures; now look at the real cut. Four tiles across the 0.8 s around the cut at 3 s:
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run preview.contact_sheet --project_id prj_e21b467917e3 --start_us 2.6s --end_us 3.4s --count 4 --columns 4 --tile_width 240
+```
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_e21b467917e3", "start_us": 2600000, "end_us": 3400000, "count": 4, "columns": 4, "tile_width": 240}}
+```
+
+At 2.7, 2.9, 3.1 and 3.3 s the foam line travels from the right edge to the left, uncovering the city lights.
+
+### 6. Do the same for an effect
+
+*Weather* has 8 effects. Their items list the sliders in `params.schema` — `rain_glass` has `density` and `fog` besides `intensity` and `speed`. Look at it, then add it over the second clip with denser drops and less fog, and check one frame.
+
+**kadrctl (PowerShell):**
+
+```powershell
+kadrctl run library.list --kind effect --category Weather
+kadrctl run library.preview --kind effect --id rain_glass --frames 4 --columns 4 --tile_width 200
+kadrctl --% run effect.add --project_id prj_e21b467917e3 --effect_id rain_glass --at_us 3s --duration_us 3s --params "{\"density\":0.7,\"fog\":0.3}"
+kadrctl run preview.frame --project_id prj_e21b467917e3 --time_us 4.5s --width 640
+```
+
+**MCP tool call (tools/call params):**
+
+```json
+{"name": "library_list", "arguments": {"kind": "effect", "category": "Weather"}}
+{"name": "library_preview", "arguments": {"kind": "effect", "id": "rain_glass", "frames": 4, "columns": 4, "tile_width": 200}}
+{"name": "effect_add", "arguments": {"project_id": "prj_e21b467917e3", "effect_id": "rain_glass", "at_us": 3000000, "duration_us": 3000000, "params": {"density": 0.7, "fog": 0.3}}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_e21b467917e3", "time_us": 4500000, "width": 640}}
+```
+
+The effect lands on its own effect track (`segment.effect` = `{"id": "rain_glass", "params": {"density": 0.7, "fog": 0.3, "intensity": 1, "speed": 1}}`) and the frame shows raindrops on glass over the city lights.
+
+## Variations
+
+- **Clip animations:** `kind: "animation"` (categories In, Out, Combo, Loop), then `animation.set`. Use `frames: 8, columns: 4` for longer moves.
+- **Text:** `text_template`, `text_effect` and `text_animation` render sample text; apply with `text.add`, `text.apply_effect` or `text.set_glyph_animation`.
+- **Filters:** the tiles show a before/after divider, which makes subtle grades easy to compare side by side.
+- **Captions:** `caption_style` shows the word highlight moving through a sample caption.
+
+More about ids, the `preview` field and options in [Library, previews and fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html).
+
+---
+
 # Command reference
 
 Source: https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html
 
-*How the reference of all 177 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.*
+*How the reference of all 183 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.*
 
-The command reference documents all 177 commands — the same text an agent receives as MCP tool descriptions, generated from the engine’s own registry. Command descriptions are in English in both languages.
+The command reference documents all 183 commands in 29 categories — the same text an agent receives as MCP tool descriptions, generated from the engine’s own registry. Command descriptions are in English in both languages.
 
 [**Open the full command reference →**](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html)
 
@@ -3958,8 +4375,9 @@ The command reference documents all 177 commands — the same text an agent rece
 | [Effects](https://gitkalenyuk.github.io/kadr/docs/ai/reference/effects.html) | 5 | Video effects on effect tracks or on single clips, with adjustable parameters. |
 | [Export](https://gitkalenyuk.github.io/kadr/docs/ai/reference/export.html) | 6 | Export jobs: start, status, estimate, list, cancel, reveal. |
 | [Filters](https://gitkalenyuk.github.io/kadr/docs/ai/reference/filters.html) | 4 | Colour filters on filter tracks or clips, and adjustment layers. |
+| [Fonts](https://gitkalenyuk.github.io/kadr/docs/ai/reference/fonts.html) | 5 | The catalogue of free fonts: install, import a font file, remove, rescan font folders. |
 | [Keyframes](https://gitkalenyuk.github.io/kadr/docs/ai/reference/keyframes.html) | 4 | Add, list, remove and clear keyframes with easing. |
-| [Library](https://gitkalenyuk.github.io/kadr/docs/ai/reference/library.html) | 2 | Built-in transitions, effects, filters, animations, fonts, stickers, styles, presets and sounds. |
+| [Library](https://gitkalenyuk.github.io/kadr/docs/ai/reference/library.html) | 3 | Built-in transitions, effects, filters, animations, fonts, stickers, styles, presets and sounds — and `library.preview` to see how an item plays. |
 | [Media](https://gitkalenyuk.github.io/kadr/docs/ai/reference/media.html) | 9 | Import, list, generate, rename, relink and proxy media files. |
 | [Playback](https://gitkalenyuk.github.io/kadr/docs/ai/reference/playback.html) | 9 | Play, pause, seek and step — and render frames, contact sheets and on-canvas layouts. |
 | [Presets](https://gitkalenyuk.github.io/kadr/docs/ai/reference/presets.html) | 6 | Save and apply “My kit” presets across projects. |
@@ -3979,7 +4397,7 @@ The command reference documents all 177 commands — the same text an agent rece
 
 ## Reading command names
 
-The part before the first dot is the namespace — the subject the command acts on: `project.`, `media.`, `timeline.` (clips, tracks, markers), `segment.` (one clip’s properties), `keyframe.`, `animation.`, `text.`, `captions.`, `transcript.`, `audio.`, `tts.`, `sfx.`, `effect.`, `filter.`, `adjustment.`, `transition.`, `library.`, `preview.`, `playback.`, `export.`, `ai.` (smart tools), `presets.`, `edit.`, `clipboard.`, `ui.`, `tools.`, `update.`, `app.`. Verbs are consistent: `add` creates a new segment, `apply` changes an existing clip, `set`/`set_*` replaces values, `get`/`list` only read.
+The part before the first dot is the namespace — the subject the command acts on: `project.`, `media.`, `timeline.` (clips, tracks, markers), `segment.` (one clip’s properties), `keyframe.`, `animation.`, `text.`, `captions.`, `transcript.`, `audio.`, `tts.`, `sfx.`, `effect.`, `filter.`, `adjustment.`, `transition.`, `library.`, `font.`, `preview.`, `playback.`, `export.`, `ai.` (smart tools), `presets.`, `edit.`, `clipboard.`, `ui.`, `tools.`, `update.`, `app.`. Verbs are consistent: `add` creates a new segment, `apply` changes an existing clip, `set`/`set_*` replaces values, `get`/`list` only read.
 
 ## The same reference in other forms
 
@@ -3995,7 +4413,7 @@ The part before the first dot is the namespace — the subject the command acts 
 
 # Command specifications
 
-All 177 commands, grouped by category. Every command is available as `POST /api/v1/commands/<name>`, as the MCP tool `<name with dots replaced by underscores>` and as `kadrctl run <name> --param value`. Commands that edit one project take `project_id` and can be combined in a batch; global commands (projects list/create/duplicate/delete, library, presets, export jobs, `captions.auto`, `transcript.transcribe`, tools, updates, `ui.toast`, `ui.library_tab`) cannot — a batch rejects them with an explicit error. Parameters ending in `_us` are integer microseconds.
+All 183 commands, grouped by category. Every command is available as `POST /api/v1/commands/<name>`, as the MCP tool `<name with dots replaced by underscores>` and as `kadrctl run <name> --param value`. Commands that edit one project take `project_id` and can be combined in a batch; global commands (projects list/create/duplicate/delete, library and `library.preview`, fonts, presets, export jobs, `captions.auto`, `transcript.transcribe`, tools, updates, `ui.toast`, `ui.library_tab`) cannot — a batch rejects them with an explicit error. Parameters ending in `_us` are integer microseconds.
 
 ## Adjustment
 
@@ -5005,7 +5423,7 @@ Example — Short single lines:
 
 **Apply caption style** · MCP tool `captions_set_style` · `POST /api/v1/commands/captions.set_style` · undoable · UI: Library/Captions/Styles
 
-Applies a caption style (library.list kind=caption_style) to every cue of every caption track, or to track_id / segment_ids — like picking a style in CapCut's caption panel. The look (font, size, colours, outline, shadow, box, glow, gradient, letter case and the active-word highlight: color, box/pill, scale, underline or karaoke) is replaced; text and word timings are kept; cues move to the style's vertical position unless keep_position=true. Styles that show a fixed number of words at a time (cap_pop_word = 1, cap_sunset_gradient = 3) re-split the cues from their word timings (relayout); switching back to a normal style re-joins them. The highlight is drawn by the text renderer from text.words + text.highlight.
+Applies a caption style (library.list kind=caption_style) to every cue of every caption track, or to track_id / segment_ids — like picking a style in CapCut's caption panel. The look (font, size, colours, outline, shadow, box, glow, gradient, letter case and the active-word highlight: color, box/pill, scale, underline, karaoke, pop, bounce, reveal, dim, glow, sweep_line or slide_box) is replaced; text and word timings are kept; cues move to the style's vertical position unless keep_position=true. Styles that show a fixed number of words at a time (cap_pop_word = 1, cap_sunset_gradient = 3) re-split the cues from their word timings (relayout); switching back to a normal style re-joins them. The highlight is drawn by the text renderer from text.words + text.highlight.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5672,6 +6090,126 @@ Example — Remove:
 {"project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
 ```
 
+## Fonts
+
+5 commands: `font.catalog`, `font.import`, `font.install`, `font.remove`, `font.rescan`.
+Reference page: https://gitkalenyuk.github.io/kadr/docs/ai/reference/fonts.html
+
+### font.catalog
+
+**Font catalogue** · MCP tool `font_catalog` · `POST /api/v1/commands/font.catalog` · UI: Inspector/Text/Font/More fonts
+
+Lists Kadr's curated catalogue of downloadable font families — the "More fonts" section of the Text → Font picker. Every family is free and open-source (SIL Open Font License 1.1) from the google/fonts repository; most support Cyrillic (cyrillic=true; ukrainian is verified after installation). Each entry has an id (also the font id to use in text.update font once installed), name, style category (sans, serif, display, handwriting, monospace, pixel), a short note on its look and best use, download size, the exact file URLs, licence and specimen page, and installed=true when it is already available (downloaded into the Kadr data folder or bundled with the app). Use it to pick a font by mood, then call font.install {id} and text.update {font: id}. Read-only and offline: nothing is downloaded. Filters: query (name, id or note), category, cyrillic, installed.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `category` | string | no |  | `sans`, `serif`, `display`, `handwriting`, `monospace`, `pixel` | Only families of this style: sans, serif, display, handwriting, monospace or pixel. |
+| `cyrillic` | boolean | no |  |  | true = only families with Cyrillic letters (Ukrainian/Russian text); false = only Latin-only ones. |
+| `installed` | boolean | no |  |  | true = only families that are already installed; false = only those that still need font.install. |
+| `query` | string | no |  |  | Case-insensitive search in the family name, id and note, e.g. "script", "retro", "mono". |
+
+**Returns:** {count, total, families:[{id, name, category, cyrillic, ukrainian? (after install), note, license, license_url, page_url, repo_path, variable, size_bytes, files:[{style, file, url, size_bytes}], installed, source?, font_id, job?{state, progress, error}}], categories, base_url, folders{downloaded, bundled[], system[]}}.
+
+Example — All handwriting fonts with Cyrillic:
+
+```json
+{"category":"handwriting","cyrillic":true}
+```
+
+Example — Search for a pixel font:
+
+```json
+{"query":"pixel"}
+```
+
+### font.import
+
+**Import font file** · MCP tool `font_import` · `POST /api/v1/commands/font.import` · UI: Inspector/Text/Font/Import font file
+
+Installs a font file from this computer into the Kadr data folder so it can be used in texts — "Import font file" in the Text → Font picker. Accepts TrueType (.ttf), OpenType (.otf) and collections (.ttc/.otc); the file is checked (it must parse and draw Latin, digit or Cyrillic glyphs; web fonts .woff/.woff2 and CFF2 variable fonts are rejected with a hint) and copied — the original stays where it is. The family name inside the font becomes the font id ("My Brand Sans" → "my_brand_sans"); importing the other styles of the same family (Bold, Italic…) adds them to that family. The category (sans, serif, display, handwriting, monospace, pixel) is inferred from the font unless given. Publishes fonts.changed. Make sure the font's licence allows the use you plan.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `path` | string | yes |  |  | Absolute path of the .ttf/.otf/.ttc file to import. |
+| `category` | string | no |  | `sans`, `serif`, `display`, `handwriting`, `monospace`, `pixel` | Only families of this style: sans, serif, display, handwriting, monospace or pixel. |
+| `replace` | boolean | no | `false` |  | Replace an already imported file of the same family and style (or a catalogue install of that family). |
+
+**Returns:** {font_id, family, style, category, cyrillic, ukrainian, variable, path (the stored copy), replaced}.
+
+Example — Import a downloaded font:
+
+```json
+{"path":"C:\\Users\\me\\Downloads\\MyBrandSans-Regular.ttf"}
+```
+
+Example — Import as a handwriting font:
+
+```json
+{"category":"handwriting","path":"/Users/me/Downloads/MyHand.otf"}
+```
+
+### font.install
+
+**Install font** · MCP tool `font_install` · `POST /api/v1/commands/font.install` · UI: Inspector/Text/Font/More fonts
+
+Downloads a font family from font.catalog into the Kadr data folder (<DataDir>/fonts/<id>/) so it can be used in any text — the Install button in the Text → Font picker. Fetches the family's font files and its OFL.txt licence over HTTPS from the google/fonts repository, checks every file (size limits, TrueType/OpenType signature, the font must draw), checks that the licence is the SIL Open Font License, then moves the folder into place atomically — a failed or interrupted download leaves nothing behind. Variable fonts get real Regular and Bold weights. Runs in the background and returns at once unless wait=true; progress arrives as font.progress events (state queued → downloading → verifying → installing → done | failed, with downloaded_bytes/total_bytes/progress), and fonts.changed when the font is ready. Afterwards use font_id with text.update {font}. An already installed family is not downloaded again (already_installed=true) unless force=true. Fails with not_found for unknown ids and not_available when the internet cannot be reached.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `id` | string | yes |  |  | Catalogue id from font.catalog, e.g. "montserrat", "caveat", "press_start_2p". |
+| `force` | boolean | no | `false` |  | Download and reinstall even when the family is already installed. |
+| `wait` | boolean | no | `false` |  | Block until the font is installed (or failed) instead of returning immediately. |
+
+**Returns:** {started, already_installed, font_id, message, job{id, font_id, state, file, downloaded_bytes, total_bytes, progress, error, hint}}.
+
+Example — Install Montserrat in the background:
+
+```json
+{"id":"montserrat"}
+```
+
+Example — Install Caveat and wait until it is ready:
+
+```json
+{"id":"caveat","wait":true}
+```
+
+### font.remove
+
+**Remove font** · MCP tool `font_remove` · `POST /api/v1/commands/font.remove` · UI: Inspector/Text/Font/Remove font
+
+Deletes a font family that was installed with font.install or font.import (library.list kind=font category=Downloaded) from the Kadr data folder. Built-in, bundled and operating-system fonts cannot be removed here (conflict). Texts that use the removed font fall back to Go Sans until it is installed again (font.install restores catalogue fonts with the same id). Publishes fonts.changed.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `font_id` | string | yes |  |  | Font id of a downloaded/imported family, e.g. "montserrat". |
+
+**Returns:** {font_id, family, dir}.
+
+Example — Remove Montserrat:
+
+```json
+{"font_id":"montserrat"}
+```
+
+### font.rescan
+
+**Rescan fonts** · MCP tool `font_rescan` · `POST /api/v1/commands/font.rescan` · UI: Inspector/Text/Font/Rescan
+
+Re-reads every font folder — the Kadr data folder (downloaded/imported fonts), the folders bundled with the app (<exe dir>/fonts, Kadr.app/Contents/Resources/fonts on macOS, KADR_FONTS_DIR) and, with system=true, the operating system's font folders — so fonts copied there while Kadr runs appear in library.list kind=font without a restart. Returns the number of families per source and the folders that were scanned. Publishes fonts.changed.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `system` | boolean | no | `true` |  | Also rescan the operating-system font folders (slower; a few seconds with thousands of fonts). |
+
+**Returns:** {downloaded, bundled, system, total (family counts), folders{downloaded, bundled[], system[]}}.
+
+Example — Pick up newly installed fonts:
+
+```json
+{}
+```
+
 ## Keyframes
 
 4 commands: `keyframe.add`, `keyframe.clear`, `keyframe.list`, `keyframe.remove`.
@@ -5805,21 +6343,21 @@ Example — Remove every keyframe at the playhead:
 
 ## Library
 
-2 commands: `library.get`, `library.list`.
+3 commands: `library.get`, `library.list`, `library.preview`.
 Reference page: https://gitkalenyuk.github.io/kadr/docs/ai/reference/library.html
 
 ### library.get
 
 **Get library item** · MCP tool `library_get` · `POST /api/v1/commands/library.get` · UI: Library
 
-Returns one library item with all its details: name, categories, description, default parameters (effect intensity/speed, filter intensity, voice-effect ffmpeg filter), default duration, the full TextStyle of a text template, or the available styles of a font. Use it to inspect an id found in library.list or stored in a project (e.g. segment.transition_out.type).
+Returns one library item with all its details: name, categories, description, default parameters (effect intensity/speed, filter intensity, voice-effect ffmpeg filter), default duration, the full TextStyle of a text template, or the available styles of a font. Use it to inspect an id found in library.list or stored in a project (e.g. segment.transition_out.type). Animated items include preview {url, frames, fps, width, height} (the hover sprite strip); call library.preview to look at the motion as one image.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | string | yes |  |  | Item id from library.list, e.g. "mix", "vhs", "film", "in_fade". |
 | `kind` | string | yes |  | `transition`, `effect`, `filter`, `animation`, `text_template`, `font`, `sticker`, `voice_effect`, `caption_style`, `generated`, `text_effect`, `text_animation`, `sound_effect` | Library kind of the item (see library.list). |
 
-**Returns:** The item: {kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style?, thumbnail}.
+**Returns:** The item: {kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style?, thumbnail, preview?}.
 
 Example — Inspect the VHS effect:
 
@@ -5831,7 +6369,7 @@ Example — Inspect the VHS effect:
 
 **List library items** · MCP tool `library_list` · `POST /api/v1/commands/library.list` · UI: Library
 
-Lists the built-in library of one kind — exactly what the left panel tabs show: transitions, video effects, colour filters, clip animations (In/Out/Combo/Loop), text templates (style presets), fonts (embedded Go fonts plus fonts installed on this computer), stickers and voice effects. Every item has a stable id to pass to the matching command (transition.set type, effect.add effect_id, filter.add filter_id, animation.set id, text.add template_id, text.update font, sticker.add sticker_id, segment.set_audio voice_effect), a display name, CapCut-style categories, default parameters/durations and a thumbnail path (GET it with the API token for a PNG preview rendered by the engine). Filter by category tab and/or a case-insensitive search query, like the search box in the panel. More kinds: sound_effect (sfx.add), caption_style (captions.set_style), text_effect (text.apply_effect), text_animation (text.set_glyph_animation), generated (media.generate preset_id). Effects carry params.schema — the named sliders accepted by effect.set_params ({id, label, min, max, default}); transitions list their direction/softness options (see transition.set and transition.get).
+Lists the built-in library of one kind — exactly what the left panel tabs show: transitions, video effects, colour filters, clip animations (In/Out/Combo/Loop), text templates (style presets), fonts (embedded Go fonts, fonts installed on this computer, fonts bundled with Kadr and fonts downloaded with font.install — see font.catalog), stickers and voice effects. Every item has a stable id to pass to the matching command (transition.set type, effect.add effect_id, filter.add filter_id, animation.set id, text.add template_id, text.update font, sticker.add sticker_id, segment.set_audio voice_effect), a display name, CapCut-style categories, default parameters/durations and a thumbnail path (GET it with the API token for a PNG preview rendered by the engine). Filter by category tab and/or a case-insensitive search query, like the search box in the panel. More kinds: sound_effect (sfx.add), caption_style (captions.set_style), text_effect (text.apply_effect), text_animation (text.set_glyph_animation), generated (media.generate preset_id). Effects carry params.schema — the named sliders accepted by effect.set_params ({id, label, min, max, default}); transitions list their direction/softness options (see transition.set and transition.get). Items that move (transitions, effects, filters, clip animations, animated text templates/word art, text animations, caption styles with word highlight, animated stickers and generated clips) also carry preview {url, frames, fps, width, height}: GET url for a JPEG sprite strip (frames side by side, one seamless loop) — the app's hover preview; items without it are static. To SEE how an item plays, call library.preview (a PNG contact sheet).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5839,7 +6377,7 @@ Lists the built-in library of one kind — exactly what the left panel tabs show
 | `category` | string | no |  |  | Only items in this category tab (case-insensitive), e.g. "Trending", "Basic", "In", "Retro". The result's categories field lists valid values. |
 | `query` | string | no |  |  | Case-insensitive search on the item name, id, categories and description (the panel's search box). |
 
-**Returns:** {kind, categories: [category tab names in display order], total, items: [{kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style? (text templates), thumbnail}]}.
+**Returns:** {kind, categories: [category tab names in display order], total, items: [{kind, id, name, category, categories, description, anim_kind?, default_duration_us?, params?, style? (text templates), thumbnail, preview? {url, frames, fps, width, height}}]}.
 
 Example — All transitions:
 
@@ -5857,6 +6395,40 @@ Example — Search filters:
 
 ```json
 {"kind":"filter","query":"warm"}
+```
+
+### library.preview
+
+**Preview library item** · MCP tool `library_preview` · `POST /api/v1/commands/library.preview` · UI: Library
+
+Renders how a library item PLAYS as one PNG contact sheet (frames left to right, top to bottom) so an AI agent can see a transition, effect, filter, clip animation, animated text template, text animation, caption style highlight, animated sticker or animated generated clip before applying it. Uses the same engine and sample pictures as the hover previews of the app: transitions go from a sunny landscape (clip A, progress 0) to a night city (clip B, progress 1); effects run over time on the landscape (static effects such as vignette show a before/after divider); filters show a before/after divider; clip animations move a small clip on a dark stage (dashed outline = rest position); text kinds render sample text. Static items (fonts, voice effects, non-animated templates/word art/stickers) return their thumbnail as a single tile with animated=false. Every item that animates has a preview field in library.list / library.get (the app's hover sprite: GET preview.url for a JPEG strip). Read-only.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `id` | string | yes |  |  | Item id from library.list, e.g. "cube_turn_left", "vhs", "film", "in_pop". |
+| `kind` | string | yes |  | `transition`, `effect`, `filter`, `animation`, `text_template`, `font`, `sticker`, `voice_effect`, `caption_style`, `generated`, `text_effect`, `text_animation`, `sound_effect` | Library kind of the item: transition, effect, filter, animation, text_template, text_effect, text_animation, caption_style, sticker, generated (others are static). |
+| `columns` | integer | no | `3` | 1 … 6 | Tiles per row; rows are added as needed. |
+| `frames` | integer | no | `6` | 2 … 12 | Number of moments (tiles) to render; more tiles show the motion in finer steps. |
+| `tile_width` | integer (pixels) | no | `256` | 64 … 480 | Width of each tile; the height follows the preview's aspect ratio (16:9 for most kinds, square for stickers and text animations). |
+
+**Returns:** {kind, id, name, animated, frames, columns, rows, tile_width, tile_height, width, height, phases[] (0..1 position of each tile in the preview loop), times_us[] (the same in microseconds), loop_us (length of the hover loop), preview? ({url, frames, fps, width, height} of the JPEG sprite), png_base64, note (what the tiles show for this kind)}.
+
+Example — See how a transition plays:
+
+```json
+{"id":"mix","kind":"transition"}
+```
+
+Example — An In animation in 8 steps:
+
+```json
+{"columns":4,"frames":8,"id":"in_pop","kind":"animation"}
+```
+
+Example — Before/after of a filter:
+
+```json
+{"columns":4,"frames":4,"id":"film","kind":"filter"}
 ```
 
 ## Media
@@ -5907,7 +6479,7 @@ Example — Remove a clip from the project:
 
 **Generate media** · MCP tool `media_generate` · `POST /api/v1/commands/media.generate` · undoable · UI: Library/Stickers/Generated
 
-Creates a procedural media file — a background, texture, pattern, test card or countdown drawn by the engine itself (no stock footage, nothing downloaded) — and adds it to the project as a normal material, like CapCut's generated/stock backgrounds but fully original and offline. Still kinds (solid colours, still gradients, grids, checkers, stripes, paper texture, colour bars without tone) are written as a PNG (material type photo, duration 0: it can be stretched to any length on the timeline); kinds that move (speed > 0, noise, countdowns) or make sound (colour-bar tone, countdown beeps) are rendered frame by frame and encoded to an H.264 MP4 of duration_us (material type video). Files go to <project>/cache/generated/ and are reused when the same kind, params, size, duration and fps are asked again (cached = true; the existing material is returned instead of a duplicate). Pick a ready-made look with preset_id (ids from library.list kind=generated, e.g. "sunset_gradient", "neon_floor", "countdown_5", "film_grain") — params then override single preset values — or give kind + params yourself. Size defaults to the project canvas; videos use the canvas fps (or 30) and even pixel sizes. With add_to_timeline the new material is also placed in the same undo step, exactly like timeline.segment.add: on the main track at the clip boundary nearest at_us (magnet), or appended to the end of the main track when at_us is omitted; track_id / new_track choose another track (e.g. an overlay track for grain or confetti on top of a clip — then use segment.set_blend / segment.set_opacity). Rendering runs while the command executes (typically 2-10 s for 5 s of 1080p video); duration_us is limited to 60 s — for longer backgrounds use a still kind or add the clip several times. Undo removes the material (and the placed clip); the cached file stays on disk. Kinds: • solid — a flat colour card (PNG) — backgrounds, chroma-key plates, fade cards. Params: color (color, default "#000000"): Fill colour.. • gradient — a smooth linear or radial colour gradient (PNG, or a flowing video when speed > 0). Params: colors (colors, 2-6, default ["#FF7A59","#7B2FF7"]): Colour stops, evenly spaced, from start to end (2-6).; type (enum linear|radial, default "linear"): linear = along angle; radial = from the centre outwards.; angle (number -360..360, default 135): Direction of a linear gradient in degrees: 0 = left to right, 90 = top to bottom.; speed (number 0..5, default 0): Colour flow speed in back-and-forth cycles per 10 seconds. 0 = a still picture (PNG).. • color_bars — a test card of vertical colour bars (PNG, or a video with a sine tone when tone = true). Params: style (enum classic|rainbow|retro, default "classic"): classic = broadcast-style 75% bars with a lower calibration row; rainbow = 12 hues over a grey step wedge; retro = muted 70s palette.; tone (boolean, default false): Add a continuous sine test tone (the output becomes a video with sound).; tone_hz (number 100..8000, default 1000): Frequency of the test tone in hertz.. • noise — film grain, TV static, paper and soft cloudy textures from value noise (video while speed > 0, else PNG). Params: color (color, default "#808080"): Base colour; the noise brightens and darkens it.; color2 (color): Optional second colour: the noise blends between color and color2 instead of brightening/darkening.; amount (number 0..1, default 0.5): Strength (contrast) of the noise.; scale (number 1..400, default 1): Grain size in pixels at 1080p height: 1-2 = fine grain/static, 100+ = soft clouds.; octaves (integer 1..5, default 1): Layers of finer detail added on top (fractal noise); 3-4 for paper and smoke.; monochrome (boolean, default true): Same noise in R, G and B (false = coloured RGB noise).; speed (number 0..4, default 1): How fast the noise changes: 1 = 24 new grain patterns per second (soft noise drifts smoothly). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 1): Random seed: another number gives another pattern.. • shapes — circles, rounded squares, triangles and rings drifting over a colour (video while speed > 0, else PNG). Params: shape (enum mixed|circle|square|triangle|ring, default "mixed"): Which shapes to draw.; count (integer 1..80, default 18): Number of shapes.; colors (colors, 1-8, default ["#FF5C8A","#FFD23F","#3EC1D3","#9B5DE5","#00F5D4"]): Shape colours, used in turn.; background (color, default "#16161D"): Background colour.; size (number 0.01..0.5, default 0.07): Average shape radius as a fraction of the frame height.; opacity (number 0.1..1, default 0.9): Shape opacity.; speed (number 0..5, default 1): Drift speed (1 = calm). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 7): Random seed for positions, sizes and directions.. • countdown — a numeric countdown (from N to 1, one number per second by default) as a video. Params: from (integer 1..60, default 5): First number; the clip counts down to 1. Default length = from seconds.; style (enum ring|plain|film, default "ring"): ring = number inside an emptying progress ring; plain = big fading numbers; film = projector-leader look with a sweeping wedge and crosshair (use a light background).; background (color, default "#111114"): Background colour.; color (color, default "#FFFFFF"): Colour of the numbers (and of the film-style circles).; accent (color, default "#FF3B5C"): Colour of the progress ring / sweeping wedge.; beep (boolean, default false): Add a short beep at every number (the video gets a sound track).. • grid — a line grid — flat (blueprint, graph paper) or a perspective floor running to the horizon (video while speed > 0, else PNG). Params: style (enum flat|perspective, default "flat"): flat = square grid; perspective = floor grid towards a horizon with a sky above.; color (color, default "#FFFFFF"): Line colour.; background (color, default "#101018"): Background (floor) colour.; color2 (color): Sky colour at the top of a perspective grid (default: the background colour).; cells (integer 2..64, default 12): Number of grid cells across the frame width.; thickness (number 0.5..20, default 2): Line thickness in pixels at 1080p height.; glow (boolean, default false): Soft neon glow around the lines (and on the horizon).; speed (number 0..5, default 0): Scroll speed in cells per second (towards the viewer). 0 = a still picture (PNG).. • checker — a two-colour checkerboard, optionally rotated and scrolling (video while speed > 0, else PNG). Params: color (color, default "#FFFFFF"): First square colour.; color2 (color, default "#D9D9E0"): Second square colour.; cells (integer 2..128, default 8): Number of squares across the frame width.; angle (number -180..180, default 0): Rotation of the pattern in degrees.; speed (number 0..5, default 0): Diagonal scroll speed in squares per second. 0 = a still picture (PNG).. • stripes — diagonal or straight stripes in 2-6 colours, optionally moving like a barber pole (video while speed > 0, else PNG). Params: colors (colors, 2-6, default ["#FFD23F","#1B1B1F"]): Stripe colours, repeated in order.; width (number 0.005..0.5, default 0.06): Width of one stripe as a fraction of the frame height.; angle (number -180..180, default 45): Stripe direction in degrees: 0 = vertical stripes, 90 = horizontal.; speed (number 0..10, default 0): Movement in stripes per second. 0 = a still picture (PNG)..
+Creates a procedural media file — a background, texture, pattern, test card or countdown drawn by the engine itself (no stock footage, nothing downloaded) — and adds it to the project as a normal material, like CapCut's generated/stock backgrounds but fully original and offline. Still kinds (solid colours, still gradients, grids, checkers, stripes, textures, patterns, colour bars without tone) are written as a PNG (material type photo, duration 0: it can be stretched to any length on the timeline); banner and frame are PNGs with a transparent background meant for an overlay track; kinds that move (speed > 0, noise, countdowns, timers) or make sound (colour-bar tone, countdown beeps) are rendered frame by frame and encoded to an H.264 MP4 of duration_us (material type video). Files go to <project>/cache/generated/ and are reused when the same kind, params, size, duration and fps are asked again (cached = true; the existing material is returned instead of a duplicate). Pick a ready-made look with preset_id (ids from library.list kind=generated, e.g. "sunset_gradient", "neon_floor", "countdown_5", "film_grain") — params then override single preset values — or give kind + params yourself. Size defaults to the project canvas; videos use the canvas fps (or 30) and even pixel sizes. With add_to_timeline the new material is also placed in the same undo step, exactly like timeline.segment.add: on the main track at the clip boundary nearest at_us (magnet), or appended to the end of the main track when at_us is omitted; track_id / new_track choose another track (e.g. an overlay track for grain, confetti, light leaks, film dust, banners or frames on top of a clip — light_leak and film_dust are drawn on black for segment.set_blend mode screen). Moving backgrounds with a loop param (mesh, aurora, lava, plasma, bokeh, particles, light_leak) repeat seamlessly every loop seconds, which is also their default length. Rendering runs while the command executes (typically 2-10 s for 5 s of 1080p video); duration_us is limited to 60 s — for longer backgrounds use a still kind or add the clip several times. Undo removes the material (and the placed clip); the cached file stays on disk. Kinds: • solid — a flat colour card (PNG) — backgrounds, chroma-key plates, fade cards. Params: color (color, default "#000000"): Fill colour.. • gradient — a smooth linear or radial colour gradient (PNG, or a flowing video when speed > 0). Params: colors (colors, 2-6, default ["#FF7A59","#7B2FF7"]): Colour stops, evenly spaced, from start to end (2-6).; type (enum linear|radial, default "linear"): linear = along angle; radial = from the centre outwards.; angle (number -360..360, default 135): Direction of a linear gradient in degrees: 0 = left to right, 90 = top to bottom.; speed (number 0..5, default 0): Colour flow speed in back-and-forth cycles per 10 seconds. 0 = a still picture (PNG).. • color_bars — a test card of vertical colour bars (PNG, or a video with a sine tone when tone = true). Params: style (enum classic|rainbow|retro, default "classic"): classic = broadcast-style 75% bars with a lower calibration row; rainbow = 12 hues over a grey step wedge; retro = muted 70s palette.; tone (boolean, default false): Add a continuous sine test tone (the output becomes a video with sound).; tone_hz (number 100..8000, default 1000): Frequency of the test tone in hertz.. • noise — film grain, TV static, paper and soft cloudy textures from value noise (video while speed > 0, else PNG). Params: color (color, default "#808080"): Base colour; the noise brightens and darkens it.; color2 (color): Optional second colour: the noise blends between color and color2 instead of brightening/darkening.; amount (number 0..1, default 0.5): Strength (contrast) of the noise.; scale (number 1..400, default 1): Grain size in pixels at 1080p height: 1-2 = fine grain/static, 100+ = soft clouds.; octaves (integer 1..5, default 1): Layers of finer detail added on top (fractal noise); 3-4 for paper and smoke.; monochrome (boolean, default true): Same noise in R, G and B (false = coloured RGB noise).; speed (number 0..4, default 1): How fast the noise changes: 1 = 24 new grain patterns per second (soft noise drifts smoothly). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 1): Random seed: another number gives another pattern.. • shapes — circles, rounded squares, triangles and rings drifting over a colour (video while speed > 0, else PNG). Params: shape (enum mixed|circle|square|triangle|ring, default "mixed"): Which shapes to draw.; count (integer 1..80, default 18): Number of shapes.; colors (colors, 1-8, default ["#FF5C8A","#FFD23F","#3EC1D3","#9B5DE5","#00F5D4"]): Shape colours, used in turn.; background (color, default "#16161D"): Background colour.; size (number 0.01..0.5, default 0.07): Average shape radius as a fraction of the frame height.; opacity (number 0.1..1, default 0.9): Shape opacity.; speed (number 0..5, default 1): Drift speed (1 = calm). 0 = a still picture (PNG).; seed (integer 0..1e+06, default 7): Random seed for positions, sizes and directions.. • countdown — a numeric countdown (from N to 1, one number per second by default) as a video. Params: from (integer 1..60, default 5): First number; the clip counts down to 1. Default length = from seconds.; style (enum ring|plain|film, default "ring"): ring = number inside an emptying progress ring; plain = big fading numbers; film = projector-leader look with a sweeping wedge and crosshair (use a light background).; background (color, default "#111114"): Background colour.; color (color, default "#FFFFFF"): Colour of the numbers (and of the film-style circles).; accent (color, default "#FF3B5C"): Colour of the progress ring / sweeping wedge.; beep (boolean, default false): Add a short beep at every number (the video gets a sound track).. • grid — a line grid — flat (blueprint, graph paper) or a perspective floor running to the horizon (video while speed > 0, else PNG). Params: style (enum flat|perspective, default "flat"): flat = square grid; perspective = floor grid towards a horizon with a sky above.; color (color, default "#FFFFFF"): Line colour.; background (color, default "#101018"): Background (floor) colour.; color2 (color): Sky colour at the top of a perspective grid (default: the background colour).; cells (integer 2..64, default 12): Number of grid cells across the frame width.; thickness (number 0.5..20, default 2): Line thickness in pixels at 1080p height.; glow (boolean, default false): Soft neon glow around the lines (and on the horizon).; speed (number 0..5, default 0): Scroll speed in cells per second (towards the viewer). 0 = a still picture (PNG).. • checker — a two-colour checkerboard, optionally rotated and scrolling (video while speed > 0, else PNG). Params: color (color, default "#FFFFFF"): First square colour.; color2 (color, default "#D9D9E0"): Second square colour.; cells (integer 2..128, default 8): Number of squares across the frame width.; angle (number -180..180, default 0): Rotation of the pattern in degrees.; speed (number 0..5, default 0): Diagonal scroll speed in squares per second. 0 = a still picture (PNG).. • stripes — diagonal or straight stripes in 2-6 colours, optionally moving like a barber pole (video while speed > 0, else PNG). Params: colors (colors, 2-6, default ["#FFD23F","#1B1B1F"]): Stripe colours, repeated in order.; width (number 0.005..0.5, default 0.06): Width of one stripe as a fraction of the frame height.; angle (number -180..180, default 45): Stripe direction in degrees: 0 = vertical stripes, 90 = horizontal.; speed (number 0..10, default 0): Movement in stripes per second. 0 = a still picture (PNG).. • mesh — a soft modern mesh gradient: colour clouds blended into each other, slowly drifting in a seamless loop (video while speed > 0, else PNG). Params: colors (colors, 2-6, default ["#FF9A8B","#FF6A88","#FF99AC","#FAD0C4","#A18CD1"]): Colours of the blended clouds (2-6).; softness (number 0..1, default 0.5): 0 = distinct colour patches, 1 = very soft, misty blending.; grain (number 0..0.3, default 0.04): Fine film grain on top (0 = clean).; speed (number 0..3, default 1): How far the colour clouds drift (1 = calm). 0 = a still picture (PNG).; loop (number 2..30, default 8): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 3): Random seed: another number gives another arrangement.. • aurora — northern lights: glowing curtains of light waving over a starry night sky (video while speed > 0, else PNG). Params: colors (colors, 2-4, default ["#00FFA3","#00C2FF","#B026FF"]): Curtain colours from the bottom edge of the light upwards.; background (color, default "#040714"): Night sky colour at the top.; color2 (color, default "#0A2A3C"): Sky colour near the horizon (bottom).; stars (boolean, default true): Twinkling stars in the sky.; landscape (boolean, default true): Dark mountain and forest silhouette along the bottom.; speed (number 0..3, default 1): Wave speed of the curtains. 0 = a still picture (PNG).; loop (number 2..30, default 10): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 5): Random seed: another number gives another arrangement.. • lava — glossy blobs that rise, sink, merge and split like a lava lamp (video while speed > 0, else PNG). Params: colors (colors, 1-4, default ["#FFB000","#FF3D6E","#B5179E"]): Blob colours from top to bottom of the frame.; background (color, default "#1B0B2E"): Background colour at the top.; color2 (color, default "#3A0D4F"): Background colour at the bottom.; count (integer 2..16, default 7): Number of blobs.; size (number 0.04..0.3, default 0.13): Blob radius as a fraction of the frame height.; speed (number 0..3, default 1): Rise/sink speed. 0 = a still picture (PNG).; loop (number 2..30, default 10): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 11): Random seed: another number gives another arrangement.. • plasma — a retro demo-scene plasma: interfering colour waves cycling through a palette (video while speed > 0, else PNG). Params: colors (colors, 2-6, default ["#120458","#7A04EB","#FF00A0","#FE75FE","#00F0FF"]): Palette the waves cycle through.; scale (number 0.3..6, default 1.5): Wave density: higher = more, smaller ripples.; speed (number 0..3, default 1): Wave speed. 0 = a still picture (PNG).; loop (number 2..30, default 8): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 2): Random seed: another number gives another arrangement.. • bokeh — out-of-focus light discs drifting and twinkling over a dark gradient, like city lights behind a lens (video while speed > 0, else PNG). Params: colors (colors, 1-6, default ["#FFD27A","#FF9F5A","#FFF2C4"]): Light colours.; background (color, default "#120E1C"): Background colour at the top.; color2 (color, default "#2B1B2E"): Background colour at the bottom.; count (integer 4..150, default 36): Number of light discs.; size (number 0.01..0.3, default 0.08): Average disc radius as a fraction of the frame height.; softness (number 0..1, default 0.35): Edge softness: 0 = crisp discs, 1 = very blurry.; speed (number 0..3, default 1): Drift speed. 0 = a still picture (PNG).; loop (number 2..30, default 10): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 8): Random seed: another number gives another arrangement.. • particles — light particles: floating dust, fireflies, falling snow, twinkling stars or rising embers (video while speed > 0, else PNG). Params: style (enum dust|fireflies|snow|stars|embers, default "dust"): dust = slow glowing motes; fireflies = wandering pulsing green-gold lights; snow = flakes falling with a sway; stars = twinkling starfield; embers = sparks rising and flickering.; color (color, default "#FFFFFF"): Particle colour (fireflies and embers tint it warmer).; background (color, default "#0B0F1A"): Background colour at the top.; color2 (color): Optional background colour at the bottom (vertical gradient).; count (integer 10..800, default 160): Number of particles.; size (number 0.2..5, default 1): Particle size multiplier.; speed (number 0..3, default 1): Movement speed. 0 = a still picture (PNG).; loop (number 2..30, default 8): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 4): Random seed: another number gives another arrangement.. • light_leak — film light leaks, burns, prism streaks and lens flares on black — put it on an overlay track with the Screen (or Add) blend mode (video while speed > 0, else PNG). Params: style (enum leak|burn|prism|flare, default "leak"): leak = soft warm glows drifting in from the edges; burn = hot film burn flaring from one side; prism = rainbow streaks sweeping across; flare = lens flare with a moving source, streak and ghost rings.; colors (colors, 1-5, default ["#FF3D00","#FF8A00","#FFC14D"]): Light colours (prism uses a rainbow when only defaults are given).; intensity (number 0.2..1.5, default 1): Brightness of the light.; speed (number 0..3, default 1): Movement speed. 0 = a still picture (PNG).; loop (number 2..30, default 6): Seconds until the motion repeats exactly (seamless loop); also the default clip length.; seed (integer 0..1e+06, default 9): Random seed: another number gives another arrangement.. • film_dust — old-film dirt on black: dust specks, hairs and vertical scratches flickering every frame — use the Screen blend mode on top of a clip (video while speed > 0, else PNG). Params: color (color, default "#FFFFFF"): Colour of the dirt.; amount (number 0..1, default 0.5): How much dirt.; speed (number 0..2, default 1): 1 = new dirt 12 times per second, like a projector. 0 = a still picture (PNG).; seed (integer 0..1e+06, default 6): Random seed: another number gives another arrangement.. • texture — a still material texture: paper, kraft paper, grunge wall, concrete, canvas, denim, marble, watercolour paper or wood (PNG). Params: style (enum paper|kraft|grunge|concrete|canvas|denim|marble|watercolor|wood, default "paper"): Material to imitate.; color (color): Base colour (default depends on the style).; color2 (color): Accent colour: fibres, stains, veins, watercolour blooms or grain (default depends on the style).; amount (number 0..1, default 0.5): Strength of the texture detail.; scale (number 0.25..4, default 1): Size of the texture features.; seed (integer 0..1e+06, default 7): Random seed: another number gives another arrangement.. • pattern — a decorative repeating pattern — memphis, waves, polka dots, halftone, terrazzo, chevron, honeycomb, gingham, scales, dot grid, isometric cubes or triangle mosaic (PNG, or a slowly scrolling video when speed > 0). Params: style (enum memphis|waves|dots|halftone|terrazzo|chevron|honeycomb|gingham|scales|dot_grid|cubes|triangles, default "memphis"): Pattern design.; colors (colors, 2-6, default ["#FFF4E6","#FF6B6B","#4ECDC4","#FFD93D","#6A4C93"]): Background colour first, then the pattern colours.; scale (number 2..64, default 8): Pattern repeats across the frame width.; angle (number -180..180, default 0): Rotation of the pattern in degrees.; speed (number 0..5, default 0): Diagonal scroll speed in repeats per second. 0 = a still picture (PNG).; seed (integer 0..1e+06, default 12): Random seed: another number gives another arrangement.. • timer — a styled countdown video from N to 1 — flip clock, neon ring, progress bar, vanishing dots or pop-art bursts. Params: from (integer 1..60, default 5): First number; the clip counts down to 1. Default length = from seconds.; style (enum flip|neon|bar|dots|pop, default "flip"): flip = split-flap clock cards that flip every second; neon = glowing ring and digits; bar = big number over a shrinking progress bar; dots = a ring of dots that go out one by one; pop = the number punches in over a coloured starburst.; background (color, default "#121216"): Background colour.; color (color, default "#FFFFFF"): Colour of the numbers.; accent (color, default "#FF3B5C"): Accent colour (cards, ring, bar, dots, bursts).; beep (boolean, default false): Add a short beep at every number (the video gets a sound track).. • banner — a text-free banner shape on a transparent background — lower third, pill, tab, ribbon, glass panel, news bar or brush stroke — to put your own text on (PNG with alpha). Params: style (enum lower_third|pill|tab|ribbon|glass|news|brush, default "lower_third"): Banner design.; color (color, default "#FFFFFF"): Main panel colour.; color2 (color, default "#FF3B5C"): Accent colour (bars, tags, ribbon ends, icon slot).; position (enum bottom|center|top, default "bottom"): Vertical position in the frame.; width (number 0.2..1, default 0.6): Banner width as a fraction of the frame width.. • frame — a border overlay with a transparent centre — film strip, neon, instant photo, vignette, torn paper, viewfinder, rounded, postage stamp or double line (PNG with alpha). Params: style (enum film|neon|polaroid|vignette|torn|viewfinder|rounded|stamp|double, default "rounded"): Frame design.; color (color, default "#FFFFFF"): Main frame colour (vignette: the shadow colour).; color2 (color, default "#FF3B5C"): Accent colour (neon glow, viewfinder REC dot, inner line).; thickness (number 0.01..0.25, default 0.05): Border thickness as a fraction of the frame height..
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5917,7 +6489,7 @@ Creates a procedural media file — a background, texture, pattern, test card or
 | `duration_us` | integer (microseconds) | no |  | 100000 … 60000000 | Length of a generated video (moving or sounding kinds). Default 5000000 (5 s); countdowns default to from × 1 s. For still pictures (PNG) it only sets the length of the clip placed by add_to_timeline (default 5 s). |
 | `fps` | number (frames per second) | no |  | 1 … 60 | Frame rate of a generated video. Default: the project canvas fps, or 30. |
 | `height` | integer (pixels) | no |  | 16 … 4096 | Output height in pixels. Default: the project canvas height (1080 for 16:9). Videos round down to an even number. |
-| `kind` | string | no |  | `solid`, `gradient`, `color_bars`, `noise`, `shapes`, `countdown`, `grid`, `checker`, `stripes` | What to generate: solid, gradient, color_bars, noise, shapes, countdown, grid, checker or stripes. Required unless preset_id is given (must then match the preset's kind). |
+| `kind` | string | no |  | `solid`, `gradient`, `color_bars`, `noise`, `shapes`, `countdown`, `grid`, `checker`, `stripes`, `mesh`, `aurora`, `lava`, `plasma`, `bokeh`, `particles`, `light_leak`, `film_dust`, `texture`, `pattern`, `timer`, `banner`, `frame` | What to generate: solid, gradient, color_bars, noise, shapes, countdown, grid, checker, stripes, mesh, aurora, lava, plasma, bokeh, particles, light_leak, film_dust, texture, pattern, timer, banner, frame. Required unless preset_id is given (must then match the preset's kind). |
 | `name` | string | no |  |  | Display name of the new material in the Media panel. Default: the preset name, or the kind title (e.g. "Gradient"). |
 | `new_track` | boolean | no |  |  | With add_to_timeline: put the clip on a brand-new overlay track (e.g. grain or confetti over existing clips). |
 | `params` | object | no |  |  | Kind-specific settings, e.g. {"colors": ["#FF5E62", "#FFD86F"], "angle": 90} for a gradient or {"from": 3, "beep": true} for a countdown. Colours are "#RRGGBB"; numbers outside their range are rejected. Omitted keys use the defaults listed per kind in the description. |
@@ -5955,6 +6527,18 @@ Example — 2 s black card at the start:
 
 ```json
 {"add_to_timeline":true,"at_us":0,"duration_us":2000000,"kind":"solid","params":{"color":"#000000"},"project_id":"prj_1a2b3c4d5e6f"}
+```
+
+Example — Seamless northern-lights background (10 s loop):
+
+```json
+{"add_to_timeline":true,"at_us":0,"preset_id":"aurora_north","project_id":"prj_1a2b3c4d5e6f"}
+```
+
+Example — Neon border frame (transparent PNG) on a new overlay track:
+
+```json
+{"add_to_timeline":true,"at_us":0,"duration_us":5000000,"new_track":true,"preset_id":"frame_neon","project_id":"prj_1a2b3c4d5e6f"}
 ```
 
 ### media.get
@@ -6892,12 +7476,13 @@ Reference page: https://gitkalenyuk.github.io/kadr/docs/ai/reference/stickers.ht
 
 **Add sticker** · MCP tool `sticker_add` · `POST /api/v1/commands/sticker.add` · undoable · UI: Library/Stickers
 
-Adds a built-in sticker to a sticker track, like clicking a card in the Stickers tab. The sticker PNG (512×512, transparent, generated by the engine) is registered once per project as a material of type "sticker" and a segment using it is placed at at_us (default: playhead) for duration_us (default 3 s) on the first free sticker track, or a new sticker track above all visual tracks. The sticker starts centred at 30% of the canvas height (transform scale 0.3); move/resize it with segment.set_transform. Sticker ids come from library.list kind=sticker.
+Adds a built-in sticker to a sticker track, like clicking a card in the Stickers tab. The sticker PNG (512×512, transparent, generated by the engine) is registered once per project as a material of type "sticker" and a segment using it is placed at at_us (default: playhead) for duration_us (default 3 s) on the first free sticker track, or a new sticker track above all visual tracks. The sticker starts centred at 30% of the canvas height (transform scale 0.3); move/resize it with segment.set_transform. Sticker ids come from library.list kind=sticker. Animated stickers (the "Animated" tab; their library item has params.loop_anim, optional params.in_anim and params.loop_us) get that loop animation (period loop_us) and entrance animation applied automatically, exactly as animation.set would; pass animate=false to place them still. Change or remove the animations later with animation.set / animation.remove.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
 | `sticker_id` | string | yes |  |  | Sticker id from library.list kind=sticker, e.g. "heart", "badge_subscribe", "arrow_curved". |
+| `animate` | boolean | no | `true` |  | Apply the sticker's default loop/entrance animation when it has one (animated stickers only); false places it without animation. |
 | `at_us` | integer (microseconds) | no |  | 0 … ∞ | Timeline time where the new segment starts (1 second = 1000000). Defaults to the playhead position. |
 | `duration_us` | integer (microseconds) | no | `3000000` | 100000 … 86400000000 | Length of the new sticker segment on the timeline. CapCut's default is 3 seconds (3000000). |
 | `track_id` | string | no |  |  | Put the segment on this existing track. Omit to use the first free track of the right type, or a new track created above all visual tracks. |
@@ -6914,6 +7499,12 @@ Example — Subscribe badge from 5 s for 2 s:
 
 ```json
 {"at_us":5000000,"duration_us":2000000,"project_id":"prj_1a2b3c4d5e6f","sticker_id":"badge_subscribe"}
+```
+
+Example — Animated grin face placed without its default animation:
+
+```json
+{"animate":false,"project_id":"prj_1a2b3c4d5e6f","sticker_id":"emoji_grin"}
 ```
 
 ## Text
@@ -6980,7 +7571,7 @@ Adds a text segment to a text track, like clicking "Default text" or a text temp
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
 | `at_us` | integer (microseconds) | no |  | 0 … ∞ | Timeline time where the new segment starts (1 second = 1000000). Defaults to the playhead position. |
 | `duration_us` | integer (microseconds) | no | `3000000` | 100000 … 86400000000 | Length of the new text segment on the timeline. CapCut's default is 3 seconds (3000000). |
-| `style` | object | no |  |  | Optional TextStyle overrides: {font, size, color, bold, italic, underline, align, line_spacing, letter_spacing, stroke{color,width}, shadow{color,opacity,blur,distance,angle}, box{color,opacity,radius}, case, glow{color,intensity,radius}, fill{type,colors,angle}, extra_strokes[{color,width}], extrude{color,depth,angle}, effect_id, curve, glyph_in/glyph_out/glyph_loop{id,duration_us}, words[{text,start_us,end_us}], highlight{style,color,scale}} — same units as text.update. |
+| `style` | object | no |  |  | Optional TextStyle overrides: {font, size, color, bold, italic, underline, align, line_spacing, letter_spacing, stroke{color,width}, shadow{color,opacity,blur,distance,angle}, box{color,opacity,radius}, case, glow{color,intensity,radius}, fill{type,colors,angle}, extra_strokes[{color,width}], extrude{color,depth,angle}, effect_id, curve, glyph_in/glyph_out/glyph_loop{id,duration_us}, words[{text,start_us,end_us}], highlight{style,color,scale,text_color}} — same units as text.update. Wave 4: stroke_fill{type,colors,angle,stops}, fill.stops[], pattern{type,colors,scale,angle,opacity,speed}, bevel{depth,angle,strength,gloss,highlight,shade,round}, inner_shadow{color,opacity,blur,distance,angle}, inner_glow{color,intensity,radius}, echo{colors,distance,angle,hollow}, distress{type,amount,scale}, sparkle{color,amount,size,speed}, drip{amount,length}, rough, pixelate, box{…, fill, border{color,width}, shadow{…}, per_line, skew, pad, knockout}, highlight.text_color. |
 | `template_id` | string | no |  |  | Text template id from library.list kind=text_template, e.g. "title_bold", "neon_sign_pink", "gradient_pop_title". |
 | `text` | string | no |  |  | Text content; use \n for line breaks. Defaults to the template's sample text or "Default text". |
 | `track_id` | string | no |  |  | Put the segment on this existing track. Omit to use the first free track of the right type, or a new track created above all visual tracks. |
@@ -7015,7 +7606,7 @@ Example — Gold word art that types itself:
 
 **Apply text effect** · MCP tool `text_apply_effect` · `POST /api/v1/commands/text.apply_effect` · undoable · UI: Library/Text/Effects
 
-Applies a word-art preset ("text effect": gradient, metal, neon, outline, 3D and retro looks from library.list kind=text_effect) to a text segment, like clicking a card in the Text → Effects grid. The preset WRITES its fields into the TextStyle — fill gradient, glow, extra_strokes, extrude and, where the preset uses them, stroke, shadow and color — after clearing the previous preset's fill/glow/extra outlines/extrusion, and records its id in effect_id. Rendering uses only the stored fields, so every value stays editable with text.update afterwards. Words, font, size, alignment, animations and timing are kept. effect_id "none" removes the preset's fill, glow, extra outlines and extrusion (a transparent hollow colour becomes white).
+Applies a word-art preset ("text effect": gradient, metal, luxury, neon, candy, texture, sticker, hand-made, outline, 3D, retro, spooky, gaming and cute looks from library.list kind=text_effect) to a text segment, like clicking a card in the Text → Effects grid. The preset WRITES its fields into the TextStyle — fill gradient, glow, extra_strokes, extrude, the wave-4 pattern / bevel / inner shadow / inner glow / echo / distress / sparkle / drip / rough / pixelate fields and, where the preset uses them, stroke, shadow and color — after clearing the previous preset's fill/glow/extra outlines/extrusion, and records its id in effect_id. Rendering uses only the stored fields, so every value stays editable with text.update afterwards. Words, font, size, alignment, animations and timing are kept. effect_id "none" removes the preset's fill, glow, extra outlines and extrusion (a transparent hollow colour becomes white).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -7035,6 +7626,12 @@ Example — Remove the effect:
 
 ```json
 {"effect_id":"none","project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
+```
+
+Example — Holographic sticker look:
+
+```json
+{"effect_id":"fx4_holo_sticker","project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
 ```
 
 ### text.apply_template
@@ -7121,21 +7718,50 @@ Example — Endless wave:
 
 **Edit text** · MCP tool `text_update` · `POST /api/v1/commands/text.update` · undoable · UI: Inspector/Text
 
-Changes the content and look of a text segment — the Text tab of the inspector (Basic: font, size, style, colour, case, alignment, spacing; Stroke; Extra outlines; Shadow; Background box; Glow; Gradient fill; 3D extrude; Curve; Word-art effect; caption highlight). Only the parameters you pass change. Units: size is CapCut's scale (15 = default, font height ≈ size/300 of the canvas height); letter_spacing and line_spacing are in em (0.1 = 10% of the font size) added to the normal spacing; stroke_width, shadow_blur and shadow_distance are 0..1 (stroke up to 0.25 em thick, shadow offset/blur up to 0.5 em); shadow_angle, fill_angle and extrude_angle are in degrees counter-clockwise from the right (-45 = down-right, -90 = downwards / top→bottom); box_radius 0..1 rounds the corners (1 = pill). Stroke, shadow, box, glow and extrude are enabled by setting any of their parameters (missing ones get defaults: black stroke width 0.3, black shadow opacity 0.6/blur 0.3/distance 0.15/angle -45, black box opacity 0.6/radius 0.2, glow in the text colour intensity 0.6/radius 0.35, dark-grey extrude depth 0.15/angle -45) and removed with stroke_width=0, shadow_opacity=0, box_opacity=0, glow_intensity=0 or extrude_depth=0. Gradient fill: fill_type linear|radial with 2–4 fill_colors (evenly spaced; radial goes centre→edge), fill_type=solid removes it (the text colour is used again); passing only fill_colors turns on a linear gradient. A color with alpha 00 ("#FFFFFF00") plus a stroke gives hollow outline text. curve -1..1 bends the lines into an arc (1 = half circle arch, -1 = smile). case upper|lower|title converts letters when rendering (the stored content is unchanged; none = as typed). effect_id applies a word-art preset from library.list kind=text_effect FIRST (it writes fill, glow, extra_strokes, extrude and the stroke/shadow/color it uses — the rendered look comes only from the stored fields), so other parameters in the same call override it; effect_id "" or "none" removes the preset's fill/glow/extra outlines/extrusion. Captions: words (timings relative to the segment start) plus highlight_style color|box|scale|underline|karaoke highlight the spoken word (highlight_style=none removes it). Per-letter animations are set with text.set_glyph_animation.
+Changes the content and look of a text segment — the Text tab of the inspector (Basic: font, size, style, colour, case, alignment, spacing; Stroke; Extra outlines; Shadow; Background box; Glow; Gradient fill; 3D extrude; Curve; Word-art effect; caption highlight). Only the parameters you pass change. Units: size is CapCut's scale (15 = default, font height ≈ size/300 of the canvas height); letter_spacing and line_spacing are in em (0.1 = 10% of the font size) added to the normal spacing; stroke_width, shadow_blur and shadow_distance are 0..1 (stroke up to 0.25 em thick, shadow offset/blur up to 0.5 em); shadow_angle, fill_angle and extrude_angle are in degrees counter-clockwise from the right (-45 = down-right, -90 = downwards / top→bottom); box_radius 0..1 rounds the corners (1 = pill). Stroke, shadow, box, glow and extrude are enabled by setting any of their parameters (missing ones get defaults: black stroke width 0.3, black shadow opacity 0.6/blur 0.3/distance 0.15/angle -45, black box opacity 0.6/radius 0.2, glow in the text colour intensity 0.6/radius 0.35, dark-grey extrude depth 0.15/angle -45) and removed with stroke_width=0, shadow_opacity=0, box_opacity=0, glow_intensity=0 or extrude_depth=0. Gradient fill: fill_type linear|radial with 2–4 fill_colors (evenly spaced; radial goes centre→edge), fill_type=solid removes it (the text colour is used again); passing only fill_colors turns on a linear gradient. A color with alpha 00 ("#FFFFFF00") plus a stroke gives hollow outline text. curve -1..1 bends the lines into an arc (1 = half circle arch, -1 = smile). case upper|lower|title converts letters when rendering (the stored content is unchanged; none = as typed). effect_id applies a word-art preset from library.list kind=text_effect FIRST (it writes fill, glow, extra_strokes, extrude and the stroke/shadow/color it uses — the rendered look comes only from the stored fields), so other parameters in the same call override it; effect_id "" or "none" removes the preset's fill/glow/extra outlines/extrusion. Captions: words (timings relative to the segment start) plus highlight_style color|box|scale|underline|karaoke|pop|bounce|reveal|dim|glow|sweep_line|slide_box highlight the spoken word (highlight_style=none removes it). Per-letter animations are set with text.set_glyph_animation. Wave-4 word art (all optional; each group is enabled by any of its parameters and removed by its zero amount): fill_stops (hard-edged chrome/duotone gradients, up to 8 fill_colors); stroke_fill_* (gradient outline); pattern_* (procedural texture over the fill: stripes, checker, dots, halftone, hearts, stars, grain, glitter, holo, foil, brushed metal, marble, camo, galaxy, lava flow, aurora, rainbow…, pattern_speed animates the moving ones); bevel_* (emboss lighting; bevel_round + bevel_gloss = puffy glossy letters); inner_shadow_* and inner_glow_* (inside the letters); echo_* (stacked offset copies, retro 3D stacks / trails); distress_* (grunge, chalk, stamp, spray, scratch, worn); sparkle_* (star glints, sparkle_speed twinkles); drip_* (paint or slime drips); rough (hand-made wobble); pixelate (pixel-art blocks); box_* extras (gradient box, border, card shadow, one box per line, skew, padding, knockout stencil); highlight_text_color (letter colour of the active caption word). Highlight styles also include pop, bounce, reveal, dim, glow, sweep_line and slide_box.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
 | `segment_id` | string | yes |  |  | ID of the target segment (clip). Get it from project.get → tracks[].segments[].id. |
 | `align` | string | no |  | `left`, `center`, `right` | Horizontal alignment of lines within the text block. |
+| `bevel_angle` | number (degrees) | no |  | -180 … 180 | Direction the bevel light comes from, counter-clockwise from the right (135 = upper left, the default). |
+| `bevel_depth` | number | no |  | 0 … 1 | Bevel / emboss lighting: width of the lit edge 0..1 (1 = 0.25 em); 0 removes the bevel. |
+| `bevel_gloss` | number | no |  | 0 … 1 | Sharp specular highlight on the bevel (glossy plastic / puffy balloon look) 0..1. |
+| `bevel_highlight` | string | no |  |  | Bevel light colour #RRGGBB (default white; gold-ish for warm metal). |
+| `bevel_round` | boolean | no |  |  | Rounded pillow profile (puffy, inflated letters) instead of a flat chisel. |
+| `bevel_shade` | string | no |  |  | Bevel shade colour #RRGGBB (default black). |
+| `bevel_strength` | number | no |  | 0 … 1 | Contrast of the bevel light and shade 0..1 (default 0.8). |
 | `bold` | boolean | no |  |  | Bold style (a real bold face when the font has one, otherwise synthesised). |
+| `box_border_color` | string | no |  |  | Colour #RRGGBB of an outline drawn inside the edge of the background box. |
+| `box_border_width` | number | no |  | 0 … 1 | Box outline thickness 0..1 (1 = 0.25 em); 0 removes it. |
 | `box_color` | string | no |  |  | Background box colour #RRGGBB. Enables the box if it was off. |
+| `box_fill_angle` | number (degrees) | no |  | -360 … 360 | Direction of the box gradient, counter-clockwise from the right. |
+| `box_fill_colors` | string[] | no |  |  | 2–8 colours of a gradient background box (left→right unless box_fill_angle); [] removes the gradient. Enables the box if it was off. |
+| `box_knockout` | boolean | no |  |  | Cut the letters out of the box so the video shows through them (stencil look). |
 | `box_opacity` | number | no |  | 0 … 1 | Background box opacity 0..1; 0 removes the box. |
+| `box_pad` | number | no |  | 0 … 1 | Extra padding around the text inside the box 0..1 (1 = 0.5 em). |
+| `box_per_line` | boolean | no |  |  | One box per text line (ribbon / highlighter captions) instead of one box around the block. |
 | `box_radius` | number | no |  | 0 … 1 | Corner roundness 0..1 (fraction of half the box height; 1 = pill). |
+| `box_shadow_angle` | number (degrees) | no |  | -180 … 180 | Box shadow direction, counter-clockwise from the right (-45 = down-right). |
+| `box_shadow_blur` | number | no |  | 0 … 1 | Box shadow softness 0..1 (1 = 0.25 em). |
+| `box_shadow_color` | string | no |  |  | Colour #RRGGBB of a drop shadow under the background box (blur 0 = flat offset "card" shadow). |
+| `box_shadow_distance` | number | no |  | 0 … 1 | Box shadow offset 0..1 (1 = 0.5 em). |
+| `box_shadow_opacity` | number | no |  | 0 … 1 | Box shadow opacity 0..1; 0 removes it. |
+| `box_skew` | number | no |  | -1 … 1 | Slants the box into a parallelogram (-1..1; positive leans right) — sports and news lower thirds. |
 | `case` | string | no |  | `none`, `upper`, `lower`, `title` | Letter case conversion at render time: upper (ABC), lower (abc), title (Abc Def) or none (as typed). |
 | `color` | string | no |  |  | Text colour as #RRGGBB (or #RRGGBBAA; alpha 00 + a stroke = hollow text). |
 | `content` | string | no |  |  | New text content; \n starts a new line. Must not be empty. |
 | `curve` | number | no |  | -1 … 1 | Arc bend of every line: 0 = straight, 1 = half-circle arch (∩), -1 = half-circle smile (∪). |
+| `distress_amount` | number | no |  | 0 … 1 | How much is eroded 0..1; 0 removes the distress. |
+| `distress_scale` | number | no |  | 0 … 10 | Texture size multiplier (0 = 1). |
+| `distress_type` | string | no |  | `none`, `grunge`, `chalk`, `stamp`, `spray`, `scratch`, `worn` | Erodes the whole text with a texture: grunge (rough print), chalk (chalkboard), stamp (rubber stamp), spray (speckled spray paint), scratch (scratched lines), worn (faded vintage print); none removes it. |
+| `drip_amount` | number | no |  | 0 … 1 | Paint / slime drips hanging from the letters 0..1 (horror, slime, melting looks); 0 removes them. |
+| `drip_length` | number | no |  | 0 … 1 | Longest drip 0..1 (1 = 1.2 em; default 0.5). |
+| `echo_angle` | number (degrees) | no |  | -180 … 180 | Direction of the echo copies, counter-clockwise from the right (-45 = down-right). |
+| `echo_colors` | string[] | no |  |  | Echo: 1–6 colours #RRGGBB(AA) of offset copies of the letters stacked behind the text, nearest first (retro 70s/80s stacks, motion trails with fading alpha); [] removes the echo. |
+| `echo_distance` | number | no |  | 0 … 1 | Distance between echo copies 0..1 (1 = 0.5 em); 0 removes the echo. |
+| `echo_hollow` | boolean | no |  |  | Draw the echo copies as thin outlines instead of solid shapes. |
 | `effect_id` | string | no |  |  | Word-art preset from library.list kind=text_effect (e.g. "fx_gold_metal", "fx_neon_outline"), applied before the other parameters; "" or "none" removes the preset's fill/glow/extra outlines/extrusion. |
 | `extra_strokes` | object[] | no |  |  | Additional outlines OUTSIDE the main stroke, inner → outer, each {color:"#RRGGBB", width:0..1} (width like stroke_width); at most 4; [] removes them. |
 | `extrude_angle` | number (degrees) | no |  | -180 … 180 | Extrusion direction, counter-clockwise from the right: -45 = down-right (default), -90 = straight down. |
@@ -7143,24 +7769,49 @@ Changes the content and look of a text segment — the Text tab of the inspector
 | `extrude_depth` | number (em) | no |  | 0 … 1 | Extrusion depth 0..1 em; 0 removes it. |
 | `fill_angle` | number (degrees) | no |  | -360 … 360 | Direction of a linear gradient, counter-clockwise from the right: 0 = left→right, -90 = top→bottom, 90 = bottom→top. |
 | `fill_colors` | string[] | no |  |  | 2–4 gradient colour stops #RRGGBB(AA), evenly spaced: first at the start (linear) or centre (radial), last at the end/edge. |
+| `fill_stops` | number[] | no |  |  | Positions 0..1 of the fill_colors stops (one per colour, ascending; two equal neighbours make a hard edge such as a chrome horizon); [] = evenly spaced. |
 | `fill_type` | string | no |  | `solid`, `linear`, `radial` | Fill of the letters: solid (the text colour; removes a gradient), linear or radial gradient through fill_colors. |
-| `font` | string | no |  |  | Font id from library.list kind=font (e.g. "go_sans", "go_mono", "sys_arial"). Characters the font lacks (Cyrillic, CJK…) fall back to system fonts automatically. |
+| `font` | string | no |  |  | Font id from library.list kind=font (e.g. "go_sans", "go_mono", "sys_arial", or a downloaded font such as "montserrat" — install free fonts with font.catalog + font.install). Characters the font lacks (Cyrillic, CJK…) fall back to system fonts automatically. |
 | `glow_color` | string | no |  |  | Glow (soft coloured halo) colour #RRGGBB. Enables the glow if it was off. |
 | `glow_intensity` | number | no |  | 0 … 1 | How strong/opaque the glow is near the letters, 0..1; 0 removes the glow. |
 | `glow_radius` | number | no |  | 0 … 1 | Glow size 0..1 (1 ≈ a halo reaching 1.3 em beyond the letters). |
 | `highlight_color` | string | no |  |  | Highlight colour #RRGGBB (default #FFD600). Enables a color highlight if none was set. |
 | `highlight_scale` | number | no |  | 0.5 … 3 | Growth of the active word for highlight_style=scale (default 1.15). |
-| `highlight_style` | string | no |  | `none`, `color`, `box`, `scale`, `underline`, `karaoke` | How the spoken word is highlighted when words are set: color (word turns highlight_color), box (rounded box behind it), scale (word grows), underline, karaoke (fills left→right as spoken); none removes the highlight. |
+| `highlight_style` | string | no |  | `none`, `color`, `box`, `scale`, `underline`, `karaoke`, `pop`, `bounce`, `reveal`, `dim`, `glow`, `sweep_line`, `slide_box` | How the spoken word is highlighted when words are set: color (word turns highlight_color), box (rounded box behind it), scale (word grows), underline, karaoke (fills left→right as spoken), pop (springs up with an overshoot), bounce (hops once), reveal (later words hidden until spoken), dim (later words dimmed), glow (halo behind the word), sweep_line (underline grows while spoken), slide_box (box glides from word to word); none removes the highlight. |
+| `highlight_text_color` | string | no |  |  | Colour #RRGGBB of the active word's letters for the box / slide_box / underline / sweep_line / glow highlight styles (e.g. black text on a yellow box); "" keeps the text colour. |
+| `inner_glow_color` | string | no |  |  | Inner glow colour #RRGGBB: light seeping in from the letter edges (neon tube, lit-from-within). Enables it if it was off. |
+| `inner_glow_intensity` | number | no |  | 0 … 1 | Inner glow strength 0..1; 0 removes it. |
+| `inner_glow_radius` | number | no |  | 0 … 1 | How far the inner glow reaches into the letters 0..1 (1 = 0.3 em). |
+| `inner_shadow_angle` | number (degrees) | no |  | -180 … 180 | Inner shadow offset direction, counter-clockwise from the right (-60 = down, slightly right). |
+| `inner_shadow_blur` | number | no |  | 0 … 1 | Inner shadow softness 0..1 (1 = 0.25 em). |
+| `inner_shadow_color` | string | no |  |  | Inner shadow colour #RRGGBB: a shadow cast INSIDE the letters (debossed / cut-out look). Enables it if it was off. |
+| `inner_shadow_distance` | number | no |  | 0 … 1 | Inner shadow offset 0..1 (1 = 0.25 em). |
+| `inner_shadow_opacity` | number | no |  | 0 … 1 | Inner shadow opacity 0..1; 0 removes it. |
 | `italic` | boolean | no |  |  | Italic style (real italic face or a synthetic slant). |
 | `letter_spacing` | number (em) | no |  | -0.5 … 2 | Extra space between characters in em (0 = normal). |
 | `line_spacing` | number (em) | no |  | -0.5 … 3 | Extra space between lines in em (0 = normal, 0.5 = half a line more). |
+| `pattern_angle` | number (degrees) | no |  | -360 … 360 | Rotates the pattern from its default orientation. |
+| `pattern_colors` | string[] | no |  |  | Pattern colours #RRGGBB(AA); their meaning depends on pattern_type (see its list); omitted = the type's defaults, "" = use the text fill. |
+| `pattern_opacity` | number | no |  | 0 … 1 | How strongly the pattern covers the fill, 0..1 (0 = fully, same as 1). |
+| `pattern_scale` | number | no |  | 0 … 20 | Pattern feature size multiplier (1 = default size relative to the font, 2 = twice as big; 0 = default). |
+| `pattern_speed` | number | no |  | -10 … 10 | Animation speed of moving patterns (holo shimmer, glitter twinkle, flowing lava, rainbow sweep, scrolling stripes…), cycles per second; 0 = still. |
+| `pattern_type` | string | no |  | `none`, `stripes`, `pinstripe`, `checker`, `gingham`, `plaid`, `dots`, `halftone`, `hearts`, `stars`, `grain`, `static`, `scanlines`, `brushed`, `foil`, `carbon`, `glitter`, `holo`, `rainbow`, `aurora`, `flow`, `galaxy`, `marble`, `wood`, `camo`, `leopard`, `zebra`, `frost`, `grid` | Procedural texture painted over the letter fill: stripes (diagonal two-colour stripes (candy cane / barber pole); colors [stripe, gap] (gap defaults to the fill); speed scrolls them); pinstripe (thin vertical pinstripes over the fill; colors [line]); checker (checkerboard (racing flag); colors [a, b]); gingham (picnic gingham: translucent crossing bands, darker where they overlap; colors [band, background]); plaid (woven tartan with a twill texture; colors [main, dark band, secondary, thin accent]); dots (polka dots on a staggered grid; colors [dot, background]); halftone (comic halftone dots growing from the top to the bottom of the text; colors [dot] (default: a darker shade of the fill)); hearts (tiny repeating hearts (kawaii, love); colors [heart, background]); stars (tiny repeating five-point stars; colors [star, background]); grain (film grain / risograph noise that roughens flat colour; speed makes it flicker); static (black-and-white TV static noise; speed animates it); scanlines (dark horizontal CRT scanlines; speed rolls them); brushed (brushed-metal streaks along the pattern angle (shades the fill)); foil (crinkled metal foil facets of random brightness (gold leaf, tinsel); speed makes facets glint); carbon (woven carbon fibre; colors [dark, highlight]); glitter (glitter flakes of varying brightness with bright sparkles; colors [glitter] (default: the fill); speed twinkles); holo (holographic / iridescent pastel rainbow with a soft sheen; colors = palette (2–8); speed shimmers); rainbow (saturated rainbow bands; speed sweeps them across the letters); aurora (northern-lights curtains of green, teal and violet; colors = palette; speed drifts them); flow (flowing lava / fire plasma; colors = palette from dark to bright; speed makes it flow); galaxy (deep-space nebula with tiny stars; colors = palette; speed twinkles the stars); marble (polished marble with thin veins; colors [stone, vein] (stone defaults to the fill)); wood (wood grain rings; colors [light, dark]); camo (camouflage blobs in four colours; colors [1..4]); leopard (leopard rosettes; colors [fur, ring, spot centre] (fur defaults to the fill)); zebra (wavy zebra stripes; colors [stripe, background]); frost (frosted ice cracks and rime; colors [frost]); grid (glowing synthwave grid lines; colors [line]; speed scrolls the grid). none removes it. |
+| `pixelate` | number | no |  | 0 … 1 | Blocky pixel-art rendering 0..1 (1 = 0.2 em pixels); 0 = smooth. |
+| `rough` | number | no |  | 0 … 1 | Hand-made wobble: shaky outlines and slightly tilted letters 0..1 (marker, crayon, doodle looks); 0 = clean. |
 | `shadow_angle` | number (degrees) | no |  | -180 … 180 | Shadow direction, counter-clockwise from the right: -45 = down-right, 90 = up. |
 | `shadow_blur` | number | no |  | 0 … 1 | Shadow softness 0..1 (1 = 0.5 em blur radius). |
 | `shadow_color` | string | no |  |  | Shadow colour #RRGGBB. Enables the shadow if it was off. |
 | `shadow_distance` | number | no |  | 0 … 1 | Shadow offset 0..1 (1 = 0.5 em). |
 | `shadow_opacity` | number | no |  | 0 … 1 | Shadow opacity 0..1; 0 removes the shadow. |
 | `size` | number | no |  | 1 … 300 | Text size on CapCut's scale (default 15 ≈ 1/20 of the canvas height). |
+| `sparkle_amount` | number | no |  | 0 … 1 | How many four-point star glints sit on the letters 0..1; 0 removes them. |
+| `sparkle_color` | string | no |  |  | Colour of the star glints #RRGGBB (default white). Enables sparkles if they were off. |
+| `sparkle_size` | number | no |  | 0 … 1 | Star size 0..1 (1 = 0.6 em rays). |
+| `sparkle_speed` | number | no |  | 0 … 10 | Twinkles per second; 0 = still stars. |
 | `stroke_color` | string | no |  |  | Outline colour #RRGGBB. Enables the stroke if it was off. |
+| `stroke_fill_angle` | number (degrees) | no |  | -360 … 360 | Direction of a linear stroke gradient, counter-clockwise from the right (0 = left→right, -90 = top→bottom). |
+| `stroke_fill_colors` | string[] | no |  |  | 2–8 colour stops #RRGGBB(AA) of the stroke gradient; passing them alone turns on a linear stroke gradient (and a stroke if there was none). |
+| `stroke_fill_type` | string | no |  | `solid`, `linear`, `radial` | Gradient along the main stroke: linear or radial through stroke_fill_colors; solid removes it (stroke_color is used again). |
 | `stroke_width` | number | no |  | 0 … 1 | Outline thickness 0..1 (1 = 0.25 em); 0 removes the stroke. |
 | `underline` | boolean | no |  |  | Underline every line. |
 | `words` | object[] | no |  |  | Caption word timings [{text, start_us, end_us}] in microseconds relative to the segment start (normally written by captions.auto); matched in order onto the words of the text; [] removes them. |
@@ -7225,6 +7876,30 @@ Example — Back to a plain solid fill:
 
 ```json
 {"extrude_depth":0,"fill_type":"solid","glow_intensity":0,"project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
+```
+
+Example — Glossy puffy glitter letters with twinkling stars:
+
+```json
+{"bevel_depth":0.8,"bevel_gloss":0.8,"bevel_round":true,"pattern_colors":["#E2B23C"],"pattern_speed":0.8,"pattern_type":"glitter","project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f","sparkle_amount":0.5,"sparkle_speed":1.2}
+```
+
+Example — Retro 70s stack on a slanted card:
+
+```json
+{"box_color":"#1B1B1B","box_opacity":1,"box_pad":0.2,"box_shadow_blur":0,"box_shadow_opacity":1,"box_skew":0.3,"echo_angle":-45,"echo_colors":["#F7B32B","#F26B1D","#C0392B"],"echo_distance":0.16,"project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
+```
+
+Example — Chrome with a hard horizon:
+
+```json
+{"fill_angle":-90,"fill_colors":["#FFFFFF","#5B86B5","#2A1E14","#F3D9B5"],"fill_stops":[0,0.5,0.5,1],"project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
+```
+
+Example — Black text on a yellow box under the spoken word:
+
+```json
+{"highlight_color":"#FFE14D","highlight_style":"slide_box","highlight_text_color":"#111111","project_id":"prj_1a2b3c4d5e6f","segment_id":"seg_9a8b7c6d5e4f"}
 ```
 
 ## Timeline
@@ -8124,10 +8799,10 @@ Puts the same transition between every pair of touching clips on a track (defaul
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
-| `direction` | string | no |  | `left`, `right`, `up`, `down` | Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*) it selects the sibling id. |
+| `direction` | string | no |  | `left`, `right`, `up`, `down` | Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*, whip_*) it selects the sibling id. |
 | `duration_us` | integer (microseconds) | no |  | 100000 … 10000000 | Transition length; clamped per pair. See the description for the default. |
 | `segment_id` | string | no |  |  | Copy type and duration from this clip's transition (the selected transition in the UI). |
-| `softness` | number | no |  | 0 … 1 | Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, checkerboard, luma/ink dissolves, burns, light sweep). |
+| `softness` | number | no |  | 0 … 1 | Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, shape reveals, checkerboard, luma/ink dissolves, burns, light sweep). |
 | `track_id` | string | no |  |  | Track to process (main or overlay video track). Defaults to the main video track. |
 | `type` | string | no |  |  | Transition id from library.list kind=transition. See the description for the default. |
 
@@ -8194,9 +8869,9 @@ Adds or replaces the transition between a clip and the NEXT clip on the same tra
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
 | `segment_id` | string | yes |  |  | ID of the target segment (clip). Get it from project.get → tracks[].segments[].id. |
 | `type` | string | yes |  |  | Transition id from library.list kind=transition, e.g. "mix", "black_fade", "wipe_left", "cube_turn_left", "iris_heart". A stored type with options ("blinds_h?direction=up") is accepted too. |
-| `direction` | string | no |  | `left`, `right`, `up`, `down` | Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*) it selects the sibling id. |
+| `direction` | string | no |  | `left`, `right`, `up`, `down` | Optional direction for transitions that have one (library item params.directions): the way the motion travels. For directional families (wipe_*, slide_*, push_*, cube_turn_*, whip_*) it selects the sibling id. |
 | `duration_us` | integer (microseconds) | no | `500000` | 100000 … 10000000 | Transition length (default 0.5 s). Clamped to half of the shorter neighbouring clip. |
-| `softness` | number | no |  | 0 … 1 | Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, checkerboard, luma/ink dissolves, burns, light sweep). |
+| `softness` | number | no |  | 0 … 1 | Optional edge softness 0..1 (0 = hard edge, 1 = very soft) for mask transitions with params.softness=true (wipes, irises, shape reveals, checkerboard, luma/ink dissolves, burns, light sweep). |
 
 **Returns:** {segment_id, next_segment_id, transition: {type, duration_us}, id, name, direction?, softness?, options: {directions, default_direction, softness, default_softness, direction_by_sibling}, clamped, max_duration_us}.
 

@@ -1,9 +1,14 @@
 <!--meta {"title":"Effects, transitions & colour","nav":"Effects & colour","order":90,"description":"Add transitions between clips, video effects and filters, grade colour with basic sliders, HSL and curves, animate anything with keyframes and save your favourite looks to My kit.","group":"Creating"} -->
 <p class="lead">Transitions smooth out cuts, effects add movement and atmosphere, filters and colour tools set the mood. Everything in this page is original to Kadr and rendered on your computer.</p>
 
+<h2 id="hover-preview">See it move before you add it</h2>
+<p>Hover over a card for a moment and its picture starts to <strong>play</strong>: a transition goes from a sunny landscape to a night city, an effect runs on a sample picture, a filter sweeps from <em>before</em> to <em>after</em>, and a clip animation moves a small clip on a dark stage (the dashed outline marks where the clip ends up). Move the mouse away and the still picture comes back.</p>
+<p>Previews work everywhere you choose a look: the Transitions, Effects, Filters, Text and Stickers tabs (including generated backgrounds), the Animation tab, Text → Effects and Text → Animate, the replacement grids in the Transition, Effect and Filter panels, caption styles and My kit. Items that don't move — still stickers, fonts, voice effects — simply show their picture.</p>
+<div class="callout note"><p>Kadr draws the previews itself the first time you hover a card and keeps them, so the first hover can take a moment and later ones are instant. If Windows animations are switched off (<strong>Settings → Accessibility → Visual effects → Animation effects</strong>), previews stay still too.</p></div>
+
 <h2 id="transitions">Transitions</h2>
 <figure><img src="{{root}}assets/img/guide/transitions.webp" alt="The Transitions tab with preview cards, the player, and the Transition panel on the right with duration, Apply to all, Remove and a grid of replacements" width="1280" height="428" loading="lazy"><figcaption>The Transitions tab and the Transition panel of a selected transition.</figcaption></figure>
-<p>A transition plays between two clips that touch each other on the same track (usually the main track). There are 68 of them, from simple fades and slides to 3D cubes, iris shapes, light leaks and glitches.</p>
+<p>A transition plays between two clips that touch each other on the same track (usually the main track). There are 221 of them in 19 category tabs — from simple fades and slides to 3D cubes, iris shapes, light leaks and glitches, plus wipes (torn paper, paint strokes, zigzags), zooms, spins and vortexes, liquid and ink, particles and glass shatter, film and retro looks and split screens. Whip pans, wipes, slides, pushes and many others have a <strong>Direction</strong>; transitions with a mask edge also have a <strong>Softness</strong>.</p>
 <h3 id="add-transition">Add a transition</h3>
 <ol>
   <li>On the timeline, click the <strong>left</strong> clip of the two clips you want to join.</li>
@@ -16,17 +21,17 @@
 
 <h2 id="effects">Video effects</h2>
 <figure><img src="{{root}}assets/img/guide/effects.webp" alt="The Effects tab with categories, the player showing a bokeh effect, and the Effect panel with Intensity, Speed, Density and Size sliders" width="1280" height="428" loading="lazy"><figcaption>An effect layer selected: its own sliders appear in the inspector.</figcaption></figure>
-<p>The <strong>Effects</strong> tab has 56 effects in categories such as Party, Retro, Glitch, Lens, Light, Sparkle, Comics, Nature and Split screen. Use them in two ways:</p>
+<p>The <strong>Effects</strong> tab has 195 effects in 20 categories: Party, Retro, Glitch, Lens, Light, Sparkle, Comics, Nature, Split and more, plus Motion (shutter, dolly zoom, jelly wobble), Frame (instant photo, viewfinder, rounded card), Stylize (pixel sort, jigsaw, 8-bit), Weather (raindrops on glass, blizzard, thunderstorm), Dreamy (fireflies, falling petals, aurora) and Color (colour pop, channel swap, solarize). Use them in two ways:</p>
 <ul>
   <li><strong>As a layer:</strong> click <strong>+</strong> (or drag the card to the timeline). The effect goes on its own effect track at the playhead and affects <em>everything below it</em> for as long as the effect clip lasts. Drag its edges to change when it starts and ends.</li>
   <li><strong>On one clip:</strong> select a clip, click an effect card to highlight it, then click <strong>Apply to clip</strong> in the hint bar. Only that clip gets the effect; you'll find it under <strong>Effects</strong> in the clip's Video tab.</li>
 </ul>
-<p>Select the effect (the layer, or the clip's effect list) to tune it: every effect has its own sliders — <strong>Intensity</strong>, <strong>Speed</strong>, size, density and so on. The circular-arrow button resets them, the bin removes the effect.</p>
+<p>Select the effect (the layer, or the clip's effect list) to tune it: every effect has its own sliders — <strong>Intensity</strong>, <strong>Speed</strong> and up to four of its own, such as density, size, fog or wind. The circular-arrow button resets them, the bin removes the effect.</p>
 
 <h2 id="filters">Filters</h2>
 <div class="grid-2">
   <div>
-    <p>Filters change the colours of the picture in one click — warm, cool, film, black-and-white, vintage and 70 more, in 18 categories.</p>
+    <p>Filters change the colours of the picture in one click — 227 of them in 25 categories: warm, cool, film, black-and-white and night looks, plus Cinematic grades, Vintage film stocks, soft Aesthetic pastels, Mood, Seasons, two-colour Duotone, Special looks such as night vision, and Portrait filters that keep skin tones natural.</p>
     <ul>
       <li><strong>On one clip:</strong> select the clip, click a filter card, then <strong>Apply “…” to clip</strong>.</li>
       <li><strong>On a stretch of the video:</strong> click <strong>+</strong> on a card. A filter layer is added at the playhead and colours everything below it.</li>
@@ -74,11 +79,11 @@
 <div class="callout tip"><p><strong>Grade several clips at once</strong> with an adjustment layer: open the library's <strong>Adjustment</strong> tab and add <strong>Custom adjustment</strong>. It appears on its own track and every colour setting you give it affects all tracks below it for its duration.</p></div>
 
 <h2 id="animations">Clip animations</h2>
-<p>The <strong>Animation</strong> tab of the inspector makes a clip move as it appears or disappears. It works for videos, photos, stickers and text:</p>
+<p>The <strong>Animation</strong> tab of the inspector makes a clip move as it appears or disappears. There are 310 animations, and all of them work for videos, photos, stickers and text:</p>
 <ul>
-  <li><strong>In</strong> and <strong>Out</strong> — fades, slides, zooms, spins and more at the start or end of the clip;</li>
-  <li><strong>Combo</strong> — an in-and-out pair in one (it replaces separate In/Out animations);</li>
-  <li><strong>Loop</strong> — a movement that repeats for the whole clip, such as floating, swinging or pulsing.</li>
+  <li><strong>In</strong> (105) and <strong>Out</strong> (105) — fades, slides, zooms, spins, blinds and slats, doors that swing open on a hinge, shine sweeps, RGB splits, motion blur and more at the start or end of the clip;</li>
+  <li><strong>Combo</strong> (53) — an in-and-out pair in one, such as a coin spin, a slot-machine roll or a float away (it replaces separate In/Out animations);</li>
+  <li><strong>Loop</strong> (47) — a movement that repeats for the whole clip, such as floating, swinging, pulsing, a gentle wave or a buzzing RGB shift.</li>
 </ul>
 <p>Click a card to apply it and set the <strong>Duration</strong> slider above the grid.</p>
 

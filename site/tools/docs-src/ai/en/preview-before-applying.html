@@ -1,0 +1,71 @@
+<!--meta {"title":"Choose a transition and an effect by looking at them","nav":"Pick by looking","order":397,"description":"Narrow Kadr's 221 transitions and 195 effects to a few candidates with library.list, look at how each one plays with library.preview contact sheets, apply the best with its direction, softness or sliders, and confirm it in the edit.","group":"Recipes","summary":"Claude shortlists transitions and effects, actually looks at how each one moves, picks the one that suits your footage and checks it in your edit.","time":"~1 min","needs":"A Kadr project with two clips that touch","commands":["library.list","library.preview","transition.set","preview.contact_sheet","effect.add","preview.frame"]} -->
+<p class="lead">You get a transition and an effect chosen by eye, not by name. Claude narrows the library to a few candidates, renders each one as a contact sheet to see how it moves, applies the best one with the right direction and sliders, and checks the result in your own edit.</p>
+<ul>
+  <li><strong>Time:</strong> ~1 min</li>
+  <li><strong>You need:</strong> A Kadr project with two clips that touch</li>
+  <li><strong>Main commands:</strong> <code class="cmd">library.list</code>, <code class="cmd">library.preview</code>, <code class="cmd">transition.set</code>, <code class="cmd">preview.contact_sheet</code>, <code class="cmd">effect.add</code>, <code class="cmd">preview.frame</code></li>
+</ul>
+
+<h2 id="ask-claude">Ask Claude</h2>
+<blockquote><p>In my Kadr project "Travel teaser", pick a calm, flowing transition for the cut between the two clips — look at a few liquid transitions with library_preview before you decide, and tell me why you chose it. Then add a weather effect over the second clip that suits a rainy evening, again comparing a couple of options visually. Show me a contact sheet of the cut when you're done.</p></blockquote>
+
+<h2 id="steps">Step by step</h2>
+<div class="callout note"><p>Each step shows the same calls twice. The <strong>kadrctl</strong> tab is for PowerShell: a line that starts with <code>kadrctl --%</code> passes JSON, and without <code>--%</code> the same line also works in Command Prompt. The <strong>MCP</strong> tab is the tool call an agent sends — the tool name and its arguments. Ids such as <code>prj_…</code> and <code>seg_…</code> come from the results of earlier steps, so yours will differ. In this example the project holds two generated 3-second clips: a sunset mesh gradient and a city-lights bokeh.</p></div>
+<ol class="steps">
+<li>
+<h3 id="shortlist">Shortlist candidates</h3>
+<p>A category tab is the quickest filter: <em>Liquid</em> has 14 transitions. The descriptions say what each one looks like and when to use it.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run library.list --kind transition --category Liquid</code></pre><pre data-lang="mcp"><code>{"name": "library_list", "arguments": {"kind": "transition", "category": "Liquid"}}</code></pre></div>
+<pre><code class="lang-text">tide_wipe     Tide          A rolling wave front with a sparkling white foam crest washes the new clip in. Great for beach, travel and summer footage…
+ink_bleed     Ink bleed     Dark ink blots spread with organic tendrils from a few drops; the ink clears behind its front to reveal the new clip…
+paint_splash  Paint splash  A spiky paint splash with flying droplets bursts from near the centre and floods into the new clip…</code></pre>
+</li>
+<li>
+<h3 id="look">Look at each one</h3>
+<div class="callout note"><p>Through MCP, <code>library_preview</code> comes back as an image, so Claude actually sees the motion. With <code>kadrctl</code> or REST you get the same PNG as base64 in <code>png_base64</code>.</p></div>
+<p>A one-row strip of six tiles is enough to compare. The tiles run from clip A (a sunny landscape) to clip B (a night city).</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run library.preview --kind transition --id tide_wipe --frames 6 --columns 6 --tile_width 160
+kadrctl run library.preview --kind transition --id ink_bleed --frames 6 --columns 6 --tile_width 160
+kadrctl run library.preview --kind transition --id paint_splash --frames 6 --columns 6 --tile_width 160</code></pre><pre data-lang="mcp"><code>{"name": "library_preview", "arguments": {"kind": "transition", "id": "tide_wipe", "frames": 6, "columns": 6, "tile_width": 160}}
+{"name": "library_preview", "arguments": {"kind": "transition", "id": "ink_bleed", "frames": 6, "columns": 6, "tile_width": 160}}
+{"name": "library_preview", "arguments": {"kind": "transition", "id": "paint_splash", "frames": 6, "columns": 6, "tile_width": 160}}</code></pre></div>
+<p>Tide sweeps a wavy foam line across the frame; Ink bleed grows dark blots that would muddy a bright sunset; Paint splash is loud. For a calm travel teaser Claude picks <strong>Tide</strong>.</p>
+</li>
+<li>
+<h3 id="options">Read its options</h3>
+<p>The item from step 1 lists what <code>tide_wipe</code> accepts: <code>"directions": ["right","left","down","up"]</code>, <code>"softness": true</code>, <code>"default_softness": 0.2</code>. A wave coming in from the right reads as forward motion, and a slightly softer edge suits the gradient.</p>
+</li>
+<li>
+<h3 id="apply">Apply it to the cut</h3>
+<p>The transition goes on the <strong>left</strong> clip of the cut. <code>direction</code> is the way the motion travels.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run transition.set --project_id prj_e21b467917e3 --segment_id seg_3ccd6c9e2cbe --type tide_wipe --duration_us 0.8s --direction left --softness 0.3</code></pre><pre data-lang="mcp"><code>{"name": "transition_set", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_3ccd6c9e2cbe", "type": "tide_wipe", "duration_us": 800000, "direction": "left", "softness": 0.3}}</code></pre></div>
+<pre><code class="lang-text">type tide_wipe?direction=left&amp;softness=0.3   duration_us 800000   clamped false   max_duration_us 1500000</code></pre>
+</li>
+<li>
+<h3 id="confirm">Check it in the edit</h3>
+<p>The library preview used sample pictures; now look at the real cut. Four tiles across the 0.8 s around the cut at 3 s:</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run preview.contact_sheet --project_id prj_e21b467917e3 --start_us 2.6s --end_us 3.4s --count 4 --columns 4 --tile_width 240</code></pre><pre data-lang="mcp"><code>{"name": "preview_contact_sheet", "arguments": {"project_id": "prj_e21b467917e3", "start_us": 2600000, "end_us": 3400000, "count": 4, "columns": 4, "tile_width": 240}}</code></pre></div>
+<p>At 2.7, 2.9, 3.1 and 3.3 s the foam line travels from the right edge to the left, uncovering the city lights.</p>
+</li>
+<li>
+<h3 id="effect">Do the same for an effect</h3>
+<p><em>Weather</em> has 8 effects. Their items list the sliders in <code>params.schema</code> — <code>rain_glass</code> has <code>density</code> and <code>fog</code> besides <code>intensity</code> and <code>speed</code>. Look at it, then add it over the second clip with denser drops and less fog, and check one frame.</p>
+<div class="code-tabs"><pre data-lang="kadrctl"><code>kadrctl run library.list --kind effect --category Weather
+kadrctl run library.preview --kind effect --id rain_glass --frames 4 --columns 4 --tile_width 200
+kadrctl --% run effect.add --project_id prj_e21b467917e3 --effect_id rain_glass --at_us 3s --duration_us 3s --params "{\"density\":0.7,\"fog\":0.3}"
+kadrctl run preview.frame --project_id prj_e21b467917e3 --time_us 4.5s --width 640</code></pre><pre data-lang="mcp"><code>{"name": "library_list", "arguments": {"kind": "effect", "category": "Weather"}}
+{"name": "library_preview", "arguments": {"kind": "effect", "id": "rain_glass", "frames": 4, "columns": 4, "tile_width": 200}}
+{"name": "effect_add", "arguments": {"project_id": "prj_e21b467917e3", "effect_id": "rain_glass", "at_us": 3000000, "duration_us": 3000000, "params": {"density": 0.7, "fog": 0.3}}}
+{"name": "preview_frame", "arguments": {"project_id": "prj_e21b467917e3", "time_us": 4500000, "width": 640}}</code></pre></div>
+<p>The effect lands on its own effect track (<code>segment.effect</code> = <code>{"id": "rain_glass", "params": {"density": 0.7, "fog": 0.3, "intensity": 1, "speed": 1}}</code>) and the frame shows raindrops on glass over the city lights.</p>
+</li>
+</ol>
+
+<h2 id="variations">Variations</h2>
+<ul>
+  <li><strong>Clip animations:</strong> <code>kind: "animation"</code> (categories In, Out, Combo, Loop), then <code class="cmd">animation.set</code>. Use <code>frames: 8, columns: 4</code> for longer moves.</li>
+  <li><strong>Text:</strong> <code>text_template</code>, <code>text_effect</code> and <code>text_animation</code> render sample text; apply with <code class="cmd">text.add</code>, <code class="cmd">text.apply_effect</code> or <code class="cmd">text.set_glyph_animation</code>.</li>
+  <li><strong>Filters:</strong> the tiles show a before/after divider, which makes subtle grades easy to compare side by side.</li>
+  <li><strong>Captions:</strong> <code>caption_style</code> shows the word highlight moving through a sample caption.</li>
+</ul>
+<p>More about ids, the <code>preview</code> field and options in <a href="{{root}}{{lang_root}}docs/ai/library.html">Library, previews and fonts</a>.</p>

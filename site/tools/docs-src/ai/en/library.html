@@ -1,0 +1,142 @@
+<!--meta {"title":"Library, previews and fonts","nav":"Library & fonts","order":215,"description":"How an agent finds transitions, effects, filters, animations, text looks, stickers and generated media in Kadr's library, looks at them with library.preview before choosing, installs free fonts and uses the word-art fields of TextStyle.","group":"Guides"} -->
+<p class="lead">Everything an agent can add to a video — transitions, effects, filters, animations, text looks, stickers, generated backgrounds, fonts, sounds — comes from the built-in library. Discover ids with <code class="cmd">library.list</code>, <em>look</em> at the candidates with <code class="cmd">library.preview</code>, then apply the one that fits. Never guess an id.</p>
+
+<h2 id="kinds">What is in the library</h2>
+<table>
+  <thead><tr><th><code>kind</code></th><th>Items</th><th>Use the id with</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>transition</code></td><td>221 in 19 tabs</td><td><code class="cmd">transition.set</code> <code>type</code>, <code class="cmd">transition.apply_all</code></td><td>Tabs include Wipe, Zoom, Spin, Liquid, Particles, Film, Retro, Split; directional families such as <code>whip_*</code>, <code>wipe_*</code>, <code>slide_*</code>; options in <code>params.directions</code> / <code>params.softness</code>.</td></tr>
+    <tr><td><code>effect</code></td><td>195 in 20 tabs</td><td><code class="cmd">effect.add</code>, <code class="cmd">effect.apply</code>, <code class="cmd">effect.set_params</code></td><td>Every effect has <code>intensity</code> and <code>speed</code>; most add 1–4 named sliders listed in <code>params.schema</code> and in the description.</td></tr>
+    <tr><td><code>filter</code></td><td>227 in 25 tabs</td><td><code class="cmd">filter.add</code>, <code class="cmd">filter.apply</code></td><td>New tabs Cinematic, Vintage, Aesthetic, Mood, Seasons, Duotone, Special; Portrait looks keep skin tones natural.</td></tr>
+    <tr><td><code>animation</code></td><td>310: 105 in, 105 out, 53 combo, 47 loop</td><td><code class="cmd">animation.set</code> <code>kind</code> + <code>id</code></td><td>All of them work on video, photo, sticker and text segments.</td></tr>
+    <tr><td><code>text_template</code></td><td>175 in 22 tabs</td><td><code class="cmd">text.add</code> <code>template_id</code></td><td>Templates use built-in fonts, so they never need a download.</td></tr>
+    <tr><td><code>text_effect</code></td><td>114 in 16 tabs</td><td><code class="cmd">text.apply_effect</code></td><td>Word art; writes fill, outlines, glow, 3D and the <a href="#text-style">word-art fields</a> into the style.</td></tr>
+    <tr><td><code>text_animation</code></td><td>137: 55 in, 45 out, 37 loop</td><td><code class="cmd">text.set_glyph_animation</code></td><td>Per letter / word / line, e.g. <code>in_decrypt</code>, <code>in_split_flap</code>, <code>in_terminal</code>, <code>loop_neon_buzz</code>.</td></tr>
+    <tr><td><code>caption_style</code></td><td>55 in 12 tabs</td><td><code class="cmd">captions.set_style</code></td><td>Highlight styles now include <code>pop</code>, <code>bounce</code>, <code>reveal</code>, <code>dim</code>, <code>glow</code>, <code>sweep_line</code>, <code>slide_box</code>.</td></tr>
+    <tr><td><code>sticker</code></td><td>394 in 25 tabs, 73 animated</td><td><code class="cmd">sticker.add</code></td><td>See <a href="#stickers">animated stickers</a>.</td></tr>
+    <tr><td><code>generated</code></td><td>98 presets of 22 kinds</td><td><code class="cmd">media.generate</code> <code>preset_id</code></td><td>See <a href="#generated">generated media</a>.</td></tr>
+    <tr><td><code>font</code></td><td>4 built-in + this computer's + installed</td><td><code class="cmd">text.update</code> <code>font</code></td><td>More with <code class="cmd">font.catalog</code> + <code class="cmd">font.install</code> — see <a href="#fonts">fonts</a>.</td></tr>
+    <tr><td><code>sound_effect</code>, <code>voice_effect</code></td><td>47, 25</td><td><code class="cmd">sfx.add</code>, <code class="cmd">segment.set_audio</code> <code>voice_effect</code></td><td>Static items (no preview).</td></tr>
+  </tbody>
+</table>
+
+<h2 id="find">Find candidates</h2>
+<p><code class="cmd">library.list</code> takes a <code>kind</code>, an optional <code>category</code> (a tab name from the result's <code>categories</code>) and an optional <code>query</code> that searches names, ids, categories and descriptions. Narrow the list instead of reading 300 items: descriptions are written for agents — what the item looks like and when to use it.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "library_list", "arguments": {"kind": "transition", "category": "Liquid"}}
+{"name": "library_list", "arguments": {"kind": "effect", "query": "rain"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run library.list --kind transition --category Liquid
+kadrctl run library.list --kind effect --query rain</code></pre></div>
+<pre><code class="lang-text">tide_wipe   Tide        A rolling wave front with a sparkling white foam crest washes the new clip in…
+                        params: directions [right left down up], softness true, default_softness 0.2
+paint_drip  Paint drip  The new clip pours down from the top like thick glossy paint…
+ink_bleed   Ink bleed   Dark ink blots spread with organic tendrils from a few drops…</code></pre>
+
+<h2 id="preview">Look before you choose: library.preview</h2>
+<p>Names and descriptions only go so far. <code class="cmd">library.preview</code> renders how an item <em>plays</em> as one PNG contact sheet — over MCP it comes back as an image the model can see. Use it to compare two or three candidates before applying one.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "library_preview", "arguments": {"kind": "transition", "id": "tide_wipe", "frames": 6, "columns": 6, "tile_width": 160}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run library.preview --kind transition --id tide_wipe --frames 6 --columns 6 --tile_width 160</code></pre></div>
+<pre><code class="lang-json">{"kind": "transition", "id": "tide_wipe", "name": "Tide", "animated": true,
+ "frames": 6, "columns": 6, "rows": 1, "tile_width": 160, "tile_height": 90,
+ "phases": [0.159, 0.227, 0.295, 0.364, 0.432, 0.5], "times_us": [344697, …], "loop_us": 2166667,
+ "preview": {"url": "/api/v1/library/transition/tide_wipe/preview", "frames": 26, "fps": 12, "width": 192, "height": 108},
+ "note": "Tiles run from transition progress 0 (outgoing clip A, a sunny landscape) to 1 (incoming clip B, a night city)…",
+ "png_base64": "…"}</code></pre>
+<table>
+  <thead><tr><th>Kind</th><th>What the tiles show</th></tr></thead>
+  <tbody>
+    <tr><td>Transitions</td><td>From a sunny landscape (clip A) to a night city (clip B), left to right, top to bottom.</td></tr>
+    <tr><td>Effects</td><td>Evenly spaced moments of the effect on the landscape; static effects such as a vignette show a before/after divider.</td></tr>
+    <tr><td>Filters</td><td>A before/after divider sweeping across the picture.</td></tr>
+    <tr><td>Clip animations</td><td>A small clip moving on a dark stage; a dashed outline marks its rest position.</td></tr>
+    <tr><td>Text templates, word art, text animations, caption styles</td><td>Sample text as it animates, or the spoken-word highlight moving through a caption.</td></tr>
+    <tr><td>Animated stickers, moving generated media</td><td>One loop of the sticker's default animation or of the background.</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li><code>frames</code> 2–12 (default 6) sets how many moments you see; <code>columns</code> (≤ 6) and <code>tile_width</code> set the layout. A one-row strip of 6 tiles at 160 px is cheap and easy to compare.</li>
+  <li><code>note</code> says what the tiles show for this kind; <code>times_us</code> and <code>phases</code> place each tile in the preview loop.</li>
+  <li>Static items (fonts, voice effects, still stickers and templates) return their thumbnail as one tile with <code>"animated": false</code>.</li>
+  <li>The sample pictures are not your footage. To see the item <em>in your edit</em>, apply it and check with <code class="cmd">preview.frame</code> or <code class="cmd">preview.contact_sheet</code> — see <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Verifying results</a>.</li>
+</ul>
+<p>A complete walk-through is the recipe <a href="{{root}}{{lang_root}}docs/ai/preview-before-applying.html">Choose a transition and an effect by looking at them</a>.</p>
+
+<h2 id="preview-field">The preview field and thumbnails</h2>
+<p>Every item that moves carries <code>preview</code> in <code class="cmd">library.list</code> and <code class="cmd">library.get</code> results — the editor uses it for its hover previews:</p>
+<pre><code class="lang-json">"preview": {"url": "/api/v1/library/transition/mix/preview", "frames": 24, "fps": 12, "width": 192, "height": 108}</code></pre>
+<p><code>GET</code> the <code>url</code> (with the API token) for a JPEG sprite strip: <code>frames</code> tiles of <code>width</code>×<code>height</code> side by side, left to right, one seamless loop at <code>fps</code>. No <code>preview</code> field means a static item. Every item also has a <code>thumbnail</code> path (a still PNG). Agents normally prefer <code class="cmd">library.preview</code>; the strip is for your own UI. Strips are cached in memory and under <code>&lt;DataDir&gt;/library/previews/</code>.</p>
+
+<h2 id="options">Options: directions, softness and effect sliders</h2>
+<p>A transition item lists what it accepts: <code>params.directions</code> and <code>default_direction</code>, <code>params.softness</code> and <code>default_softness</code>. Pass them to <code class="cmd">transition.set</code> (<code>direction</code> = the way the motion travels; <code>softness</code> 0–1). An effect item lists its sliders in <code>params.schema</code> (<code>{id, label, min, max, default}</code>); pass values in <code>params</code> of <code class="cmd">effect.add</code> / <code class="cmd">effect.apply</code>, or later with <code class="cmd">effect.set_params</code>.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "transition_set", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_3ccd6c9e2cbe", "type": "tide_wipe", "duration_us": 800000, "direction": "left", "softness": 0.3}}
+{"name": "effect_add", "arguments": {"project_id": "prj_e21b467917e3", "effect_id": "rain_glass", "at_us": 3000000, "duration_us": 3000000, "params": {"density": 0.7, "fog": 0.3}}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run transition.set --project_id prj_e21b467917e3 --segment_id seg_3ccd6c9e2cbe --type tide_wipe --duration_us 0.8s --direction left --softness 0.3
+kadrctl --% run effect.add --project_id prj_e21b467917e3 --effect_id rain_glass --at_us 3s --duration_us 3s --params "{\"density\":0.7,\"fog\":0.3}"</code></pre></div>
+
+<h2 id="fonts">Fonts: catalogue, install, import</h2>
+<p><code class="cmd">library.list</code> with <code>kind: "font"</code> lists the fonts that are ready to use. Category tabs say where a font comes from — <code>Built-in</code> (4 Go fonts, identical everywhere), <code>Downloaded</code> (installed through Kadr), <code>Bundled</code> (shipped next to the app), <code>System</code> (installed in the OS) — and its style: <code>Sans</code>, <code>Serif</code>, <code>Display</code>, <code>Handwriting</code>, <code>Monospace</code>, <code>Pixel</code>, <code>Symbol</code>. <code>params</code> has <code>source</code>, <code>styles</code>, <code>cyrillic</code>, <code>ukrainian</code> (Ґ Є І Ї) and <code>variable</code>.</p>
+<p>More fonts come from <code class="cmd">font.catalog</code>: 146 free SIL-OFL families from the google/fonts repository, 123 of them with Cyrillic, each with a note on its look and best use. The catalogue is read-only and offline; <code class="cmd">font.install</code> downloads a family into <code>&lt;DataDir&gt;/fonts/&lt;id&gt;/</code>, after which its id works in <code class="cmd">text.update</code> <code>font</code>.</p>
+<ol class="steps">
+  <li><h3 id="fonts-pick">Pick a family</h3><div class="code-tabs"><pre data-lang="mcp"><code>{"name": "font_catalog", "arguments": {"category": "handwriting", "cyrillic": true}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run font.catalog --category handwriting --cyrillic</code></pre></div>
+<pre><code class="lang-text">13 of 146 families
+caveat        Caveat        Natural quick handwriting with Cyrillic; notes, annotations and vlogs.   394 KB  installed: false
+marck_script  Marck Script  Casual flowing script with Cyrillic; greetings and personal stories.      82 KB
+bad_script    Bad Script    Thin lively handwriting with Cyrillic; diaries and travel notes.          180 KB</code></pre></li>
+  <li><h3 id="fonts-install">Install it</h3><p>The download runs in the background and reports <code>font.progress</code> events, then <code>fonts.changed</code>. With <code>wait: true</code> the call returns when the font is ready. Without internet it fails with <code>not_available</code>; an already installed family returns <code>already_installed: true</code>.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "font_install", "arguments": {"id": "caveat", "wait": true}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run font.install --id caveat --wait</code></pre></div></li>
+  <li><h3 id="fonts-use">Use it</h3><div class="code-tabs"><pre data-lang="mcp"><code>{"name": "text_update", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_c39f3546d148", "font": "caveat"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run text.update --project_id prj_e21b467917e3 --segment_id seg_c39f3546d148 --font caveat</code></pre></div></li>
+</ol>
+<ul>
+  <li><strong>An id from the catalogue is not usable until it is installed.</strong> <code class="cmd">text.update</code> with an unknown font fails with <code>not_found</code> and a hint to call <code class="cmd">font.catalog</code> / <code class="cmd">font.install</code>. Check <code>installed</code> in the catalogue first.</li>
+  <li><strong>Fonts travel with the computer, not the project.</strong> A project (or a My kit text preset) that names a font this machine lacks renders with Go Sans. Catalogue fonts are reproducible — one <code class="cmd">font.install</code> on the other machine; <code>sys_*</code> fonts depend on that OS.</li>
+  <li><code class="cmd">font.import</code> <code>{path}</code> installs a local <code>.ttf</code>/<code>.otf</code>/<code>.ttc</code> (the family name becomes the id); <code class="cmd">font.remove</code> deletes only fonts installed through Kadr; <code class="cmd">font.rescan</code> picks up fonts copied into font folders while Kadr runs.</li>
+  <li>For Ukrainian text prefer fonts with <code>ukrainian: true</code>; missing letters are borrowed from a system font, which works but may not match.</li>
+  <li><code>GET /api/v1/fonts/{id}/preview?text=&amp;h=&amp;color=</code> returns a transparent PNG of sample text in that font.</li>
+</ul>
+
+<h2 id="text-style">Word-art fields of TextStyle</h2>
+<p>Beyond fill, stroke, shadow, box, glow, gradient, 3D extrude and curve, a text style has optional word-art fields (absent or zero = off). <code class="cmd">text.add</code> accepts them inside <code>style</code>; <code class="cmd">text.update</code> has flat parameters for each (<code>pattern_type</code>, <code>bevel_depth</code>, <code>sparkle_amount</code>…); <code class="cmd">text.apply_effect</code> sets them from a word-art preset.</p>
+<table>
+  <thead><tr><th>Field</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>fill.stops</code></td><td>Positions 0–1 of up to 8 gradient colours; equal neighbours make a hard edge (chrome horizon).</td></tr>
+    <tr><td><code>stroke_fill</code></td><td>Gradient along the outline <code>{type, colors, angle}</code>.</td></tr>
+    <tr><td><code>pattern</code></td><td><code>{type, colors, scale, angle, opacity, speed}</code> — 28 types: stripes, pinstripe, checker, gingham, plaid, dots, halftone, hearts, stars, grain, static, scanlines, brushed, foil, carbon, glitter, holo, rainbow, aurora, flow, galaxy, marble, wood, camo, leopard, zebra, frost, grid.</td></tr>
+    <tr><td><code>bevel</code></td><td><code>{depth, angle, strength, gloss, highlight, shade, round}</code> — embossed or puffy lighting.</td></tr>
+    <tr><td><code>inner_shadow</code>, <code>inner_glow</code></td><td>Shadow or light inside the letters (<code>inner_glow</code>: <code>{color, intensity, radius}</code>).</td></tr>
+    <tr><td><code>echo</code></td><td><code>{colors (1–6), distance, angle, hollow}</code> — stacked offset copies behind the text.</td></tr>
+    <tr><td><code>distress</code></td><td><code>{type: grunge|chalk|stamp|spray|scratch|worn, amount, scale}</code>.</td></tr>
+    <tr><td><code>sparkle</code>, <code>drip</code></td><td>Star glints <code>{color, amount, size, speed}</code>; paint drips <code>{amount, length}</code>.</td></tr>
+    <tr><td><code>rough</code>, <code>pixelate</code></td><td>0–1: hand-made wobble; blocky pixel art.</td></tr>
+    <tr><td><code>box</code> extras</td><td><code>fill</code> (gradient), <code>border</code>, <code>shadow</code>, <code>per_line</code>, <code>skew</code>, <code>pad</code>, <code>knockout</code> (letters cut out of the box).</td></tr>
+    <tr><td><code>highlight.text_color</code></td><td>Letter colour of the spoken caption word for box-like highlight styles.</td></tr>
+  </tbody>
+</table>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_e21b467917e3", "text": "SUMMER SALE", "at_us": 3000000, "style": {
+  "size": 26, "bold": true, "color": "#FFD84D",
+  "stroke": {"color": "#FFFFFF", "width": 0.25},
+  "stroke_fill": {"type": "linear", "colors": ["#FFFFFF", "#FF3D7F"], "angle": -90},
+  "pattern": {"type": "glitter", "speed": 0.6},
+  "bevel": {"depth": 0.35, "angle": 135, "gloss": 0.6, "round": true},
+  "echo": {"colors": ["#FF3D7F", "#7B2FF7"], "distance": 0.25, "angle": -45},
+  "sparkle": {"amount": 0.4, "speed": 1.5}}}}
+{"name": "text_update", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_c39f3546d148", "distress_type": "worn", "distress_amount": 0.3, "inner_shadow_opacity": 0.5}}</code></pre></div>
+<div class="callout note"><p>A pattern with <code>speed</code> &gt; 0 or sparkles with <code>speed</code> &gt; 0 make the text animate by itself, so a single <code class="cmd">preview.frame</code> shows only one moment of it.</p></div>
+
+<h2 id="stickers">Animated stickers</h2>
+<p>Stickers whose library item has <code>params.loop_anim</code> (plus optional <code>params.in_anim</code> and <code>params.loop_us</code>) are animated — the 73 in the <code>Animated</code> tab. <code class="cmd">sticker.add</code> applies those animations automatically, exactly as <code class="cmd">animation.set</code> would; pass <code>animate: false</code> to place the sticker still. Change them later with <code class="cmd">animation.set</code> / <code class="cmd">animation.remove</code>.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "sticker_add", "arguments": {"project_id": "prj_e21b467917e3", "sticker_id": "emoji_grin", "at_us": 0}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run sticker.add --project_id prj_e21b467917e3 --sticker_id emoji_grin --at_us 0</code></pre></div>
+<pre><code class="lang-text">segment.animations: {"in": {"id": "in_pop", "duration_us": 500000}, "loop": {"id": "loop_jelly", "duration_us": 1200000}}</code></pre>
+
+<h2 id="generated">Generated media</h2>
+<p><code class="cmd">media.generate</code> draws backgrounds and overlays locally — 22 kinds, 98 presets (<code>library.list kind=generated</code>). The newer kinds:</p>
+<table>
+  <thead><tr><th>Kinds</th><th>What they make</th></tr></thead>
+  <tbody>
+    <tr><td><code>mesh</code>, <code>aurora</code>, <code>lava</code>, <code>plasma</code>, <code>bokeh</code>, <code>particles</code></td><td>Moving backgrounds that loop seamlessly every <code>loop</code> seconds (also their default length), so copies can be placed back to back.</td></tr>
+    <tr><td><code>light_leak</code>, <code>film_dust</code></td><td>Light leaks, film burns, prism streaks, lens flares and old-film dirt drawn on black — put them on an overlay track and set <code class="cmd">segment.set_blend</code> <code>mode: "screen"</code>.</td></tr>
+    <tr><td><code>texture</code>, <code>pattern</code></td><td>Paper, kraft, grunge, concrete, canvas, denim, marble, watercolour, wood; memphis, waves, dots, halftone, terrazzo, chevron, honeycomb, gingham, scales, cubes, triangles.</td></tr>
+    <tr><td><code>timer</code></td><td>Styled countdowns: flip clock, neon ring, progress bar, dots, pop bursts (optional beeps).</td></tr>
+    <tr><td><code>banner</code>, <code>frame</code></td><td>Transparent PNGs for an overlay track: text-free lower thirds, pills, ribbons, glass panels, news bars, brush strokes; film, neon, instant photo, vignette, torn paper, viewfinder and other borders.</td></tr>
+  </tbody>
+</table>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "media_generate", "arguments": {"project_id": "prj_e21b467917e3", "preset_id": "leak_warm", "add_to_timeline": true, "new_track": true, "at_us": 0, "duration_us": 3000000}}
+{"name": "segment_set_blend", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_978c06ee7ef6", "mode": "screen"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run media.generate --project_id prj_e21b467917e3 --preset_id leak_warm --add_to_timeline --new_track --at_us 0 --duration_us 3s
+kadrctl run segment.set_blend --project_id prj_e21b467917e3 --segment_id seg_978c06ee7ef6 --mode screen</code></pre></div>
+<p>The full parameter list of every kind is in the description of <a href="{{root}}{{lang_root}}docs/ai/reference/media.html">media.generate</a>.</p>

@@ -1,5 +1,5 @@
-<!--meta {"title":"Довідник команд","nav":"Вступ","order":900,"description":"Як влаштовано довідник усіх 177 команд Kadr: категорії, що містить кожен запис, як читати назви команд і ті самі дані через API, OpenAPI та llms-full.txt.","group":"Довідник команд"} -->
-<p class="lead">Довідник команд описує всі 177 команд — той самий текст, який агент отримує як описи інструментів MCP, згенерований із реєстру самого рушія. Описи команд англійською в обох мовних версіях.</p>
+<!--meta {"title":"Довідник команд","nav":"Вступ","order":900,"description":"Як влаштовано довідник усіх 183 команд Kadr: категорії, що містить кожен запис, як читати назви команд і ті самі дані через API, OpenAPI та llms-full.txt.","group":"Довідник команд"} -->
+<p class="lead">Довідник команд описує всі 183 команди у 29 категоріях — той самий текст, який агент отримує як описи інструментів MCP, згенерований із реєстру самого рушія. Описи команд англійською в обох мовних версіях.</p>
 <p><a href="{{root}}{{lang_root}}docs/ai/reference/index.html"><strong>Відкрити повний довідник команд →</strong></a></p>
 
 <h2 id="entry">Що містить кожен запис</h2>
@@ -26,8 +26,9 @@
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/effects.html">Effects</a></td><td>5</td><td>Відеоефекти на доріжках ефектів або на окремих кліпах, з параметрами.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/export.html">Export</a></td><td>6</td><td>Завдання експорту: запуск, стан, оцінка, список, скасування, показ у папці.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/filters.html">Filters</a></td><td>4</td><td>Кольорові фільтри на доріжках фільтрів чи кліпах і коригувальні шари.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/fonts.html">Fonts</a></td><td>5</td><td>Каталог безкоштовних шрифтів: установлення, імпорт файлу шрифту, видалення, повторне сканування тек зі шрифтами.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/keyframes.html">Keyframes</a></td><td>4</td><td>Додавання, перегляд, видалення й очищення ключових кадрів зі згладжуванням.</td></tr>
-    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/library.html">Library</a></td><td>2</td><td>Вбудовані переходи, ефекти, фільтри, анімації, шрифти, стікери, стилі, пресети й звуки.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/library.html">Library</a></td><td>3</td><td>Вбудовані переходи, ефекти, фільтри, анімації, шрифти, стікери, стилі, пресети й звуки, а також <code class="cmd">library.preview</code>, щоб побачити, як елемент виглядає в русі.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/media.html">Media</a></td><td>9</td><td>Імпорт, перегляд, генерація, перейменування, перепідключення й проксі медіафайлів.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/playback.html">Playback</a></td><td>9</td><td>Відтворення, пауза, перемотування й покадровий крок — а також рендер кадрів, контактних аркушів і компонування на полотні.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/presets.html">Presets</a></td><td>6</td><td>Збереження й застосування пресетів «Мого набору» між проєктами.</td></tr>
@@ -48,7 +49,7 @@
 </table>
 
 <h2 id="namespaces">Як читати назви команд</h2>
-<p>Частина до першої крапки — простір імен, тобто об’єкт, з яким працює команда: <code>project.</code>, <code>media.</code>, <code>timeline.</code> (кліпи, доріжки, маркери), <code>segment.</code> (властивості одного кліпу), <code>keyframe.</code>, <code>animation.</code>, <code>text.</code>, <code>captions.</code>, <code>transcript.</code>, <code>audio.</code>, <code>tts.</code>, <code>sfx.</code>, <code>effect.</code>, <code>filter.</code>, <code>adjustment.</code>, <code>transition.</code>, <code>library.</code>, <code>preview.</code>, <code>playback.</code>, <code>export.</code>, <code>ai.</code> (розумні інструменти), <code>presets.</code>, <code>edit.</code>, <code>clipboard.</code>, <code>ui.</code>, <code>tools.</code>, <code>update.</code>, <code>app.</code>. Дієслова послідовні: <code>add</code> створює новий сегмент, <code>apply</code> змінює наявний кліп, <code>set</code>/<code>set_*</code> замінює значення, <code>get</code>/<code>list</code> лише читають.</p>
+<p>Частина до першої крапки — простір імен, тобто об’єкт, з яким працює команда: <code>project.</code>, <code>media.</code>, <code>timeline.</code> (кліпи, доріжки, маркери), <code>segment.</code> (властивості одного кліпу), <code>keyframe.</code>, <code>animation.</code>, <code>text.</code>, <code>captions.</code>, <code>transcript.</code>, <code>audio.</code>, <code>tts.</code>, <code>sfx.</code>, <code>effect.</code>, <code>filter.</code>, <code>adjustment.</code>, <code>transition.</code>, <code>library.</code>, <code>font.</code>, <code>preview.</code>, <code>playback.</code>, <code>export.</code>, <code>ai.</code> (розумні інструменти), <code>presets.</code>, <code>edit.</code>, <code>clipboard.</code>, <code>ui.</code>, <code>tools.</code>, <code>update.</code>, <code>app.</code>. Дієслова послідовні: <code>add</code> створює новий сегмент, <code>apply</code> змінює наявний кліп, <code>set</code>/<code>set_*</code> замінює значення, <code>get</code>/<code>list</code> лише читають.</p>
 
 <h2 id="other-formats">Той самий довідник в інших формах</h2>
 <table>

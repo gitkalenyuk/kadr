@@ -5,6 +5,69 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 [Semantic Versioning](https://semver.org/). Versions with a suffix such as `-beta.1` are pre-releases and are
 delivered through the **Beta** update channel.
 
+## [0.1.0-beta.3] - 2026-10-02
+
+A much bigger library — several times more transitions, effects, filters, animations, text looks, stickers and
+backgrounds — animated previews when you hover a card, 24 fonts with Cyrillic out of the box and 146 more in one click.
+
+### New
+
+- **See it move before you add it.** Hover any card for a moment — in the Transitions, Effects, Filters, Text and
+  Stickers tabs, the Animation tab, Text → Effects and Animate, the Transition, Effect and Filter panels, caption styles
+  and My kit — and it plays an animated preview rendered by Kadr's engine.
+- **221 transitions** (was 68) in 19 tabs, with new Wipe, Zoom, Spin, Liquid, Particles, Film, Retro and Split tabs and
+  directional whip pans. 23 of the new transitions take a direction and 13 an edge softness.
+- **195 video effects** (was 56) in 20 tabs, with new Motion, Frame, Stylize, Weather, Dreamy and Color tabs. Every new
+  effect has 1–4 sliders of its own.
+- **227 filters** (was 70) in 25 tabs, with new Cinematic, Vintage, Aesthetic, Mood, Seasons, Duotone and Special looks
+  and portrait filters that keep skin tones natural.
+- **310 clip animations** (was 136): 105 In, 105 Out, 53 Combo and 47 Loop — blinds, slats, hinge swings, coin spins,
+  slot rolls, shine sweeps, RGB splits, motion smears, waves and more. Loops now work on videos, photos, stickers and
+  text alike.
+- **175 text templates** (was 46), with new Vlog, Quote, Sale, Luxury, Gaming, Love, Travel, Food, Sports, News,
+  Minimal, Impact and Kinetic tabs.
+- **114 word-art effects** (was 22) and new text looks in Text → Effects: 28 patterns (glitter, holographic foil,
+  marble, plaid, leopard…, some of them moving), bevel and emboss, inner shadow and inner glow, echo stacks, grunge,
+  chalk and stamp textures, sparkles, drips, gradient outlines, a hand-made wobble and pixel art. The background box
+  can now be one box per line, slanted, bordered, shadowed, gradient-filled or cut out around the letters.
+- **137 letter animations** (was 39): 55 In, 45 Out and 37 Loop, such as decrypt, split-flap, terminal cursor, jelly
+  pop, rain drop, glitch and neon buzz.
+- **55 caption styles** (was 15) with new Karaoke, Pop, Cinematic, Neon, Minimal, Creator and Fun tabs, and 7 new word
+  highlights: pop, bounce, reveal, dim ahead, glow, underline sweep and gliding box. Box-style highlights can recolour
+  the spoken word's letters.
+- **394 stickers** (was 82), 73 of them animated, with new Animated, Love, Party, Nature, Food, Tech, Retro, Travel,
+  Sports, 3D and Folk tabs. Animated stickers arrive with their animation already applied.
+- **98 generated media presets** (was 32) from 13 new generators: mesh gradients, aurora, lava lamp, plasma, bokeh,
+  particles, light leaks, film dust, textures, patterns, styled timers, banners and frames. Moving backgrounds loop
+  seamlessly; banners and frames are transparent overlays; light leaks and film dust are made for the Screen blend mode.
+- **Fonts.** A new font picker in Text → Basic → Font with search, style filters (Sans, Serif, Display, Handwriting,
+  Monospace, Pixel), a Cyrillic filter, *My fonts* and *More fonts*: 146 free, open-licence font families (123 with
+  Cyrillic) that download and apply in one click. Import your own `.ttf`/`.otf` files too. Variable fonts get real
+  Regular and Bold weights. Downloaded fonts are kept in `%APPDATA%\Kadr\fonts`.
+- **24 fonts included, no download needed** — all with Cyrillic: Montserrat, Rubik, Oswald, Manrope, Unbounded, Russo
+  One, Rubik Mono One, Comfortaa, Yeseva One, Seymour One, Tektur, Rubik Bubbles, Caveat, Lobster, Pacifico, Marck
+  Script, Amatic SC, Bad Script, Playfair Display, Lora, Prata, JetBrains Mono, Press Start 2P and Pixelify Sans
+  (SIL Open Font License; listed under *Bundled*).
+
+### Fixed
+
+- Some valid font files (for example Pacifico, Rubik Italic and Rubik Bubbles) were rejected when installing or
+  importing, and some installed system fonts were missing from the font list.
+- A few pop-style clip animations showed the clip at full size for one frame at their start or end.
+
+### For AI agents and scripts
+
+- **`library.preview`** returns a PNG contact sheet of how a transition, effect, filter, animation, text look, caption
+  style, animated sticker or generated clip plays — over MCP it arrives as an image, so an agent can look before it
+  chooses. Items that move carry a `preview` field (`GET` its `url` for the JPEG sprite strip).
+- **Font commands:** `font.catalog`, `font.install` (background download with `font.progress` events), `font.import`,
+  `font.remove` and `font.rescan`; event `fonts.changed`; `GET /api/v1/fonts/{id}/preview`.
+- New optional text style fields (`pattern`, `bevel`, `inner_shadow`, `inner_glow`, `echo`, `distress`, `sparkle`,
+  `drip`, `rough`, `pixelate`, `stroke_fill`, `fill.stops`, box extras, `highlight.text_color`) in `text.add`, with
+  flat parameters in `text.update`.
+- `sticker.add` applies an animated sticker's animations unless `animate: false`; `media.generate` has 13 new kinds.
+- 183 documented commands (was 177).
+
 ## [0.1.0-beta.2] - 2026-10-01
 
 Second public beta. If you have 0.1.0-beta.1 installed, Kadr offers this update automatically (Settings → Updates).

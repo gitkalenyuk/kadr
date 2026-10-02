@@ -1,0 +1,142 @@
+<!--meta {"title":"Бібліотека, прев’ю й шрифти","nav":"Бібліотека й шрифти","order":215,"description":"Як агент знаходить у бібліотеці Kadr переходи, ефекти, фільтри, анімації, текстові стилі, стікери й згенеровані медіа, роздивляється їх через library.preview перед вибором, установлює безкоштовні шрифти й користується полями word art у TextStyle.","group":"Посібники"} -->
+<p class="lead">Усе, що агент може додати до відео, — переходи, ефекти, фільтри, анімації, текстові стилі, стікери, згенеровані фони, шрифти, звуки — береться з вбудованої бібліотеки. Знаходьте ідентифікатори через <code class="cmd">library.list</code>, <em>дивіться</em> на кандидатів через <code class="cmd">library.preview</code> і лише тоді застосовуйте той, що пасує. Ніколи не вгадуйте id.</p>
+
+<h2 id="kinds">Що є в бібліотеці</h2>
+<table>
+  <thead><tr><th><code>kind</code></th><th>Елементів</th><th>Куди передавати id</th><th>Примітки</th></tr></thead>
+  <tbody>
+    <tr><td><code>transition</code></td><td>221 у 19 вкладках</td><td><code class="cmd">transition.set</code> <code>type</code>, <code class="cmd">transition.apply_all</code></td><td>Серед вкладок — Wipe, Zoom, Spin, Liquid, Particles, Film, Retro, Split; родини з напрямком, як-от <code>whip_*</code>, <code>wipe_*</code>, <code>slide_*</code>; параметри — у <code>params.directions</code> / <code>params.softness</code>.</td></tr>
+    <tr><td><code>effect</code></td><td>195 у 20 вкладках</td><td><code class="cmd">effect.add</code>, <code class="cmd">effect.apply</code>, <code class="cmd">effect.set_params</code></td><td>Кожен ефект має <code>intensity</code> і <code>speed</code>; більшість додає 1–4 власні повзунки, перелічені в <code>params.schema</code> та в описі.</td></tr>
+    <tr><td><code>filter</code></td><td>227 у 25 вкладках</td><td><code class="cmd">filter.add</code>, <code class="cmd">filter.apply</code></td><td>Нові вкладки Cinematic, Vintage, Aesthetic, Mood, Seasons, Duotone, Special; портретні стилі зберігають природний колір шкіри.</td></tr>
+    <tr><td><code>animation</code></td><td>310: 105 in, 105 out, 53 combo, 47 loop</td><td><code class="cmd">animation.set</code> <code>kind</code> + <code>id</code></td><td>Усі працюють на сегментах відео, фото, стікерів і тексту.</td></tr>
+    <tr><td><code>text_template</code></td><td>175 у 22 вкладках</td><td><code class="cmd">text.add</code> <code>template_id</code></td><td>Шаблони використовують вбудовані шрифти, тож нічого завантажувати не треба.</td></tr>
+    <tr><td><code>text_effect</code></td><td>114 у 16 вкладках</td><td><code class="cmd">text.apply_effect</code></td><td>Word art; записує в стиль заливку, обведення, світіння, 3D і <a href="#text-style">поля word art</a>.</td></tr>
+    <tr><td><code>text_animation</code></td><td>137: 55 in, 45 out, 37 loop</td><td><code class="cmd">text.set_glyph_animation</code></td><td>По літерах, словах чи рядках, наприклад <code>in_decrypt</code>, <code>in_split_flap</code>, <code>in_terminal</code>, <code>loop_neon_buzz</code>.</td></tr>
+    <tr><td><code>caption_style</code></td><td>55 у 12 вкладках</td><td><code class="cmd">captions.set_style</code></td><td>Серед стилів підсвічування тепер є <code>pop</code>, <code>bounce</code>, <code>reveal</code>, <code>dim</code>, <code>glow</code>, <code>sweep_line</code>, <code>slide_box</code>.</td></tr>
+    <tr><td><code>sticker</code></td><td>394 у 25 вкладках, 73 анімовані</td><td><code class="cmd">sticker.add</code></td><td>Див. <a href="#stickers">анімовані стікери</a>.</td></tr>
+    <tr><td><code>generated</code></td><td>98 пресетів 22 видів</td><td><code class="cmd">media.generate</code> <code>preset_id</code></td><td>Див. <a href="#generated">згенеровані медіа</a>.</td></tr>
+    <tr><td><code>font</code></td><td>4 вбудовані + системні + встановлені</td><td><code class="cmd">text.update</code> <code>font</code></td><td>Більше — через <code class="cmd">font.catalog</code> + <code class="cmd">font.install</code>, див. <a href="#fonts">шрифти</a>.</td></tr>
+    <tr><td><code>sound_effect</code>, <code>voice_effect</code></td><td>47, 25</td><td><code class="cmd">sfx.add</code>, <code class="cmd">segment.set_audio</code> <code>voice_effect</code></td><td>Статичні елементи (без прев’ю).</td></tr>
+  </tbody>
+</table>
+
+<h2 id="find">Знайдіть кандидатів</h2>
+<p><code class="cmd">library.list</code> приймає <code>kind</code>, необов’язкову <code>category</code> (назву вкладки з поля <code>categories</code> результату) і необов’язковий <code>query</code>, який шукає в назвах, id, категоріях та описах. Звужуйте список замість того, щоб читати 300 елементів: описи написано для агентів — як елемент виглядає й коли його доречно вживати.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "library_list", "arguments": {"kind": "transition", "category": "Liquid"}}
+{"name": "library_list", "arguments": {"kind": "effect", "query": "rain"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run library.list --kind transition --category Liquid
+kadrctl run library.list --kind effect --query rain</code></pre></div>
+<pre><code class="lang-text">tide_wipe   Tide        A rolling wave front with a sparkling white foam crest washes the new clip in…
+                        params: directions [right left down up], softness true, default_softness 0.2
+paint_drip  Paint drip  The new clip pours down from the top like thick glossy paint…
+ink_bleed   Ink bleed   Dark ink blots spread with organic tendrils from a few drops…</code></pre>
+
+<h2 id="preview">Подивіться, перш ніж обирати: library.preview</h2>
+<p>Назви й описи не скажуть усього. <code class="cmd">library.preview</code> рендерить, як елемент <em>відтворюється</em>, у вигляді одного PNG-контактного аркуша — через MCP він приходить як зображення, яке модель бачить. Порівнюйте так двох-трьох кандидатів, перш ніж застосувати одного.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "library_preview", "arguments": {"kind": "transition", "id": "tide_wipe", "frames": 6, "columns": 6, "tile_width": 160}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run library.preview --kind transition --id tide_wipe --frames 6 --columns 6 --tile_width 160</code></pre></div>
+<pre><code class="lang-json">{"kind": "transition", "id": "tide_wipe", "name": "Tide", "animated": true,
+ "frames": 6, "columns": 6, "rows": 1, "tile_width": 160, "tile_height": 90,
+ "phases": [0.159, 0.227, 0.295, 0.364, 0.432, 0.5], "times_us": [344697, …], "loop_us": 2166667,
+ "preview": {"url": "/api/v1/library/transition/tide_wipe/preview", "frames": 26, "fps": 12, "width": 192, "height": 108},
+ "note": "Tiles run from transition progress 0 (outgoing clip A, a sunny landscape) to 1 (incoming clip B, a night city)…",
+ "png_base64": "…"}</code></pre>
+<table>
+  <thead><tr><th>Вид</th><th>Що показують плитки</th></tr></thead>
+  <tbody>
+    <tr><td>Переходи</td><td>Від сонячного пейзажу (кліп A) до нічного міста (кліп B), зліва направо й згори донизу.</td></tr>
+    <tr><td>Ефекти</td><td>Рівномірно розподілені моменти ефекту на пейзажі; статичні ефекти, як-от віньєтка, показано з розділювачем «до/після».</td></tr>
+    <tr><td>Фільтри</td><td>Розділювач «до/після», що проходить через кадр.</td></tr>
+    <tr><td>Анімації кліпів</td><td>Маленький кліп рухається на темній сцені; пунктирна рамка позначає його положення спокою.</td></tr>
+    <tr><td>Текстові шаблони, word art, анімації тексту, стилі субтитрів</td><td>Зразковий текст в анімації або підсвічування вимовленого слова, що біжить по субтитру.</td></tr>
+    <tr><td>Анімовані стікери, рухомі згенеровані медіа</td><td>Один цикл типової анімації стікера або фону.</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li><code>frames</code> 2–12 (типово 6) — скільки моментів ви побачите; <code>columns</code> (≤ 6) і <code>tile_width</code> задають компонування. Рядок із 6 плиток по 160 px дешевий і зручний для порівняння.</li>
+  <li><code>note</code> пояснює, що показують плитки для цього виду; <code>times_us</code> і <code>phases</code> розміщують кожну плитку в циклі прев’ю.</li>
+  <li>Статичні елементи (шрифти, голосові ефекти, нерухомі стікери й шаблони) повертають мініатюру однією плиткою з <code>"animated": false</code>.</li>
+  <li>Зразкові картинки — не ваше відео. Щоб побачити елемент <em>у вашому монтажі</em>, застосуйте його й перевірте через <code class="cmd">preview.frame</code> або <code class="cmd">preview.contact_sheet</code> — див. <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Перевірка результату</a>.</li>
+</ul>
+<p>Повний приклад — рецепт <a href="{{root}}{{lang_root}}docs/ai/preview-before-applying.html">Обрати перехід та ефект, подивившись на них</a>.</p>
+
+<h2 id="preview-field">Поле preview і мініатюри</h2>
+<p>Кожен рухомий елемент має поле <code>preview</code> у результатах <code class="cmd">library.list</code> і <code class="cmd">library.get</code> — редактор використовує його для прев’ю під вказівником миші:</p>
+<pre><code class="lang-json">"preview": {"url": "/api/v1/library/transition/mix/preview", "frames": 24, "fps": 12, "width": 192, "height": 108}</code></pre>
+<p><code>GET</code> на <code>url</code> (з токеном API) повертає JPEG-спрайт: <code>frames</code> плиток розміром <code>width</code>×<code>height</code> поруч, зліва направо, один безшовний цикл із частотою <code>fps</code>. Немає поля <code>preview</code> — елемент статичний. Кожен елемент має також шлях <code>thumbnail</code> (нерухомий PNG). Агентам зазвичай зручніший <code class="cmd">library.preview</code>; спрайт — для вашого власного інтерфейсу. Спрайти кешуються в пам’яті та в <code>&lt;DataDir&gt;/library/previews/</code>.</p>
+
+<h2 id="options">Параметри: напрямок, м’якість і повзунки ефектів</h2>
+<p>Елемент-перехід перелічує, що він приймає: <code>params.directions</code> і <code>default_direction</code>, <code>params.softness</code> і <code>default_softness</code>. Передайте їх у <code class="cmd">transition.set</code> (<code>direction</code> — куди рухається зміна кадру; <code>softness</code> 0–1). Елемент-ефект перелічує свої повзунки в <code>params.schema</code> (<code>{id, label, min, max, default}</code>); значення передавайте в <code>params</code> команд <code class="cmd">effect.add</code> / <code class="cmd">effect.apply</code> або пізніше через <code class="cmd">effect.set_params</code>.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "transition_set", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_3ccd6c9e2cbe", "type": "tide_wipe", "duration_us": 800000, "direction": "left", "softness": 0.3}}
+{"name": "effect_add", "arguments": {"project_id": "prj_e21b467917e3", "effect_id": "rain_glass", "at_us": 3000000, "duration_us": 3000000, "params": {"density": 0.7, "fog": 0.3}}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run transition.set --project_id prj_e21b467917e3 --segment_id seg_3ccd6c9e2cbe --type tide_wipe --duration_us 0.8s --direction left --softness 0.3
+kadrctl --% run effect.add --project_id prj_e21b467917e3 --effect_id rain_glass --at_us 3s --duration_us 3s --params "{\"density\":0.7,\"fog\":0.3}"</code></pre></div>
+
+<h2 id="fonts">Шрифти: каталог, установлення, імпорт</h2>
+<p><code class="cmd">library.list</code> з <code>kind: "font"</code> перелічує шрифти, готові до роботи. Вкладки-категорії кажуть, звідки шрифт, — <code>Built-in</code> (4 шрифти Go, однакові всюди), <code>Downloaded</code> (установлені через Kadr), <code>Bundled</code> (постачаються поруч із застосунком), <code>System</code> (установлені в ОС) — і який у нього стиль: <code>Sans</code>, <code>Serif</code>, <code>Display</code>, <code>Handwriting</code>, <code>Monospace</code>, <code>Pixel</code>, <code>Symbol</code>. У <code>params</code> є <code>source</code>, <code>styles</code>, <code>cyrillic</code>, <code>ukrainian</code> (Ґ Є І Ї) і <code>variable</code>.</p>
+<p>Додаткові шрифти — у <code class="cmd">font.catalog</code>: 146 безкоштовних родин під ліцензією SIL OFL з репозиторію google/fonts, 123 з них із кирилицею, кожна з приміткою про вигляд і доречне застосування. Каталог лише для читання й працює офлайн; <code class="cmd">font.install</code> завантажує родину в <code>&lt;DataDir&gt;/fonts/&lt;id&gt;/</code>, після чого її id працює в параметрі <code>font</code> команди <code class="cmd">text.update</code>.</p>
+<ol class="steps">
+  <li><h3 id="fonts-pick">Оберіть родину</h3><div class="code-tabs"><pre data-lang="mcp"><code>{"name": "font_catalog", "arguments": {"category": "handwriting", "cyrillic": true}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run font.catalog --category handwriting --cyrillic</code></pre></div>
+<pre><code class="lang-text">13 of 146 families
+caveat        Caveat        Natural quick handwriting with Cyrillic; notes, annotations and vlogs.   394 KB  installed: false
+marck_script  Marck Script  Casual flowing script with Cyrillic; greetings and personal stories.      82 KB
+bad_script    Bad Script    Thin lively handwriting with Cyrillic; diaries and travel notes.          180 KB</code></pre></li>
+  <li><h3 id="fonts-install">Установіть її</h3><p>Завантаження йде у фоні й надсилає події <code>font.progress</code>, а потім <code>fonts.changed</code>. З <code>wait: true</code> виклик повертається, коли шрифт готовий. Без інтернету команда завершується помилкою <code>not_available</code>; для вже встановленої родини повертається <code>already_installed: true</code>.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "font_install", "arguments": {"id": "caveat", "wait": true}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run font.install --id caveat --wait</code></pre></div></li>
+  <li><h3 id="fonts-use">Застосуйте її</h3><div class="code-tabs"><pre data-lang="mcp"><code>{"name": "text_update", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_c39f3546d148", "font": "caveat"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run text.update --project_id prj_e21b467917e3 --segment_id seg_c39f3546d148 --font caveat</code></pre></div></li>
+</ol>
+<ul>
+  <li><strong>id з каталогу не працює, доки шрифт не встановлено.</strong> <code class="cmd">text.update</code> з невідомим шрифтом повертає <code>not_found</code> із підказкою викликати <code class="cmd">font.catalog</code> / <code class="cmd">font.install</code>. Спершу перевірте <code>installed</code> у каталозі.</li>
+  <li><strong>Шрифти належать комп’ютеру, а не проєкту.</strong> Проєкт (або текстовий пресет My kit), що посилається на відсутній на цій машині шрифт, рендериться шрифтом Go Sans. Шрифти з каталогу легко відтворити — один <code class="cmd">font.install</code> на іншій машині; шрифти <code>sys_*</code> залежать від тамтешньої ОС.</li>
+  <li><code class="cmd">font.import</code> <code>{path}</code> установлює локальний <code>.ttf</code>/<code>.otf</code>/<code>.ttc</code> (назва родини стає id); <code class="cmd">font.remove</code> видаляє лише шрифти, встановлені через Kadr; <code class="cmd">font.rescan</code> підхоплює шрифти, скопійовані в теки шрифтів, поки Kadr працює.</li>
+  <li>Для українського тексту обирайте шрифти з <code>ukrainian: true</code>; відсутні літери позичаються в системного шрифту — це працює, але літери можуть не пасувати.</li>
+  <li><code>GET /api/v1/fonts/{id}/preview?text=&amp;h=&amp;color=</code> повертає прозорий PNG зі зразком тексту цим шрифтом.</li>
+</ul>
+
+<h2 id="text-style">Поля word art у TextStyle</h2>
+<p>Окрім заливки, обведення, тіні, плашки, світіння, градієнта, 3D-видавлювання й вигину, стиль тексту має необов’язкові поля word art (відсутнє чи нульове значення = вимкнено). <code class="cmd">text.add</code> приймає їх усередині <code>style</code>; <code class="cmd">text.update</code> має для кожного пласкі параметри (<code>pattern_type</code>, <code>bevel_depth</code>, <code>sparkle_amount</code>…); <code class="cmd">text.apply_effect</code> заповнює їх із пресета word art.</p>
+<table>
+  <thead><tr><th>Поле</th><th>Що робить</th></tr></thead>
+  <tbody>
+    <tr><td><code>fill.stops</code></td><td>Позиції 0–1 до 8 кольорів градієнта; однакові сусідні значення дають різку межу (хромований горизонт).</td></tr>
+    <tr><td><code>stroke_fill</code></td><td>Градієнт уздовж обведення <code>{type, colors, angle}</code>.</td></tr>
+    <tr><td><code>pattern</code></td><td><code>{type, colors, scale, angle, opacity, speed}</code> — 28 типів: stripes, pinstripe, checker, gingham, plaid, dots, halftone, hearts, stars, grain, static, scanlines, brushed, foil, carbon, glitter, holo, rainbow, aurora, flow, galaxy, marble, wood, camo, leopard, zebra, frost, grid.</td></tr>
+    <tr><td><code>bevel</code></td><td><code>{depth, angle, strength, gloss, highlight, shade, round}</code> — рельєфне або «надуте» освітлення.</td></tr>
+    <tr><td><code>inner_shadow</code>, <code>inner_glow</code></td><td>Тінь або світло всередині літер (<code>inner_glow</code>: <code>{color, intensity, radius}</code>).</td></tr>
+    <tr><td><code>echo</code></td><td><code>{colors (1–6), distance, angle, hollow}</code> — зсунуті копії тексту стосом позаду.</td></tr>
+    <tr><td><code>distress</code></td><td><code>{type: grunge|chalk|stamp|spray|scratch|worn, amount, scale}</code>.</td></tr>
+    <tr><td><code>sparkle</code>, <code>drip</code></td><td>Зірочки-відблиски <code>{color, amount, size, speed}</code>; патьоки фарби <code>{amount, length}</code>.</td></tr>
+    <tr><td><code>rough</code>, <code>pixelate</code></td><td>0–1: тремтіння «від руки»; піксельна графіка.</td></tr>
+    <tr><td>додатки <code>box</code></td><td><code>fill</code> (градієнт), <code>border</code>, <code>shadow</code>, <code>per_line</code>, <code>skew</code>, <code>pad</code>, <code>knockout</code> (літери, вирізані з плашки).</td></tr>
+    <tr><td><code>highlight.text_color</code></td><td>Колір літер вимовленого слова в субтитрі для стилів підсвічування з плашкою.</td></tr>
+  </tbody>
+</table>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "text_add", "arguments": {"project_id": "prj_e21b467917e3", "text": "SUMMER SALE", "at_us": 3000000, "style": {
+  "size": 26, "bold": true, "color": "#FFD84D",
+  "stroke": {"color": "#FFFFFF", "width": 0.25},
+  "stroke_fill": {"type": "linear", "colors": ["#FFFFFF", "#FF3D7F"], "angle": -90},
+  "pattern": {"type": "glitter", "speed": 0.6},
+  "bevel": {"depth": 0.35, "angle": 135, "gloss": 0.6, "round": true},
+  "echo": {"colors": ["#FF3D7F", "#7B2FF7"], "distance": 0.25, "angle": -45},
+  "sparkle": {"amount": 0.4, "speed": 1.5}}}}
+{"name": "text_update", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_c39f3546d148", "distress_type": "worn", "distress_amount": 0.3, "inner_shadow_opacity": 0.5}}</code></pre></div>
+<div class="callout note"><p>Візерунок зі <code>speed</code> &gt; 0 або блискітки зі <code>speed</code> &gt; 0 анімують текст самі собою, тож один <code class="cmd">preview.frame</code> покаже лише одну мить.</p></div>
+
+<h2 id="stickers">Анімовані стікери</h2>
+<p>Стікери, чий елемент бібліотеки має <code>params.loop_anim</code> (і, можливо, <code>params.in_anim</code> та <code>params.loop_us</code>), анімовані — це 73 стікери вкладки <code>Animated</code>. <code class="cmd">sticker.add</code> застосовує ці анімації автоматично, так само як <code class="cmd">animation.set</code>; передайте <code>animate: false</code>, щоб поставити стікер нерухомим. Змінити анімації згодом можна через <code class="cmd">animation.set</code> / <code class="cmd">animation.remove</code>.</p>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "sticker_add", "arguments": {"project_id": "prj_e21b467917e3", "sticker_id": "emoji_grin", "at_us": 0}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run sticker.add --project_id prj_e21b467917e3 --sticker_id emoji_grin --at_us 0</code></pre></div>
+<pre><code class="lang-text">segment.animations: {"in": {"id": "in_pop", "duration_us": 500000}, "loop": {"id": "loop_jelly", "duration_us": 1200000}}</code></pre>
+
+<h2 id="generated">Згенеровані медіа</h2>
+<p><code class="cmd">media.generate</code> малює фони й накладки локально — 22 види, 98 пресетів (<code>library.list kind=generated</code>). Нові види:</p>
+<table>
+  <thead><tr><th>Види</th><th>Що створюють</th></tr></thead>
+  <tbody>
+    <tr><td><code>mesh</code>, <code>aurora</code>, <code>lava</code>, <code>plasma</code>, <code>bokeh</code>, <code>particles</code></td><td>Рухомі фони, що безшовно повторюються кожні <code>loop</code> секунд (це ж і їхня типова тривалість), тож копії можна ставити впритул одна до одної.</td></tr>
+    <tr><td><code>light_leak</code>, <code>film_dust</code></td><td>Засвічення, опіки плівки, призматичні промені, відблиски об’єктива й бруд старої плівки на чорному — кладіть їх на доріжку накладання й задавайте <code class="cmd">segment.set_blend</code> <code>mode: "screen"</code>.</td></tr>
+    <tr><td><code>texture</code>, <code>pattern</code></td><td>Папір, крафт, гранж, бетон, полотно, джинс, мармур, акварель, дерево; мемфіс, хвилі, горошок, растр, тераццо, шеврон, соти, віші, луска, кубики, трикутники.</td></tr>
+    <tr><td><code>timer</code></td><td>Стильні відліки: перекидний годинник, неонове кільце, смуга прогресу, точки, «вибухи» (за бажання — з бипами).</td></tr>
+    <tr><td><code>banner</code>, <code>frame</code></td><td>Прозорі PNG для доріжки накладання: нижні титри без тексту, «пігулки», стрічки, скляні панелі, рядки новин, мазки пензля; рамки — кіноплівка, неон, миттєве фото, віньєтка, рваний папір, видошукач та інші.</td></tr>
+  </tbody>
+</table>
+<div class="code-tabs"><pre data-lang="mcp"><code>{"name": "media_generate", "arguments": {"project_id": "prj_e21b467917e3", "preset_id": "leak_warm", "add_to_timeline": true, "new_track": true, "at_us": 0, "duration_us": 3000000}}
+{"name": "segment_set_blend", "arguments": {"project_id": "prj_e21b467917e3", "segment_id": "seg_978c06ee7ef6", "mode": "screen"}}</code></pre><pre data-lang="kadrctl"><code>kadrctl run media.generate --project_id prj_e21b467917e3 --preset_id leak_warm --add_to_timeline --new_track --at_us 0 --duration_us 3s
+kadrctl run segment.set_blend --project_id prj_e21b467917e3 --segment_id seg_978c06ee7ef6 --mode screen</code></pre></div>
+<p>Повний перелік параметрів кожного виду — в описі команди <a href="{{root}}{{lang_root}}docs/ai/reference/media.html">media.generate</a>.</p>

@@ -1,4 +1,4 @@
-<!--meta {"title":"Рецепти","nav":"Усі рецепти","order":300,"description":"Наскрізні сценарії Kadr для ШІ-агентів — TikTok, монтаж під біт, «говорющі голови», слайдшоу, аудіограми, промо, варіанти форматів, самоперевірка, перекладені субтитри й документалка з архіву — з кожним викликом для kadrctl і MCP.","group":"Рецепти"} -->
+<!--meta {"title":"Рецепти","nav":"Усі рецепти","order":300,"description":"Наскрізні сценарії Kadr для ШІ-агентів — TikTok, монтаж під біт, «говорющі голови», слайдшоу, аудіограми, промо, варіанти форматів, самоперевірка, перекладені субтитри, документалка з архіву й вибір вигляду «на око» — з кожним викликом для kadrctl і MCP.","group":"Рецепти"} -->
 <p class="lead">Кожен рецепт — завершена робота: запит, який можна вставити в Claude, а далі кожен виклик агента по порядку — як <code>kadrctl</code> і як виклик інструмента MCP. Усі рецепти перед публікацією прогнано від початку до кінця на справжньому рушії Kadr — зі згенерованими замінниками медіа.</p>
 <div class="cards">
   <a class="card" href="{{root}}{{lang_root}}docs/ai/vertical-tiktok.html"><b>Вертикальний TikTok із папки кліпів</b><span>Папка кліпів і пісня стають відео 9:16 з кадруванням за об’єктом, різкими переходами, субтитрами з підсвіткою слів і музикою на рівній гучності. · ~3 хв</span></a>
@@ -11,6 +11,7 @@
   <a class="card" href="{{root}}{{lang_root}}docs/ai/ai-review-loop.html"><b>Claude перевіряє й виправляє власний монтаж</b><span>Claude рендерить ваш монтаж, помічає чорні краї та обрізані титри, вимірює їх, виправляє, перевіряє результат і скасовує все, що виглядає гірше. · ~1 хв</span></a>
   <a class="card" href="{{root}}{{lang_root}}docs/ai/translate-and-reburn-captions.html"><b>Переклад і повторне «вшивання» субтитрів</b><span>Claude перекладає субтитри, зберігає їхній таймінг, а ви отримуєте відео з вшитими субтитрами та файли SRT обома мовами. · ~2 хв</span></a>
   <a class="card" href="{{root}}{{lang_root}}docs/ai/documentary-archive-footage.html"><b>Документальний фільм з архівної хроніки в суспільному надбанні</b><span>Кінохроніка в суспільному надбанні з archive.org, українська озвучка ElevenLabs, кадри під голос, рух Кена Бернса, вигляд кіноплівки й виправлені субтитри. · ~10 хв (переважно завантаження)</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/preview-before-applying.html"><b>Обрати перехід та ефект, подивившись на них</b><span>Claude добирає кілька переходів та ефектів, справді дивиться, як кожен рухається, обирає той, що пасує до вашого відео, і перевіряє його у вашому монтажі. · ~1 хв</span></a>
 </div>
 
 <h2 id="how-to-use">Як користуватися рецептом</h2>
@@ -35,5 +36,6 @@
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/ai-review-loop.html">Цикл перевірки</a></td><td>Будь-який проєкт Kadr</td><td><code class="cmd">preview.contact_sheet</code>, <code class="cmd">preview.layout</code>, <code class="cmd">preview.frame</code>, <code class="cmd">keyframe.list</code></td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/translate-and-reburn-captions.html">Переклад субтитрів</a></td><td>Проєкт Kadr із субтитрами (наприклад, з рецепта про «говорющу голову»)</td><td><code class="cmd">captions.list</code>, <code class="cmd">project.duplicate</code>, <code class="cmd">captions.update</code>, <code class="cmd">captions.set_style</code></td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/documentary-archive-footage.html">Документалка з архіву</a></td><td>ffmpeg у PATH, ключ API ElevenLabs (необов’язково — підійдуть і локальні голоси), інтернет для хроніки</td><td><code class="cmd">media.import</code>, <code class="cmd">tts.set_api_key</code>, <code class="cmd">tts.voices</code>, <code class="cmd">tts.speak</code></td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/preview-before-applying.html">Вибір «на око»</a></td><td>Проєкт Kadr із двома кліпами впритул</td><td><code class="cmd">library.list</code>, <code class="cmd">library.preview</code>, <code class="cmd">transition.set</code>, <code class="cmd">preview.contact_sheet</code></td></tr>
   </tbody>
 </table>

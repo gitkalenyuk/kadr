@@ -46,7 +46,7 @@
 </ul>
 
 <h2 id="images">Pictures the model can see</h2>
-<p>Results that contain a <code>png_base64</code> field are returned as an MCP <strong>image</strong> block plus a text block with the remaining fields. That applies to <code>preview_frame</code> (one composited frame, exactly as exported) and <code>preview_contact_sheet</code> (a grid of frames across the edit, with <code>times_us</code> for each tile). For measurements use <code>preview_layout</code>: it returns the box of every visible clip, text and sticker in canvas pixels. See <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Verifying results</a>.</p>
+<p>Results that contain a <code>png_base64</code> field are returned as an MCP <strong>image</strong> block plus a text block with the remaining fields. That applies to <code>preview_frame</code> (one composited frame, exactly as exported), <code>preview_contact_sheet</code> (a grid of frames across the edit, with <code>times_us</code> for each tile) and <code>library_preview</code> (how a transition, effect, filter, animation, text look, caption style, animated sticker or generated clip plays — look before you choose; see <a href="{{root}}{{lang_root}}docs/ai/library.html#preview">Library, previews and fonts</a>). For measurements use <code>preview_layout</code>: it returns the box of every visible clip, text and sticker in canvas pixels. See <a href="{{root}}{{lang_root}}docs/ai/verifying.html">Verifying results</a>.</p>
 
 <h2 id="errors">Errors</h2>
 <p>A failed call is a tool result with <code>"isError": true</code> whose text is the engine’s error as JSON:</p>

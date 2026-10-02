@@ -1,4 +1,4 @@
-<!--meta {"title":"Recipes","nav":"All recipes","order":300,"description":"End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions and an archive documentary — with every call as kadrctl and MCP.","group":"Recipes"} -->
+<!--meta {"title":"Recipes","nav":"All recipes","order":300,"description":"End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions, an archive documentary and picking looks by eye — with every call as kadrctl and MCP.","group":"Recipes"} -->
 <p class="lead">Each recipe is a complete job: a prompt you can paste into Claude, then every call the agent makes, in order, as <code>kadrctl</code> and as an MCP tool call. All of them were run end to end against a real Kadr engine — with generated stand-in media — before publishing.</p>
 <div class="cards">
   <a class="card" href="{{root}}{{lang_root}}docs/ai/vertical-tiktok.html"><b>Vertical TikTok from a folder of clips</b><span>A folder of clips and a song become a 9:16 video with subject-tracking reframes, whip-pan cuts, word-highlight captions and music at a steady level. · ~3 min</span></a>
@@ -11,6 +11,7 @@
   <a class="card" href="{{root}}{{lang_root}}docs/ai/ai-review-loop.html"><b>Let Claude review and fix its own edit</b><span>Claude renders your edit, spots black edges and cut-off titles, measures them, fixes them, checks the fix and undoes anything that looks worse. · ~1 min</span></a>
   <a class="card" href="{{root}}{{lang_root}}docs/ai/translate-and-reburn-captions.html"><b>Translate and re-burn captions</b><span>Claude translates your captions, keeps their timing, and you get a burned-in version plus SRT files in both languages. · ~2 min</span></a>
   <a class="card" href="{{root}}{{lang_root}}docs/ai/documentary-archive-footage.html"><b>Documentary from public-domain archive footage</b><span>Public-domain newsreels from archive.org, Ukrainian ElevenLabs narration, shots timed to the voice, Ken Burns moves, a film-strip look and fixed captions. · ~10 min (mostly downloading)</span></a>
+  <a class="card" href="{{root}}{{lang_root}}docs/ai/preview-before-applying.html"><b>Choose a transition and an effect by looking at them</b><span>Claude shortlists transitions and effects, actually looks at how each one moves, picks the one that suits your footage and checks it in your edit. · ~1 min</span></a>
 </div>
 
 <h2 id="how-to-use">How to use a recipe</h2>
@@ -35,5 +36,6 @@
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/ai-review-loop.html">Review loop</a></td><td>Any Kadr project</td><td><code class="cmd">preview.contact_sheet</code>, <code class="cmd">preview.layout</code>, <code class="cmd">preview.frame</code>, <code class="cmd">keyframe.list</code></td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/translate-and-reburn-captions.html">Translate captions</a></td><td>A Kadr project with captions (for example from the talking-head recipe)</td><td><code class="cmd">captions.list</code>, <code class="cmd">project.duplicate</code>, <code class="cmd">captions.update</code>, <code class="cmd">captions.set_style</code></td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/documentary-archive-footage.html">Archive documentary</a></td><td>ffmpeg on PATH, an ElevenLabs API key (optional — local voices work too), internet for the footage</td><td><code class="cmd">media.import</code>, <code class="cmd">tts.set_api_key</code>, <code class="cmd">tts.voices</code>, <code class="cmd">tts.speak</code></td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/preview-before-applying.html">Pick by looking</a></td><td>A Kadr project with two clips that touch</td><td><code class="cmd">library.list</code>, <code class="cmd">library.preview</code>, <code class="cmd">transition.set</code>, <code class="cmd">preview.contact_sheet</code></td></tr>
   </tbody>
 </table>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadr — the video editor your AI can drive</title>
-<meta name="description" content="Kadr is a free CapCut-style video editor for Windows where every button is an API command: REST, MCP for Claude and other AI agents, WebSocket events and a CLI. Offline captions, 68 transitions, 70 filters, GPU export.">
+<meta name="description" content="Kadr is a free CapCut-style video editor for Windows where every button is an API command: REST, MCP for Claude and other AI agents, WebSocket events and a CLI. Offline captions, 221 transitions, 227 filters, GPU export.">
 <link rel="canonical" href="https://gitkalenyuk.github.io/kadr/">
 <link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/">
 <link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/">
@@ -28,7 +28,7 @@
 <meta property="og:image:alt" content="Kadr — the video editor your AI can drive">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Kadr — the video editor your AI can drive">
-<meta name="twitter:description" content="Every button is an API. REST, MCP, CLI. Offline captions, 68 transitions, 70 filters, GPU export.">
+<meta name="twitter:description" content="Every button is an API. REST, MCP, CLI. Offline captions, 221 transitions, 227 filters, GPU export.">
 <meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
 <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css">
@@ -162,7 +162,7 @@
             <i><svg><use href="#i-adjust"/></svg></i>
           </div>
           <div class="ed-lib-main">
-            <div class="ed-lib-head"><span>Generated</span><span class="ed-dim">32</span></div>
+            <div class="ed-lib-head"><span>Generated</span><span class="ed-dim">98</span></div>
             <div class="ed-tiles">
               <div class="tile t-aurora" data-tile="a"><span>Aurora flow</span></div>
               <div class="tile t-photo" data-tile="b"><span>Synthwave</span></div>
@@ -217,7 +217,7 @@
     <aside class="chat" id="chat" aria-label="Claude conversation (animated demo)">
       <div class="chat-head">
         <span class="chat-avatar" aria-hidden="true"><svg><use href="#i-sparkle"/></svg></span>
-        <span><b>Claude</b><span class="chat-sub">kadr · MCP · <!--toolcount-->178<!--/toolcount--> tools</span></span>
+        <span><b>Claude</b><span class="chat-sub">kadr · MCP · <!--toolcount-->184<!--/toolcount--> tools</span></span>
         <button class="chat-replay" id="hero-pause" aria-label="Pause the demo video" aria-pressed="false"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
         <button class="chat-replay" id="chat-replay" aria-label="Replay the demo"><svg aria-hidden="true"><use href="#i-replay"/></svg></button>
       </div>
@@ -227,11 +227,11 @@
   </div>
 
   <ul class="stats wrap" id="stats" aria-label="Kadr in numbers">
-    <li><b class="tnum" data-count><!--cmdcount-->177<!--/cmdcount--></b><span>API commands</span></li>
-    <li><b class="tnum" data-count>68</b><span>transitions</span></li>
-    <li><b class="tnum" data-count>70</b><span>filters</span></li>
-    <li><b class="tnum" data-count>56</b><span>effects</span></li>
-    <li><b class="tnum" data-count>136</b><span>clip animations</span></li>
+    <li><b class="tnum" data-count><!--cmdcount-->183<!--/cmdcount--></b><span>API commands</span></li>
+    <li><b class="tnum" data-count>221</b><span>transitions</span></li>
+    <li><b class="tnum" data-count>227</b><span>filters</span></li>
+    <li><b class="tnum" data-count>195</b><span>effects</span></li>
+    <li><b class="tnum" data-count>310</b><span>clip animations</span></li>
     <li><b class="tnum">0</b><span>uploads</span></li>
   </ul>
 </section>
@@ -242,7 +242,7 @@
     <header class="section-head reveal">
       <span class="eyebrow"><span class="chip-clip" style="background:var(--teal);color:var(--teal)"></span>01 · Every button is an API</span>
       <h2 id="api-title">If you can click it,<br><span class="grad-text">a script can call it.</span></h2>
-      <p>The editor, the REST API, the MCP server, the CLI and these docs are generated from one command registry — so they can never drift apart. Each of the <!--cmdcount-->177<!--/cmdcount--> commands ships with a description written for AI agents, typed parameters with units, examples and actionable error hints.</p>
+      <p>The editor, the REST API, the MCP server, the CLI and these docs are generated from one command registry — so they can never drift apart. Each of the <!--cmdcount-->183<!--/cmdcount--> commands ships with a description written for AI agents, typed parameters with units, examples and actionable error hints.</p>
     </header>
 
     <div class="api-demo reveal">
@@ -309,7 +309,7 @@
           <span class="reel-label mono" id="reel-label" aria-hidden="true"><i></i><span>transition.set</span><b>cube_turn_left</b></span>
         </div>
         <div class="card-body">
-          <h3><span class="big tnum" data-count>68</span> transitions</h3>
+          <h3><span class="big tnum" data-count>221</span> transitions</h3>
           <p>Cube turns, card flips, page peels, iris shapes, ripples, swirls, glitches, light leaks and film burns — with direction and softness. One call applies a transition to every cut.</p>
         </div>
       </article>
@@ -325,7 +325,7 @@
           <span class="compare-tag a">Original</span><span class="compare-tag b" id="compare-tag">Filter</span>
         </div>
         <div class="card-body">
-          <h3><span class="big tnum" data-count>70</span> filters</h3>
+          <h3><span class="big tnum" data-count>227</span> filters</h3>
           <div class="chips" id="filter-chips" role="group" aria-label="Choose a filter"></div>
           <p>Plus HSL, tone curves, LUTs, auto&nbsp;adjust and keyframable intensity.</p>
         </div>
@@ -338,7 +338,7 @@
         </div>
         <div class="card-body">
           <h3>Word-art &amp; per-letter animation</h3>
-          <p><b class="tnum">22</b> word-art effects (chrome, neon, 3D extrude, gradients), <b class="tnum">39</b> per-letter animations (typewriter, scramble, karaoke sweep, wave), <b class="tnum">46</b> templates, curved text and ~100 fonts.</p>
+          <p><b class="tnum">114</b> word-art effects (chrome, neon, 3D extrude, gradients), <b class="tnum">137</b> per-letter animations (typewriter, scramble, karaoke sweep, wave), <b class="tnum">175</b> templates, curved text and <b class="tnum">146</b> free fonts to download.</p>
         </div>
         <div class="textfx-strip" id="textfx-strip" aria-label="Word-art effects rendered by Kadr"></div>
       </article>
@@ -397,7 +397,7 @@
         <div class="social-phone"><video class="lazy-video" muted loop playsinline preload="none" poster="assets/img/showcase/vertical-poster.webp" data-sources="assets/media/vertical.mp4|video/mp4" width="360" height="640" aria-label="A vertical social edit with text templates, stickers and transitions, rendered by Kadr"></video></div>
         <div class="social-body">
           <h3>Templates, stickers &amp; generated media</h3>
-          <p><b class="tnum">46</b> text templates, <b class="tnum">82</b> original stickers (many animated) and <code>media.generate</code> for gradients, grids, confetti and countdowns — everything a vertical edit needs.</p>
+          <p><b class="tnum">175</b> text templates, <b class="tnum">394</b> original stickers (many animated) and <code>media.generate</code> for gradients, grids, confetti and countdowns — everything a vertical edit needs.</p>
           <div class="gen-tiles" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i></div>
         </div>
       </article>
@@ -405,10 +405,10 @@
       <!-- Library numbers -->
       <article class="card card-mini card-lib reveal" style="--d:.04s">
         <ul class="lib-list">
-          <li><b class="tnum" data-count>56</b><span>video effects with live parameters</span></li>
-          <li><b class="tnum" data-count>136</b><span>clip animations: in, out, combo, loop</span></li>
-          <li><b class="tnum" data-count>82</b><span>original stickers, some animated</span></li>
-          <li><b class="tnum" data-count>32</b><span>generated backgrounds: gradients, grids, confetti, countdowns</span></li>
+          <li><b class="tnum" data-count>195</b><span>video effects with live parameters</span></li>
+          <li><b class="tnum" data-count>310</b><span>clip animations: in, out, combo, loop</span></li>
+          <li><b class="tnum" data-count>394</b><span>original stickers, some animated</span></li>
+          <li><b class="tnum" data-count>98</b><span>generated backgrounds: gradients, grids, confetti, countdowns</span></li>
         </ul>
       </article>
 
@@ -427,7 +427,7 @@
         <p>Auto captions run on your own computer with Whisper — around 100 languages, word-level timing, GPU-accelerated when you have one. Every word can light up as it is spoken.</p>
       </header>
       <ul class="ticks reveal">
-        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>15 caption styles</b> — highlight word, karaoke bar, pop word, active pill, underline, neon, terminal…</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>55 caption styles</b> — highlight word, karaoke bar, pop word, active pill, underline, neon, terminal…</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Edit video by editing text</b> — delete words in the transcript and the clip is ripple-cut.</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>One click cleanup</b> — remove filler words and long pauses.</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>SRT, ASS, LRC</b> import; SRT and TXT export.</span></li>
@@ -587,7 +587,7 @@
         <caption class="sr-only">Kadr compared with typical online and desktop editors</caption>
         <thead><tr><th scope="col"><span class="sr-only">Capability</span></th><th scope="col" class="k"><img src="assets/img/logo.svg" alt="Kadr" width="84" height="20"></th><th scope="col">Typical online editor</th><th scope="col">Typical pro desktop editor</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Every action available as a local API (REST, CLI)</th><td class="k"><span class="yes">Yes</span> all <!--cmdcount-->177<!--/cmdcount--> commands</td><td><span class="no">Rarely</span></td><td><span class="mid">Partly</span> via scripting / plugins</td></tr>
+          <tr><th scope="row">Every action available as a local API (REST, CLI)</th><td class="k"><span class="yes">Yes</span> all <!--cmdcount-->183<!--/cmdcount--> commands</td><td><span class="no">Rarely</span></td><td><span class="mid">Partly</span> via scripting / plugins</td></tr>
           <tr><th scope="row">AI agents edit directly over MCP</th><td class="k"><span class="yes">Built in</span></td><td><span class="no">No</span></td><td><span class="no">Usually not</span></td></tr>
           <tr><th scope="row">Works fully offline</th><td class="k"><span class="yes">Yes</span></td><td><span class="no">Needs internet</span></td><td><span class="yes">Yes</span></td></tr>
           <tr><th scope="row">Auto captions on your own device</th><td class="k"><span class="yes">Yes</span> Whisper, ~100 languages</td><td><span class="mid">In the cloud</span></td><td><span class="mid">Varies</span></td></tr>

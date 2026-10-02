@@ -127,6 +127,7 @@ kadrctl batch prj_a049124a748a demo.json</code></pre><pre data-lang="mcp"><code>
     <tr><td><code>ai.progress</code></td><td>A background-removal job advanced or finished.</td><td><code>state</code>, <code>progress</code>, <code>frames</code>, <code>eta_s</code></td></tr>
     <tr><td><code>presets.changed</code></td><td>A My kit preset was saved, renamed or deleted.</td><td><code>{action, preset_id, kind}</code></td></tr>
     <tr><td><code>ui.open_project</code>, <code>ui.select</code>, <code>ui.library_tab</code>, <code>ui.toast</code></td><td>An agent asked the window to show something.</td><td><code>{segment_id}</code>, <code>{tab}</code>, <code>{title, body}</code></td></tr>
+    <tr><td><code>font.progress</code>, <code>fonts.changed</code></td><td>A <code class="cmd">font.install</code> download advanced; fonts were installed, imported, removed or rescanned.</td><td><code>{font_id, state, downloaded_bytes, total_bytes, progress, error}</code>, <code>{reason, font_id}</code></td></tr>
     <tr><td><code>tools.progress</code></td><td>The FFmpeg download advanced.</td><td><code>{tool, state, downloaded_bytes, total_bytes, progress, error}</code></td></tr>
     <tr><td><code>update.available</code>, <code>update.progress</code>, <code>update.ready</code>, <code>update.failed</code></td><td>Update check and download.</td><td>Version, progress or error</td></tr>
   </tbody>
@@ -152,7 +153,9 @@ ws.onmessage = (m) =&gt; {
     <tr><td><code>/api/v1/projects/{id}/media/{mid}/thumbnail?h=</code></td><td>JPEG poster frame of a material.</td></tr>
     <tr><td><code>/api/v1/projects/{id}/media/{mid}/frame?t_us=&amp;h=</code></td><td>JPEG frame of the source file at <code>t_us</code>.</td></tr>
     <tr><td><code>/api/v1/projects/{id}/media/{mid}/waveform?pps=</code></td><td>JSON <code>{"peaks_per_second": N, "peaks": [0..1, …]}</code></td></tr>
-    <tr><td><code>/api/v1/library/{kind}/{id}/thumbnail</code></td><td>Preview image of a library item.</td></tr>
+    <tr><td><code>/api/v1/library/{kind}/{id}/thumbnail</code></td><td>Still preview image (PNG) of a library item.</td></tr>
+    <tr><td><code>/api/v1/library/{kind}/{id}/preview</code></td><td>Animated preview of an item that moves: a JPEG sprite strip, frames side by side, one seamless loop. Size and rate are in the item’s <code>preview</code> field; 404 for static items. For a PNG grid an agent can look at, call <code class="cmd">library.preview</code>.</td></tr>
+    <tr><td><code>/api/v1/fonts/{id}/preview?text=&amp;h=&amp;color=</code></td><td>Transparent PNG of sample text in an installed font.</td></tr>
     <tr><td><code>/api/v1/library/sound_effect/{id}/audio</code></td><td>WAV preview of a sound effect.</td></tr>
     <tr><td><code>/api/v1/exports/{job}/file</code></td><td>The finished export file.</td></tr>
   </tbody>

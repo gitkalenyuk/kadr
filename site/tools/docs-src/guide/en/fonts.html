@@ -1,0 +1,54 @@
+<!--meta {"title":"Fonts","nav":"Fonts","order":75,"description":"Choose fonts for your titles in Kadr: search and filter by style or Cyrillic, download any of 146 free fonts in one click, import your own .ttf or .otf files, and find where font files are kept.","group":"Creating"} -->
+<p class="lead">Every text clip can use a different font. Kadr shows its built-in fonts and the fonts installed on your computer, and offers 146 free font families that it downloads for you in one click — 123 of them with Cyrillic letters.</p>
+
+<h2 id="picker">Open the font picker</h2>
+<ol class="steps">
+  <li><h3 id="picker-select">Select a text clip</h3><p>Click a text or caption clip on the timeline (or in the player). The inspector shows <strong>Text → Basic</strong>.</p></li>
+  <li><h3 id="picker-open">Click the font name</h3><p>In the <strong>Font</strong> section, click the current font's name. The font picker opens below it; your fonts are shown written in themselves.</p></li>
+  <li><h3 id="picker-pick">Pick a font</h3><p>Click a font to apply it at once — try a few, the picker stays open. Click the font name again or press <kbd>Esc</kbd> to close it.</p></li>
+</ol>
+<p>At the top of the picker are a <strong>Search</strong> box and style chips — <strong>Sans</strong>, <strong>Serif</strong>, <strong>Display</strong>, <strong>Handwriting</strong>, <strong>Monospace</strong>, <strong>Pixel</strong> (and <strong>Symbol</strong> when you have symbol fonts) — plus a <strong>Cyrillic</strong> chip. Below them, switch between <strong>My fonts</strong> (ready to use) and <strong>More fonts</strong> (free fonts to download).</p>
+
+<h2 id="sources">Where fonts come from</h2>
+<p><strong>My fonts</strong> groups the fonts you can use right now by where they come from:</p>
+<table>
+  <thead><tr><th>Group</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Built-in</strong></td><td>Four fonts inside Kadr itself (Go Sans, Go Mono and friends). They look the same on every computer.</td></tr>
+    <tr><td><strong>Downloaded</strong></td><td>Fonts you downloaded from <strong>More fonts</strong> or imported from a file.</td></tr>
+    <tr><td><strong>Bundled with Kadr</strong></td><td>24 free fonts that come with Kadr, all with Cyrillic: Montserrat, Rubik, Oswald, Manrope, Unbounded, Russo One, Rubik Mono One, Comfortaa, Yeseva One, Seymour One, Tektur, Rubik Bubbles, Caveat, Lobster, Pacifico, Marck Script, Amatic SC, Bad Script, Playfair Display, Lora, Prata, JetBrains Mono, Press Start 2P and Pixelify Sans. They work offline, right after installation.</td></tr>
+    <tr><td><strong>On this computer</strong></td><td>Every font installed in Windows, including the ones other programs installed.</td></tr>
+  </tbody>
+</table>
+<p>The small badges help with other languages: <strong>UA</strong> — the font has the full Ukrainian alphabet (Ґ, Є, І, Ї); <strong>CYR</strong> — it has Cyrillic letters.</p>
+
+<h2 id="download">Download free fonts</h2>
+<ol class="steps">
+  <li><h3 id="download-browse">Open More fonts</h3><p>Switch to <strong>More fonts</strong>. You see the families you don't have yet with their style, Cyrillic support and download size; point at one to read a short note about its look and best use.</p></li>
+  <li><h3 id="download-filter">Narrow the list</h3><p>Use the chips — for example <strong>Handwriting</strong> together with <strong>Cyrillic</strong> — or search for a mood such as “retro”, “script” or “mono”.</p></li>
+  <li><h3 id="download-click">Click the font</h3><p>Kadr downloads it (a small progress bar shows how far it is), checks the files and applies the font to the selected text. A message confirms when it is installed.</p></li>
+</ol>
+<p>All 146 families are free and open-source under the SIL Open Font License, from the Google Fonts collection, so you can use them in any video, including commercial work. A download needs the internet only once: afterwards the font works offline and in every project. Fonts with several weights get a proper Regular and Bold, so the <strong>Bold</strong> button uses the real bold letters.</p>
+<div class="callout note"><p>If a download fails — no internet, a firewall, a proxy — nothing half-finished is left behind. Click the font again to retry.</p></div>
+
+<h2 id="import">Import your own font file</h2>
+<p>Bought a font, or have one from your brand kit? Click <strong>Import font file</strong> at the bottom of the picker and choose a <code>.ttf</code>, <code>.otf</code> or <code>.ttc</code> file. Kadr checks it, copies it into its own folder (the original stays where it is) and adds it to <strong>My fonts → Downloaded</strong>. Import the Bold or Italic file of the same family too, and Kadr puts them together under one name.</p>
+<p>Web fonts (<code>.woff</code>, <code>.woff2</code>) can't be imported — use the <code>.ttf</code> or <code>.otf</code> version. Make sure the font's licence allows the way you plan to use it.</p>
+
+<h2 id="remove">Remove a font</h2>
+<p>In <strong>My fonts</strong>, point at a downloaded or imported font and click the bin, then click again to confirm. Built-in fonts and the fonts installed in Windows can't be removed here. Texts that used a removed font switch to Go Sans until you install it again — for a font from <strong>More fonts</strong>, one click brings it back.</p>
+
+<h2 id="cyrillic">Cyrillic and Ukrainian text</h2>
+<p>Turn on the <strong>Cyrillic</strong> chip to see only fonts that draw Cyrillic letters themselves, and look for the <strong>UA</strong> badge for complete Ukrainian. If you pick a Latin-only font for Ukrainian text, Kadr still shows every letter by borrowing the missing ones from a system font — readable, but the letters may not match. A font with the UA badge looks right.</p>
+
+<h2 id="files">Where the font files live</h2>
+<table>
+  <thead><tr><th>Fonts</th><th>Folder</th></tr></thead>
+  <tbody>
+    <tr><td>Downloaded and imported</td><td><code>%APPDATA%\Kadr\fonts</code>, one folder per font (portable version: <code>data\fonts</code> next to <code>Kadr.exe</code>)</td></tr>
+    <tr><td>Bundled with Kadr</td><td>the <code>fonts</code> folder next to <code>Kadr.exe</code></td></tr>
+    <tr><td>Installed in Windows</td><td><code>C:\Windows\Fonts</code> and <code>%LOCALAPPDATA%\Microsoft\Windows\Fonts</code></td></tr>
+  </tbody>
+</table>
+<p>Installed a font in Windows while Kadr was open? Click the circular-arrow button next to the search box: Kadr looks through the font folders again and the new font appears.</p>
+<div class="callout tip"><p><strong>Moving a project to another computer?</strong> Fonts are not stored inside the project. Install the same fonts there — for fonts from <strong>More fonts</strong> it is one click — otherwise those texts show Go Sans, and the font name in the inspector gets a warning sign. See <a href="{{root}}{{lang_root}}docs/guide/troubleshooting.html#move-computer">How do I move a project to another computer?</a></p></div>

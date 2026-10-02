@@ -1,6 +1,6 @@
 # Kadr
 
-> Kadr is a free, offline CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 177 commands with parameters, units and examples — while a human watches the edits live in the editor.
+> Kadr is a free, offline CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 183 commands with parameters, units and examples — while a human watches the edits live in the editor.
 
 Key facts for agents:
 
@@ -9,6 +9,8 @@ Key facts for agents:
 - REST: `POST /api/v1/commands/{name}` with a JSON object of arguments and `Authorization: Bearer <token>` (token file `%APPDATA%\Kadr\api-token`). Responses: `{"ok": true, "result": …}` or `{"ok": false, "error": {"code", "message", "hint", "field"}}`; `not_available` (HTTP 503) means a local component is missing.
 - Model: project (`prj_…`) → tracks (`trk_…`, compositing order, one magnetic `main_video` track) → segments (`seg_…`, timeline range + source range) → materials (`mat_…`). Transitions live on the left clip; keyframe times are relative to the segment; positions are canvas fractions with +Y down; `volume_db` is dB but `volume` keyframes are linear.
 - Work loop: read state (`timeline_get`), batch related edits, look at `preview_frame` / `preview_contact_sheet` (returned as images over MCP), follow error hints, poll long jobs (`captions_status` with `wait_s`, `export_status`).
+- Library: discover ids with `library_list` (kind + category/query; 221 transitions, 195 effects, 227 filters, 310 clip animations, 175 text templates, 114 word-art effects, 137 text animations, 55 caption styles, 394 stickers, 98 generated-media presets) and look before choosing with `library_preview` (a PNG contact sheet of how the item plays, returned as an image over MCP). Items that move carry `preview` {url, frames, fps, width, height} (JPEG sprite strip).
+- Fonts: `library_list` kind=font lists installed fonts; `font_catalog` lists 146 free OFL families (offline); `font_install` {id} downloads one, after which its id works in `text_update` {font}; `font_import` {path} adds a local .ttf/.otf. An uninstalled font id fails with not_found.
 
 ## Start
 
@@ -26,13 +28,14 @@ Key facts for agents:
 ## Guides
 
 - [Concepts](https://gitkalenyuk.github.io/kadr/docs/ai/concepts.html): The rules an agent needs: projects, tracks, segments and materials, microsecond time, compositing order, the magnetic main track, linked clips, transitions, keyframes and easing, coordinates, volume units, ids and undo.
+- [Library, previews and fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html): How an agent finds transitions, effects, filters, animations, text looks, stickers and generated media in Kadr's library, looks at them with library.preview before choosing, installs free fonts and uses the word-art fields of TextStyle.
 - [Working visibly with a human watching](https://gitkalenyuk.github.io/kadr/docs/ai/working-visibly.html): Let a person follow an agent’s work in the Kadr window: open the project, select the clip being edited, switch library tabs, move the playhead and narrate with notifications.
 - [Verifying results](https://gitkalenyuk.github.io/kadr/docs/ai/verifying.html): Check an edit the way an editor would: read the timeline, look at frames and contact sheets, measure layouts and loudness, then confirm the exported file itself.
 - [Best practices and pitfalls](https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html): How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.
 
 ## Recipes
 
-- [Recipes](https://gitkalenyuk.github.io/kadr/docs/ai/recipes.html): End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions and an archive documentary — with every call as kadrctl and MCP.
+- [Recipes](https://gitkalenyuk.github.io/kadr/docs/ai/recipes.html): End-to-end Kadr workflows for AI agents — TikToks, beat cuts, talking heads, slideshows, audiograms, promos, format variants, self-review, translated captions, an archive documentary and picking looks by eye — with every call as kadrctl and MCP.
 - [Vertical TikTok from a folder of clips](https://gitkalenyuk.github.io/kadr/docs/ai/vertical-tiktok.html): Turn a folder of landscape clips and a song into a 9:16 TikTok, Reels or Shorts video with reframed shots, whip-pan transitions, word-highlight captions and steady background music.
 - [Music video cut to the beat](https://gitkalenyuk.github.io/kadr/docs/ai/beat-cut-music-video.html): Detect the beats of a song, cut a set of clips exactly on them in one atomic batch, then add flash transitions, a colour filter, a punch-zoom on the drop and a title.
 - [Talking-head cleanup to a vertical short](https://gitkalenyuk.github.io/kadr/docs/ai/talking-head-cleanup.html): Clean up a talking-head recording: denoise and level the voice, cut silences, filler words and long pauses, add captions, and reframe to 9:16 for a short.
@@ -43,11 +46,12 @@ Key facts for agents:
 - [Let Claude review and fix its own edit](https://gitkalenyuk.github.io/kadr/docs/ai/ai-review-loop.html): Ask Claude to look at the rendered video with contact sheets and frames, measure problems with preview.layout, fix them, confirm the fix, and undo anything that turns out worse.
 - [Translate and re-burn captions](https://gitkalenyuk.github.io/kadr/docs/ai/translate-and-reburn-captions.html): Have Claude translate a video’s captions, write them into a copy of the project with the word timing kept, export SRT files and render a burned-in version in the new language.
 - [Documentary from public-domain archive footage](https://gitkalenyuk.github.io/kadr/docs/ai/documentary-archive-footage.html): Build a short documentary from public-domain newsreels on archive.org: search and cut the footage with ffmpeg, narrate it in Ukrainian with an ElevenLabs voice, fit every shot to the narration, add Ken Burns moves, a film look and corrected captions, then export.
+- [Choose a transition and an effect by looking at them](https://gitkalenyuk.github.io/kadr/docs/ai/preview-before-applying.html): Narrow Kadr's 221 transitions and 195 effects to a few candidates with library.list, look at how each one plays with library.preview contact sheets, apply the best with its direction, softness or sliders, and confirm it in the edit.
 
 ## Command reference
 
-- [Introduction to the command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html): How the reference of all 177 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.
-- [All commands](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html): the 177 commands by category, with parameters, units, defaults, returns and examples.
+- [Introduction to the command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html): How the reference of all 183 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.
+- [All commands](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html): the 183 commands by category, with parameters, units, defaults, returns and examples.
 - [Adjustment](https://gitkalenyuk.github.io/kadr/docs/ai/reference/adjustment.html): adjustment.auto_enhance, segment.reset_adjust, segment.reset_curves, segment.reset_hsl, segment.set_adjust, segment.set_curves, segment.set_hsl
 - [Animation](https://gitkalenyuk.github.io/kadr/docs/ai/reference/animation.html): animation.remove, animation.set
 - [App](https://gitkalenyuk.github.io/kadr/docs/ai/reference/app.html): app.version
@@ -58,8 +62,9 @@ Key facts for agents:
 - [Effects](https://gitkalenyuk.github.io/kadr/docs/ai/reference/effects.html): effect.add, effect.apply, effect.get_params, effect.remove, effect.set_params
 - [Export](https://gitkalenyuk.github.io/kadr/docs/ai/reference/export.html): export.cancel, export.estimate, export.list, export.reveal, export.start, export.status
 - [Filters](https://gitkalenyuk.github.io/kadr/docs/ai/reference/filters.html): adjustment.add, filter.add, filter.apply, filter.remove
+- [Fonts](https://gitkalenyuk.github.io/kadr/docs/ai/reference/fonts.html): font.catalog, font.import, font.install, font.remove, font.rescan
 - [Keyframes](https://gitkalenyuk.github.io/kadr/docs/ai/reference/keyframes.html): keyframe.add, keyframe.clear, keyframe.list, keyframe.remove
-- [Library](https://gitkalenyuk.github.io/kadr/docs/ai/reference/library.html): library.get, library.list
+- [Library](https://gitkalenyuk.github.io/kadr/docs/ai/reference/library.html): library.get, library.list, library.preview
 - [Media](https://gitkalenyuk.github.io/kadr/docs/ai/reference/media.html): media.create_proxy, media.delete, media.generate, media.get, media.import, media.list, media.relink, media.rename, media.usage
 - [Playback](https://gitkalenyuk.github.io/kadr/docs/ai/reference/playback.html): playback.pause, playback.play, playback.seek, playback.state, playback.step, playback.toggle, preview.contact_sheet, preview.frame, preview.layout
 - [Presets](https://gitkalenyuk.github.io/kadr/docs/ai/reference/presets.html): presets.apply, presets.delete, presets.get, presets.list, presets.rename, presets.save

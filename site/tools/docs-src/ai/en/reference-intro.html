@@ -1,5 +1,5 @@
-<!--meta {"title":"Command reference","nav":"Introduction","order":900,"description":"How the reference of all 177 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.","group":"Command reference"} -->
-<p class="lead">The command reference documents all 177 commands — the same text an agent receives as MCP tool descriptions, generated from the engine’s own registry. Command descriptions are in English in both languages.</p>
+<!--meta {"title":"Command reference","nav":"Introduction","order":900,"description":"How the reference of all 183 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.","group":"Command reference"} -->
+<p class="lead">The command reference documents all 183 commands in 29 categories — the same text an agent receives as MCP tool descriptions, generated from the engine’s own registry. Command descriptions are in English in both languages.</p>
 <p><a href="{{root}}{{lang_root}}docs/ai/reference/index.html"><strong>Open the full command reference →</strong></a></p>
 
 <h2 id="entry">What each entry contains</h2>
@@ -26,8 +26,9 @@
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/effects.html">Effects</a></td><td>5</td><td>Video effects on effect tracks or on single clips, with adjustable parameters.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/export.html">Export</a></td><td>6</td><td>Export jobs: start, status, estimate, list, cancel, reveal.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/filters.html">Filters</a></td><td>4</td><td>Colour filters on filter tracks or clips, and adjustment layers.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/fonts.html">Fonts</a></td><td>5</td><td>The catalogue of free fonts: install, import a font file, remove, rescan font folders.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/keyframes.html">Keyframes</a></td><td>4</td><td>Add, list, remove and clear keyframes with easing.</td></tr>
-    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/library.html">Library</a></td><td>2</td><td>Built-in transitions, effects, filters, animations, fonts, stickers, styles, presets and sounds.</td></tr>
+    <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/library.html">Library</a></td><td>3</td><td>Built-in transitions, effects, filters, animations, fonts, stickers, styles, presets and sounds — and <code class="cmd">library.preview</code> to see how an item plays.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/media.html">Media</a></td><td>9</td><td>Import, list, generate, rename, relink and proxy media files.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/playback.html">Playback</a></td><td>9</td><td>Play, pause, seek and step — and render frames, contact sheets and on-canvas layouts.</td></tr>
     <tr><td><a href="{{root}}{{lang_root}}docs/ai/reference/presets.html">Presets</a></td><td>6</td><td>Save and apply “My kit” presets across projects.</td></tr>
@@ -48,7 +49,7 @@
 </table>
 
 <h2 id="namespaces">Reading command names</h2>
-<p>The part before the first dot is the namespace — the subject the command acts on: <code>project.</code>, <code>media.</code>, <code>timeline.</code> (clips, tracks, markers), <code>segment.</code> (one clip’s properties), <code>keyframe.</code>, <code>animation.</code>, <code>text.</code>, <code>captions.</code>, <code>transcript.</code>, <code>audio.</code>, <code>tts.</code>, <code>sfx.</code>, <code>effect.</code>, <code>filter.</code>, <code>adjustment.</code>, <code>transition.</code>, <code>library.</code>, <code>preview.</code>, <code>playback.</code>, <code>export.</code>, <code>ai.</code> (smart tools), <code>presets.</code>, <code>edit.</code>, <code>clipboard.</code>, <code>ui.</code>, <code>tools.</code>, <code>update.</code>, <code>app.</code>. Verbs are consistent: <code>add</code> creates a new segment, <code>apply</code> changes an existing clip, <code>set</code>/<code>set_*</code> replaces values, <code>get</code>/<code>list</code> only read.</p>
+<p>The part before the first dot is the namespace — the subject the command acts on: <code>project.</code>, <code>media.</code>, <code>timeline.</code> (clips, tracks, markers), <code>segment.</code> (one clip’s properties), <code>keyframe.</code>, <code>animation.</code>, <code>text.</code>, <code>captions.</code>, <code>transcript.</code>, <code>audio.</code>, <code>tts.</code>, <code>sfx.</code>, <code>effect.</code>, <code>filter.</code>, <code>adjustment.</code>, <code>transition.</code>, <code>library.</code>, <code>font.</code>, <code>preview.</code>, <code>playback.</code>, <code>export.</code>, <code>ai.</code> (smart tools), <code>presets.</code>, <code>edit.</code>, <code>clipboard.</code>, <code>ui.</code>, <code>tools.</code>, <code>update.</code>, <code>app.</code>. Verbs are consistent: <code>add</code> creates a new segment, <code>apply</code> changes an existing clip, <code>set</code>/<code>set_*</code> replaces values, <code>get</code>/<code>list</code> only read.</p>
 
 <h2 id="other-formats">The same reference in other forms</h2>
 <table>

@@ -41,6 +41,12 @@
 <h3 id="shortcuts-layout">Keyboard shortcuts don't work</h3>
 <p>Click an empty part of the timeline first: while the cursor is in a text box, shortcuts are switched off so you can type. If you use a non-Latin keyboard layout (for example Ukrainian), switch to the English layout — letter shortcuts such as <kbd>Ctrl</kbd>+<kbd>B</kbd>, <kbd>Q</kbd> and <kbd>M</kbd> follow the active layout. See <a href="{{root}}{{lang_root}}docs/guide/shortcuts.html">Keyboard shortcuts</a>.</p>
 
+<h3 id="font-problems">A font won't download, or a title shows the wrong font</h3>
+<p>Downloading a font from <strong>More fonts</strong> needs the internet; if a firewall or proxy blocks it, the font shows an error — click it again to retry, or download the font yourself and use <strong>Import font file</strong>. A title shows Go Sans and its font name has a warning sign when the project uses a font this computer doesn't have (for example after moving the project): install that font and the title is fixed. See <a href="{{root}}{{lang_root}}docs/guide/fonts.html">Fonts</a>.</p>
+
+<h3 id="previews-still">Library cards don't play when I hover over them</h3>
+<p>Keep the mouse on the card for a moment — the first preview of each card is drawn on the spot. Items that don't move (still stickers, fonts) have no animation. If no card plays at all, Windows animations are probably switched off: turn on <strong>Settings → Accessibility → Visual effects → Animation effects</strong>.</p>
+
 <h3 id="edited-by">A message says “Edited via API” or “Edited via MCP”</h3>
 <p>Another program — usually an AI assistant you connected, or a script — changed the project. That is expected when you use Kadr with AI. Any such change can be undone with <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</p>
 
@@ -67,7 +73,7 @@
 <p>Yes. Kadr is freeware: free to use on any number of computers, also for commercial work, with no account, no watermark, no ads and no telemetry.</p>
 
 <h3 id="offline">Does Kadr work offline?</h3>
-<p>Yes. Editing, export, auto captions, background removal and the other smart tools all run on your computer. The internet is only used for the one-time FFmpeg download, update checks (which you can switch off) and — only if you choose them — ElevenLabs voices.</p>
+<p>Yes. Editing, export, auto captions, background removal and the other smart tools all run on your computer. The internet is only used for the one-time FFmpeg download, update checks (which you can switch off) and — only if you choose them — ElevenLabs voices and downloads of free fonts.</p>
 
 <h3 id="where-projects">Where are my projects stored?</h3>
 <table>
@@ -76,13 +82,14 @@
     <tr><td>Projects, settings, My kit</td><td><code>%APPDATA%\Kadr</code> — projects are in its <code>projects</code> folder, one folder each</td></tr>
     <tr><td>Portable version</td><td>the <code>data</code> folder next to <code>Kadr.exe</code></td></tr>
     <tr><td>Exported videos</td><td><code>Videos\Kadr</code> in your user folder, unless you chose another folder</td></tr>
+    <tr><td>Fonts you downloaded or imported</td><td><code>%APPDATA%\Kadr\fonts</code></td></tr>
     <tr><td>FFmpeg downloaded by Kadr</td><td><code>%LOCALAPPDATA%\Kadr\tools\ffmpeg\bin</code></td></tr>
   </tbody>
 </table>
 <p>To open <code>%APPDATA%\Kadr</code>, paste it into the address bar of File Explorer. <strong>Settings → About → Data folder</strong> always shows the folder your copy of Kadr uses.</p>
 
 <h3 id="move-computer">How do I move a project to another computer?</h3>
-<p>Copy the project's folder from <code>%APPDATA%\Kadr\projects</code> to the same place on the other computer, and copy your media files too. If the media ends up in a different folder there, <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">relink</a> it. For the cleanest hand-over, export the finished video instead.</p>
+<p>Copy the project's folder from <code>%APPDATA%\Kadr\projects</code> to the same place on the other computer, and copy your media files too. If the media ends up in a different folder there, <a href="{{root}}{{lang_root}}docs/guide/import-media.html#missing">relink</a> it. Fonts are not part of the project: install the same <a href="{{root}}{{lang_root}}docs/guide/fonts.html">fonts</a> on the other computer too. For the cleanest hand-over, export the finished video instead.</p>
 
 <h3 id="lost-work">Kadr closed unexpectedly. Is my work lost?</h3>
 <p>No. Kadr saves after every change, so your project is exactly as you left it. Only an export that was running needs to be started again.</p>
