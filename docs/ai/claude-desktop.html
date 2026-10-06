@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/ai/claude-desktop.html" data-alt-uk="../../uk/docs/ai/claude-desktop.html" data-section="ai">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Desktop — Kadr</title>
+<meta name="description" content="Add Kadr to Claude Desktop with a short claude_desktop_config.json entry, restart, and let Claude edit while you watch.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/claude-desktop.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Claude Desktop — Kadr">
+<meta property="og:description" content="Add Kadr to Claude Desktop with a short claude_desktop_config.json entry, restart, and let Claude edit while you watch.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Desktop — Kadr">
+<meta name="twitter:description" content="Add Kadr to Claude Desktop with a short claude_desktop_config.json entry, restart, and let Claude edit while you watch.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-ai page-claude-desktop" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/">For humans</a>
+      <a href="../../docs/ai/" aria-current="page">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/ai/claude-desktop.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/ai/claude-desktop.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Get started</span><span class="sr-only">Get started with Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">Claude Desktop</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai" aria-current="true"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/ai/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/ai/claude-code.html"><span>Claude Code</span></a></li><li><a href="../../docs/ai/claude-desktop.html" aria-current="page"><span>Claude Desktop</span></a></li><li><a href="../../docs/ai/other-mcp-clients.html"><span>Other MCP clients</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Interfaces</p><ul><li><a href="../../docs/ai/mcp.html"><span>MCP tools</span></a></li><li><a href="../../docs/ai/rest.html"><span>REST API</span></a></li><li><a href="../../docs/ai/cli.html"><span>CLI (kadrctl)</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Guides</p><ul><li><a href="../../docs/ai/concepts.html"><span>Concepts</span></a></li><li><a href="../../docs/ai/library.html"><span>Library &amp; fonts</span></a></li><li><a href="../../docs/ai/working-visibly.html"><span>Working visibly</span></a></li><li><a href="../../docs/ai/verifying.html"><span>Verifying results</span></a></li><li><a href="../../docs/ai/best-practices.html"><span>Best practices</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Recipes</p><ul><li><a href="../../docs/ai/recipes.html"><span>All recipes</span></a></li><li><a href="../../docs/ai/vertical-tiktok.html"><span>Vertical TikTok</span></a></li><li><a href="../../docs/ai/beat-cut-music-video.html"><span>Cut to the beat</span></a></li><li><a href="../../docs/ai/talking-head-cleanup.html"><span>Talking-head cleanup</span></a></li><li><a href="../../docs/ai/photo-slideshow.html"><span>Photo slideshow</span></a></li><li><a href="../../docs/ai/podcast-audiogram.html"><span>Podcast audiogram</span></a></li><li><a href="../../docs/ai/product-promo.html"><span>Product promo</span></a></li><li><a href="../../docs/ai/batch-export-variants.html"><span>Three formats</span></a></li><li><a href="../../docs/ai/ai-review-loop.html"><span>Review loop</span></a></li><li><a href="../../docs/ai/translate-and-reburn-captions.html"><span>Translate captions</span></a></li><li><a href="../../docs/ai/documentary-archive-footage.html"><span>Archive documentary</span></a></li><li><a href="../../docs/ai/preview-before-applying.html"><span>Pick by looking</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Command reference</p><ul><li><a href="../../docs/ai/reference-intro.html"><span>Introduction</span></a></li><li><a href="../../docs/ai/reference/index.html"><span>All commands</span><span class="count">188</span></a></li><li><a href="../../docs/ai/reference/adjustment.html"><span>Adjustment</span><span class="count">7</span></a></li><li><a href="../../docs/ai/reference/animation.html"><span>Animation</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/app.html"><span>App</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/audio.html"><span>Audio</span><span class="count">12</span></a></li><li><a href="../../docs/ai/reference/audio-properties.html"><span>Audio properties</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/captions.html"><span>Captions</span><span class="count">16</span></a></li><li><a href="../../docs/ai/reference/edit.html"><span>Edit</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/effects.html"><span>Effects</span><span class="count">5</span></a></li><li><a href="../../docs/ai/reference/export.html"><span>Export</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/filters.html"><span>Filters</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/fonts.html"><span>Fonts</span><span class="count">5</span></a></li><li><a href="../../docs/ai/reference/keyframes.html"><span>Keyframes</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/library.html"><span>Library</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/media.html"><span>Media</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/playback.html"><span>Playback</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/presets.html"><span>Presets</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/projects.html"><span>Projects</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/rendering.html"><span>Rendering</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/smart-tools.html"><span>Smart tools</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/speed.html"><span>Speed</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/stickers.html"><span>Stickers</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/text.html"><span>Text</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/timeline.html"><span>Timeline</span><span class="count">23</span></a></li><li><a href="../../docs/ai/reference/tools.html"><span>Tools</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/transcript.html"><span>Transcript</span><span class="count">7</span></a></li><li><a href="../../docs/ai/reference/transitions.html"><span>Transitions</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/updates.html"><span>Updates</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/video.html"><span>Video</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/video-properties.html"><span>Video properties</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/window.html"><span>Window</span><span class="count">4</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><span aria-current="page">Claude Desktop</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI agents</span><span class="pe-group">Start</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>2 min read</span></p><h1>Claude Desktop</h1></header><p class="lead">Claude Desktop starts <code>kadr-mcp.exe</code> for you and shows Kadr’s tools in every chat. It takes one entry in a JSON file and a restart.</p>
+
+<ol class="steps">
+  <li>
+    <h3 id="open-config">Open the config file<a class="anchor" href="#open-config" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>In Claude Desktop open <strong>Settings → Developer → Edit Config</strong>. This opens <code>claude_desktop_config.json</code> — normally <code>%APPDATA%\Claude\claude_desktop_config.json</code>. Create the file if it does not exist.</p>
+  </li>
+  <li>
+    <h3 id="add-kadr">Add Kadr<a class="anchor" href="#add-kadr" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Paste this, with your own user name in the path (Kadr’s <strong>Settings → API &amp; automation</strong> shows the exact snippet for your PC). In JSON every backslash is written twice.</p>
+    <div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">{</span>
+  <span class="tok-p">&quot;mcpServers&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
+    <span class="tok-p">&quot;kadr&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
+      <span class="tok-p">&quot;command&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe&quot;</span>
+    <span class="tok-o">}</span>
+  <span class="tok-o">}</span>
+<span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+    <p>If the file already has an <code>mcpServers</code> section, add only the <code>"kadr": { … }</code> entry inside it, separated from its neighbours by a comma.</p>
+  </li>
+  <li>
+    <h3 id="restart">Restart Claude Desktop completely<a class="anchor" href="#restart" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Closing the window is not enough: right-click the Claude icon in the notification area and choose <strong>Quit</strong>, then start Claude Desktop again. Open Kadr first if you want to watch the edits.</p>
+  </li>
+  <li>
+    <h3 id="verify">Check that it works<a class="anchor" href="#verify" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Kadr’s tools now appear in the chat’s tools menu. Start a new chat and ask:</p>
+    <blockquote><p>List my Kadr projects.</p></blockquote>
+    <p>Claude calls <code>project_list</code> and answers. Then try an edit and watch the editor:</p>
+    <blockquote><p>Create a 9:16 Kadr project called "Desktop test", open it in the Kadr window, generate a 4-second sunset_gradient background, add the title "Hello" with the title_bold template and show me the frame at 1 second.</p></blockquote>
+  </li>
+</ol>
+
+<h2 id="what-claude-sees">What Claude gets<a class="anchor" href="#what-claude-sees" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>One tool per Kadr command (<code>timeline_segment_split</code> for <code>timeline.segment.split</code>) with the full description, parameter units and examples, plus <code>kadr_batch</code> for atomic multi-step edits. See <a href="../../docs/ai/mcp.html">MCP tools</a>.</li>
+  <li>Server instructions that explain the basics: projects → tracks → segments, microseconds, read state first, batch edits, look at frames.</li>
+  <li>Pictures: <code>preview_frame</code> and <code>preview_contact_sheet</code> return image content, so Claude actually sees the result of its edit.</li>
+</ul>
+
+<h2 id="env">Another port or data folder<a class="anchor" href="#env" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>By default the bridge talks to <code>127.0.0.1:7777</code> and reads the token from <code>%APPDATA%\Kadr</code>. For a separate engine, add an <code>env</code> block:</p>
+<div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">{</span>
+  <span class="tok-p">&quot;mcpServers&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
+    <span class="tok-p">&quot;kadr&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
+      <span class="tok-p">&quot;command&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;C:\\Users\\you\\AppData\\Local\\Programs\\Kadr\\kadr-mcp.exe&quot;</span><span class="tok-o">,</span>
+      <span class="tok-p">&quot;env&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
+        <span class="tok-p">&quot;KADR_ADDR&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;127.0.0.1:7790&quot;</span><span class="tok-o">,</span>
+        <span class="tok-p">&quot;KADR_DATA_DIR&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;D:\\kadr-automation&quot;</span>
+      <span class="tok-o">}</span>
+    <span class="tok-o">}</span>
+  <span class="tok-o">}</span>
+<span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<p><code>KADR_TOKEN</code> can be set instead of <code>KADR_DATA_DIR</code>.</p>
+
+<h2 id="troubleshooting">Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>No Kadr tools in the chat</td><td>The config was not reloaded, or the JSON is invalid.</td><td>Quit Claude Desktop from the tray and start it again. Check the JSON (commas, doubled backslashes).</td></tr>
+    <tr><td>“Server disconnected” or the server fails to start</td><td>Wrong path to <code>kadr-mcp.exe</code>.</td><td>Use the full path from Kadr’s <strong>Settings → API &amp; automation</strong>. The server’s log is in <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
+    <tr><td><code>Kadr engine did not start … within 10 s</code></td><td><code>kadr-server.exe</code> is missing next to <code>kadr-mcp.exe</code>, or blocked.</td><td>Start Kadr yourself and ask again.</td></tr>
+    <tr><td>Edits don’t appear in the open Kadr window</td><td>The bridge started a headless <code>kadr-server.exe</code> before Kadr was opened; it owns port 7777.</td><td>Quit <code>kadr-server.exe</code> in Task Manager, keep Kadr open, restart Claude Desktop.</td></tr>
+    <tr><td><code>unauthorized: missing or invalid API token</code></td><td>An old <code>KADR_TOKEN</code> or a different <code>KADR_DATA_DIR</code> in <code>env</code>.</td><td>Remove them, or copy the token from <code>%APPDATA%\Kadr\api-token</code>.</td></tr>
+    <tr><td>A call stops after 5 minutes</td><td>The bridge waits at most 5 minutes per call (for example <code>wait: true</code> on long captions).</td><td>Run long jobs without <code>wait</code> and poll <code>captions_status</code> or <code>export_status</code>.</td></tr>
+  </tbody>
+</table></div>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/ai/claude-code.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Claude Code</b></a><a class="pager-next" href="../../docs/ai/other-mcp-clients.html" rel="next"><span>Next</span><b>Other MCP clients<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-3"><a href="#open-config">Open the config file</a></li><li class="lvl-3"><a href="#add-kadr">Add Kadr</a></li><li class="lvl-3"><a href="#restart">Restart Claude Desktop completely</a></li><li class="lvl-3"><a href="#verify">Check that it works</a></li><li class="lvl-2"><a href="#what-claude-sees">What Claude gets</a></li><li class="lvl-2"><a href="#env">Another port or data folder</a></li><li class="lvl-2"><a href="#troubleshooting">Troubleshooting</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#availability">Availability</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

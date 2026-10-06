@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="./" data-alt-uk="uk/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kadr — the video editor your AI can drive</title>
+<meta name="description" content="Kadr is a free CapCut-style video editor for Windows where every button is an API command: REST, MCP for Claude and other AI agents, WebSocket events and a CLI. Offline captions, 221 transitions, 227 filters, GPU export.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Kadr — the video editor your AI can drive">
+<meta property="og:description" content="A CapCut-style desktop editor where every action is an API command. Edit by hand, by script, or just ask Claude.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kadr — the video editor your AI can drive">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kadr — the video editor your AI can drive">
+<meta name="twitter:description" content="Every button is an API. REST, MCP, CLI. Offline captions, 221 transitions, 227 filters, GPU export.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var d=document.documentElement,w=localStorage.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Kadr","applicationCategory":"MultimediaApplication","operatingSystem":"Windows 10, Windows 11","inLanguage":["en","uk"],"description":"A CapCut-style desktop video editor where every action is an API command (REST, MCP, CLI).","url":"https://gitkalenyuk.github.io/kadr/","softwareVersion":"1.0.0","image":"https://gitkalenyuk.github.io/kadr/assets/img/og.jpg","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+    <symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+    <symbol id="i-scissors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M3.3 7l17.4 10M20.7 7 3.3 17M9 4l3 2 3-2M9 20l3-2 3 2"/></symbol>
+    <symbol id="i-rewind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19 2 12l9-7zM22 19l-9-7 9-7z"/></symbol>
+    <symbol id="i-flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7l-5 5 5 5zM16 7l5 5-5 5z"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4M3.3 19a10 10 0 1 1 17.4 0"/></symbol>
+    <symbol id="i-cc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 10.2a2.2 2.2 0 1 0 0 3.6M17 10.2a2.2 2.2 0 1 0 0 3.6"/></symbol>
+    <symbol id="i-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"/></symbol>
+    <symbol id="i-export" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4zM22 9l-6 6M16 9l6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5M20 9H9a5 5 0 0 0 0 10h4"/></symbol>
+    <symbol id="i-magnet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15V7a6 6 0 0 1 12 0v8M6 11h4M14 11h4M6 15a6 6 0 0 0 12 0"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M17 3v18M3 7.5h4M3 12h18M3 16.5h4M17 7.5h4M17 16.5h4"/></symbol>
+    <symbol id="i-sticker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9l7-7V5a2 2 0 0 0-2-2z"/><path d="M14 21v-5a2 2 0 0 1 2-2h5M8.5 10h.01M15.5 10h.01M8.5 14.5s1.5 1.5 3.5 1.5"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><circle cx="15" cy="15" r="6"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+    <symbol id="i-adjust" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-apple" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.4.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1-3.2-1 .1-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></symbol>
+  </defs>
+</svg>
+
+<!--site:header-->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="./" aria-label="Kadr home"><img src="./assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="./docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="#features">Features</a>
+      <a href="#api">API</a>
+      <a href="#captions">Captions</a>
+      <a href="#ai-tools">Smart tools</a>
+      <a href="./changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="./index.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="./uk/index.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="./docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Get started</span><span class="sr-only">Get started with Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<!--/site:header-->
+
+<main id="main">
+
+<!-- ============================== HERO ============================== -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <canvas class="hero-gl" id="hero-gl" aria-hidden="true"></canvas>
+  <div class="hero-orbs" aria-hidden="true"><i class="o1" data-parallax="0.18"></i><i class="o2" data-parallax="0.32"></i><i class="o3" data-parallax="0.1"></i></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-copy wrap">
+    <a class="hero-pill" href="#availability">
+      <span class="badge badge-live"><span class="dot"></span>1.0</span>
+      <span class="hero-pill-text">Kadr 1.0 — now rendering on your GPU</span>
+      <svg aria-hidden="true"><use href="#i-arrow"/></svg>
+    </a>
+    <h1 id="hero-title" class="hero-title">
+      <span class="line"><span class="word">The</span> <span class="word">video</span> <span class="word">editor</span></span>
+      <span class="line"><span class="word grad-text">your&nbsp;AI</span> <span class="word grad-text">can&nbsp;drive.</span></span>
+    </h1>
+    <p class="hero-sub">Kadr is a CapCut-style editor for Windows where every button, slider and shortcut is also an API command. Edit by hand, script it over REST and the CLI, or just ask Claude&nbsp;— it all runs on your machine.</p>
+    <div class="hero-ctas">
+      <p class="cta-invite"><svg aria-hidden="true"><use href="#i-windows"/></svg>Kadr is available by invitation.</p>
+      <a class="btn btn-primary btn-lg" href="docs/ai/mcp.html" data-doc="mcp">
+        <svg aria-hidden="true"><use href="#i-sparkle"/></svg>Connect Claude
+      </a>
+    </div>
+    <p class="hero-meta"><span>Version 1.0.0 · Free · Windows 10 &amp; 11 · No account</span><span class="hero-mac"><svg aria-hidden="true"><use href="#i-apple"/></svg>macOS coming soon</span></p>
+  </div>
+
+  <!-- Faux editor: the player shows a real clip rendered by Kadr's engine; the timeline mirrors that project. -->
+  <div class="stage wrap-wide" id="stage">
+    <div class="editor" id="editor" role="img" aria-label="Animated demo: Claude edits a 10-second promo in the Kadr editor through MCP; the player shows the real render.">
+      <div class="ed-titlebar" aria-hidden="true">
+        <img class="ed-logo" src="assets/img/mark.svg" alt="" width="18" height="18">
+        <span class="ed-menu">File</span><span class="ed-menu">Edit</span><span class="ed-menu">View</span>
+        <span class="ed-title">Summer promo <span class="ed-dim">· 16:9 · 30 fps</span></span>
+        <span class="ed-api"><span class="dot"></span>API 127.0.0.1:7777</span>
+        <span class="ed-export"><svg><use href="#i-export"/></svg>Export</span>
+        <span class="ed-win"><i></i><i></i><i></i></span>
+      </div>
+      <div class="ed-body" aria-hidden="true">
+        <aside class="ed-lib">
+          <div class="ed-rail">
+            <i class="on"><svg><use href="#i-film"/></svg></i>
+            <i><svg><use href="#i-music"/></svg></i>
+            <i><svg><use href="#i-text"/></svg></i>
+            <i><svg><use href="#i-sticker"/></svg></i>
+            <i><svg><use href="#i-sparkle"/></svg></i>
+            <i><svg><use href="#i-swap"/></svg></i>
+            <i><svg><use href="#i-filter"/></svg></i>
+            <i><svg><use href="#i-adjust"/></svg></i>
+          </div>
+          <div class="ed-lib-main">
+            <div class="ed-lib-head"><span>Generated</span><span class="ed-dim">98</span></div>
+            <div class="ed-tiles">
+              <div class="tile t-aurora" data-tile="a"><span>Aurora flow</span></div>
+              <div class="tile t-photo" data-tile="b"><span>Synthwave</span></div>
+              <div class="tile t-neon" data-tile="c"><span>Neon floor</span></div>
+              <div class="tile t-candy"><span>Candy flow</span></div>
+              <div class="tile t-smoke"><span>Smoke</span></div>
+              <div class="tile t-confetti"><span>Confetti</span></div>
+            </div>
+          </div>
+        </aside>
+        <div class="ed-player">
+          <div class="ed-canvas">
+            <video id="hero-video" muted loop playsinline preload="metadata" poster="assets/img/showcase/hero-poster.webp" width="960" height="540">
+              <source src="assets/media/hero.webm" type="video/webm">
+              <source src="assets/media/hero.mp4" type="video/mp4">
+            </video>
+            <div class="ed-canvas-empty" id="canvas-empty"><span>Empty project</span></div>
+            <div class="ed-flash" id="ed-flash"></div>
+          </div>
+          <div class="ed-transport">
+            <span class="mono ed-tc"><span id="tc-now">00:00:00:00</span><span class="ed-dim"> / 00:00:10:00</span></span>
+            <span class="ed-play"><svg><use href="#i-play"/></svg></span>
+            <span class="ed-ratio">Ratio 16:9</span>
+          </div>
+        </div>
+        <aside class="ed-insp">
+          <div class="ed-tabs"><span class="on">Text</span><span>Animation</span><span>Tracking</span></div>
+          <div class="ed-insp-body">
+            <div class="ed-field"><span>Effect</span><b id="insp-effect">—</b></div>
+            <div class="ed-field"><span>Size</span><div class="ed-slider"><i style="--v:.62" id="sl-size"></i></div></div>
+            <div class="ed-field"><span>Glow</span><div class="ed-slider"><i style="--v:.0" id="sl-glow"></i></div></div>
+            <div class="ed-field"><span>Spacing</span><div class="ed-slider"><i style="--v:.35"></i></div></div>
+            <div class="ed-field"><span>Letters in</span><b id="insp-anim">—</b></div>
+            <div class="ed-swatches"><i style="--c:#fff"></i><i style="--c:#1fd1db"></i><i style="--c:#7b61ff"></i><i style="--c:#ff3d8b"></i><i style="--c:#ffc857"></i></div>
+          </div>
+        </aside>
+      </div>
+      <div class="ed-timeline" aria-hidden="true">
+        <div class="ed-tl-tools">
+          <svg><use href="#i-undo"/></svg><svg><use href="#i-redo"/></svg><b></b>
+          <svg><use href="#i-scissors"/></svg><svg><use href="#i-trash"/></svg><svg><use href="#i-snow"/></svg><svg><use href="#i-rewind"/></svg><svg><use href="#i-flip"/></svg>
+          <span class="ed-tl-right"><svg class="on"><use href="#i-magnet"/></svg><span class="ed-zoom"><i></i></span></span>
+        </div>
+        <div class="ed-tl-area" id="tl-area">
+          <div class="ed-ruler" id="tl-ruler"></div>
+          <div class="ed-tracks" id="tl-tracks"></div>
+          <div class="ed-playhead" id="tl-playhead"><i></i></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="chat" id="chat" aria-label="Claude conversation (animated demo)">
+      <div class="chat-head">
+        <span class="chat-avatar" aria-hidden="true"><svg><use href="#i-sparkle"/></svg></span>
+        <span><b>Claude</b><span class="chat-sub">kadr · MCP · <!--toolcount-->189<!--/toolcount--> tools</span></span>
+        <button class="chat-replay" id="hero-pause" aria-label="Pause the demo video" aria-pressed="false"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
+        <button class="chat-replay" id="chat-replay" aria-label="Replay the demo"><svg aria-hidden="true"><use href="#i-replay"/></svg></button>
+      </div>
+      <span class="chat-progress" aria-hidden="true"><i id="chat-progress"></i></span>
+      <ol class="chat-log" id="chat-log" aria-live="off"></ol>
+    </aside>
+  </div>
+
+  <ul class="stats wrap" id="stats" aria-label="Kadr in numbers">
+    <li><b class="tnum" data-count><!--cmdcount-->188<!--/cmdcount--></b><span>API commands</span></li>
+    <li><b class="tnum" data-count>221</b><span>transitions</span></li>
+    <li><b class="tnum" data-count>227</b><span>filters</span></li>
+    <li><b class="tnum" data-count>195</b><span>effects</span></li>
+    <li><b class="tnum" data-count>310</b><span>clip animations</span></li>
+    <li><b class="tnum">0</b><span>uploads</span></li>
+  </ul>
+</section>
+
+<!-- ============================== API ============================== -->
+<section class="section api" id="api" aria-labelledby="api-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="eyebrow"><span class="chip-clip" style="background:var(--teal);color:var(--teal)"></span>01 · Every button is an API</span>
+      <h2 id="api-title">If you can click it,<br><span class="grad-text">a script can call it.</span></h2>
+      <p>The editor, the REST API, the MCP server, the CLI and these docs are generated from one command registry — so they can never drift apart. Each of the <!--cmdcount-->188<!--/cmdcount--> commands ships with a description written for AI agents, typed parameters with units, examples and actionable error hints.</p>
+    </header>
+
+    <div class="api-demo reveal">
+      <div class="api-buttons" role="group" aria-label="Pick an editor button to see its API call">
+        <p class="api-buttons-label">Pick a button</p>
+        <div class="api-btn-grid" id="api-btns"></div>
+        <p class="api-hint"><kbd>Ctrl</kbd> <kbd>B</kbd> in the editor, <code>timeline.segment.split</code> over the API — same command, same undo step.</p>
+      </div>
+      <div class="term" id="term">
+        <div class="term-head">
+          <div class="term-tabs" role="tablist" aria-label="Client">
+            <button role="tab" id="tab-curl" aria-selected="true" aria-controls="term-body" data-client="curl">curl</button>
+            <button role="tab" id="tab-mcp" aria-selected="false" aria-controls="term-body" data-client="mcp" tabindex="-1">Claude · MCP</button>
+            <button role="tab" id="tab-cli" aria-selected="false" aria-controls="term-body" data-client="cli" tabindex="-1">kadrctl</button>
+          </div>
+          <span class="term-cmd mono" id="term-cmd">timeline.segment.split</span>
+        </div>
+        <div class="term-body" id="term-body" role="tabpanel" aria-live="polite">
+          <pre class="term-in"><code id="term-in"></code></pre>
+          <div class="term-sep"><span>response</span><i></i><span class="term-ms mono" id="term-ms"></span></div>
+          <pre class="term-out"><code id="term-out"></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-cards">
+      <article class="api-card reveal" style="--d:.0s">
+        <div class="api-card-icon" style="--c:var(--teal)"><svg aria-hidden="true"><use href="#i-sparkle"/></svg></div>
+        <h3>MCP for AI agents</h3>
+        <p><code>kadr-mcp.exe</code> exposes every command as a tool. Claude can build a timeline, look at rendered frames with <code>preview_frame</code> and fix its own mistakes.</p>
+        <a class="link" href="docs/ai/mcp.html" data-doc="mcp">Set up Claude <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </article>
+      <article class="api-card reveal" style="--d:.08s">
+        <div class="api-card-icon" style="--c:var(--violet-2)"><svg aria-hidden="true"><use href="#i-layers"/></svg></div>
+        <h3>REST + OpenAPI</h3>
+        <p><code>POST /api/v1/commands/&lt;name&gt;</code> on 127.0.0.1, token-protected. Atomic batches become a single undo step. OpenAPI 3 spec included.</p>
+        <a class="link" href="docs/ai/rest.html" data-doc="rest">REST quickstart <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </article>
+      <article class="api-card reveal" style="--d:.16s">
+        <div class="api-card-icon" style="--c:var(--pink)"><svg aria-hidden="true"><use href="#i-terminal"/></svg></div>
+        <h3>CLI &amp; live events</h3>
+        <p><code>kadrctl run</code> any command with human time values like <code>2.5s</code>. Subscribe to WebSocket events and watch the UI update while a script edits.</p>
+        <a class="link" href="docs/ai/cli.html" data-doc="cli">kadrctl guide <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FEATURES ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section features" id="features" aria-labelledby="features-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="eyebrow"><span class="chip-clip" style="background:var(--violet);color:var(--violet)"></span>02 · Edit like CapCut</span>
+      <h2 id="features-title">All the moves you know.<br><span class="grad-text">None of the waiting.</span></h2>
+      <p>A dark, fast, familiar editor: magnetic main track, keyframes with easing, speed curves, masks, chroma key, blend modes and a deep library of original transitions, filters, effects and text styles — all rendered locally.</p>
+    </header>
+
+    <div class="bento">
+      <!-- Transitions reel (real render) -->
+      <article class="card card-reel reveal">
+        <div class="card-media media-16x9">
+          <video class="lazy-video" muted loop playsinline preload="none" poster="assets/img/showcase/transitions-poster.webp" data-sources="assets/media/transitions.webm|video/webm,assets/media/transitions.mp4|video/mp4" width="640" height="360" aria-label="Transitions reel rendered by Kadr"></video>
+          <span class="reel-label mono" id="reel-label" aria-hidden="true"><i></i><span>transition.set</span><b>cube_turn_left</b></span>
+        </div>
+        <div class="card-body">
+          <h3><span class="big tnum" data-count>221</span> transitions</h3>
+          <p>Cube turns, card flips, page peels, iris shapes, ripples, swirls, glitches, light leaks and film burns — with direction and softness. One call applies a transition to every cut.</p>
+        </div>
+      </article>
+
+      <!-- Filters compare (real renders) -->
+      <article class="card card-filters reveal" style="--d:.06s">
+        <div class="card-media media-16x9 compare" id="compare">
+          <img class="compare-a" src="assets/img/showcase/filter-none.webp" alt="Original frame" loading="lazy" width="960" height="540">
+          <div class="compare-b" id="compare-b"><img id="compare-img" src="assets/img/showcase/filter-none.webp" alt="Same frame with a filter" loading="lazy" width="960" height="540"></div>
+          <div class="compare-handle" id="compare-handle" aria-hidden="true"><i></i></div>
+          <label class="sr-only" for="compare-range">Before / after position</label>
+          <input class="compare-range" id="compare-range" type="range" min="0" max="100" value="52">
+          <span class="compare-tag a">Original</span><span class="compare-tag b" id="compare-tag">Filter</span>
+        </div>
+        <div class="card-body">
+          <h3><span class="big tnum" data-count>227</span> filters</h3>
+          <div class="chips" id="filter-chips" role="group" aria-label="Choose a filter"></div>
+          <p>Plus HSL, tone curves, LUTs, auto&nbsp;adjust and keyframable intensity.</p>
+        </div>
+      </article>
+
+      <!-- Text -->
+      <article class="card card-text reveal">
+        <div class="card-media media-16x9">
+          <video class="lazy-video" muted loop playsinline preload="none" poster="assets/img/showcase/text-anim-poster.webp" data-sources="assets/media/text-anim.webm|video/webm,assets/media/text-anim.mp4|video/mp4" width="640" height="360" aria-label="Per-letter text animations rendered by Kadr"></video>
+        </div>
+        <div class="card-body">
+          <h3>Word-art &amp; per-letter animation</h3>
+          <p><b class="tnum">114</b> word-art effects (chrome, neon, 3D extrude, gradients), <b class="tnum">137</b> per-letter animations (typewriter, scramble, karaoke sweep, wave), <b class="tnum">175</b> templates, curved text and <b class="tnum">146</b> free fonts to download.</p>
+        </div>
+        <div class="textfx-strip" id="textfx-strip" aria-label="Word-art effects rendered by Kadr"></div>
+      </article>
+
+      <!-- Keyframes -->
+      <article class="card card-mini card-keys reveal" style="--d:.04s">
+        <div class="mini-vis" aria-hidden="true">
+          <svg viewBox="0 0 300 120" class="kf-svg">
+            <defs><linearGradient id="kfg" x1="0" x2="1"><stop offset="0" stop-color="#1fd1db"/><stop offset="1" stop-color="#ff3d8b"/></linearGradient></defs>
+            <path class="kf-grid" d="M0 30H300M0 60H300M0 90H300"/>
+            <path class="kf-curve" d="M20 96 C 80 96, 90 24, 150 24 S 230 84, 280 70"/>
+            <g class="kf-diamonds"><rect x="14" y="90" width="12" height="12" transform="rotate(45 20 96)"/><rect x="144" y="18" width="12" height="12" transform="rotate(45 150 24)"/><rect x="274" y="64" width="12" height="12" transform="rotate(45 280 70)"/></g>
+            <circle class="kf-dot" r="6"/>
+          </svg>
+        </div>
+        <h3>Keyframes with easing</h3>
+        <p>Position, scale, rotation, opacity, volume, colour and filter intensity — ease in/out, everything undoable.</p>
+      </article>
+
+      <!-- Speed curves -->
+      <article class="card card-mini card-speed reveal" style="--d:.08s">
+        <div class="mini-vis" aria-hidden="true">
+          <svg viewBox="0 0 300 120" class="sp-svg">
+            <path class="kf-grid" d="M0 60H300"/>
+            <path class="sp-curve" id="sp-curve" d="M10 60 L 290 60"/>
+          </svg>
+          <span class="sp-name mono" id="sp-name">montage</span>
+        </div>
+        <h3>Speed curves</h3>
+        <p>Montage, hero, bullet, jump cut, flash in/out or your own points, with pitch-preserving audio.</p>
+      </article>
+
+      <!-- Masks & chroma -->
+      <article class="card card-mini card-mask reveal" style="--d:.12s">
+        <div class="mini-vis mask-vis" aria-hidden="true">
+          <div class="mask-layer mask-bg"></div>
+          <div class="mask-layer mask-fg"></div>
+          <div class="mask-ring"></div>
+        </div>
+        <h3>Masks, chroma key &amp; blend</h3>
+        <p>Linear, mirror, circle, rectangle, heart and star masks with feather; chroma key; 14 blend modes.</p>
+      </article>
+
+      <!-- Magnet timeline -->
+      <article class="card card-mini card-magnet reveal">
+        <div class="mini-vis" aria-hidden="true">
+          <div class="mag-track"><i class="m1"></i><i class="m2"></i><i class="m3"></i><i class="m4"></i></div>
+          <div class="mag-track mag-audio"><i></i></div>
+        </div>
+        <h3>Magnetic main track</h3>
+        <p>Ripple delete, delete left/right <kbd>Q</kbd> <kbd>W</kbd>, split <kbd>Ctrl</kbd>+<kbd>B</kbd>, freeze, reverse, linked audio, snapping, markers.</p>
+      </article>
+
+      <!-- Social edit (real render) -->
+      <article class="card card-social reveal" style="--d:.08s">
+        <div class="social-phone"><video class="lazy-video" muted loop playsinline preload="none" poster="assets/img/showcase/vertical-poster.webp" data-sources="assets/media/vertical.mp4|video/mp4" width="360" height="640" aria-label="A vertical social edit with text templates, stickers and transitions, rendered by Kadr"></video></div>
+        <div class="social-body">
+          <h3>Templates, stickers &amp; generated media</h3>
+          <p><b class="tnum">175</b> text templates, <b class="tnum">394</b> original stickers (many animated) and <code>media.generate</code> for gradients, grids, confetti and countdowns — everything a vertical edit needs.</p>
+          <div class="gen-tiles" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g4"></i><i class="g5"></i><i class="g6"></i></div>
+        </div>
+      </article>
+
+      <!-- Library numbers -->
+      <article class="card card-mini card-lib reveal" style="--d:.04s">
+        <ul class="lib-list">
+          <li><b class="tnum" data-count>195</b><span>video effects with live parameters</span></li>
+          <li><b class="tnum" data-count>310</b><span>clip animations: in, out, combo, loop</span></li>
+          <li><b class="tnum" data-count>394</b><span>original stickers, some animated</span></li>
+          <li><b class="tnum" data-count>98</b><span>generated backgrounds: gradients, grids, confetti, countdowns</span></li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CAPTIONS ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section captions" id="captions" aria-labelledby="captions-title">
+  <div class="wrap captions-grid">
+    <div class="captions-copy">
+      <header class="section-head left reveal">
+        <span class="eyebrow"><span class="chip-clip" style="background:var(--amber);color:var(--amber)"></span>03 · Captions</span>
+        <h2 id="captions-title">Captions that<br><span class="grad-text">write themselves.</span></h2>
+        <p>Auto captions run on your own computer with Whisper — around 100 languages, word-level timing, GPU-accelerated when you have one. Every word can light up as it is spoken.</p>
+      </header>
+      <ul class="ticks reveal">
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>55 caption styles</b> — highlight word, karaoke bar, pop word, active pill, underline, neon, terminal…</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Edit video by editing text</b> — delete words in the transcript and the clip is ripple-cut.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>One click cleanup</b> — remove filler words and long pauses.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>SRT, ASS, LRC</b> import; SRT and TXT export.</span></li>
+      </ul>
+      <div class="transcript reveal" id="transcript" aria-label="Transcript of the demo clip, synced to playback">
+        <div class="transcript-head"><span class="mono">transcript.get</span><span class="ed-dim mono" id="transcript-lang">en · whisper small</span></div>
+        <p class="transcript-words" id="transcript-words">Kadr writes your captions right on your computer. Every word lights up as it is spoken.</p>
+      </div>
+    </div>
+    <div class="phone-wrap reveal" style="--d:.1s">
+      <div class="phone">
+        <video id="captions-video" class="lazy-video" loop playsinline muted preload="none" poster="assets/img/showcase/captions-poster.webp" data-sources="assets/media/captions.mp4|video/mp4" width="360" height="640" aria-label="Vertical clip with auto captions rendered by Kadr"></video>
+        <button class="phone-sound" id="captions-sound" aria-pressed="false"><svg aria-hidden="true"><use href="#i-mute"/></svg><span>Sound off</span></button>
+      </div>
+      <p class="phone-note">Voice: <code>tts.speak</code> · captions: <code>captions.auto</code> · rendered by Kadr</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SOUND ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section sound" id="sound" aria-labelledby="sound-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="eyebrow"><span class="chip-clip" style="background:var(--pink);color:var(--pink)"></span>04 · Sound</span>
+      <h2 id="sound-title">Cut to the beat.<br><span class="grad-text">Speak without a mic.</span></h2>
+    </header>
+    <div class="sound-stage reveal">
+      <canvas class="beat-canvas" id="beat-canvas" aria-hidden="true"></canvas>
+      <div class="beat-legend mono" aria-hidden="true"><span class="bl-beat">audio.detect_beats</span><span id="beat-bpm">124 BPM</span></div>
+    </div>
+    <div class="sound-grid">
+      <article class="card card-sound reveal">
+        <div class="card-ico" style="--c:var(--teal)"><svg aria-hidden="true"><use href="#i-mic"/></svg></div>
+        <h3>Text to speech</h3>
+        <p>Turn any text clip into a voice-over with Windows voices, eSpeak NG or your own ElevenLabs key, then stretch the text to match.</p>
+        <code class="snippet">tts.from_text {"sync_duration": true}</code>
+      </article>
+      <article class="card card-sound reveal" style="--d:.06s">
+        <div class="card-ico" style="--c:var(--violet-2)"><svg aria-hidden="true"><use href="#i-music"/></svg></div>
+        <h3><span class="tnum" data-count>47</span> sound effects</h3>
+        <p>Whooshes, risers, pops, dings, impacts, shutters and countdown beeps — synthesised, original, royalty-free.</p>
+        <div class="sfx-chips" id="sfx-chips"><button type="button" data-sfx="whoosh">whoosh</button><button type="button" data-sfx="pop">pop</button><button type="button" data-sfx="ding">ding</button><button type="button" data-sfx="riser">riser</button><button type="button" data-sfx="boom">boom</button></div>
+      </article>
+      <article class="card card-sound reveal" style="--d:.12s">
+        <div class="card-ico" style="--c:var(--pink)"><svg aria-hidden="true"><use href="#i-adjust"/></svg></div>
+        <h3><span class="tnum" data-count>25</span> voice effects</h3>
+        <p>Radio, walkie-talkie, cathedral, chipmunk, robot and more. Plus noise reduction, loudness normalisation, fades and keyframed volume.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== AI TOOLS ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section ai-tools" id="ai-tools" aria-labelledby="ai-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="eyebrow"><span class="chip-clip" style="background:var(--green);color:var(--green)"></span>05 · Smart tools</span>
+      <h2 id="ai-title">The tedious parts,<br><span class="grad-text">done locally.</span></h2>
+      <p>Smart tools run as background jobs on your machine and report progress as events — so agents and scripts can chain them.</p>
+    </header>
+    <div class="ai-grid">
+      <article class="card ai-card reveal">
+        <div class="ai-vis vis-bg" aria-hidden="true"><img class="bg-before" src="assets/img/showcase/bgremove-before.webp" alt="" loading="lazy" width="960" height="540"><img class="bg-after" src="assets/img/showcase/bgremove-after.webp" alt="" loading="lazy" width="960" height="540"><div class="bg-scan"></div><span class="bg-tag mono">real render</span></div>
+        <h3>Remove background</h3>
+        <p>A local ONNX matting model cuts the subject out of any clip — no green screen. Above: before and after, rendered by Kadr.</p>
+        <code class="snippet">ai.remove_background</code>
+      </article>
+      <article class="card ai-card reveal" style="--d:.06s">
+        <div class="ai-vis vis-scenes" aria-hidden="true"><div class="scene-strip"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="scene-cuts"><b></b><b></b><b></b></div></div>
+        <h3>Split scenes</h3>
+        <p>Detects every cut in long footage and splits the clip so you can rearrange shots.</p>
+        <code class="snippet">ai.split_scenes</code>
+      </article>
+      <article class="card ai-card reveal" style="--d:.12s">
+        <div class="ai-vis vis-silence" aria-hidden="true"><canvas id="silence-canvas"></canvas></div>
+        <h3>Remove silence</h3>
+        <p>Finds pauses by loudness and ripple-cuts them out, with padding so speech never clips.</p>
+        <code class="snippet">ai.remove_silence</code>
+      </article>
+      <article class="card ai-card reveal" style="--d:.18s">
+        <div class="ai-vis vis-reframe" aria-hidden="true"><div class="rf-wide"><div class="rf-subject"></div><div class="rf-crop"></div></div></div>
+        <h3>Auto reframe</h3>
+        <p>Turns 16:9 into 9:16 by tracking what matters and writing smoothed position keyframes.</p>
+        <code class="snippet">ai.auto_reframe {"ratio": "9:16"}</code>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== EXPORT ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section export" id="export" aria-labelledby="export-title">
+  <div class="wrap export-grid">
+    <div>
+      <header class="section-head left reveal">
+        <span class="eyebrow"><span class="chip-clip" style="background:var(--coral);color:var(--coral)"></span>06 · Export</span>
+        <h2 id="export-title">From timeline to<br><span class="grad-text">4K HEVC on your GPU.</span></h2>
+        <p>Hardware encoders on NVIDIA, Intel and AMD GPUs with automatic fallback to the CPU. Watch progress live over WebSocket.</p>
+      </header>
+      <ul class="spec-chips reveal" aria-label="Export options">
+        <li>480p → 4K</li><li>24 – 60 fps</li><li>H.264 · HEVC</li><li>MP4 · MOV</li><li>NVENC · Quick Sync · AMF</li><li>Animated GIF</li><li>MP3 · WAV · AAC · FLAC</li><li>Range export</li><li>No watermark</li>
+      </ul>
+    </div>
+    <div class="export-card reveal" style="--d:.1s" aria-hidden="true">
+      <div class="xp-head"><span class="mono">export.start</span><span class="badge badge-live"><span class="dot"></span>hevc_nvenc</span></div>
+      <div class="xp-file"><svg><use href="#i-film"/></svg><div><b>Summer promo.mp4</b><span class="mono">3840×2160 · 60 fps · HEVC · higher</span></div></div>
+      <div class="xp-bar"><i id="xp-fill"></i></div>
+      <div class="xp-row mono"><span id="xp-pct">0%</span><span id="xp-frames">frame 0 / 600</span></div>
+      <pre class="xp-events mono" id="xp-events"></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PRIVACY ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section private" id="private" aria-labelledby="private-title">
+  <div class="wrap private-grid">
+    <div class="pc reveal" aria-hidden="true">
+      <div class="pc-label mono"><svg><use href="#i-lock"/></svg>your PC</div>
+      <div class="pc-nodes">
+        <span class="pc-node n-ui">Editor UI</span>
+        <span class="pc-node n-engine">Engine</span>
+        <span class="pc-node n-api">API · 127.0.0.1</span>
+        <span class="pc-node n-whisper">Whisper</span>
+        <span class="pc-node n-tts">TTS</span>
+        <span class="pc-node n-ffmpeg">FFmpeg</span>
+        <span class="pc-node n-ai">Claude Desktop</span>
+        <span class="pc-node n-files">Your projects</span>
+        <span class="pc-node n-cli">kadrctl</span>
+      </div>
+      <svg class="pc-wires" viewBox="0 0 400 260" preserveAspectRatio="none"><path d="M200 125 L70 50 M200 125 L330 50 M200 125 L65 210 M200 125 L335 210 M200 125 L200 22 M200 125 L200 225 M200 125 L35 125 M200 125 L365 125"/></svg>
+      <div class="pc-cloud mono"><svg><use href="#i-x"/></svg>no uploads · no telemetry · no account</div>
+    </div>
+    <div>
+      <header class="section-head left reveal">
+        <span class="eyebrow"><span class="chip-clip" style="background:var(--teal-2);color:var(--teal-2)"></span>07 · Private by design</span>
+        <h2 id="private-title">Your footage never<br><span class="grad-text">leaves your desk.</span></h2>
+        <p>Rendering, captions, voices and smart tools all run locally. The API listens only on 127.0.0.1 and requires a token stored in your profile. Kadr has no accounts and no telemetry — the only things it ever downloads are updates and, once, FFmpeg.</p>
+      </header>
+      <a class="link reveal" href="privacy.html">Read the privacy policy <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== COMPARE ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section compare-sec" id="compare-table" aria-labelledby="compare-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <span class="eyebrow"><span class="chip-clip" style="background:var(--violet-2);color:var(--violet-2)"></span>08 · How it compares</span>
+      <h2 id="compare-title">Built for people<br><span class="grad-text">and their agents.</span></h2>
+    </header>
+    <div class="table-wrap reveal">
+      <table class="cmp">
+        <caption class="sr-only">Kadr compared with typical online and desktop editors</caption>
+        <thead><tr><th scope="col"><span class="sr-only">Capability</span></th><th scope="col" class="k"><img src="assets/img/logo.svg" alt="Kadr" width="84" height="20"></th><th scope="col">Typical online editor</th><th scope="col">Typical pro desktop editor</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Every action available as a local API (REST, CLI)</th><td class="k"><span class="yes">Yes</span> all <!--cmdcount-->188<!--/cmdcount--> commands</td><td><span class="no">Rarely</span></td><td><span class="mid">Partly</span> via scripting / plugins</td></tr>
+          <tr><th scope="row">AI agents edit directly over MCP</th><td class="k"><span class="yes">Built in</span></td><td><span class="no">No</span></td><td><span class="no">Usually not</span></td></tr>
+          <tr><th scope="row">Works fully offline</th><td class="k"><span class="yes">Yes</span></td><td><span class="no">Needs internet</span></td><td><span class="yes">Yes</span></td></tr>
+          <tr><th scope="row">Auto captions on your own device</th><td class="k"><span class="yes">Yes</span> Whisper, ~100 languages</td><td><span class="mid">In the cloud</span></td><td><span class="mid">Varies</span></td></tr>
+          <tr><th scope="row">Media and projects stay on your PC</th><td class="k"><span class="yes">Always</span></td><td><span class="no">Uploaded</span></td><td><span class="yes">Yes</span></td></tr>
+          <tr><th scope="row">Quick-edit library: word-art, stickers, transitions, templates</th><td class="k"><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td><td><span class="mid">Limited</span></td></tr>
+          <tr><th scope="row">GPU export up to 4K HEVC, no watermark</th><td class="k"><span class="yes">Yes</span></td><td><span class="mid">Plan-dependent</span></td><td><span class="yes">Yes</span></td></tr>
+          <tr><th scope="row">Account required</th><td class="k"><span class="yes">No</span></td><td><span class="no">Usually</span></td><td><span class="mid">Often</span></td></tr>
+          <tr><th scope="row">Price</th><td class="k"><span class="yes">Free</span></td><td>Freemium</td><td>Paid or subscription</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fine reveal">Comparison describes common characteristics of product categories, not any specific product.</p>
+  </div>
+</section>
+
+<!-- ============================== REQUIREMENTS + FAQ ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section reqs" id="requirements" aria-labelledby="req-title">
+  <div class="wrap reqs-grid">
+    <div>
+      <header class="section-head left reveal">
+        <span class="eyebrow"><span class="chip-clip" style="background:var(--text-2);color:var(--text-2)"></span>09 · System requirements</span>
+        <h2 id="req-title">Runs on the PC<br>you already have.</h2>
+      </header>
+      <dl class="req-list reveal">
+        <div><dt>OS</dt><dd>Windows 10 (1809 or newer) or Windows 11, 64-bit · macOS coming soon</dd></div>
+        <div><dt>CPU</dt><dd>Any x64 processor · 6+ cores recommended</dd></div>
+        <div><dt>Memory</dt><dd>4 GB minimum · 8 GB recommended · 16 GB for 4K</dd></div>
+        <div><dt>GPU</dt><dd>Optional — NVIDIA, Intel or AMD for hardware encoding; NVIDIA CUDA speeds up captions</dd></div>
+        <div><dt>Disk</dt><dd>1 GB free for Kadr, FFmpeg and caches; more for proxies and Whisper models</dd></div>
+        <div><dt>Runtime</dt><dd>Microsoft Edge WebView2 (built into Windows 11; the installer checks it)</dd></div>
+        <div><dt>FFmpeg</dt><dd>Not bundled — on first launch Kadr downloads the official GPL build (~80–100 MB) or uses one you already have</dd></div>
+        <div><dt>Optional AI</dt><dd>Python with faster-whisper (+ a Whisper model, downloaded once by you) for auto captions; rembg or onnxruntime for background removal</dd></div>
+      </dl>
+    </div>
+    <div>
+      <header class="section-head left reveal">
+        <span class="eyebrow"><span class="chip-clip" style="background:var(--text-2);color:var(--text-2)"></span>10 · FAQ</span>
+        <h2>Questions, answered.</h2>
+      </header>
+      <div class="faq reveal">
+        <details>
+          <summary>Is Kadr free?</summary>
+          <p>Yes. Kadr is freeware: no account, no watermark, no subscription. It is closed source; see the <a href="licenses.html">licences page</a>.</p>
+        </details>
+        <details>
+          <summary>Is this CapCut?</summary>
+          <p>No. Kadr is an independent editor with a CapCut-style workflow. All transitions, filters, effects, stickers, sounds and text styles are original.</p>
+        </details>
+        <details>
+          <summary>Which AI agents can drive it?</summary>
+          <p>Anything that speaks MCP — Claude Desktop, Claude Code and other MCP clients — through <code>kadr-mcp.exe</code>. Anything else can use the REST API or <code>kadrctl</code>. See <a href="docs/ai/mcp.html" data-doc="mcp">MCP setup</a>.</p>
+        </details>
+        <details>
+          <summary>Does the AI see my videos?</summary>
+          <p>Kadr itself sends nothing anywhere. An agent you connect only receives what it asks for through the API — for example a single frame from <code>preview_frame</code> — and only on your machine's loopback interface.</p>
+        </details>
+        <details>
+          <summary>Does it need the internet?</summary>
+          <p>No. After the one-time FFmpeg download, editing, captions, voices and export all work offline. With an update token from the vendor, Kadr checks GitHub for updates once a day; you can turn that off.</p>
+        </details>
+        <details>
+          <summary>macOS or Linux?</summary>
+          <p>macOS is next: a universal build for Apple silicon and Intel Macs, rendering through Metal, is being prepared. Linux is not planned yet. Today Kadr runs on Windows 10 and 11 (x64).</p>
+        </details>
+      </div>
+      <a class="link reveal" href="docs/guide/troubleshooting.html" data-doc="faq">All questions <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== AVAILABILITY ============================== -->
+<div class="divider" aria-hidden="true"></div>
+<section class="section availability" id="availability" aria-labelledby="availability-title">
+  <div class="wrap">
+    <div class="dl-card reveal">
+      <div class="dl-glow" aria-hidden="true"></div>
+      <span class="dl-ring" aria-hidden="true"></span>
+      <img class="dl-icon" src="assets/img/logo-mark.svg" alt="" width="132" height="132">
+      <h2 id="availability-title">Make your next video<br><span class="grad-text">with an AI co&#8209;editor.</span></h2>
+      <p class="dl-status"><span class="badge badge-live"><span class="dot"></span>1.0.0</span> Kadr is available by invitation.</p>
+      <div class="dl-platforms">
+        <div class="dl-os dl-win">
+          <span class="dl-os-ico"><svg aria-hidden="true"><use href="#i-windows"/></svg></span>
+          <div class="dl-os-text"><b>Windows 10 &amp; 11</b><span>64-bit · renders on NVIDIA, AMD and Intel GPUs · no admin rights</span></div>
+        </div>
+        <div class="dl-os dl-mac" id="dl-mac">
+          <span class="dl-os-ico"><svg aria-hidden="true"><use href="#i-apple"/></svg></span>
+          <div class="dl-os-text"><b>macOS <span class="badge badge-soon">Coming soon</span></b><span>A universal app for Apple silicon and Intel Macs, rendering through Metal, is in the works.</span></div>
+        </div>
+      </div>
+      <div class="dl-actions">
+        <a class="btn btn-ghost" href="docs/">
+          <svg aria-hidden="true"><use href="#i-book"/></svg>Read the docs
+        </a>
+      </div>
+      <p class="dl-links"><a href="changelog.html">Changelog</a><span aria-hidden="true">·</span><a href="docs/guide/getting-started.html" data-doc="install">Install guide</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!--site:footer-->
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="./assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="./uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="./#availability">Availability</a></li><li><a href="./#features">Features</a></li><li><a href="./changelog.html">Changelog</a></li><li><a href="./#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="./docs/guide/index.html">User guide</a></li><li><a href="./docs/ai/index.html">AI documentation</a></li><li><a href="./docs/ai/reference/index.html">Command reference</a></li><li><a href="./docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="./llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="./docs/guide/troubleshooting.html">FAQ</a></li><li><a href="./privacy.html">Privacy</a></li><li><a href="./licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<!--/site:footer-->
+
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/showcase-data.js" defer></script>
+<script src="assets/js/home.js" defer></script>
+<script src="assets/js/gl.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/ai/cli.html" data-alt-uk="../../../uk/docs/ai/cli.html" data-section="ai">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Командний рядок: kadrctl — Kadr</title>
+<meta name="description" content="Переглядайте, читайте опис і запускайте будь-яку команду Kadr із термінала з людськими форматами часу, виконуйте пакетні JSON-файли й автоматизуйте цілі папки в PowerShell.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/cli.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/cli.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/cli.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/ai/cli.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Командний рядок: kadrctl — Kadr">
+<meta property="og:description" content="Переглядайте, читайте опис і запускайте будь-яку команду Kadr із термінала з людськими форматами часу, виконуйте пакетні JSON-файли й автоматизуйте цілі папки в PowerShell.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/ai/cli.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Командний рядок: kadrctl — Kadr">
+<meta name="twitter:description" content="Переглядайте, читайте опис і запускайте будь-яку команду Kadr із термінала з людськими форматами часу, виконуйте пакетні JSON-файли й автоматизуйте цілі папки в PowerShell.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-ai page-cli" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/">Для людей</a>
+      <a href="../../../uk/docs/ai/" aria-current="page">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/ai/cli.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/ai/cli.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Почати</span><span class="sr-only">Почати роботу з Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">CLI (kadrctl)</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai" aria-current="true"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/ai/index.html"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/ai/claude-code.html"><span>Claude Code</span></a></li><li><a href="../../../uk/docs/ai/claude-desktop.html"><span>Claude Desktop</span></a></li><li><a href="../../../uk/docs/ai/other-mcp-clients.html"><span>Інші MCP-клієнти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Інтерфейси</p><ul><li><a href="../../../uk/docs/ai/mcp.html"><span>Інструменти MCP</span></a></li><li><a href="../../../uk/docs/ai/rest.html"><span>REST API</span></a></li><li><a href="../../../uk/docs/ai/cli.html" aria-current="page"><span>CLI (kadrctl)</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Посібники</p><ul><li><a href="../../../uk/docs/ai/concepts.html"><span>Концепції</span></a></li><li><a href="../../../uk/docs/ai/library.html"><span>Бібліотека й шрифти</span></a></li><li><a href="../../../uk/docs/ai/working-visibly.html"><span>Робота на очах</span></a></li><li><a href="../../../uk/docs/ai/verifying.html"><span>Перевірка результату</span></a></li><li><a href="../../../uk/docs/ai/best-practices.html"><span>Найкращі практики</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Рецепти</p><ul><li><a href="../../../uk/docs/ai/recipes.html"><span>Усі рецепти</span></a></li><li><a href="../../../uk/docs/ai/vertical-tiktok.html"><span>Вертикальний TikTok</span></a></li><li><a href="../../../uk/docs/ai/beat-cut-music-video.html"><span>Монтаж під біт</span></a></li><li><a href="../../../uk/docs/ai/talking-head-cleanup.html"><span>Очищення «говорющої голови»</span></a></li><li><a href="../../../uk/docs/ai/photo-slideshow.html"><span>Слайдшоу з фото</span></a></li><li><a href="../../../uk/docs/ai/podcast-audiogram.html"><span>Аудіограма подкасту</span></a></li><li><a href="../../../uk/docs/ai/product-promo.html"><span>Промо продукту</span></a></li><li><a href="../../../uk/docs/ai/batch-export-variants.html"><span>Три формати</span></a></li><li><a href="../../../uk/docs/ai/ai-review-loop.html"><span>Цикл перевірки</span></a></li><li><a href="../../../uk/docs/ai/translate-and-reburn-captions.html"><span>Переклад субтитрів</span></a></li><li><a href="../../../uk/docs/ai/documentary-archive-footage.html"><span>Документалка з архіву</span></a></li><li><a href="../../../uk/docs/ai/preview-before-applying.html"><span>Вибір «на око»</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідник команд</p><ul><li><a href="../../../uk/docs/ai/reference-intro.html"><span>Вступ</span></a></li><li><a href="../../../uk/docs/ai/reference/index.html"><span>Усі команди</span><span class="count">188</span></a></li><li><a href="../../../uk/docs/ai/reference/adjustment.html"><span>Корекція</span><span class="count">7</span></a></li><li><a href="../../../uk/docs/ai/reference/animation.html"><span>Анімація</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/app.html"><span>Застосунок</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/audio.html"><span>Аудіо</span><span class="count">12</span></a></li><li><a href="../../../uk/docs/ai/reference/audio-properties.html"><span>Властивості аудіо</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/captions.html"><span>Субтитри</span><span class="count">16</span></a></li><li><a href="../../../uk/docs/ai/reference/edit.html"><span>Редагування</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/effects.html"><span>Ефекти</span><span class="count">5</span></a></li><li><a href="../../../uk/docs/ai/reference/export.html"><span>Експорт</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/filters.html"><span>Фільтри</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/fonts.html"><span>Шрифти</span><span class="count">5</span></a></li><li><a href="../../../uk/docs/ai/reference/keyframes.html"><span>Ключові кадри</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/library.html"><span>Бібліотека</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/media.html"><span>Медіа</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/playback.html"><span>Відтворення</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/presets.html"><span>Пресети</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/projects.html"><span>Проєкти</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/rendering.html"><span>Rendering</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/smart-tools.html"><span>Розумні інструменти</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/speed.html"><span>Швидкість</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/stickers.html"><span>Стікери</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/text.html"><span>Текст</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/timeline.html"><span>Таймлайн</span><span class="count">23</span></a></li><li><a href="../../../uk/docs/ai/reference/tools.html"><span>Інструменти</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/transcript.html"><span>Транскрипт</span><span class="count">7</span></a></li><li><a href="../../../uk/docs/ai/reference/transitions.html"><span>Переходи</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/updates.html"><span>Оновлення</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/video.html"><span>Відео</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/video-properties.html"><span>Властивості відео</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/window.html"><span>Вікно</span><span class="count">4</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><span aria-current="page">CLI (kadrctl)</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ-агентів</span><span class="pe-group">Інтерфейси</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>3 хв читання</span></p><h1>Командний рядок: kadrctl</h1></header><p class="lead"><code>kadrctl</code> запускає будь-яку команду Kadr із термінала. Він бере параметри кожної команди із запущеного рушія, перетворює значення на потрібні типи (зокрема час на кшталт <code>2.5s</code>) і друкує результат як JSON — зручно для швидких правок, скриптів і агентів, які мають лише оболонку.</p>
+
+<h2 id="setup">Налаштування<a class="anchor" href="#setup" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p><code>kadrctl.exe</code> встановлюється поруч із <code>Kadr.exe</code> у <code>%LOCALAPPDATA%\Programs\Kadr\</code>. З опцією інсталятора <em>Додати kadrctl і kadr-mcp до PATH</em> (типово ввімкнена) він працює з будь-якого нового термінала: <code>kadrctl help</code>, <code>kadrctl version</code>.</p>
+<p>На відміну від <code>kadr-mcp</code>, <code>kadrctl</code> <strong>не</strong> запускає рушій: Kadr або <code>kadr-server.exe</code> мають працювати. Адресу й токен він сам знаходить у <code>%APPDATA%\Kadr</code>.</p>
+
+<h2 id="subcommands">Підкоманди<a class="anchor" href="#subcommands" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Підкоманда</th><th>Що робить</th></tr></thead>
+  <tbody>
+    <tr><td><code>kadrctl commands [category]</code></td><td>Показує всі команди з назвами, за бажанням — лише одну категорію (<code>Export</code>, <code>"Smart tools"</code>…). Заплановані команди позначено <code>(planned)</code>.</td></tr>
+    <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>Повна документація однієї команди: опис, місце в інтерфейсі, гаряча клавіша, результат і кожен <code>--параметр</code> з типом.</td></tr>
+    <tr><td><code>kadrctl run &lt;command&gt; [--param value]…</code></td><td>Виконує команду й друкує результат як відформатований JSON.</td></tr>
+    <tr><td><code>kadrctl batch &lt;project_id&gt; &lt;calls.json&gt; [--dry-run]</code></td><td>Виконує JSON-файл викликів як одну атомарну правку, яку можна скасувати.</td></tr>
+    <tr><td><code>kadrctl version</code></td><td>Друкує версію kadrctl.</td></tr>
+  </tbody>
+</table></div>
+<div class="code-wrap"><pre class="code lang-text"><code>&gt; kadrctl commands Window
+ui.library_tab                     Switch library tab
+ui.open_project                    Show project in the window
+ui.select                          Select clip in the window
+ui.toast                           Show a message in the window</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<div class="code-wrap"><pre class="code lang-text"><code>&gt; kadrctl describe timeline.segment.split
+timeline.segment.split — Split
+
+Splits a clip into two at at_us (default: the playhead), exactly like CapCut's Split button / Ctrl+B. …
+UI: Toolbar/Split. Hotkey: Ctrl+B.
+Undoable with edit.undo.
+Returns: {track_id, left, right, linked_right_ids?} — both halves (full segments) and the ids of linked right halves.
+
+Parameters:
+  --project_id         string   (required) ID of the project to operate on (e.g. &quot;prj_8f3a...&quot;). …
+  --segment_id         string   ID of the segment (clip) to edit. Optional: when omitted the clip on the main track under at_us is used …
+  --at_us              integer  Timeline time in microseconds (1 s = 1000000). Defaults to the current playhead position.</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+
+<h2 id="flags">Як записувати параметри<a class="anchor" href="#flags" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Кожен параметр стає прапорцем з тією самою назвою; <code>kadrctl</code> перетворює значення на тип параметра. Невідомі прапорці відхиляються ще до виконання.</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Форма</th><th>Приклад</th><th>Примітки</th></tr></thead>
+  <tbody>
+    <tr><td><code>--param value</code>, <code>--param=value</code></td><td><code>--ratio 9:16</code></td><td>Значення з пробілами беріть у лапки: <code>--name "Кухня"</code>.</td></tr>
+    <tr><td>Логічне</td><td><code>--wait</code>, <code>--wait true</code>, <code>--snap false</code></td><td>Голий прапорець означає <code>true</code>.</td></tr>
+    <tr><td>Число</td><td><code>--volume_db -12</code>, <code>--scale 0.6</code></td><td>Від’ємні числа — без проблем.</td></tr>
+    <tr><td>Час (<code>*_us</code>)</td><td><code>2500000</code>, <code>2.5s</code>, <code>1500ms</code>, <code>1m2s</code>, <code>00:01:02.5</code></td><td>Перетворюється на мікросекунди; просте число — це вже мікросекунди.</td></tr>
+    <tr><td>Масив чи об’єкт</td><td><code>--paths "[\"C:/Clips\"]"</code></td><td>Має бути JSON — див. <a href="#quoting">лапки</a>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="quoting">Лапки для JSON у Windows<a class="anchor" href="#quoting" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Параметри-масиви й об’єкти (<code>paths</code>, <code>segment_ids</code>, <code>style</code>, <code>params</code>, <code>points</code>…) — це JSON, і його подвійні лапки мають пережити оболонку:</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Оболонка</th><th>Пишіть</th></tr></thead>
+  <tbody>
+    <tr><td>Командний рядок (cmd)</td><td><code>--paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+    <tr><td>PowerShell 7.3+</td><td><code>--paths '["C:/Users/you/Videos/trip"]'</code></td></tr>
+    <tr><td>Windows PowerShell 5.1</td><td><code>--paths '[\"C:/Users/you/Videos/trip\"]'</code></td></tr>
+    <tr><td>Будь-який PowerShell</td><td><code>kadrctl --% run media.import --project_id prj_… --paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+  </tbody>
+</table></div>
+<p>Документація використовує форму з <code>--%</code>: вона працює в будь-якій версії PowerShell, а без <code>--%</code> той самий рядок працює в cmd. Після <code>--%</code> PowerShell перестає розбирати рядок, тож <code>$змінні</code> не підставляються. У JSON пишіть шляхи з прямими косими рисками (<code>C:/Users/you</code>) або подвоєними зворотними. У PowerShell беріть у лапки кольори (<code>"#FFD400"</code> — <code>#</code> починає коментар), а текст із <code>$</code> — в одинарні лапки.</p>
+
+<h2 id="batch">Пакетні файли<a class="anchor" href="#batch" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Пакетний файл — це JSON-масив об’єктів <code>{command, args}</code> без <code>project_id</code> (він береться з командного рядка). <code>--dry-run</code> перевіряє пакет на копії без збереження. Зберігайте файл у UTF-8 <strong>без</strong> BOM: <code>kadrctl</code> відхиляє BOM, а <code>Set-Content -Encoding UTF8</code> у Windows PowerShell 5.1 його додає — користуйтеся <code>[IO.File]::WriteAllText()</code>, як у <a href="#scripting">скрипті нижче</a>.</p>
+<div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">[</span>
+  <span class="tok-o">{</span> <span class="tok-p">&quot;command&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;transition.apply_all&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;args&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mix&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">400000</span> <span class="tok-o">}</span> <span class="tok-o">}</span><span class="tok-o">,</span>
+  <span class="tok-o">{</span> <span class="tok-p">&quot;command&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;text.add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;args&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span> <span class="tok-p">&quot;text&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;Тур кухнею&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;template_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;title_bold&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;at_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">0</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">2500000</span> <span class="tok-o">}</span> <span class="tok-o">}</span>
+<span class="tok-o">]</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-k">kadrctl</span> batch prj_9d2e4c7a1b05 calls.json <span class="tok-p">--dry-run</span>
+<span class="tok-k">kadrctl</span> batch prj_9d2e4c7a1b05 calls.json</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+
+<h2 id="walkthrough">Повний монтаж із термінала<a class="anchor" href="#walkthrough" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Два кліпи стають вертикальним шортсом із субтитрами. Кожна команда друкує JSON; копіюйте отримані id у наступну команду (коментарі показують, що повернулося).</p>
+<div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Приклади коду"><button type="button" role="tab" id="ct847-0" aria-controls="ct847-0p" aria-selected="true" data-tab="kadrctl">kadrctl</button><button type="button" role="tab" id="ct847-1" aria-controls="ct847-1p" aria-selected="false" tabindex="-1" data-tab="mcp">MCP</button></div><div class="ct-panel on" role="tabpanel" id="ct847-0p" aria-labelledby="ct847-0" data-tab="kadrctl" data-label="kadrctl"><div class="code-wrap"><pre class="code lang-kadrctl"><code><span class="tok-k">kadrctl</span> run project.create <span class="tok-p">--name</span> <span class="tok-s">&quot;Тур кухнею&quot;</span> <span class="tok-p">--ratio</span> 9:16
+<span class="tok-c"># &quot;id&quot;: &quot;prj_9d2e4c7a1b05&quot;</span>
+<span class="tok-k">kadrctl</span> --% run media.import <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--paths</span> <span class="tok-s">&quot;[\&quot;C:/Users/you/Videos/kitchen\&quot;]&quot;</span>
+<span class="tok-c"># матеріали: mat_3f81c2d9e0a4 (pan.mp4), mat_7b0e5a1c9d36 (talk.mp4)</span>
+<span class="tok-k">kadrctl</span> run timeline.segment.add <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--material_id</span> mat_3f81c2d9e0a4
+<span class="tok-k">kadrctl</span> run timeline.segment.add <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--material_id</span> mat_7b0e5a1c9d36
+<span class="tok-k">kadrctl</span> run timeline.get <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05
+<span class="tok-c"># основна доріжка: seg_51c08e7f2a93 (0–6 с), seg_c2a9e4b7d108 (6–12 с)</span>
+<span class="tok-k">kadrctl</span> run timeline.segment.delete_right <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--segment_id</span> seg_c2a9e4b7d108 <span class="tok-p">--at_us</span> 9s
+<span class="tok-c"># лишити тільки перші 3 с другого кліпу</span>
+<span class="tok-k">kadrctl</span> run segment.set_background <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--segment_id</span> seg_51c08e7f2a93 <span class="tok-p">--type</span> blur <span class="tok-p">--blur</span> 0.75 <span class="tok-p">--apply_to_all</span>
+<span class="tok-k">kadrctl</span> run transition.apply_all <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--type</span> mix <span class="tok-p">--duration_us</span> 0.4s
+<span class="tok-k">kadrctl</span> run captions.auto <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--style_id</span> cap_highlight_word <span class="tok-p">--wait</span>
+<span class="tok-k">kadrctl</span> run export.start <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--resolution</span> 1080p <span class="tok-p">--path</span> C:/Users/you/Videos/Kadr/kitchen.mp4
+<span class="tok-k">kadrctl</span> run export.status <span class="tok-p">--job_id</span> exp_6a0d93e1f7c2</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct847-1p" aria-labelledby="ct847-1" data-tab="mcp" data-label="MCP"><div class="code-wrap"><pre class="code lang-mcp"><code><span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;project_create&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;Тур кухнею&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;ratio&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;9:16&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;media_import&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;paths&quot;</span><span class="tok-o">:</span> <span class="tok-o">[</span><span class="tok-s">&quot;C:/Users/you/Videos/kitchen&quot;</span><span class="tok-o">]</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_segment_add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;material_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mat_3f81c2d9e0a4&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_segment_add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;material_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mat_7b0e5a1c9d36&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_get&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_segment_delete_right&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;segment_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;seg_c2a9e4b7d108&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;at_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">9000000</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;segment_set_background&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;segment_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;seg_51c08e7f2a93&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;blur&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;blur&quot;</span><span class="tok-o">:</span> <span class="tok-n">0.75</span><span class="tok-o">,</span> <span class="tok-p">&quot;apply_to_all&quot;</span><span class="tok-o">:</span> <span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;transition_apply_all&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mix&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">400000</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;captions_auto&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;style_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;cap_highlight_word&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;wait&quot;</span><span class="tok-o">:</span> <span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;export_start&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;resolution&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;1080p&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;path&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;C:/Users/you/Videos/Kadr/kitchen.mp4&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;export_status&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;job_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;exp_6a0d93e1f7c2&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div></div>
+<p>Будь-який крок скасовується через <code>kadrctl run edit.undo --project_id prj_9d2e4c7a1b05</code>, а редактор показує кожну зміну одразу.</p>
+
+<h2 id="scripting">Скрипти в PowerShell<a class="anchor" href="#scripting" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Цей скрипт робить вертикальний перекадрований шортс із кожного <code>.mp4</code> у папці й ставить експорти в чергу. Працює у Windows PowerShell 5.1 і PowerShell 7. Допоміжна функція <code>kadr</code> перетворює JSON від <code>kadrctl</code> на об’єкти й зупиняється на помилках; <code>kadr-batch</code> передає JSON через файл, тож шляхи з пробілами не потребують лапок.</p>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$ErrorActionPreference</span> = <span class="tok-s">'Stop'</span>
+[Console]::OutputEncoding = [Text.Encoding]::UTF8   <span class="tok-c"># read non-English names correctly</span>
+
+<span class="tok-c"># Run kadrctl and turn its JSON output into PowerShell objects.</span>
+function kadr {
+  <span class="tok-n">$out</span> = kadrctl @args
+  if (<span class="tok-n">$LASTEXITCODE</span> <span class="tok-p">-ne</span> 0) { throw <span class="tok-s">&quot;kadrctl $($args[0]) $($args[1]) failed&quot;</span> }
+  <span class="tok-n">$out</span> | Out-String | <span class="tok-k">ConvertFrom-Json</span>
+}
+
+<span class="tok-c"># Run calls as one batch. JSON goes through a file, so no shell quoting is involved.</span>
+function kadr-batch(<span class="tok-n">$ProjectId</span>, <span class="tok-n">$Calls</span>) {
+  <span class="tok-n">$file</span> = Join-Path <span class="tok-n">$env:TEMP</span> <span class="tok-s">'kadr-calls.json'</span>
+  [IO.File]::WriteAllText(<span class="tok-n">$file</span>, (<span class="tok-k">ConvertTo-Json</span> <span class="tok-p">-InputObject</span> @(<span class="tok-n">$Calls</span>) <span class="tok-p">-Depth</span> 10))  <span class="tok-c"># UTF-8, no BOM</span>
+  kadr batch <span class="tok-n">$ProjectId</span> <span class="tok-n">$file</span>
+}
+
+<span class="tok-n">$src</span> = <span class="tok-s">&quot;$env:USERPROFILE\Videos\Raw&quot;</span>
+<span class="tok-n">$dst</span> = <span class="tok-s">&quot;$env:USERPROFILE\Videos\Kadr\Shorts&quot;</span>
+
+<span class="tok-k">Get-ChildItem</span> <span class="tok-n">$src</span> <span class="tok-p">-Filter</span> *.mp4 | <span class="tok-k">ForEach-Object</span> {
+  <span class="tok-n">$p</span>   = kadr run project.create <span class="tok-p">--name</span> <span class="tok-n">$_</span>.BaseName <span class="tok-p">--ratio</span> 9:16
+  <span class="tok-n">$imp</span> = kadr-batch <span class="tok-n">$p</span>.id @(@{ command = <span class="tok-s">'media.import'</span>; args = @{ paths = @(<span class="tok-n">$_</span>.FullName) } })
+  <span class="tok-n">$seg</span> = kadr run timeline.segment.add <span class="tok-p">--project_id</span> <span class="tok-n">$p</span>.id <span class="tok-p">--material_id</span> <span class="tok-n">$imp</span>.results[0].materials[0].id
+  kadr run ai.auto_reframe <span class="tok-p">--project_id</span> <span class="tok-n">$p</span>.id <span class="tok-p">--segment_id</span> <span class="tok-n">$seg</span>.segment.id <span class="tok-p">--ratio</span> 9:16 | Out-Null
+  <span class="tok-n">$job</span> = kadr run export.start <span class="tok-p">--project_id</span> <span class="tok-n">$p</span>.id <span class="tok-p">--resolution</span> 1080p <span class="tok-p">--path</span> <span class="tok-s">&quot;$dst\$($_.BaseName).mp4&quot;</span>
+  <span class="tok-s">&quot;{0} -&gt; {1} ({2})&quot;</span> <span class="tok-p">-f</span> <span class="tok-n">$_</span>.Name, <span class="tok-n">$job</span>.path, <span class="tok-n">$job</span>.state
+}
+
+kadr run export.list | Format-Table job_id, state, progress, path</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<ul>
+  <li>Експорти виконуються по одному; зайві завдання чекають як <code>queued</code>, тож цикл завершується задовго до відео.</li>
+  <li><a class="cmd-link" href="../../../uk/docs/ai/reference/export.html#export.estimate"><code>export.estimate</code></a> показує підсумковий розмір і шлях без експорту.</li>
+  <li>Щоб безпечно перевірити скрипт, спрямуйте його на окремий рушій: <code>$env:KADR_DATA_DIR</code> і <code>$env:KADR_ADDR</code> і для <code>kadr-server.exe</code>, і для <code>kadrctl</code>.</li>
+</ul>
+
+<h2 id="environment">Змінні середовища<a class="anchor" href="#environment" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Змінна</th><th>Типово</th><th>Хто використовує</th></tr></thead>
+  <tbody>
+    <tr><td><code>KADR_ADDR</code></td><td><code>127.0.0.1:7777</code></td><td>Де слухає рушій і куди під’єднуються <code>kadrctl</code>/<code>kadr-mcp</code>.</td></tr>
+    <tr><td><code>KADR_DATA_DIR</code></td><td><code>%APPDATA%\Kadr</code></td><td>Проєкти, налаштування і файл <code>api-token</code>.</td></tr>
+    <tr><td><code>KADR_TOKEN</code></td><td>вміст <code>api-token</code></td><td>Перевизначає токен — для рушія і для клієнтів.</td></tr>
+    <tr><td><code>KADR_FFMPEG_DIR</code></td><td>—</td><td>Папка з <code>ffmpeg.exe</code> і <code>ffprobe.exe</code> для рушія.</td></tr>
+    <tr><td><code>KADR_PYTHON</code></td><td>—</td><td><code>python.exe</code>, у якому встановлено faster-whisper (субтитри).</td></tr>
+    <tr><td><code>KADR_ELEVENLABS_API_KEY</code></td><td>—</td><td>Ключ ElevenLabs для рушія замість <a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#tts.set_api_key"><code>tts.set_api_key</code></a>.</td></tr>
+  </tbody>
+</table></div>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$env:KADR_DATA_DIR</span> = <span class="tok-s">&quot;D:\kadr-automation&quot;</span>
+<span class="tok-n">$env:KADR_ADDR</span> = <span class="tok-s">&quot;127.0.0.1:7790&quot;</span>
+<span class="tok-k">Start-Process</span> kadr-server.exe
+<span class="tok-k">kadrctl</span> run project.list</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+
+<h2 id="errors">Коди виходу й помилки<a class="anchor" href="#errors" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>У разі успіху <code>kadrctl</code> друкує результат у стандартний вивід і завершується з кодом <code>0</code>. У разі помилки друкує її у стандартний потік помилок і завершується з кодом <code>1</code>:</p>
+<div class="code-wrap"><pre class="code lang-text"><code>error [not_found]: project &quot;prj_nope&quot; not found
+hint: Call project.list to get valid project ids.</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<p>Проблеми, знайдені ще до надсилання виклику, починаються з простого <code>error:</code>:</p>
+<div class="code-wrap"><pre class="code lang-text"><code>error: project.list has no parameter &quot;foo&quot; (see `kadrctl describe project.list`)
+error: cannot reach Kadr at http://127.0.0.1:7777 (is the editor or `kadr-server` running?): …</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<p>Коди помилок — ті самі, що в <a href="../../../uk/docs/ai/rest.html#errors">REST API</a>.</p>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/ai/rest.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>REST API</b></a><a class="pager-next" href="../../../uk/docs/ai/concepts.html" rel="next"><span>Далі</span><b>Концепції<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#setup">Налаштування</a></li><li class="lvl-2"><a href="#subcommands">Підкоманди</a></li><li class="lvl-2"><a href="#flags">Як записувати параметри</a></li><li class="lvl-2"><a href="#quoting">Лапки для JSON у Windows</a></li><li class="lvl-2"><a href="#batch">Пакетні файли</a></li><li class="lvl-2"><a href="#walkthrough">Повний монтаж із термінала</a></li><li class="lvl-2"><a href="#scripting">Скрипти в PowerShell</a></li><li class="lvl-2"><a href="#environment">Змінні середовища</a></li><li class="lvl-2"><a href="#errors">Коди виходу й помилки</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#availability">Доступність</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>

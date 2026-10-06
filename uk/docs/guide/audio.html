@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/guide/audio.html" data-alt-uk="../../../uk/docs/guide/audio.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Аудіо — Kadr</title>
+<meta name="description" content="Як додати музику й звукові ефекти, налаштувати гучність і згасання, змінити голос, прибрати шум, відокремити звук від відео й створити закадровий голос через озвучення тексту — зокрема голосами ElevenLabs.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/audio.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/audio.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/audio.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/audio.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Аудіо — Kadr">
+<meta property="og:description" content="Як додати музику й звукові ефекти, налаштувати гучність і згасання, змінити голос, прибрати шум, відокремити звук від відео й створити закадровий голос через озвучення тексту — зокрема голосами ElevenLabs.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/guide/audio.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Аудіо — Kadr">
+<meta name="twitter:description" content="Як додати музику й звукові ефекти, налаштувати гучність і згасання, змінити голос, прибрати шум, відокремити звук від відео й створити закадровий голос через озвучення тексту — зокрема голосами ElevenLabs.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-audio" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/" aria-current="page">Для людей</a>
+      <a href="../../../uk/docs/ai/">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/guide/audio.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/guide/audio.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Почати</span><span class="sr-only">Почати роботу з Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">Аудіо</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/guide/index.html"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/guide/getting-started.html"><span>Початок роботи</span></a></li><li><a href="../../../uk/docs/guide/interface.html"><span>Огляд інтерфейсу</span></a></li><li><a href="../../../uk/docs/guide/projects.html"><span>Проєкти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Монтаж</p><ul><li><a href="../../../uk/docs/guide/import-media.html"><span>Імпорт медіа</span></a></li><li><a href="../../../uk/docs/guide/timeline.html"><span>Монтаж на таймлайні</span></a></li><li><a href="../../../uk/docs/guide/player.html"><span>Плеєр і перегляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Творчість</p><ul><li><a href="../../../uk/docs/guide/text.html"><span>Текст і заголовки</span></a></li><li><a href="../../../uk/docs/guide/fonts.html"><span>Шрифти</span></a></li><li><a href="../../../uk/docs/guide/captions.html"><span>Субтитри й транскрипт</span></a></li><li><a href="../../../uk/docs/guide/effects.html"><span>Ефекти й колір</span></a></li><li><a href="../../../uk/docs/guide/audio.html" aria-current="page"><span>Аудіо</span></a></li><li><a href="../../../uk/docs/guide/stickers.html"><span>Стікери й генеровані медіа</span></a></li><li><a href="../../../uk/docs/guide/ai-tools.html"><span>ШІ-інструменти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Завершення</p><ul><li><a href="../../../uk/docs/guide/export.html"><span>Експорт</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідка</p><ul><li><a href="../../../uk/docs/guide/shortcuts.html"><span>Гарячі клавіші</span></a></li><li><a href="../../../uk/docs/guide/settings.html"><span>Налаштування й оновлення</span></a></li><li><a href="../../../uk/docs/guide/troubleshooting.html"><span>Проблеми та запитання</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><span aria-current="page">Аудіо</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</span><span class="pe-group">Творчість</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>5 хв читання</span></p><h1>Аудіо</h1></header><p class="lead">Добрий звук робить відео. У Kadr можна додати музику й звукові ефекти, вирівняти гучність, почистити голос і навіть створити закадровий голос із тексту.</p>
+
+<figure><img decoding="async" src="../../../assets/img/guide/audio.webp" alt="Вкладка Audio з категоріями звукових ефектів і списком звуків та базові налаштування виділеного кліпу з озвученням: гучність, наростання, згасання, вирівнювання гучності й зменшення шуму" width="1280" height="428" loading="lazy"><figcaption>Звукові ефекти ліворуч; налаштування виділеного аудіокліпу праворуч.</figcaption></figure>
+
+<h2 id="music">Музика та інше аудіо<a class="anchor" href="#music" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Вбудованої музичної бібліотеки в Kadr немає — використовуйте власні треки. <a href="../../../uk/docs/guide/import-media.html">Імпортуйте</a> MP3, WAV, M4A, FLAC чи інші аудіофайли на вкладці <strong>Media</strong>, потім натисніть <strong>+</strong> на картці або перетягніть її на таймлайн. Аудіо лягає на власну доріжку під відео, і його можна переміщувати, обрізати й розрізати, як будь-який кліп.</p>
+<div class="callout warn"><p>Використовуйте лише музику, на яку маєте права. YouTube та інші платформи можуть вимкнути звук або заблокувати відео з піснями, захищеними авторським правом.</p></div>
+
+<h2 id="basic">Гучність і згасання<a class="anchor" href="#basic" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Виділіть аудіокліп — або відеокліп і його вкладку <strong>Audio</strong> — щоб побачити <strong>Basic</strong>:</p>
+<ul>
+  <li><strong>Volume</strong> — гучність у децибелах (дБ): 0 дБ — початковий рівень, −6 дБ — приблизно вдвічі тихіше, аж до −∞ (тиша); до +20 дБ — щоб підсилити тихий запис. Ромб поруч дає змогу <a href="../../../uk/docs/guide/effects.html#keyframes">анімувати гучність</a>, наприклад приглушити музику, коли хтось говорить.</li>
+  <li><strong>Fade in</strong> / <strong>Fade out</strong> — плавне наростання на початку та згасання в кінці, у секундах.</li>
+  <li><strong>Normalize loudness</strong> — вирівнює гучність кліпу до рівня, зручного для соцмереж і YouTube.</li>
+  <li><strong>Reduce noise</strong> — прибирає рівномірний фоновий шум: шипіння, гудіння, вітер.</li>
+</ul>
+<p>Кнопка з круговою стрілкою скидає ці налаштування. Щоб вимкнути звук цілої доріжки, натисніть динамік на її початку.</p>
+
+<h2 id="voice-changer">Зміна голосу<a class="anchor" href="#voice-changer" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="grid-2">
+  <div>
+    <p>Змініть звучання голосу одним із 25 ефектів — Chipmunk («бурундук»), Deep (низький), Monster, Robot, Whisper (шепіт), Echo, Reverb, Underwater (під водою), Megaphone, Lo-fi та інші.</p>
+    <ul>
+      <li>Виділіть кліп і відкрийте <strong>Voice changer</strong> в інспекторі (для відеокліпу — всередині вкладки <strong>Audio</strong>). Клацніть ефект; <strong>None</strong> вимикає його.</li>
+      <li>Або відкрийте в бібліотеці <strong>Audio → Voice effects</strong>, виділіть кліп на таймлайні й натисніть <strong>+</strong> на ефекті.</li>
+    </ul>
+  </div>
+  <figure><img decoding="async" src="../../../assets/img/guide/voice-changer.webp" alt="Сітка Voice changer з ефектами Character (Chipmunk, Deep, Robot) і Space (Echo, Reverb)" width="342" height="536" loading="lazy"><figcaption>Voice changer.</figcaption></figure>
+</div>
+
+<h2 id="separate">Відокремити звук від відео<a class="anchor" href="#separate" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Відеокліп несе власний звук. Щоб працювати зі звуком окремо — інакше обрізати, перемістити чи замінити, — виділіть відео й натисніть <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> або оберіть <strong>Smart tools → Separate audio</strong>. Звук стане окремим аудіокліпом, пов’язаним із відео, тож вони рухатимуться разом, поки ввімкнено <a href="../../../uk/docs/guide/timeline.html#magnet">Linkage</a>.</p>
+<p>У контекстному меню відеокліпу є також <strong>Extract audio</strong>: звук переїжджає в новий аудіокліп, а власний звук відео вимикається.</p>
+
+<h2 id="sound-effects">Звукові ефекти<a class="anchor" href="#sound-effects" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Відкрийте вкладку <strong>Audio</strong> бібліотеки — першим показано <strong>Sound effects</strong>. Тут 47 оригінальних звуків — свисти, «попи», удари, клацання інтерфейсу, нарощування, магія, камера, відліки, мультяшні звуки й атмосфера, — розкладених кнопками-категоріями вгорі. Усі синтезовані самим Kadr і вільні для використання будь-де.</p>
+<ul>
+  <li><strong>Прослухати:</strong> клацніть звук або затримайте на ньому мишу на мить.</li>
+  <li><strong>Додати:</strong> <strong>+</strong> ставить звук у позицію курсора відтворення, або перетягніть його в потрібне місце таймлайна — «вжух» точно на переході творить дива.</li>
+</ul>
+
+<h2 id="tts">Озвучення тексту (закадровий голос)<a class="anchor" href="#tts" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="grid-2">
+  <figure><img decoding="async" src="../../../assets/img/guide/tts.webp" alt="Панель Text to speech із полем тексту, списком голосів Microsoft Zira Desktop, повзунком швидкості й кнопкою Add to timeline" width="424" height="490" loading="lazy"><figcaption>Audio → Text to speech.</figcaption></figure>
+  <div>
+    <ol>
+      <li>Відкрийте в бібліотеці <strong>Audio → Text to speech</strong>.</li>
+      <li>Введіть або вставте текст (до 5000 символів).</li>
+      <li>Оберіть голос у <strong>Voice</strong> і швидкість у <strong>Speed</strong> (від 0.5× до 2×).</li>
+      <li>Натисніть <strong>Add to timeline</strong>. Озвучення ляже у позицію курсора відтворення на вільну аудіодоріжку.</li>
+    </ol>
+    <p>Уже маєте текстовий кліп? Виділіть його — панель запропонує <strong>Read this clip aloud</strong> (зачитати цей кліп), а з позначкою <strong>Fit the text clip to the speech length</strong> текст буде на екрані рівно стільки, скільки його вимовляють. Те саме є в інспекторі: <strong>Text → Speech</strong>.</p>
+    <p>Гучність озвучення вирівнюється, тож воно гармонійно звучить поруч з іншим аудіо. Потім його можна <a href="../../../uk/docs/guide/captions.html">автоматично субтитрувати</a>.</p>
+  </div>
+</div>
+
+<h3 id="voices">Які голоси доступні<a class="anchor" href="#voices" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<ul>
+  <li><strong>Голоси Windows</strong> — вбудовані у Windows і працюють повністю офлайн. Щоб додати мови, відкрийте у Windows <strong>Параметри → Час і мова → Мовлення</strong> (Settings → Time &amp; language → Speech), додайте голоси й натисніть у Kadr стрілку оновлення поруч із <strong>Voice</strong>.</li>
+  <li><strong>eSpeak NG</strong> — безкоштовний синтезатор мовлення для приблизно 130 мов, зокрема української. Якщо його встановити, голоси з’являться автоматично.</li>
+  <li><strong>ElevenLabs</strong> — дуже природні хмарні голоси багатьма мовами, якщо у вас є обліковий запис ElevenLabs. Див. нижче.</li>
+</ul>
+
+<h3 id="elevenlabs">Голоси ElevenLabs<a class="anchor" href="#elevenlabs" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<p>ElevenLabs — онлайн-сервіс, тому потрібен API-ключ із вашого облікового запису ElevenLabs (у профілі, розділ API keys; ключ починається з <code>sk_</code>). Kadr зберігає ключ лише на вашому комп’ютері.</p>
+<ol class="steps"><li>Відкрийте <strong>Settings → Voices</strong> (на головному екрані — Settings, у редакторі — <strong>Menu → Settings…</strong>).</li><li>Вставте ключ у поле <strong>ElevenLabs API key</strong> і натисніть <strong>Save</strong>. Kadr одразу скаже, чи працює ключ і скільки голосів він відкрив.</li></ol>
+<p>Інші способи, без відкриття налаштувань:</p>
+<p><strong>Спосіб А — файл із ключем (без команд).</strong> Відкрийте в Kadr <strong>Settings → About</strong> і скопіюйте шлях <strong>Data folder</strong>. У цій папці створіть текстовий файл із назвою рівно <code>elevenlabs.key</code> (стежте, щоб Windows не дописав <code>.txt</code>), вставте в нього ключ єдиним рядком і збережіть.</p>
+<p><strong>Спосіб Б — одна команда.</strong> Якщо під час встановлення ви залишили опцію <em>Додати kadrctl і kadr-mcp до PATH</em>, відкрийте PowerShell і виконайте (зі своїм ключем):</p>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-k">kadrctl</span> run tts.set_api_key <span class="tok-p">--provider</span> elevenlabs <span class="tok-p">--api_key</span> sk_your_key_here</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<p>У відповіді буде сказано, чи працює ключ і скільки голосів він відкрив.</p>
+<p>Потім в <strong>Audio → Text to speech</strong> натисніть стрілку оновлення поруч із <strong>Voice</strong>. Голоси ElevenLabs з’являться окремою групою у списку, а також у <strong>Text → Speech</strong>.</p>
+<div class="callout note"><p>З голосом ElevenLabs текст, який ви озвучуєте, надсилається до ElevenLabs і витрачає кредити вашого облікового запису. Голоси Windows та eSpeak ніколи не залишають ваш комп’ютер. Щоб прибрати ключ, натисніть <strong>Remove</strong> у <strong>Settings → Voices</strong> (або видаліть файл <code>elevenlabs.key</code>).</p></div>
+
+<h2 id="more-audio">Інші інструменти звуку<a class="anchor" href="#more-audio" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Швидкість</strong> — аудіокліпи мають вкладку <strong>Speed</strong> з опцією <em>Keep pitch</em>; див. <a href="../../../uk/docs/guide/timeline.html#speed">Швидкість</a>.</li>
+  <li><strong>Вирізання тиші</strong> — прибирає тихі місця з мовлення; див. <a href="../../../uk/docs/guide/ai-tools.html#remove-silence">ШІ-інструменти</a>.</li>
+  <li><strong>Визначення бітів</strong> і <strong>вимірювач гучності</strong> існують як команди (<a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#audio.detect_beats"><code>audio.detect_beats</code></a> ставить маркер на кожен біт пісні, <a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#audio.loudness"><code>audio.loudness</code></a> вимірює LUFS), але кнопок для них ще немає — попросіть <a href="../../../uk/docs/ai/index.html">ШІ-асистента</a> їх виконати, а потім ріжте по маркерах самі.</li>
+</ul>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/guide/effects.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Ефекти й колір</b></a><a class="pager-next" href="../../../uk/docs/guide/stickers.html" rel="next"><span>Далі</span><b>Стікери й генеровані медіа<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#music">Музика та інше аудіо</a></li><li class="lvl-2"><a href="#basic">Гучність і згасання</a></li><li class="lvl-2"><a href="#voice-changer">Зміна голосу</a></li><li class="lvl-2"><a href="#separate">Відокремити звук від відео</a></li><li class="lvl-2"><a href="#sound-effects">Звукові ефекти</a></li><li class="lvl-2"><a href="#tts">Озвучення тексту (закадровий голос)</a></li><li class="lvl-3"><a href="#voices">Які голоси доступні</a></li><li class="lvl-3"><a href="#elevenlabs">Голоси ElevenLabs</a></li><li class="lvl-2"><a href="#more-audio">Інші інструменти звуку</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#availability">Доступність</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>

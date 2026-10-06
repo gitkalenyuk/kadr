@@ -1,0 +1,3 @@
+# Kadr — website
+
+This repository holds only the prebuilt website of **Kadr**, the CapCut-style desktop video editor in which every action is a documented command that people and AI agents (Claude Code, Codex, Cursor and any MCP client) can drive through MCP, REST and a CLI. It is published with GitHub Pages at **<https://gitkalenyuk.github.io/kadr/>**: the user guide, the documentation for AI agents, the full command reference, `llms.txt` and the OpenAPI specification, in English and Ukrainian. Kadr 1.0 is available by invitation, so this repository and the site contain no installers or download links; the site is generated from the private Kadr source tree and every push to `main` redeploys it.

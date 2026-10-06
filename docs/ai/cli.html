@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/ai/cli.html" data-alt-uk="../../uk/docs/ai/cli.html" data-section="ai">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Command line: kadrctl — Kadr</title>
+<meta name="description" content="List, describe and run any Kadr command from a terminal with human time formats, run JSON batch files, and script whole folders in PowerShell.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/ai/cli.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/cli.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/cli.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/ai/cli.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Command line: kadrctl — Kadr">
+<meta property="og:description" content="List, describe and run any Kadr command from a terminal with human time formats, run JSON batch files, and script whole folders in PowerShell.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/ai/cli.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Command line: kadrctl — Kadr">
+<meta name="twitter:description" content="List, describe and run any Kadr command from a terminal with human time formats, run JSON batch files, and script whole folders in PowerShell.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-ai page-cli" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/">For humans</a>
+      <a href="../../docs/ai/" aria-current="page">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/ai/cli.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/ai/cli.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Get started</span><span class="sr-only">Get started with Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">CLI (kadrctl)</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai" aria-current="true"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/ai/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/ai/claude-code.html"><span>Claude Code</span></a></li><li><a href="../../docs/ai/claude-desktop.html"><span>Claude Desktop</span></a></li><li><a href="../../docs/ai/other-mcp-clients.html"><span>Other MCP clients</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Interfaces</p><ul><li><a href="../../docs/ai/mcp.html"><span>MCP tools</span></a></li><li><a href="../../docs/ai/rest.html"><span>REST API</span></a></li><li><a href="../../docs/ai/cli.html" aria-current="page"><span>CLI (kadrctl)</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Guides</p><ul><li><a href="../../docs/ai/concepts.html"><span>Concepts</span></a></li><li><a href="../../docs/ai/library.html"><span>Library &amp; fonts</span></a></li><li><a href="../../docs/ai/working-visibly.html"><span>Working visibly</span></a></li><li><a href="../../docs/ai/verifying.html"><span>Verifying results</span></a></li><li><a href="../../docs/ai/best-practices.html"><span>Best practices</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Recipes</p><ul><li><a href="../../docs/ai/recipes.html"><span>All recipes</span></a></li><li><a href="../../docs/ai/vertical-tiktok.html"><span>Vertical TikTok</span></a></li><li><a href="../../docs/ai/beat-cut-music-video.html"><span>Cut to the beat</span></a></li><li><a href="../../docs/ai/talking-head-cleanup.html"><span>Talking-head cleanup</span></a></li><li><a href="../../docs/ai/photo-slideshow.html"><span>Photo slideshow</span></a></li><li><a href="../../docs/ai/podcast-audiogram.html"><span>Podcast audiogram</span></a></li><li><a href="../../docs/ai/product-promo.html"><span>Product promo</span></a></li><li><a href="../../docs/ai/batch-export-variants.html"><span>Three formats</span></a></li><li><a href="../../docs/ai/ai-review-loop.html"><span>Review loop</span></a></li><li><a href="../../docs/ai/translate-and-reburn-captions.html"><span>Translate captions</span></a></li><li><a href="../../docs/ai/documentary-archive-footage.html"><span>Archive documentary</span></a></li><li><a href="../../docs/ai/preview-before-applying.html"><span>Pick by looking</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Command reference</p><ul><li><a href="../../docs/ai/reference-intro.html"><span>Introduction</span></a></li><li><a href="../../docs/ai/reference/index.html"><span>All commands</span><span class="count">188</span></a></li><li><a href="../../docs/ai/reference/adjustment.html"><span>Adjustment</span><span class="count">7</span></a></li><li><a href="../../docs/ai/reference/animation.html"><span>Animation</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/app.html"><span>App</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/audio.html"><span>Audio</span><span class="count">12</span></a></li><li><a href="../../docs/ai/reference/audio-properties.html"><span>Audio properties</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/captions.html"><span>Captions</span><span class="count">16</span></a></li><li><a href="../../docs/ai/reference/edit.html"><span>Edit</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/effects.html"><span>Effects</span><span class="count">5</span></a></li><li><a href="../../docs/ai/reference/export.html"><span>Export</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/filters.html"><span>Filters</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/fonts.html"><span>Fonts</span><span class="count">5</span></a></li><li><a href="../../docs/ai/reference/keyframes.html"><span>Keyframes</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/library.html"><span>Library</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/media.html"><span>Media</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/playback.html"><span>Playback</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/presets.html"><span>Presets</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/projects.html"><span>Projects</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/rendering.html"><span>Rendering</span><span class="count">3</span></a></li><li><a href="../../docs/ai/reference/smart-tools.html"><span>Smart tools</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/speed.html"><span>Speed</span><span class="count">2</span></a></li><li><a href="../../docs/ai/reference/stickers.html"><span>Stickers</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/text.html"><span>Text</span><span class="count">8</span></a></li><li><a href="../../docs/ai/reference/timeline.html"><span>Timeline</span><span class="count">23</span></a></li><li><a href="../../docs/ai/reference/tools.html"><span>Tools</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/transcript.html"><span>Transcript</span><span class="count">7</span></a></li><li><a href="../../docs/ai/reference/transitions.html"><span>Transitions</span><span class="count">4</span></a></li><li><a href="../../docs/ai/reference/updates.html"><span>Updates</span><span class="count">6</span></a></li><li><a href="../../docs/ai/reference/video.html"><span>Video</span><span class="count">1</span></a></li><li><a href="../../docs/ai/reference/video-properties.html"><span>Video properties</span><span class="count">9</span></a></li><li><a href="../../docs/ai/reference/window.html"><span>Window</span><span class="count">4</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><span aria-current="page">CLI (kadrctl)</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI agents</span><span class="pe-group">Interfaces</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>3 min read</span></p><h1>Command line: kadrctl</h1></header><p class="lead"><code>kadrctl</code> runs any Kadr command from a terminal. It reads each command’s parameters from the running engine, converts values to the right types (including times like <code>2.5s</code>), and prints the result as JSON — handy for quick edits, for scripts, and for agents that only have a shell.</p>
+
+<h2 id="setup">Setup<a class="anchor" href="#setup" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p><code>kadrctl.exe</code> is installed next to <code>Kadr.exe</code> in <code>%LOCALAPPDATA%\Programs\Kadr\</code>. With the installer option <em>Add kadrctl and kadr-mcp to PATH</em> (on by default) it works from any new terminal: <code>kadrctl help</code>, <code>kadrctl version</code>.</p>
+<p>Unlike <code>kadr-mcp</code>, <code>kadrctl</code> does <strong>not</strong> start the engine: Kadr or <code>kadr-server.exe</code> must be running. It finds the address and token in <code>%APPDATA%\Kadr</code> by itself.</p>
+
+<h2 id="subcommands">Subcommands<a class="anchor" href="#subcommands" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Subcommand</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>kadrctl commands [category]</code></td><td>Lists every command with its title, optionally one category (<code>Export</code>, <code>"Smart tools"</code>…). Planned commands are marked <code>(planned)</code>.</td></tr>
+    <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>The full documentation of one command: description, UI path, hotkey, returns, and each <code>--parameter</code> with type.</td></tr>
+    <tr><td><code>kadrctl run &lt;command&gt; [--param value]…</code></td><td>Runs a command and prints its result as indented JSON.</td></tr>
+    <tr><td><code>kadrctl batch &lt;project_id&gt; &lt;calls.json&gt; [--dry-run]</code></td><td>Runs a JSON file of calls as one atomic, undoable edit.</td></tr>
+    <tr><td><code>kadrctl version</code></td><td>Prints the kadrctl version.</td></tr>
+  </tbody>
+</table></div>
+<div class="code-wrap"><pre class="code lang-text"><code>&gt; kadrctl commands Window
+ui.library_tab                     Switch library tab
+ui.open_project                    Show project in the window
+ui.select                          Select clip in the window
+ui.toast                           Show a message in the window</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<div class="code-wrap"><pre class="code lang-text"><code>&gt; kadrctl describe timeline.segment.split
+timeline.segment.split — Split
+
+Splits a clip into two at at_us (default: the playhead), exactly like CapCut's Split button / Ctrl+B. …
+UI: Toolbar/Split. Hotkey: Ctrl+B.
+Undoable with edit.undo.
+Returns: {track_id, left, right, linked_right_ids?} — both halves (full segments) and the ids of linked right halves.
+
+Parameters:
+  --project_id         string   (required) ID of the project to operate on (e.g. &quot;prj_8f3a...&quot;). …
+  --segment_id         string   ID of the segment (clip) to edit. Optional: when omitted the clip on the main track under at_us is used …
+  --at_us              integer  Timeline time in microseconds (1 s = 1000000). Defaults to the current playhead position.</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+
+<h2 id="flags">Writing parameters<a class="anchor" href="#flags" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Each parameter becomes a flag with the same name; <code>kadrctl</code> converts the value to the parameter’s type. Unknown flags are rejected before anything runs.</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Form</th><th>Example</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>--param value</code>, <code>--param=value</code></td><td><code>--ratio 9:16</code></td><td>Quote values with spaces: <code>--name "Kitchen tour"</code>.</td></tr>
+    <tr><td>Boolean</td><td><code>--wait</code>, <code>--wait true</code>, <code>--snap false</code></td><td>A bare flag means <code>true</code>.</td></tr>
+    <tr><td>Number</td><td><code>--volume_db -12</code>, <code>--scale 0.6</code></td><td>Negative numbers are fine.</td></tr>
+    <tr><td>Time (<code>*_us</code>)</td><td><code>2500000</code>, <code>2.5s</code>, <code>1500ms</code>, <code>1m2s</code>, <code>00:01:02.5</code></td><td>Converted to microseconds; a plain number already is microseconds.</td></tr>
+    <tr><td>Array or object</td><td><code>--paths "[\"C:/Clips\"]"</code></td><td>Must be JSON — see <a href="#quoting">quoting</a>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="quoting">Quoting JSON on Windows<a class="anchor" href="#quoting" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Array and object parameters (<code>paths</code>, <code>segment_ids</code>, <code>style</code>, <code>params</code>, <code>points</code>…) are JSON, and its double quotes must survive the shell:</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Shell</th><th>Write</th></tr></thead>
+  <tbody>
+    <tr><td>Command Prompt</td><td><code>--paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+    <tr><td>PowerShell 7.3+</td><td><code>--paths '["C:/Users/you/Videos/trip"]'</code></td></tr>
+    <tr><td>Windows PowerShell 5.1</td><td><code>--paths '[\"C:/Users/you/Videos/trip\"]'</code></td></tr>
+    <tr><td>Any PowerShell</td><td><code>kadrctl --% run media.import --project_id prj_… --paths "[\"C:/Users/you/Videos/trip\"]"</code></td></tr>
+  </tbody>
+</table></div>
+<p>The docs use the <code>--%</code> form: it works in every PowerShell version, and without <code>--%</code> the same line works in Command Prompt. After <code>--%</code> PowerShell stops interpreting the line, so <code>$variables</code> are not expanded. Inside JSON use forward slashes in paths (<code>C:/Users/you</code>) or double backslashes. In PowerShell, quote colours (<code>"#FFD400"</code> — <code>#</code> starts a comment) and put text containing <code>$</code> in single quotes.</p>
+
+<h2 id="batch">Batch files<a class="anchor" href="#batch" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>A batch file is a JSON array of <code>{command, args}</code> objects without <code>project_id</code> (it comes from the command line). <code>--dry-run</code> checks the batch on a copy without saving. Save the file as UTF-8 <strong>without</strong> a byte-order mark: <code>kadrctl</code> rejects a BOM, and Windows PowerShell 5.1’s <code>Set-Content -Encoding UTF8</code> writes one — use <code>[IO.File]::WriteAllText()</code> as in the <a href="#scripting">script below</a>.</p>
+<div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">[</span>
+  <span class="tok-o">{</span> <span class="tok-p">&quot;command&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;transition.apply_all&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;args&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mix&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">400000</span> <span class="tok-o">}</span> <span class="tok-o">}</span><span class="tok-o">,</span>
+  <span class="tok-o">{</span> <span class="tok-p">&quot;command&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;text.add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;args&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span> <span class="tok-p">&quot;text&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;Kitchen tour&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;template_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;title_bold&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;at_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">0</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">2500000</span> <span class="tok-o">}</span> <span class="tok-o">}</span>
+<span class="tok-o">]</span></code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-k">kadrctl</span> batch prj_9d2e4c7a1b05 calls.json <span class="tok-p">--dry-run</span>
+<span class="tok-k">kadrctl</span> batch prj_9d2e4c7a1b05 calls.json</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+
+<h2 id="walkthrough">A complete edit from the terminal<a class="anchor" href="#walkthrough" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Two clips become a captioned 9:16 short. Each command prints JSON; copy the ids it returns into the next command (the comments show what came back).</p>
+<div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Code examples"><button type="button" role="tab" id="ct726-0" aria-controls="ct726-0p" aria-selected="true" data-tab="kadrctl">kadrctl</button><button type="button" role="tab" id="ct726-1" aria-controls="ct726-1p" aria-selected="false" tabindex="-1" data-tab="mcp">MCP</button></div><div class="ct-panel on" role="tabpanel" id="ct726-0p" aria-labelledby="ct726-0" data-tab="kadrctl" data-label="kadrctl"><div class="code-wrap"><pre class="code lang-kadrctl"><code><span class="tok-k">kadrctl</span> run project.create <span class="tok-p">--name</span> <span class="tok-s">&quot;Kitchen tour&quot;</span> <span class="tok-p">--ratio</span> 9:16
+<span class="tok-c"># &quot;id&quot;: &quot;prj_9d2e4c7a1b05&quot;</span>
+<span class="tok-k">kadrctl</span> --% run media.import <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--paths</span> <span class="tok-s">&quot;[\&quot;C:/Users/you/Videos/kitchen\&quot;]&quot;</span>
+<span class="tok-c"># materials: mat_3f81c2d9e0a4 (pan.mp4), mat_7b0e5a1c9d36 (talk.mp4)</span>
+<span class="tok-k">kadrctl</span> run timeline.segment.add <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--material_id</span> mat_3f81c2d9e0a4
+<span class="tok-k">kadrctl</span> run timeline.segment.add <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--material_id</span> mat_7b0e5a1c9d36
+<span class="tok-k">kadrctl</span> run timeline.get <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05
+<span class="tok-c"># main track: seg_51c08e7f2a93 (0–6 s), seg_c2a9e4b7d108 (6–12 s)</span>
+<span class="tok-k">kadrctl</span> run timeline.segment.delete_right <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--segment_id</span> seg_c2a9e4b7d108 <span class="tok-p">--at_us</span> 9s
+<span class="tok-c"># keep only the first 3 s of the second clip</span>
+<span class="tok-k">kadrctl</span> run segment.set_background <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--segment_id</span> seg_51c08e7f2a93 <span class="tok-p">--type</span> blur <span class="tok-p">--blur</span> 0.75 <span class="tok-p">--apply_to_all</span>
+<span class="tok-k">kadrctl</span> run transition.apply_all <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--type</span> mix <span class="tok-p">--duration_us</span> 0.4s
+<span class="tok-k">kadrctl</span> run captions.auto <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--style_id</span> cap_highlight_word <span class="tok-p">--wait</span>
+<span class="tok-k">kadrctl</span> run export.start <span class="tok-p">--project_id</span> prj_9d2e4c7a1b05 <span class="tok-p">--resolution</span> 1080p <span class="tok-p">--path</span> C:/Users/you/Videos/Kadr/kitchen.mp4
+<span class="tok-k">kadrctl</span> run export.status <span class="tok-p">--job_id</span> exp_6a0d93e1f7c2</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct726-1p" aria-labelledby="ct726-1" data-tab="mcp" data-label="MCP"><div class="code-wrap"><pre class="code lang-mcp"><code><span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;project_create&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;Kitchen tour&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;ratio&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;9:16&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;media_import&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;paths&quot;</span><span class="tok-o">:</span> <span class="tok-o">[</span><span class="tok-s">&quot;C:/Users/you/Videos/kitchen&quot;</span><span class="tok-o">]</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_segment_add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;material_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mat_3f81c2d9e0a4&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_segment_add&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;material_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mat_7b0e5a1c9d36&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_get&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;timeline_segment_delete_right&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;segment_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;seg_c2a9e4b7d108&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;at_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">9000000</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;segment_set_background&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;segment_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;seg_51c08e7f2a93&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;blur&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;blur&quot;</span><span class="tok-o">:</span> <span class="tok-n">0.75</span><span class="tok-o">,</span> <span class="tok-p">&quot;apply_to_all&quot;</span><span class="tok-o">:</span> <span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;transition_apply_all&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;type&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;mix&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;duration_us&quot;</span><span class="tok-o">:</span> <span class="tok-n">400000</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;captions_auto&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;style_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;cap_highlight_word&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;wait&quot;</span><span class="tok-o">:</span> <span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;export_start&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;prj_9d2e4c7a1b05&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;resolution&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;1080p&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;path&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;C:/Users/you/Videos/Kadr/kitchen.mp4&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span>
+<span class="tok-o">{</span><span class="tok-p">&quot;name&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;export_status&quot;</span><span class="tok-o">,</span> <span class="tok-p">&quot;arguments&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span><span class="tok-p">&quot;job_id&quot;</span><span class="tok-o">:</span> <span class="tok-s">&quot;exp_6a0d93e1f7c2&quot;</span><span class="tok-o">}</span><span class="tok-o">}</span></code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div></div></div>
+<p>Every step can be undone with <code>kadrctl run edit.undo --project_id prj_9d2e4c7a1b05</code>, and the editor shows each change as it happens.</p>
+
+<h2 id="scripting">Scripting in PowerShell<a class="anchor" href="#scripting" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>This script makes a vertical, reframed short from every <code>.mp4</code> in a folder and queues the exports. It runs in Windows PowerShell 5.1 and PowerShell 7. The helper <code>kadr</code> turns <code>kadrctl</code>’s JSON into objects and stops on errors; <code>kadr-batch</code> sends JSON through a file, so paths with spaces need no quoting.</p>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$ErrorActionPreference</span> = <span class="tok-s">'Stop'</span>
+[Console]::OutputEncoding = [Text.Encoding]::UTF8   <span class="tok-c"># read non-English names correctly</span>
+
+<span class="tok-c"># Run kadrctl and turn its JSON output into PowerShell objects.</span>
+function kadr {
+  <span class="tok-n">$out</span> = kadrctl @args
+  if (<span class="tok-n">$LASTEXITCODE</span> <span class="tok-p">-ne</span> 0) { throw <span class="tok-s">&quot;kadrctl $($args[0]) $($args[1]) failed&quot;</span> }
+  <span class="tok-n">$out</span> | Out-String | <span class="tok-k">ConvertFrom-Json</span>
+}
+
+<span class="tok-c"># Run calls as one batch. JSON goes through a file, so no shell quoting is involved.</span>
+function kadr-batch(<span class="tok-n">$ProjectId</span>, <span class="tok-n">$Calls</span>) {
+  <span class="tok-n">$file</span> = Join-Path <span class="tok-n">$env:TEMP</span> <span class="tok-s">'kadr-calls.json'</span>
+  [IO.File]::WriteAllText(<span class="tok-n">$file</span>, (<span class="tok-k">ConvertTo-Json</span> <span class="tok-p">-InputObject</span> @(<span class="tok-n">$Calls</span>) <span class="tok-p">-Depth</span> 10))  <span class="tok-c"># UTF-8, no BOM</span>
+  kadr batch <span class="tok-n">$ProjectId</span> <span class="tok-n">$file</span>
+}
+
+<span class="tok-n">$src</span> = <span class="tok-s">&quot;$env:USERPROFILE\Videos\Raw&quot;</span>
+<span class="tok-n">$dst</span> = <span class="tok-s">&quot;$env:USERPROFILE\Videos\Kadr\Shorts&quot;</span>
+
+<span class="tok-k">Get-ChildItem</span> <span class="tok-n">$src</span> <span class="tok-p">-Filter</span> *.mp4 | <span class="tok-k">ForEach-Object</span> {
+  <span class="tok-n">$p</span>   = kadr run project.create <span class="tok-p">--name</span> <span class="tok-n">$_</span>.BaseName <span class="tok-p">--ratio</span> 9:16
+  <span class="tok-n">$imp</span> = kadr-batch <span class="tok-n">$p</span>.id @(@{ command = <span class="tok-s">'media.import'</span>; args = @{ paths = @(<span class="tok-n">$_</span>.FullName) } })
+  <span class="tok-n">$seg</span> = kadr run timeline.segment.add <span class="tok-p">--project_id</span> <span class="tok-n">$p</span>.id <span class="tok-p">--material_id</span> <span class="tok-n">$imp</span>.results[0].materials[0].id
+  kadr run ai.auto_reframe <span class="tok-p">--project_id</span> <span class="tok-n">$p</span>.id <span class="tok-p">--segment_id</span> <span class="tok-n">$seg</span>.segment.id <span class="tok-p">--ratio</span> 9:16 | Out-Null
+  <span class="tok-n">$job</span> = kadr run export.start <span class="tok-p">--project_id</span> <span class="tok-n">$p</span>.id <span class="tok-p">--resolution</span> 1080p <span class="tok-p">--path</span> <span class="tok-s">&quot;$dst\$($_.BaseName).mp4&quot;</span>
+  <span class="tok-s">&quot;{0} -&gt; {1} ({2})&quot;</span> <span class="tok-p">-f</span> <span class="tok-n">$_</span>.Name, <span class="tok-n">$job</span>.path, <span class="tok-n">$job</span>.state
+}
+
+kadr run export.list | Format-Table job_id, state, progress, path</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<ul>
+  <li>Exports run one at a time; extra jobs wait as <code>queued</code>, so the loop finishes long before the videos do.</li>
+  <li><a class="cmd-link" href="../../docs/ai/reference/export.html#export.estimate"><code>export.estimate</code></a> shows the final size and path without exporting.</li>
+  <li>To test a script safely, point it at a separate engine: <code>$env:KADR_DATA_DIR</code> and <code>$env:KADR_ADDR</code> for both <code>kadr-server.exe</code> and <code>kadrctl</code>.</li>
+</ul>
+
+<h2 id="environment">Environment variables<a class="anchor" href="#environment" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Variable</th><th>Default</th><th>Used by</th></tr></thead>
+  <tbody>
+    <tr><td><code>KADR_ADDR</code></td><td><code>127.0.0.1:7777</code></td><td>Where the engine listens and where <code>kadrctl</code>/<code>kadr-mcp</code> connect.</td></tr>
+    <tr><td><code>KADR_DATA_DIR</code></td><td><code>%APPDATA%\Kadr</code></td><td>Projects, settings and the <code>api-token</code> file.</td></tr>
+    <tr><td><code>KADR_TOKEN</code></td><td>contents of <code>api-token</code></td><td>Overrides the token, for the engine and for clients.</td></tr>
+    <tr><td><code>KADR_FFMPEG_DIR</code></td><td>—</td><td>A folder with <code>ffmpeg.exe</code> and <code>ffprobe.exe</code> for the engine.</td></tr>
+    <tr><td><code>KADR_PYTHON</code></td><td>—</td><td>The <code>python.exe</code> that has faster-whisper (captions).</td></tr>
+    <tr><td><code>KADR_ELEVENLABS_API_KEY</code></td><td>—</td><td>An ElevenLabs key for the engine instead of <a class="cmd-link" href="../../docs/ai/reference/audio.html#tts.set_api_key"><code>tts.set_api_key</code></a>.</td></tr>
+  </tbody>
+</table></div>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$env:KADR_DATA_DIR</span> = <span class="tok-s">&quot;D:\kadr-automation&quot;</span>
+<span class="tok-n">$env:KADR_ADDR</span> = <span class="tok-s">&quot;127.0.0.1:7790&quot;</span>
+<span class="tok-k">Start-Process</span> kadr-server.exe
+<span class="tok-k">kadrctl</span> run project.list</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+
+<h2 id="errors">Exit codes and errors<a class="anchor" href="#errors" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>On success <code>kadrctl</code> prints the result to standard output and exits with <code>0</code>. On failure it prints the error to standard error and exits with <code>1</code>:</p>
+<div class="code-wrap"><pre class="code lang-text"><code>error [not_found]: project &quot;prj_nope&quot; not found
+hint: Call project.list to get valid project ids.</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<p>Problems found before the call is sent start with a plain <code>error:</code>:</p>
+<div class="code-wrap"><pre class="code lang-text"><code>error: project.list has no parameter &quot;foo&quot; (see `kadrctl describe project.list`)
+error: cannot reach Kadr at http://127.0.0.1:7777 (is the editor or `kadr-server` running?): …</code></pre><button class="copy-btn" type="button" aria-label="Copy code"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button></div>
+<p>Error codes are the same as in the <a href="../../docs/ai/rest.html#errors">REST API</a>.</p>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/ai/rest.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>REST API</b></a><a class="pager-next" href="../../docs/ai/concepts.html" rel="next"><span>Next</span><b>Concepts<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#setup">Setup</a></li><li class="lvl-2"><a href="#subcommands">Subcommands</a></li><li class="lvl-2"><a href="#flags">Writing parameters</a></li><li class="lvl-2"><a href="#quoting">Quoting JSON on Windows</a></li><li class="lvl-2"><a href="#batch">Batch files</a></li><li class="lvl-2"><a href="#walkthrough">A complete edit from the terminal</a></li><li class="lvl-2"><a href="#scripting">Scripting in PowerShell</a></li><li class="lvl-2"><a href="#environment">Environment variables</a></li><li class="lvl-2"><a href="#errors">Exit codes and errors</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#availability">Availability</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

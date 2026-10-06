@@ -1,0 +1,108 @@
+KADR END-USER LICENSE AGREEMENT (FREEWARE)
+
+[TEMPLATE - The owner must review and adapt this text (publisher name,
+governing law, contact address) before publishing. Not legal advice.]
+
+Last updated: 2026-10-01
+
+Please read this agreement carefully. By installing, copying or using
+Kadr you agree to be bound by it. If you do not agree, do not install or
+use Kadr.
+
+1. DEFINITIONS
+"Kadr" or "the Software" means the Kadr video editor and its companion
+programs (Kadr.exe, kadrctl.exe, kadr-mcp.exe, kadr-server.exe), their
+user interface, documentation and updates, in executable form, as
+published by the Kadr publisher ("we", "us"). "You" means the person or
+organisation using the Software.
+
+2. LICENCE GRANT
+Kadr is freeware. Subject to this agreement, we grant you a free,
+non-exclusive, non-transferable, worldwide licence to install and use
+the Software on any number of computers you own or control, for any
+lawful purpose, including commercial purposes.
+
+3. YOUR CONTENT
+Videos, images, audio, projects and any other output you create with
+Kadr belong to you (subject to the rights of third parties in the
+material you import). You may use, publish and sell that output,
+including commercially, without any obligation to us. We claim no rights
+in your content.
+
+4. RESTRICTIONS
+Kadr is closed-source software. Except to the extent applicable law
+expressly permits it despite this restriction, you may not:
+  a) reverse engineer, decompile or disassemble the Software, or attempt
+     to derive its source code;
+  b) modify, translate or create derivative works of the Software's
+     executables;
+  c) redistribute, sell, rent, lease, sublicense or publish the Software
+     or its installers (for example on download portals or bundled with
+     other software) without our prior written permission; point people
+     to the official download page instead;
+  d) remove or alter any copyright, trademark or licence notices;
+  e) use the Software to break the law or to infringe the rights of
+     others.
+Automating Kadr through its documented interfaces (REST API, MCP server,
+command-line tool) is expressly permitted and is not reverse engineering.
+
+5. THIRD-PARTY COMPONENTS
+The Software uses third-party components (for example the Go standard
+library, Wails, React and fonts) that are licensed under their own
+open-source licences, listed in THIRD_PARTY_NOTICES.txt. Those licences
+govern your use of those components, and nothing in this agreement
+restricts the rights they grant you. FFmpeg is not part of the Software:
+if you choose to let Kadr download FFmpeg, or install it yourself, you
+receive it under its own licence (see THIRD_PARTY_NOTICES.txt).
+
+6. PRIVACY - YOUR DATA STAYS LOCAL
+Kadr runs entirely on your computer. Your projects, media and settings
+are stored locally (by default in %APPDATA%\Kadr) and are not uploaded
+to us. The local API listens on 127.0.0.1 only and is protected by a
+token stored on your computer. The only network requests Kadr makes on
+its own are: checking GitHub for new Kadr versions (can be turned off in
+Settings), and, when you agree, downloading FFmpeg or other optional
+components. Those requests go to GitHub and reveal your IP address and
+the requested file to it. Kadr contains no advertising, analytics or
+telemetry.
+
+7. UPDATES
+Kadr can check for, download and install updates. Updates are
+cryptographically signed and are covered by this agreement unless they
+come with a different one.
+
+8. NO WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", FREE OF CHARGE,
+WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, TITLE AND NON-INFRINGEMENT. YOU USE IT AT YOUR OWN RISK. KEEP
+BACKUPS OF YOUR MEDIA AND PROJECTS.
+
+9. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL WE
+OR OUR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING LOSS OF DATA,
+PROFITS, OR BUSINESS INTERRUPTION) ARISING OUT OF OR IN CONNECTION WITH
+THE SOFTWARE OR THIS AGREEMENT, HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. Some
+jurisdictions do not allow these exclusions; in that case they apply
+only to the extent permitted.
+
+10. TERMINATION
+This licence ends automatically if you breach it. On termination you
+must stop using and delete the Software. Sections 3, 5, 8, 9 and 11
+survive termination.
+
+11. GENERAL
+We own all rights, title and interest in the Software, including all
+intellectual property rights; no rights are granted to you other than
+those expressly stated here. This agreement is the entire agreement
+between you and us about the Software. If any provision is held
+unenforceable, the rest remains in effect. This agreement is governed by
+the laws of Ukraine, excluding its conflict-of-law rules.
+Mandatory consumer-protection rights you have under the law of your
+country are not affected.
+
+Contact: https://github.com/gitkalenyuk/kadr/issues
+
+Copyright (c) 2026 Kadr. All rights reserved.

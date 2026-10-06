@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/guide/getting-started.html" data-alt-uk="../../uk/docs/guide/getting-started.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Getting started — Kadr</title>
+<meta name="description" content="Get Kadr (it is available by invitation), install it on Windows, get past the SmartScreen warning, let Kadr set up FFmpeg and create your first project.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/guide/getting-started.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/getting-started.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/getting-started.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/getting-started.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Getting started — Kadr">
+<meta property="og:description" content="Get Kadr (it is available by invitation), install it on Windows, get past the SmartScreen warning, let Kadr set up FFmpeg and create your first project.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/guide/getting-started.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Getting started — Kadr">
+<meta name="twitter:description" content="Get Kadr (it is available by invitation), install it on Windows, get past the SmartScreen warning, let Kadr set up FFmpeg and create your first project.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-getting-started" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/" aria-current="page">For humans</a>
+      <a href="../../docs/ai/">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/guide/getting-started.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/guide/getting-started.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Get started</span><span class="sr-only">Get started with Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">Getting started</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/guide/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/guide/getting-started.html" aria-current="page"><span>Getting started</span></a></li><li><a href="../../docs/guide/interface.html"><span>Interface tour</span></a></li><li><a href="../../docs/guide/projects.html"><span>Projects</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Editing</p><ul><li><a href="../../docs/guide/import-media.html"><span>Import media</span></a></li><li><a href="../../docs/guide/timeline.html"><span>Timeline editing</span></a></li><li><a href="../../docs/guide/player.html"><span>Player &amp; preview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Creating</p><ul><li><a href="../../docs/guide/text.html"><span>Text &amp; titles</span></a></li><li><a href="../../docs/guide/fonts.html"><span>Fonts</span></a></li><li><a href="../../docs/guide/captions.html"><span>Captions &amp; transcript</span></a></li><li><a href="../../docs/guide/effects.html"><span>Effects &amp; colour</span></a></li><li><a href="../../docs/guide/audio.html"><span>Audio</span></a></li><li><a href="../../docs/guide/stickers.html"><span>Stickers &amp; generated media</span></a></li><li><a href="../../docs/guide/ai-tools.html"><span>AI tools</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Finishing</p><ul><li><a href="../../docs/guide/export.html"><span>Export</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Help</p><ul><li><a href="../../docs/guide/shortcuts.html"><span>Keyboard shortcuts</span></a></li><li><a href="../../docs/guide/settings.html"><span>Settings &amp; updates</span></a></li><li><a href="../../docs/guide/troubleshooting.html"><span>Troubleshooting &amp; FAQ</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/guide/index.html">User guide</a></li><li><span aria-current="page">Getting started</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Start</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 min read</span></p><h1>Getting started</h1></header><p class="lead">From the installer to your first project in about five minutes. Kadr is free, needs no account and works offline.</p>
+
+<h2 id="get">1. Get Kadr<a class="anchor" href="#get" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Kadr is available by invitation. The person who invited you gives you the installer (and, if you want automatic updates, an update token — see <a href="../../docs/guide/settings.html#updates">Updates</a>). The files of a Kadr version are:</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>File</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td><code>Kadr-Setup-X.Y.Z-x64.exe</code></td><td><strong>The installer — choose this one.</strong> It installs Kadr for your user account (no administrator rights needed), adds a Start menu entry and keeps Kadr up to date.</td></tr>
+    <tr><td><code>Kadr-X.Y.Z-windows-x64-portable.zip</code></td><td>The portable version: unzip and run, nothing is installed. See <a href="../../docs/guide/settings.html#portable">Portable mode</a>.</td></tr>
+    <tr><td><code>SHA256SUMS.txt</code></td><td>Checksums, if you want to verify that the file is genuine.</td></tr>
+  </tbody>
+</table></div>
+<p>If you received the installer through a browser, it may say the file “isn't commonly downloaded”. That only means Kadr is new. In Microsoft Edge, open the <strong>…</strong> menu next to the file, choose <strong>Keep</strong>, then <strong>Show more → Keep anyway</strong>.</p>
+
+<h2 id="install">2. Install<a class="anchor" href="#install" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ol class="steps">
+  <li>
+    <h3 id="run-installer">Run the installer<a class="anchor" href="#run-installer" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Double-click <code>Kadr-Setup-…-x64.exe</code> wherever you saved it.</p>
+  </li>
+  <li>
+    <h3 id="smartscreen">Get past SmartScreen<a class="anchor" href="#smartscreen" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Kadr is not code-signed yet, so Windows may show a blue window saying <em>“Windows protected your PC”</em>. Click <strong>More info</strong>, then <strong>Run anyway</strong>. This warning appears for most new apps from small publishers.</p>
+  </li>
+  <li>
+    <h3 id="installer-pages">Click through the installer<a class="anchor" href="#installer-pages" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>The installer speaks English and Ukrainian. Accept the licence; Kadr installs into your user folder (<code>%LOCALAPPDATA%\Programs\Kadr</code>). Two options are ticked by default: <strong>Create a desktop shortcut</strong>, and <strong>Add kadrctl and kadr-mcp to PATH</strong> — the second one is only needed if you plan to connect an AI assistant, but leaving it on does no harm.</p>
+  </li>
+  <li>
+    <h3 id="webview2">WebView2 check<a class="anchor" href="#webview2" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>The editor window uses Microsoft Edge WebView2, which is already part of Windows 11 and most Windows 10 PCs. If it is missing, the installer points you to Microsoft's free download.</p>
+  </li>
+  <li>
+    <h3 id="launch">Launch Kadr<a class="anchor" href="#launch" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Leave <strong>Launch Kadr</strong> ticked on the last page, or start Kadr from the Start menu later.</p>
+  </li>
+</ol>
+<div class="callout tip"><p><strong>Want to be extra sure the file is genuine?</strong> In PowerShell run <code>Get-FileHash .\Kadr-Setup-X.Y.Z-x64.exe</code> and compare the result with the matching line in <code>SHA256SUMS.txt</code>.</p></div>
+
+<h2 id="ffmpeg">3. First launch: set up FFmpeg<a class="anchor" href="#ffmpeg" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Kadr reads and writes video with <strong>FFmpeg</strong>, a free program that is not bundled with Kadr. The first time you start Kadr, it checks for FFmpeg. If it can't find one, the <strong>Set up FFmpeg</strong> window appears:</p>
+<figure><img decoding="async" src="../../assets/img/guide/ffmpeg-setup.webp" alt="The Set up FFmpeg window with the buttons Later and Download now" width="572" height="387" loading="lazy"><figcaption>The first-run FFmpeg window. In the desktop app there is also a button “I have FFmpeg — choose folder”.</figcaption></figure>
+<ul>
+  <li><strong>Download now</strong> (recommended) — Kadr downloads FFmpeg 7.1 for Windows (about 100 MB), checks that the file is intact and keeps it in its own tools folder. When the window says <strong>FFmpeg is ready</strong>, click <strong>Continue</strong>.</li>
+  <li><strong>I have FFmpeg — choose folder</strong> — if FFmpeg is already on your computer, pick the folder that contains <code>ffmpeg.exe</code> and <code>ffprobe.exe</code>. An FFmpeg that is already on your system <code>PATH</code> is found automatically and the window never appears.</li>
+  <li><strong>Later</strong> — closes the window. Importing, previewing and exporting will not work until FFmpeg is set up; you can do it any time in <a href="../../docs/guide/settings.html#ffmpeg">Settings → FFmpeg</a>.</li>
+</ul>
+
+<h2 id="first-project">4. Create your first project<a class="anchor" href="#first-project" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<figure><img decoding="async" src="../../assets/img/guide/home.webp" alt="The Kadr home screen with the Create project button, quick buttons for vertical and square videos, and a grid of projects" width="1280" height="840" loading="lazy"><figcaption>The home screen lists your projects. Start a new one with <strong>Create project</strong>.</figcaption></figure>
+<ol class="steps">
+  <li>
+    <h3 id="create">Create a project<a class="anchor" href="#create" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Click <strong>Create project</strong> (or press <kbd>Ctrl</kbd>+<kbd>N</kbd>) for a normal 16:9 video. For TikTok, Reels or Shorts click <strong>Vertical 9:16</strong>; for an Instagram post, <strong>Square 1:1</strong>. The editor opens right away. You can change the shape later — see <a href="../../docs/guide/projects.html#ratio">Projects</a>.</p>
+  </li>
+  <li>
+    <h3 id="import">Bring in your media<a class="anchor" href="#import" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>In the <strong>Media</strong> tab click <strong>Import</strong> (<kbd>Ctrl</kbd>+<kbd>I</kbd>) or drag files from File Explorer onto the window. More in <a href="../../docs/guide/import-media.html">Import media</a>.</p>
+  </li>
+  <li>
+    <h3 id="add">Put clips on the timeline<a class="anchor" href="#add" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Click the <strong>+</strong> on a media card, or drag the card down onto the timeline. Clips on the main track line up one after another automatically.</p>
+  </li>
+  <li>
+    <h3 id="edit">Edit<a class="anchor" href="#edit" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Move the playhead (the white line) to a spot and press <kbd>Ctrl</kbd>+<kbd>B</kbd> to cut, select the unwanted part and press <kbd>Delete</kbd>. Add a title from the <strong>Text</strong> tab and music from <strong>Media</strong>. The <a href="../../docs/guide/timeline.html">Timeline editing</a> page has all the details.</p>
+  </li>
+  <li>
+    <h3 id="export">Export<a class="anchor" href="#export" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+    <p>Click <strong>Export</strong> in the top-right corner (<kbd>Ctrl</kbd>+<kbd>E</kbd>), keep the suggested settings and click <strong>Export</strong>. Your video lands in <code>Videos\Kadr</code>. See <a href="../../docs/guide/export.html">Export</a>.</p>
+  </li>
+</ol>
+<div class="callout tip"><p>Kadr saves every change immediately — there is no Save button. Made a mistake? <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes it.</p></div>
+
+<h2 id="extras">Optional extras<a class="anchor" href="#extras" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Almost everything works straight after installation. Two smart features use free AI models that run on your own computer and need a one-time setup with Python:</p>
+<ul>
+  <li><strong>Automatic captions and transcript editing</strong> — needs Python and <em>faster-whisper</em>. See <a href="../../docs/guide/captions.html#requirements">Captions → What you need</a>.</li>
+  <li><strong>Background removal</strong> — needs Python and <em>rembg</em>. See <a href="../../docs/guide/ai-tools.html#remove-background">AI tools</a>.</li>
+</ul>
+
+<h2 id="requirements">System requirements<a class="anchor" href="#requirements" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th></th><th>Minimum</th><th>Recommended</th></tr></thead>
+  <tbody>
+    <tr><td>Windows</td><td>Windows 10 (version 1809), 64-bit</td><td>Windows 11, 64-bit</td></tr>
+    <tr><td>Processor</td><td>Any 64-bit processor</td><td>6 cores or more</td></tr>
+    <tr><td>Memory</td><td>4 GB</td><td>8 GB, or 16 GB for 4K video</td></tr>
+    <tr><td>Graphics</td><td>Not required</td><td>An NVIDIA, Intel or AMD graphics card makes export faster</td></tr>
+    <tr><td>Disk</td><td>About 1 GB for Kadr and FFmpeg, plus room for your projects</td><td>An SSD</td></tr>
+    <tr><td>Internet</td><td colspan="2">Only for the one-time FFmpeg download and update checks. Editing works offline.</td></tr>
+  </tbody>
+</table></div>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/guide/index.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Overview</b></a><a class="pager-next" href="../../docs/guide/interface.html" rel="next"><span>Next</span><b>Interface tour<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#get">1. Get Kadr</a></li><li class="lvl-2"><a href="#install">2. Install</a></li><li class="lvl-3"><a href="#run-installer">Run the installer</a></li><li class="lvl-3"><a href="#smartscreen">Get past SmartScreen</a></li><li class="lvl-3"><a href="#installer-pages">Click through the installer</a></li><li class="lvl-3"><a href="#webview2">WebView2 check</a></li><li class="lvl-3"><a href="#launch">Launch Kadr</a></li><li class="lvl-2"><a href="#ffmpeg">3. First launch: set up FFmpeg</a></li><li class="lvl-2"><a href="#first-project">4. Create your first project</a></li><li class="lvl-3"><a href="#create">Create a project</a></li><li class="lvl-3"><a href="#import">Bring in your media</a></li><li class="lvl-3"><a href="#add">Put clips on the timeline</a></li><li class="lvl-3"><a href="#edit">Edit</a></li><li class="lvl-3"><a href="#export">Export</a></li><li class="lvl-2"><a href="#extras">Optional extras</a></li><li class="lvl-2"><a href="#requirements">System requirements</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#availability">Availability</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

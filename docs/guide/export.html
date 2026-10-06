@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/guide/export.html" data-alt-uk="../../uk/docs/guide/export.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Export — Kadr</title>
+<meta name="description" content="Save your finished video from Kadr: resolution, quality, H.264 or HEVC, frame rate, GPU encoding, audio-only and GIF exports, and where the files go.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/guide/export.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/export.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/export.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/export.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Export — Kadr">
+<meta property="og:description" content="Save your finished video from Kadr: resolution, quality, H.264 or HEVC, frame rate, GPU encoding, audio-only and GIF exports, and where the files go.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/guide/export.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Export — Kadr">
+<meta name="twitter:description" content="Save your finished video from Kadr: resolution, quality, H.264 or HEVC, frame rate, GPU encoding, audio-only and GIF exports, and where the files go.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-export" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/" aria-current="page">For humans</a>
+      <a href="../../docs/ai/">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/guide/export.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/guide/export.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Get started</span><span class="sr-only">Get started with Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">Export</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/guide/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/guide/getting-started.html"><span>Getting started</span></a></li><li><a href="../../docs/guide/interface.html"><span>Interface tour</span></a></li><li><a href="../../docs/guide/projects.html"><span>Projects</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Editing</p><ul><li><a href="../../docs/guide/import-media.html"><span>Import media</span></a></li><li><a href="../../docs/guide/timeline.html"><span>Timeline editing</span></a></li><li><a href="../../docs/guide/player.html"><span>Player &amp; preview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Creating</p><ul><li><a href="../../docs/guide/text.html"><span>Text &amp; titles</span></a></li><li><a href="../../docs/guide/fonts.html"><span>Fonts</span></a></li><li><a href="../../docs/guide/captions.html"><span>Captions &amp; transcript</span></a></li><li><a href="../../docs/guide/effects.html"><span>Effects &amp; colour</span></a></li><li><a href="../../docs/guide/audio.html"><span>Audio</span></a></li><li><a href="../../docs/guide/stickers.html"><span>Stickers &amp; generated media</span></a></li><li><a href="../../docs/guide/ai-tools.html"><span>AI tools</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Finishing</p><ul><li><a href="../../docs/guide/export.html" aria-current="page"><span>Export</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Help</p><ul><li><a href="../../docs/guide/shortcuts.html"><span>Keyboard shortcuts</span></a></li><li><a href="../../docs/guide/settings.html"><span>Settings &amp; updates</span></a></li><li><a href="../../docs/guide/troubleshooting.html"><span>Troubleshooting &amp; FAQ</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/guide/index.html">User guide</a></li><li><span aria-current="page">Export</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Finishing</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>3 min read</span></p><h1>Export</h1></header><p class="lead">Exporting turns your project into a video file you can upload or share. The defaults suit almost every platform, so in most cases you just click <strong>Export</strong>.</p>
+
+<figure><img decoding="async" src="../../assets/img/guide/export.webp" alt="The Export window: cover preview, name, export folder, video settings for resolution, bit rate, codec, format and frame rate, Audio and GIF switches, estimated size and the Export button" width="792" height="569" loading="lazy"><figcaption>The Export window. The estimated file size updates as you change the settings.</figcaption></figure>
+
+<h2 id="quick">Export in three clicks<a class="anchor" href="#quick" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ol class="steps">
+  <li><h3 id="open">Open the Export window<a class="anchor" href="#open" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Click <strong>Export</strong> in the top-right corner of the editor, or press <kbd>Ctrl</kbd>+<kbd>E</kbd>.</p></li>
+  <li><h3 id="check">Check the name and folder<a class="anchor" href="#check" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p><strong>Name</strong> is the file name; <strong>Export to</strong> is the folder — by default <code>Videos\Kadr</code> in your user folder. To save elsewhere, type another folder path. The line <em>Saved as …</em> shows the final file name.</p></li>
+  <li><h3 id="go">Click Export<a class="anchor" href="#go" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Progress and the time left are shown. Click <strong>Hide</strong> to keep editing while the export runs in the background — a message appears when it is finished.</p></li>
+</ol>
+<p>When it is done, click <strong>Open folder</strong> to see the file in File Explorer, <strong>Export again</strong> to make another version, or <strong>Close</strong>. If a file with the same name already exists, Kadr adds “ (1)”, “ (2)”… instead of overwriting it.</p>
+
+<h2 id="video-settings">Video settings<a class="anchor" href="#video-settings" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Setting</th><th>Options</th><th>Advice</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Resolution</strong></td><td>480p, 720p, 1080p, 2K, 4K</td><td>1080p is right for social media. Choose 4K only if your footage is 4K. The exact pixel size for your project's shape is shown next to it.</td></tr>
+    <tr><td><strong>Bit rate</strong></td><td>Lower, Recommended, Higher, Customize</td><td>Higher means better quality and bigger files. <em>Customize</em> lets you type a value in Mbps.</td></tr>
+    <tr><td><strong>Codec</strong></td><td>H.264, HEVC</td><td>H.264 plays everywhere. HEVC (H.265) gives smaller files at the same quality but older devices may not play it.</td></tr>
+    <tr><td><strong>Format</strong></td><td>mp4, mov</td><td>mp4 is the universal choice.</td></tr>
+    <tr><td><strong>Frame rate</strong></td><td>24, 25, 30, 50, 60 fps</td><td>Keep the project's frame rate unless a platform asks for something else.</td></tr>
+  </tbody>
+</table></div>
+
+<h3 id="presets">Good settings for popular platforms<a class="anchor" href="#presets" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<div class="table-scroll"><table>
+  <thead><tr><th>Platform</th><th>Project ratio</th><th>Export</th></tr></thead>
+  <tbody>
+    <tr><td>TikTok, Instagram Reels, YouTube Shorts</td><td>9:16</td><td>1080p, Recommended, H.264, mp4, 30 fps</td></tr>
+    <tr><td>YouTube</td><td>16:9</td><td>1080p or 4K, Recommended or Higher, H.264, mp4</td></tr>
+    <tr><td>Instagram feed post</td><td>1:1</td><td>1080p, Recommended, H.264, mp4</td></tr>
+    <tr><td>Messengers (Telegram, WhatsApp)</td><td>any</td><td>720p, Lower — small and quick to send</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="gpu">Fast export with your graphics card<a class="anchor" href="#gpu" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>If your computer has an NVIDIA, Intel or AMD graphics chip with a video encoder (NVENC, Quick Sync or AMF), Kadr uses it automatically — exports are then several times faster. Next to <strong>Codec</strong> the window shows which encoder will be used, for example <em>GPU · h264_nvenc</em>. Without a suitable graphics chip, Kadr uses the processor; the result looks the same, it just takes longer.</p>
+
+<h2 id="audio-gif">Audio-only and GIF<a class="anchor" href="#audio-gif" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Three switches choose what to export — you can turn on more than one at a time:</p>
+<ul>
+  <li><strong>Video</strong> — the normal video file.</li>
+  <li><strong>Audio</strong> — the soundtrack as <strong>MP3</strong>, <strong>WAV</strong>, <strong>AAC</strong> or <strong>FLAC</strong>. With Video on, it is saved as an extra file; switch Video off to export the sound only — for example a podcast episode.</li>
+  <li><strong>GIF</strong> — an animated GIF (up to 720 pixels, 15 frames per second, no sound) for chats and websites. Keep GIFs short: they get big quickly.</li>
+</ul>
+
+<h2 id="where">Where the files go<a class="anchor" href="#where" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Unless you type another folder, exports are saved in <code>C:\Users\&lt;you&gt;\Videos\Kadr</code>. Missing folders are created automatically. The export uses your original media at full quality — proxies and the preview quality setting don't affect it.</p>
+
+<div class="callout tip"><p>Need several versions — vertical and horizontal, or a short excerpt only? An <a href="../../docs/ai/index.html">AI assistant</a> can export a time range or a batch of variants for you with <a class="cmd-link" href="../../docs/ai/reference/export.html#export.start"><code>export.start</code></a>.</p></div>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/guide/ai-tools.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>AI tools</b></a><a class="pager-next" href="../../docs/guide/shortcuts.html" rel="next"><span>Next</span><b>Keyboard shortcuts<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#quick">Export in three clicks</a></li><li class="lvl-3"><a href="#open">Open the Export window</a></li><li class="lvl-3"><a href="#check">Check the name and folder</a></li><li class="lvl-3"><a href="#go">Click Export</a></li><li class="lvl-2"><a href="#video-settings">Video settings</a></li><li class="lvl-3"><a href="#presets">Good settings for popular platforms</a></li><li class="lvl-2"><a href="#gpu">Fast export with your graphics card</a></li><li class="lvl-2"><a href="#audio-gif">Audio-only and GIF</a></li><li class="lvl-2"><a href="#where">Where the files go</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#availability">Availability</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

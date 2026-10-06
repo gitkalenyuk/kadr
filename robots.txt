@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gitkalenyuk.github.io/kadr/sitemap.xml

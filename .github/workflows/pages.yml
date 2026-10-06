@@ -1,0 +1,62 @@
+# Deploys this repository (the prebuilt Kadr website) to GitHub Pages:
+# https://gitkalenyuk.github.io/kadr/
+#
+# The site is plain HTML/CSS/JS built from the private Kadr source tree
+# (`node site/tools/build.mjs`, then mirrored here), so there is no build step.
+# Kadr is distributed by invitation: this site never links to installers.
+# One-time setup: Settings -> Pages -> Build and deployment -> Source = "GitHub Actions"
+# (gh api -X POST repos/gitkalenyuk/kadr/pages -f build_type=workflow).
+name: Deploy website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; never cancel a running deployment.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check the site
+        run: |
+          test -f index.html || { echo "::error::index.html is missing"; exit 1; }
+          # Distribution is by invitation: refuse to publish links to installers or release pages.
+          if grep -rIlE 'href="[^"]*(github\.com/gitkalenyuk/kadr(-releases)?/releases|releases/(latest|download)|Kadr-Setup|portable\.zip|latest\.json)[^"]*"|api\.github\.com/repos/gitkalenyuk' --include='*.html' --include='*.js' . ; then
+            echo "::error::download links found (listed above)"; exit 1
+          fi
+          echo "Site size: $(du -sh --exclude=.git . | cut -f1), files: $(find . -path ./.git -prune -o -type f -print | wc -l)"
+
+      - name: Prepare the artifact
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          rsync -a --exclude .git --exclude .github --exclude README.md ./ "$RUNNER_TEMP/site/"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
