@@ -22,7 +22,7 @@ Key facts for agents:
 ## Interfaces
 
 - [MCP tools](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html): How Kadr’s commands appear as MCP tools: naming, annotations, kadr_batch for atomic edits, images from preview tools, errors and timeouts.
-- [REST API](https://gitkalenyuk.github.io/kadr/docs/ai/rest.html): Call any Kadr command over HTTP on 127.0.0.1:7777: token, response envelope, error codes and hints, batches and dry runs, resource aliases, WebSocket events and binary endpoints.
+- [REST API](https://gitkalenyuk.github.io/kadr/docs/ai/rest.html): Call any Kadr command over HTTP on your own PC (127.0.0.1:7777 by default, configurable): finding the address, token, response envelope, error codes and hints, batches and dry runs, resource aliases, WebSocket events and binary endpoints.
 - [Command line: kadrctl](https://gitkalenyuk.github.io/kadr/docs/ai/cli.html): List, describe and run any Kadr command from a terminal with human time formats, run JSON batch files, and script whole folders in PowerShell.
 
 ## Guides

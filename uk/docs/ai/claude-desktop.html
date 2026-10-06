@@ -114,7 +114,7 @@
   </li>
   <li>
     <h3 id="add-kadr">Додайте Kadr<a class="anchor" href="#add-kadr" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
-    <p>Вставте це, підставивши своє ім’я користувача в шлях (розділ <strong>Налаштування → API &amp; automation</strong> у Kadr показує точний фрагмент для вашого ПК). У JSON кожна зворотна коса риска пишеться двічі.</p>
+    <p>Вставте це, підставивши своє ім’я користувача в шлях (розділ <strong>Налаштування → API &amp; agents</strong> у Kadr показує точний фрагмент для вашого ПК). У JSON кожна зворотна коса риска пишеться двічі.</p>
     <div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">{</span>
   <span class="tok-p">&quot;mcpServers&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
     <span class="tok-p">&quot;kadr&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
@@ -145,7 +145,7 @@
 </ul>
 
 <h2 id="env">Інший порт або папка даних<a class="anchor" href="#env" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>Типово міст звертається до <code>127.0.0.1:7777</code> і читає токен із <code>%APPDATA%\Kadr</code>. Для окремого рушія додайте блок <code>env</code>:</p>
+<p>Типово міст знаходить запущений Kadr через <code>%APPDATA%\Kadr\api-endpoint.json</code> (зазвичай це <code>127.0.0.1:7777</code>) і читає токен із <code>%APPDATA%\Kadr</code>. Якщо ви лише перенесли API Kadr на інший порт у <strong>Settings → API &amp; agents</strong>, нічого міняти не треба — міст піде слідом. Для окремого рушія додайте блок <code>env</code>:</p>
 <div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">{</span>
   <span class="tok-p">&quot;mcpServers&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
     <span class="tok-p">&quot;kadr&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
@@ -164,7 +164,7 @@
   <thead><tr><th>Симптом</th><th>Причина</th><th>Що робити</th></tr></thead>
   <tbody>
     <tr><td>У чаті немає інструментів Kadr</td><td>Конфігурацію не перечитано або JSON некоректний.</td><td>Завершіть Claude Desktop через трей і запустіть знову. Перевірте JSON (коми, подвоєні зворотні риски).</td></tr>
-    <tr><td>«Server disconnected» або сервер не стартує</td><td>Неправильний шлях до <code>kadr-mcp.exe</code>.</td><td>Візьміть повний шлях із <strong>Налаштування → API &amp; automation</strong> у Kadr. Журнал сервера — у <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
+    <tr><td>«Server disconnected» або сервер не стартує</td><td>Неправильний шлях до <code>kadr-mcp.exe</code>.</td><td>Візьміть повний шлях із <strong>Налаштування → API &amp; agents</strong> у Kadr. Журнал сервера — у <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
     <tr><td><code>Kadr engine did not start … within 10 s</code></td><td>Поруч із <code>kadr-mcp.exe</code> немає <code>kadr-server.exe</code> або його заблоковано.</td><td>Запустіть Kadr самі й повторіть запит.</td></tr>
     <tr><td>Правки не з’являються у відкритому вікні Kadr</td><td>Міст запустив «безголовий» <code>kadr-server.exe</code> ще до відкриття Kadr; порт 7777 зайнятий ним.</td><td>Завершіть <code>kadr-server.exe</code> у Диспетчері завдань, лишіть Kadr відкритим, перезапустіть Claude Desktop.</td></tr>
     <tr><td><code>unauthorized: missing or invalid API token</code></td><td>Старий <code>KADR_TOKEN</code> або інший <code>KADR_DATA_DIR</code> в <code>env</code>.</td><td>Приберіть їх або скопіюйте токен із <code>%APPDATA%\Kadr\api-token</code>.</td></tr>

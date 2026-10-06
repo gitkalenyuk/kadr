@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>REST API — Kadr</title>
-<meta name="description" content="Викликайте будь-яку команду Kadr через HTTP на 127.0.0.1:7777: токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.">
+<meta name="description" content="Викликайте будь-яку команду Kadr через HTTP на вашому ПК (типово 127.0.0.1:7777, порт можна змінити): як знайти адресу, токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.">
 <link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/rest.html">
 <link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/rest.html">
 <link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/rest.html">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="uk_UA">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:title" content="REST API — Kadr">
-<meta property="og:description" content="Викликайте будь-яку команду Kadr через HTTP на 127.0.0.1:7777: токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.">
+<meta property="og:description" content="Викликайте будь-яку команду Kadr через HTTP на вашому ПК (типово 127.0.0.1:7777, порт можна змінити): як знайти адресу, токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.">
 <meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/ai/rest.html">
 <meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="REST API — Kadr">
-<meta name="twitter:description" content="Викликайте будь-яку команду Kadr через HTTP на 127.0.0.1:7777: токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.">
+<meta name="twitter:description" content="Викликайте будь-яку команду Kadr через HTTP на вашому ПК (типово 127.0.0.1:7777, порт можна змінити): як знайти адресу, токен, конверт відповіді, коди помилок і підказки, пакети й пробні запуски, ресурсні псевдоніми, події WebSocket і бінарні ендпоінти.">
 <meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
 <link rel="stylesheet" href="../../../assets/css/base.css">
 <link rel="stylesheet" href="../../../assets/css/docs.css">
@@ -109,10 +109,19 @@
 
 <h2 id="base-url">Базова адреса<a class="anchor" href="#base-url" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <div class="code-wrap"><pre class="code lang-text"><code>http://127.0.0.1:7777/api/v1</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
-<p>Її обслуговують і редактор (<code>Kadr.exe</code>), і «безголовий» <code>kadr-server.exe</code>. Щоб змінити адресу, задайте <code>KADR_ADDR</code> (наприклад, <code>127.0.0.1:7790</code>) до запуску Kadr. Без токена доступні <code>GET /api/v1/health</code> → <code>{"ok":true,"result":{"status":"ok","version":"…"}}</code>, <code>GET /api/v1/openapi.json</code> і HTML-довідник <code>GET /docs</code>.</p>
+<p>Її обслуговують і редактор (<code>Kadr.exe</code>), і «безголовий» <code>kadr-server.exe</code>. <strong>7777 — лише типовий порт</strong>: користувач може перенести API в <strong>Settings → API &amp; agents</strong>, агент — командою <a class="cmd-link" href="../../../uk/docs/ai/reference/app.html#app.api.set"><code>app.api.set</code></a> (<code>{"port": 7790}</code> — вікно переходить на новий порт одразу), а <code>KADR_ADDR</code> (наприклад, <code>127.0.0.1:7790</code>) перекриває обидва для одного процесу. Не вписуйте порт у скрипти жорстко — знаходьте його так:</p>
+<ol>
+  <li>Прочитайте <code>%APPDATA%\Kadr\api-endpoint.json</code> (macOS <code>~/Library/Application Support/Kadr</code>, Linux <code>~/.config/Kadr</code>). Кожен запущений Kadr записує його й видаляє під час виходу: <code>{"url": "http://127.0.0.1:7777", "pid": 12345, "version": "1.0.0", "token_file": "…\\api-token", "started_at": "…", "mode": "editor"}</code>. Беріть <code>url</code> і токен із <code>token_file</code>, якщо процес <code>pid</code> живий.</li>
+  <li>Інакше — <code>settings.json</code> → <code>api.host</code>/<code>api.port</code>, інакше <code>127.0.0.1:7777</code>.</li>
+  <li>Або просто запустіть <code>kadrctl endpoint</code> — він робить усе це й друкує результат; <a class="cmd-link" href="../../../uk/docs/ai/reference/app.html#app.api.get"><code>app.api.get</code></a> повертає те саме зсередини.</li>
+</ol>
+<div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$ep</span>  = Get-Content <span class="tok-s">&quot;$env:APPDATA\Kadr\api-endpoint.json&quot;</span> <span class="tok-p">-Raw</span> | <span class="tok-k">ConvertFrom-Json</span>
+<span class="tok-n">$env:KADR_TOKEN</span> = (<span class="tok-k">Get-Content</span> <span class="tok-n">$ep</span>.token_file <span class="tok-p">-Raw</span>).Trim()
+<span class="tok-k">Invoke-RestMethod</span> <span class="tok-p">-Method</span> Post <span class="tok-p">-Uri</span> <span class="tok-s">&quot;$($ep.url)/api/v1/commands/project.list&quot;</span> <span class="tok-p">-Headers</span> @{ Authorization = <span class="tok-s">&quot;Bearer $env:KADR_TOKEN&quot;</span> } <span class="tok-p">-Body</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-o">}</span><span class="tok-s">'</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div>
+<p>Приклади на цьому сайті використовують <code>http://127.0.0.1:7777</code>; підставте свій <code>url</code>. Без токена доступні <code>GET /api/v1/health</code> → <code>{"ok":true,"result":{"status":"ok","version":"…"}}</code>, <code>GET /api/v1/openapi.json</code> і HTML-довідник <code>GET /docs</code>.</p>
 
 <h2 id="auth">Автентифікація<a class="anchor" href="#auth" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>Усе інше потребує токена API, що створюється під час першого запуску й зберігається в <code>%APPDATA%\Kadr\api-token</code> (Kadr показує шлях у <strong>Налаштування → API &amp; automation</strong>). Надсилайте його як bearer-токен: <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<p>Усе інше потребує токена API, що створюється під час першого запуску й зберігається в <code>%APPDATA%\Kadr\api-token</code> (Kadr показує шлях у <strong>Налаштування → API &amp; agents</strong>). Надсилайте його як bearer-токен: <code>Authorization: Bearer &lt;token&gt;</code>.</p>
 <div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Приклади коду"><button type="button" role="tab" id="ct844-0" aria-controls="ct844-0p" aria-selected="true" data-tab="powershell">PowerShell</button><button type="button" role="tab" id="ct844-1" aria-controls="ct844-1p" aria-selected="false" tabindex="-1" data-tab="cmd">CMD</button><button type="button" role="tab" id="ct844-2" aria-controls="ct844-2p" aria-selected="false" tabindex="-1" data-tab="bash">Bash</button></div><div class="ct-panel on" role="tabpanel" id="ct844-0p" aria-labelledby="ct844-0" data-tab="powershell" data-label="PowerShell"><div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$env:KADR_TOKEN</span> = (<span class="tok-k">Get-Content</span> <span class="tok-s">&quot;$env:APPDATA\Kadr\api-token&quot;</span> <span class="tok-p">-Raw</span>).Trim()</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct844-1p" aria-labelledby="ct844-1" data-tab="cmd" data-label="CMD"><div class="code-wrap"><pre class="code lang-cmd"><code><span class="tok-k">set</span> /p KADR_TOKEN=&lt;<span class="tok-s">&quot;%APPDATA%\Kadr\api-token&quot;</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct844-2p" aria-labelledby="ct844-2" data-tab="bash" data-label="Bash"><div class="code-wrap"><pre class="code lang-bash"><code><span class="tok-k">export</span> KADR_TOKEN=$(<span class="tok-k">cat</span> <span class="tok-s">&quot;$APPDATA/Kadr/api-token&quot;</span>)</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div></div>
 <p>Браузери не можуть ставити заголовки для запитів <code>&lt;img&gt;</code>, <code>&lt;audio&gt;</code> чи WebSocket, тож там можна передати <code>?token=&lt;token&gt;</code>. <code>KADR_TOKEN</code>, заданий до запуску Kadr, має пріоритет над файлом; щоб змінити токен, закрийте Kadr, видаліть <code>api-token</code> і запустіть Kadr знову.</p>
 

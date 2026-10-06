@@ -115,7 +115,7 @@
   </li>
   <li>
     <h3 id="add-kadr">Add Kadr<a class="anchor" href="#add-kadr" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
-    <p>Paste this, with your own user name in the path (Kadr’s <strong>Settings → API &amp; automation</strong> shows the exact snippet for your PC). In JSON every backslash is written twice.</p>
+    <p>Paste this, with your own user name in the path (Kadr’s <strong>Settings → API &amp; agents</strong> shows the exact snippet for your PC). In JSON every backslash is written twice.</p>
     <div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">{</span>
   <span class="tok-p">&quot;mcpServers&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
     <span class="tok-p">&quot;kadr&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
@@ -146,7 +146,7 @@
 </ul>
 
 <h2 id="env">Another port or data folder<a class="anchor" href="#env" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>By default the bridge talks to <code>127.0.0.1:7777</code> and reads the token from <code>%APPDATA%\Kadr</code>. For a separate engine, add an <code>env</code> block:</p>
+<p>By default the bridge finds the running Kadr through <code>%APPDATA%\Kadr\api-endpoint.json</code> (normally <code>127.0.0.1:7777</code>) and reads the token from <code>%APPDATA%\Kadr</code>. If you only moved Kadr’s API to another port in <strong>Settings → API &amp; agents</strong>, change nothing — the bridge follows. For a separate engine, add an <code>env</code> block:</p>
 <div class="code-wrap"><pre class="code lang-json"><code><span class="tok-o">{</span>
   <span class="tok-p">&quot;mcpServers&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
     <span class="tok-p">&quot;kadr&quot;</span><span class="tok-o">:</span> <span class="tok-o">{</span>
@@ -165,7 +165,7 @@
   <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
   <tbody>
     <tr><td>No Kadr tools in the chat</td><td>The config was not reloaded, or the JSON is invalid.</td><td>Quit Claude Desktop from the tray and start it again. Check the JSON (commas, doubled backslashes).</td></tr>
-    <tr><td>“Server disconnected” or the server fails to start</td><td>Wrong path to <code>kadr-mcp.exe</code>.</td><td>Use the full path from Kadr’s <strong>Settings → API &amp; automation</strong>. The server’s log is in <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
+    <tr><td>“Server disconnected” or the server fails to start</td><td>Wrong path to <code>kadr-mcp.exe</code>.</td><td>Use the full path from Kadr’s <strong>Settings → API &amp; agents</strong>. The server’s log is in <code>%APPDATA%\Claude\logs\</code> (<code>mcp-server-kadr.log</code>).</td></tr>
     <tr><td><code>Kadr engine did not start … within 10 s</code></td><td><code>kadr-server.exe</code> is missing next to <code>kadr-mcp.exe</code>, or blocked.</td><td>Start Kadr yourself and ask again.</td></tr>
     <tr><td>Edits don’t appear in the open Kadr window</td><td>The bridge started a headless <code>kadr-server.exe</code> before Kadr was opened; it owns port 7777.</td><td>Quit <code>kadr-server.exe</code> in Task Manager, keep Kadr open, restart Claude Desktop.</td></tr>
     <tr><td><code>unauthorized: missing or invalid API token</code></td><td>An old <code>KADR_TOKEN</code> or a different <code>KADR_DATA_DIR</code> in <code>env</code>.</td><td>Remove them, or copy the token from <code>%APPDATA%\Kadr\api-token</code>.</td></tr>

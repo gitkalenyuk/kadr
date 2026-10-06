@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Settings &amp; updates — Kadr</title>
-<meta name="description" content="Kadr settings explained: automatic updates (with an update token), FFmpeg setup, API information, portable mode and uninstalling.">
+<meta name="description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, the API port for AI agents, portable mode and uninstalling.">
 <link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/settings.html">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="uk_UA">
 <meta property="og:title" content="Settings &amp; updates — Kadr">
-<meta property="og:description" content="Kadr settings explained: automatic updates (with an update token), FFmpeg setup, API information, portable mode and uninstalling.">
+<meta property="og:description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, the API port for AI agents, portable mode and uninstalling.">
 <meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Settings &amp; updates — Kadr">
-<meta name="twitter:description" content="Kadr settings explained: automatic updates (with an update token), FFmpeg setup, API information, portable mode and uninstalling.">
+<meta name="twitter:description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, the API port for AI agents, portable mode and uninstalling.">
 <meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
 <link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/css/base.css">
@@ -106,14 +106,14 @@
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/guide/index.html">User guide</a></li><li><span aria-current="page">Settings &amp; updates</span></li></ol></nav>
     
     <article class="prose">
-<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Help</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 min read</span></p><h1>Settings &amp; updates</h1></header><p class="lead">Kadr has very few settings — most choices live where you use them. The Settings window covers updates, FFmpeg and information about your installation.</p>
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Help</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 min read</span></p><h1>Settings &amp; updates</h1></header><p class="lead">Kadr has very few settings — most choices live where you use them. The Settings window covers updates, rendering on your graphics card, FFmpeg, voices, the API for AI agents and information about your installation.</p>
 
 <h2 id="open">Open Settings<a class="anchor" href="#open" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <ul>
   <li>On the home screen: <strong>Settings</strong> at the bottom left.</li>
   <li>In the editor: <strong>Menu → Settings…</strong>, or <strong>Menu → Check for updates…</strong> to jump straight to updates.</li>
 </ul>
-<p>The window has four sections: <strong>About</strong>, <strong>Updates</strong>, <strong>FFmpeg</strong> and <strong>API &amp; automation</strong>.</p>
+<p>The window has six sections: <strong>About</strong>, <strong>Updates</strong>, <strong>Rendering</strong>, <strong>FFmpeg</strong>, <strong>Voices</strong> and <strong>API &amp; agents</strong>.</p>
 
 <h2 id="about">About<a class="anchor" href="#about" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>Shows your Kadr <strong>Version</strong> (with a <em>Pre-release</em> or <em>Portable</em> label when that applies), the build, the platform and the FFmpeg version. Two lines are especially useful:</p>
@@ -138,6 +138,18 @@
   <li><strong>Channel</strong> — <em>Stable releases</em> (the default), or <em>Beta (includes pre-releases)</em> to get new features earlier, when the vendor publishes them.</li>
 </ul>
 
+<h2 id="rendering">Rendering<a class="anchor" href="#rendering" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Kadr draws every frame — in the player, in previews and in the export — on your <strong>graphics card</strong>: NVIDIA, AMD and Intel on Windows (through Vulkan or Direct3D 12), Apple Silicon and Intel Macs through Metal. That is what makes playback smooth and exports several times faster than on the processor. If no graphics card can be used (an old driver, a remote desktop session, a virtual machine), Kadr renders on the processor instead: the picture is exactly the same, it just takes longer.</p>
+<ul>
+  <li><strong>Graphics card</strong> at the top shows the card in use, its graphics API, how much video memory it has and a bar with the <em>Video memory used by Kadr</em> right now.</li>
+  <li><strong>Renderer</strong> — <em>Auto</em> (the default: the graphics card when it works, otherwise the processor), <em>GPU</em> (only the graphics card) or <em>CPU</em> (only the processor, for example to rule out a driver problem).</li>
+  <li><strong>Graphics card</strong> (the list) — when your computer has more than one, pick the one Kadr should use. By default it takes the fastest one. The same card can appear once per graphics API; Vulkan is preferred on Windows, Direct3D 12 is the fallback.</li>
+  <li><strong>Video memory</strong> — <em>Automatic</em> lets Kadr use all of the card's memory except what is kept free for the system. <em>Set a limit</em> lets you choose how much it may use, in GB — lower it if you play games, stream or run another editor at the same time.</li>
+  <li><strong>Keep free for the system</strong> — memory Kadr never touches so that Windows or macOS stays responsive (512 MB by default).</li>
+</ul>
+<p>Kadr never uses more than the smallest of: your limit, the card's memory minus the reserve, and what the system allows. Example: on a 12 GB card with the limit set to 12 GB, Kadr uses at most 11.5 GB and leaves 0.5 GB for Windows. Changes apply from the next frame or the next export — no restart. An export that is already running finishes with the settings it started with.</p>
+<p>The export window shows which renderer an export uses (for example <em>NVIDIA GeForce RTX 3060</em>, or <em>CPU</em> with the reason). AI agents read and change the same settings with <a class="cmd-link" href="../../docs/ai/reference/rendering.html#render.devices"><code>render.devices</code></a>, <a class="cmd-link" href="../../docs/ai/reference/rendering.html#render.settings.get"><code>render.settings.get</code></a> and <a class="cmd-link" href="../../docs/ai/reference/rendering.html#render.settings.set"><code>render.settings.set</code></a>.</p>
+
 <h2 id="ffmpeg">FFmpeg<a class="anchor" href="#ffmpeg" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <figure><img decoding="async" src="../../assets/img/guide/settings-ffmpeg-missing.webp" alt="Settings, FFmpeg section warning that FFmpeg is not installed, with a Download FFmpeg button, a Use my FFmpeg field and the download folder" width="852" height="470" loading="lazy"><figcaption>Settings → FFmpeg when FFmpeg is missing.</figcaption></figure>
 <p>Kadr needs FFmpeg to import, preview and export. This section shows whether it was found and where:</p>
@@ -147,8 +159,15 @@
 </ul>
 <p>When FFmpeg is found, the status line shows its version and where it came from: <em>Downloaded by Kadr</em>, <em>Folder you chose</em>, <em>Next to Kadr</em> or <em>System PATH</em>. FFmpeg is free software under the GPL licence; it is a separate program, not part of Kadr.</p>
 
-<h2 id="api">API &amp; automation<a class="anchor" href="#api" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>Everything you click in Kadr can also be done by scripts and AI assistants. This section shows the local <strong>API address</strong> (<code>http://127.0.0.1:7777</code>), a link to the built-in <strong>Documentation</strong>, the <strong>Token file</strong> that protects the API, and ready-to-copy settings for connecting Claude Desktop and Claude Code. The API only listens on your own computer. You don't need any of this to edit videos — but if you're curious, read the <a href="../../docs/ai/index.html">AI documentation</a>.</p>
+<h2 id="voices">Voices<a class="anchor" href="#voices" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Voices for text-to-speech: the voices installed on your computer, voices Kadr can download, and the optional ElevenLabs key for cloud voices. See <a href="../../docs/guide/audio.html">Audio</a>.</p>
+
+<h2 id="api">API &amp; agents<a class="anchor" href="#api" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Everything you click in Kadr can also be done by scripts and AI assistants (Claude Code, Codex, Cursor, Claude Desktop…). This section shows the local <strong>API address</strong> (by default <code>http://127.0.0.1:7777</code>) with its state (<em>Listening</em>), a link to the built-in <strong>Documentation</strong>, the <strong>Token file</strong> that protects the API, the <strong>Endpoint file</strong>, and under <strong>Connect an AI agent</strong> ready-to-copy setup for each agent with the right paths. You don't need any of this to edit videos — but if you're curious, read the <a href="../../docs/ai/index.html">AI documentation</a>.</p>
+<ul>
+  <li><strong>Port</strong> — the port the API listens on (default 7777). Change it if another program already uses 7777, then click <strong>Apply</strong>: the API moves at once, without a restart. <strong>Use default (7777)</strong> switches back. Agents keep working: every running Kadr writes its current address to the endpoint file (<code>api-endpoint.json</code> in the data folder), and <code>kadr-mcp</code> and <code>kadrctl</code> read it.</li>
+  <li><strong>Other computers</strong> — off by default: only this computer can connect (recommended). Switching it on lets other computers on your network control Kadr with the token; do it only on a network you trust.</li>
+</ul>
 
 <h2 id="portable">Portable mode<a class="anchor" href="#portable" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>The portable zip (<code>Kadr-X.Y.Z-windows-x64-portable.zip</code>) runs without installation — from any folder or a USB stick. Unzip it and run <code>Kadr.exe</code>.</p>
@@ -170,7 +189,7 @@
     </article>
     <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/guide/shortcuts.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Keyboard shortcuts</b></a><a class="pager-next" href="../../docs/guide/troubleshooting.html" rel="next"><span>Next</span><b>Troubleshooting &amp; FAQ<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
   </main>
-  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#open">Open Settings</a></li><li class="lvl-2"><a href="#about">About</a></li><li class="lvl-2"><a href="#updates">Updates</a></li><li class="lvl-3"><a href="#update-read">Read what's new</a></li><li class="lvl-3"><a href="#update-download">Download</a></li><li class="lvl-3"><a href="#update-install">Install</a></li><li class="lvl-2"><a href="#ffmpeg">FFmpeg</a></li><li class="lvl-2"><a href="#api">API &amp; automation</a></li><li class="lvl-2"><a href="#portable">Portable mode</a></li><li class="lvl-2"><a href="#uninstall">Uninstall</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#open">Open Settings</a></li><li class="lvl-2"><a href="#about">About</a></li><li class="lvl-2"><a href="#updates">Updates</a></li><li class="lvl-3"><a href="#update-read">Read what's new</a></li><li class="lvl-3"><a href="#update-download">Download</a></li><li class="lvl-3"><a href="#update-install">Install</a></li><li class="lvl-2"><a href="#rendering">Rendering</a></li><li class="lvl-2"><a href="#ffmpeg">FFmpeg</a></li><li class="lvl-2"><a href="#voices">Voices</a></li><li class="lvl-2"><a href="#api">API &amp; agents</a></li><li class="lvl-2"><a href="#portable">Portable mode</a></li><li class="lvl-2"><a href="#uninstall">Uninstall</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
 </div>
 <footer class="footer">
   <div class="footer-glow" aria-hidden="true"></div>

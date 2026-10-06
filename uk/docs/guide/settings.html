@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Налаштування й оновлення — Kadr</title>
-<meta name="description" content="Налаштування Kadr: автоматичні оновлення (з токеном оновлень), FFmpeg, відомості про API, портативний режим і видалення програми.">
+<meta name="description" content="Налаштування Kadr: автоматичні оновлення (з токеном оновлень), рендер на відеокарті й ліміт відеопам’яті, FFmpeg, порт API для ШІ-агентів, портативний режим і видалення програми.">
 <link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/settings.html">
 <link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/settings.html">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="uk_UA">
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:title" content="Налаштування й оновлення — Kadr">
-<meta property="og:description" content="Налаштування Kadr: автоматичні оновлення (з токеном оновлень), FFmpeg, відомості про API, портативний режим і видалення програми.">
+<meta property="og:description" content="Налаштування Kadr: автоматичні оновлення (з токеном оновлень), рендер на відеокарті й ліміт відеопам’яті, FFmpeg, порт API для ШІ-агентів, портативний режим і видалення програми.">
 <meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/guide/settings.html">
 <meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Налаштування й оновлення — Kadr">
-<meta name="twitter:description" content="Налаштування Kadr: автоматичні оновлення (з токеном оновлень), FFmpeg, відомості про API, портативний режим і видалення програми.">
+<meta name="twitter:description" content="Налаштування Kadr: автоматичні оновлення (з токеном оновлень), рендер на відеокарті й ліміт відеопам’яті, FFmpeg, порт API для ШІ-агентів, портативний режим і видалення програми.">
 <meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
 <link rel="stylesheet" href="../../../assets/css/base.css">
 <link rel="stylesheet" href="../../../assets/css/docs.css">
@@ -105,14 +105,14 @@
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><span aria-current="page">Налаштування й оновлення</span></li></ol></nav>
     
     <article class="prose">
-<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</span><span class="pe-group">Довідка</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 хв читання</span></p><h1>Налаштування й оновлення</h1></header><p class="lead">Налаштувань у Kadr небагато — більшість рішень ухвалюється там, де ви працюєте. Вікно Settings відповідає за оновлення, FFmpeg і відомості про вашу інсталяцію.</p>
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</span><span class="pe-group">Довідка</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 хв читання</span></p><h1>Налаштування й оновлення</h1></header><p class="lead">Налаштувань у Kadr небагато — більшість рішень ухвалюється там, де ви працюєте. Вікно Settings відповідає за оновлення, рендер на відеокарті, FFmpeg, голоси, API для ШІ-агентів і відомості про вашу інсталяцію.</p>
 
 <h2 id="open">Як відкрити Settings<a class="anchor" href="#open" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <ul>
   <li>На головному екрані: <strong>Settings</strong> ліворуч унизу.</li>
   <li>У редакторі: <strong>Menu → Settings…</strong> або <strong>Menu → Check for updates…</strong> — одразу до оновлень.</li>
 </ul>
-<p>Вікно має чотири розділи: <strong>About</strong>, <strong>Updates</strong>, <strong>FFmpeg</strong> і <strong>API &amp; automation</strong>.</p>
+<p>Вікно має шість розділів: <strong>About</strong>, <strong>Updates</strong>, <strong>Rendering</strong>, <strong>FFmpeg</strong>, <strong>Voices</strong> і <strong>API &amp; agents</strong>.</p>
 
 <h2 id="about">About — про програму<a class="anchor" href="#about" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>Показує <strong>Version</strong> — версію Kadr (з позначкою <em>Pre-release</em> чи <em>Portable</em>, якщо це так), збірку, платформу й версію FFmpeg. Особливо корисні два рядки:</p>
@@ -137,6 +137,18 @@
   <li><strong>Channel</strong> — <em>Stable releases</em> (стабільні, за замовчуванням) або <em>Beta (includes pre-releases)</em>, щоб отримувати нові функції раніше, коли постачальник їх публікує.</li>
 </ul>
 
+<h2 id="rendering">Rendering — рендер на відеокарті<a class="anchor" href="#rendering" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Kadr малює кожен кадр — у плеєрі, у попередньому перегляді та в експорті — на <strong>відеокарті</strong>: NVIDIA, AMD та Intel у Windows (через Vulkan або Direct3D 12), Apple Silicon та Intel Mac — через Metal. Саме тому відтворення плавне, а експорт у рази швидший, ніж на процесорі. Якщо відеокарту використати не вдається (старий драйвер, віддалений робочий стіл, віртуальна машина), Kadr рендерить процесором: картинка точно така сама, просто довше.</p>
+<ul>
+  <li><strong>Graphics card</strong> угорі показує відеокарту, яка працює, її графічний API, обсяг відеопам’яті та смугу <em>Video memory used by Kadr</em> — скільки пам’яті Kadr займає зараз.</li>
+  <li><strong>Renderer</strong> — <em>Auto</em> (за замовчуванням: відеокарта, коли вона працює, інакше процесор), <em>GPU</em> (лише відеокарта) або <em>CPU</em> (лише процесор, наприклад щоб виключити проблему з драйвером).</li>
+  <li><strong>Graphics card</strong> (список) — якщо відеокарт кілька, оберіть, якою користуватися. За замовчуванням Kadr бере найшвидшу. Одна карта може бути в списку двічі — по разу для кожного графічного API; у Windows перевага за Vulkan, Direct3D 12 — запасний варіант.</li>
+  <li><strong>Video memory</strong> — <em>Automatic</em>: Kadr може брати всю пам’ять карти, крім тієї, що лишається системі. <em>Set a limit</em>: ви самі вказуєте, скільки ГБ йому можна, — зменште, якщо паралельно граєте, стримите чи працюєте в іншому редакторі.</li>
+  <li><strong>Keep free for the system</strong> — пам’ять, якої Kadr ніколи не торкається, щоб Windows чи macOS не підвисали (за замовчуванням 512 МБ).</li>
+</ul>
+<p>Kadr ніколи не бере більше за найменше з трьох: ваш ліміт, пам’ять карти мінус резерв і те, що дозволяє система. Приклад: карта на 12 ГБ і ліміт 12 ГБ — Kadr використає щонайбільше 11,5 ГБ і залишить 0,5 ГБ для Windows. Зміни діють з наступного кадру або наступного експорту, перезапуск не потрібен. Експорт, що вже йде, завершується з тими налаштуваннями, з якими почався.</p>
+<p>Вікно експорту показує, чим рендериться експорт (наприклад <em>NVIDIA GeForce RTX 3060</em> або <em>CPU</em> з причиною). ШІ-агенти читають і змінюють ці самі налаштування командами <a class="cmd-link" href="../../../uk/docs/ai/reference/rendering.html#render.devices"><code>render.devices</code></a>, <a class="cmd-link" href="../../../uk/docs/ai/reference/rendering.html#render.settings.get"><code>render.settings.get</code></a> і <a class="cmd-link" href="../../../uk/docs/ai/reference/rendering.html#render.settings.set"><code>render.settings.set</code></a>.</p>
+
 <h2 id="ffmpeg">FFmpeg<a class="anchor" href="#ffmpeg" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <figure><img decoding="async" src="../../../assets/img/guide/settings-ffmpeg-missing.webp" alt="Settings, розділ FFmpeg із попередженням, що FFmpeg не встановлено, кнопкою Download FFmpeg, полем Use my FFmpeg і папкою завантаження" width="852" height="470" loading="lazy"><figcaption>Settings → FFmpeg, коли FFmpeg бракує.</figcaption></figure>
 <p>Kadr потрібен FFmpeg для імпорту, перегляду й експорту. Цей розділ показує, чи його знайдено і де:</p>
@@ -146,8 +158,15 @@
 </ul>
 <p>Коли FFmpeg знайдено, рядок стану показує його версію та джерело: <em>Downloaded by Kadr</em> (завантажив Kadr), <em>Folder you chose</em> (обрана вами папка), <em>Next to Kadr</em> (поруч із Kadr) або <em>System PATH</em>. FFmpeg — вільна програма під ліцензією GPL; це окремий продукт, не частина Kadr.</p>
 
-<h2 id="api">API &amp; automation<a class="anchor" href="#api" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>Усе, що ви клацаєте в Kadr, можуть робити й скрипти та ШІ-асистенти. Тут показано локальну <strong>API address</strong> (<code>http://127.0.0.1:7777</code>), посилання на вбудовану <strong>Documentation</strong>, <strong>Token file</strong> — файл токена, що захищає API, — і готові до копіювання налаштування для під’єднання Claude Desktop та Claude Code. API доступний лише на вашому комп’ютері. Для монтажу все це не потрібне, але якщо цікаво — читайте <a href="../../../uk/docs/ai/index.html">документацію для ШІ</a>.</p>
+<h2 id="voices">Voices — голоси<a class="anchor" href="#voices" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Голоси для озвучення тексту: встановлені на комп’ютері, ті, які Kadr може завантажити, і необов’язковий ключ ElevenLabs для хмарних голосів. Див. <a href="../../../uk/docs/guide/audio.html">Звук</a>.</p>
+
+<h2 id="api">API &amp; agents — API та агенти<a class="anchor" href="#api" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Усе, що ви клацаєте в Kadr, можуть робити й скрипти та ШІ-асистенти (Claude Code, Codex, Cursor, Claude Desktop…). Тут показано локальну <strong>API address</strong> (за замовчуванням <code>http://127.0.0.1:7777</code>) та її стан (<em>Listening</em>), посилання на вбудовану <strong>Documentation</strong>, <strong>Token file</strong> — файл токена, що захищає API, — <strong>Endpoint file</strong>, а в блоці <strong>Connect an AI agent</strong> — готові до копіювання налаштування для кожного агента з правильними шляхами. Для монтажу все це не потрібне, але якщо цікаво — читайте <a href="../../../uk/docs/ai/index.html">документацію для ШІ</a>.</p>
+<ul>
+  <li><strong>Port</strong> — порт, на якому працює API (за замовчуванням 7777). Змініть його, якщо 7777 уже зайнятий іншою програмою, і натисніть <strong>Apply</strong>: API переїде одразу, без перезапуску. <strong>Use default (7777)</strong> повертає стандартний. Агенти продовжать працювати: кожен запущений Kadr записує свою поточну адресу у файл <code>api-endpoint.json</code> у теці даних, а <code>kadr-mcp</code> і <code>kadrctl</code> його читають.</li>
+  <li><strong>Other computers</strong> — за замовчуванням вимкнено: під’єднатися може лише цей комп’ютер (рекомендовано). Якщо ввімкнути, інші комп’ютери у вашій мережі зможуть керувати Kadr за токеном — робіть це лише в мережі, якій довіряєте.</li>
+</ul>
 
 <h2 id="portable">Портативний режим<a class="anchor" href="#portable" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>Портативний архів (<code>Kadr-X.Y.Z-windows-x64-portable.zip</code>) працює без встановлення — з будь-якої папки чи флешки. Розпакуйте його й запустіть <code>Kadr.exe</code>.</p>
@@ -169,7 +188,7 @@
     </article>
     <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/guide/shortcuts.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Гарячі клавіші</b></a><a class="pager-next" href="../../../uk/docs/guide/troubleshooting.html" rel="next"><span>Далі</span><b>Проблеми та запитання<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
   </main>
-  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#open">Як відкрити Settings</a></li><li class="lvl-2"><a href="#about">About — про програму</a></li><li class="lvl-2"><a href="#updates">Updates — оновлення</a></li><li class="lvl-3"><a href="#update-read">Подивіться, що нового</a></li><li class="lvl-3"><a href="#update-download">Завантажте</a></li><li class="lvl-3"><a href="#update-install">Встановіть</a></li><li class="lvl-2"><a href="#ffmpeg">FFmpeg</a></li><li class="lvl-2"><a href="#api">API &amp; automation</a></li><li class="lvl-2"><a href="#portable">Портативний режим</a></li><li class="lvl-2"><a href="#uninstall">Видалення</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#open">Як відкрити Settings</a></li><li class="lvl-2"><a href="#about">About — про програму</a></li><li class="lvl-2"><a href="#updates">Updates — оновлення</a></li><li class="lvl-3"><a href="#update-read">Подивіться, що нового</a></li><li class="lvl-3"><a href="#update-download">Завантажте</a></li><li class="lvl-3"><a href="#update-install">Встановіть</a></li><li class="lvl-2"><a href="#rendering">Rendering — рендер на відеокарті</a></li><li class="lvl-2"><a href="#ffmpeg">FFmpeg</a></li><li class="lvl-2"><a href="#voices">Voices — голоси</a></li><li class="lvl-2"><a href="#api">API &amp; agents — API та агенти</a></li><li class="lvl-2"><a href="#portable">Портативний режим</a></li><li class="lvl-2"><a href="#uninstall">Видалення</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
 </div>
 <footer class="footer">
   <div class="footer-glow" aria-hidden="true"></div>

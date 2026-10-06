@@ -142,7 +142,13 @@
 </table></div>
 
 <h2 id="gpu">Fast export with your graphics card<a class="anchor" href="#gpu" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>If your computer has an NVIDIA, Intel or AMD graphics chip with a video encoder (NVENC, Quick Sync or AMF), Kadr uses it automatically — exports are then several times faster. Next to <strong>Codec</strong> the window shows which encoder will be used, for example <em>GPU · h264_nvenc</em>. Without a suitable graphics chip, Kadr uses the processor; the result looks the same, it just takes longer.</p>
+<p>Kadr does both halves of an export on your graphics card when it can. Every frame is <strong>drawn</strong> on the graphics card (clips, transforms, masks, filters, effects, transitions, animations and text), and the finished frames go straight to the card's <strong>video encoder</strong> (NVENC on NVIDIA, AMF on AMD, Quick Sync on Intel, VideoToolbox on Mac). On a mid-range card such as an RTX 3060 a 1080p export of a real project runs several times faster than on the processor, and the processor stays free for other work.</p>
+<ul>
+  <li>The <strong>Renderer</strong> line shows what will draw the frames — your graphics card by name, or <em>CPU</em> with the reason — with a shortcut to <a href="../../docs/guide/settings.html#rendering">Settings → Rendering</a>, where you choose the card and how much video memory Kadr may use.</li>
+  <li>Next to <strong>Codec</strong> the window shows which encoder will be used, for example <em>GPU · h264_nvenc</em>.</li>
+  <li>While exporting, the progress view shows the renderer, the speed in frames per second and the time left.</li>
+</ul>
+<p>Without a usable graphics card Kadr renders and encodes on the processor; the result looks the same, it just takes longer. If the graphics card fails in the middle of an export (for example a driver reset), Kadr finishes the remaining frames on the processor and tells you so — the file is complete either way.</p>
 
 <h2 id="audio-gif">Audio-only and GIF<a class="anchor" href="#audio-gif" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>Three switches choose what to export — you can turn on more than one at a time:</p>

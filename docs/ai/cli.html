@@ -106,7 +106,7 @@
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><span aria-current="page">CLI (kadrctl)</span></li></ol></nav>
     
     <article class="prose">
-<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI agents</span><span class="pe-group">Interfaces</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>3 min read</span></p><h1>Command line: kadrctl</h1></header><p class="lead"><code>kadrctl</code> runs any Kadr command from a terminal. It reads each command’s parameters from the running engine, converts values to the right types (including times like <code>2.5s</code>), and prints the result as JSON — handy for quick edits, for scripts, and for agents that only have a shell.</p>
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI agents</span><span class="pe-group">Interfaces</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 min read</span></p><h1>Command line: kadrctl</h1></header><p class="lead"><code>kadrctl</code> runs any Kadr command from a terminal. It reads each command’s parameters from the running engine, converts values to the right types (including times like <code>2.5s</code>), and prints the result as JSON — handy for quick edits, for scripts, and for agents that only have a shell.</p>
 
 <h2 id="setup">Setup<a class="anchor" href="#setup" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p><code>kadrctl.exe</code> is installed next to <code>Kadr.exe</code> in <code>%LOCALAPPDATA%\Programs\Kadr\</code>. With the installer option <em>Add kadrctl and kadr-mcp to PATH</em> (on by default) it works from any new terminal: <code>kadrctl help</code>, <code>kadrctl version</code>.</p>
@@ -120,6 +120,7 @@
     <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>The full documentation of one command: description, UI path, hotkey, returns, and each <code>--parameter</code> with type.</td></tr>
     <tr><td><code>kadrctl run &lt;command&gt; [--param value]…</code></td><td>Runs a command and prints its result as indented JSON.</td></tr>
     <tr><td><code>kadrctl batch &lt;project_id&gt; &lt;calls.json&gt; [--dry-run]</code></td><td>Runs a JSON file of calls as one atomic, undoable edit.</td></tr>
+    <tr><td><code>kadrctl endpoint</code></td><td>Shows which Kadr it talks to and tests it: <code>url</code>, <code>addr_source</code> (env, endpoint, settings or default), <code>token_source</code>, the token and endpoint files, <code>reachable</code> and <code>authorized</code>. Run it first when a connection fails.</td></tr>
     <tr><td><code>kadrctl version</code></td><td>Prints the kadrctl version.</td></tr>
   </tbody>
 </table></div>
@@ -247,12 +248,13 @@ kadr run export.list | Format-Table job_id, state, progress, path</code></pre><b
 <div class="table-scroll"><table>
   <thead><tr><th>Variable</th><th>Default</th><th>Used by</th></tr></thead>
   <tbody>
-    <tr><td><code>KADR_ADDR</code></td><td><code>127.0.0.1:7777</code></td><td>Where the engine listens and where <code>kadrctl</code>/<code>kadr-mcp</code> connect.</td></tr>
+    <tr><td><code>KADR_ADDR</code></td><td>the running Kadr, else <code>127.0.0.1:7777</code></td><td>Where the engine listens and where <code>kadrctl</code>/<code>kadr-mcp</code> connect. Overrides everything; without it clients use the live <code>api-endpoint.json</code>, then the port saved with <a class="cmd-link" href="../../docs/ai/reference/app.html#app.api.set"><code>app.api.set</code></a>.</td></tr>
     <tr><td><code>KADR_DATA_DIR</code></td><td><code>%APPDATA%\Kadr</code></td><td>Projects, settings and the <code>api-token</code> file.</td></tr>
     <tr><td><code>KADR_TOKEN</code></td><td>contents of <code>api-token</code></td><td>Overrides the token, for the engine and for clients.</td></tr>
     <tr><td><code>KADR_FFMPEG_DIR</code></td><td>—</td><td>A folder with <code>ffmpeg.exe</code> and <code>ffprobe.exe</code> for the engine.</td></tr>
     <tr><td><code>KADR_PYTHON</code></td><td>—</td><td>The <code>python.exe</code> that has faster-whisper (captions).</td></tr>
     <tr><td><code>KADR_ELEVENLABS_API_KEY</code></td><td>—</td><td>An ElevenLabs key for the engine instead of <a class="cmd-link" href="../../docs/ai/reference/audio.html#tts.set_api_key"><code>tts.set_api_key</code></a>.</td></tr>
+    <tr><td><code>KADR_RENDER_MODE</code></td><td>the saved setting (<code>auto</code>)</td><td><code>auto</code>, <code>gpu</code> or <code>cpu</code> for this engine only, overriding <a class="cmd-link" href="../../docs/ai/reference/rendering.html#render.settings.set"><code>render.settings.set</code></a>.</td></tr>
   </tbody>
 </table></div>
 <div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$env:KADR_DATA_DIR</span> = <span class="tok-s">&quot;D:\kadr-automation&quot;</span>

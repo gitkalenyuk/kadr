@@ -59,12 +59,13 @@ Kadr is a CapCut-style desktop video editor in which every button, slider and me
 | Smart tools | Auto reframe to any ratio, scene detection and splitting, silence removal, background removal | `ai.auto_reframe`, `ai.remove_silence` |
 | Generate | 98 presets of 22 kinds rendered locally — mesh gradients, aurora, bokeh, particles, light leaks, film dust, textures, patterns, timers, banners, frames, test cards — plus 394 stickers, 73 of them animated; no stock footage | `media.generate`, `sticker.add` |
 | See | Render any frame, a contact sheet of the whole edit, the on-canvas box of every clip, or how a library item plays; MCP returns pictures as images | `preview.frame`, `preview.contact_sheet`, `preview.layout` |
-| Deliver | MP4/MOV in H.264 or HEVC up to 4K (GPU encoders when available), GIF, audio only, SRT/VTT captions | `export.start`, `captions.export` |
+| Deliver | MP4/MOV in H.264 or HEVC up to 4K — every frame composited on the GPU and encoded by the GPU’s encoder when available — GIF, audio only, SRT/VTT captions | `export.start`, `captions.export` |
+| Tune the machine | Pick the graphics card, GPU or CPU rendering and how much video memory Kadr may use; move the API to another port | `render.devices`, `render.settings.set`, `app.api.set` |
 | Show the human | Open a project in the window, select a clip, switch the library tab, show a notification | `ui.open_project`, `ui.toast` |
 
 ## Three ways in
 
-All three reach the same engine — the open editor (`Kadr.exe`) or the headless `kadr-server.exe` — at `http://127.0.0.1:7777`, and run exactly the same commands.
+All three reach the same engine — the open editor (`Kadr.exe`) or the headless `kadr-server.exe` — at `http://127.0.0.1:7777` by default, and run exactly the same commands. The port is configurable; `kadr-mcp` and `kadrctl` find the running Kadr through `api-endpoint.json` in the data folder (see [Base URL](https://gitkalenyuk.github.io/kadr/docs/ai/rest.html#base-url)).
 
 | Interface | Best for | How it names commands |
 | --- | --- | --- |
@@ -130,8 +131,9 @@ The export runs in the background; `export.status` with the returned `job_id` re
 
 ## Safety and privacy
 
-- **Local only.** The API listens on `127.0.0.1`; requests addressed to any other host name get `403 forbidden` (DNS-rebinding protection), and browsers may only connect from local origins.
+- **Local only.** The API listens on `127.0.0.1` (unless the user explicitly allows other computers in Settings); requests addressed to any other host name get `403 forbidden` (DNS-rebinding protection), and browsers may only connect from local origins.
 - **Token.** Every request except health and documentation needs the token from `%APPDATA%\Kadr\api-token`. `kadr-mcp` and `kadrctl` read it themselves. Treat it like a password: it gives full control over your projects.
+- **Machine settings are the user’s.** `render.settings.set` (GPU, video memory limit) and `app.api.set` (port) change how Kadr runs for everyone on this PC; read them freely (`render.settings.get`, `app.api.get`), change them only when asked.
 - **Everything is undoable** — except deleting a whole project, which MCP marks as destructive so clients ask first. Imported media files are never modified or deleted.
 - **Nothing is uploaded by Kadr.** Commands read and write files on your PC at paths you give. The only network traffic is optional: ElevenLabs voices (the text you synthesise), update checks, the one-time FFmpeg download, and font files from the google/fonts repository when `font.install` runs. Frames and data reach your AI provider only when the agent asks for them through tools you allow.
 
@@ -155,7 +157,7 @@ One command registers Kadr’s MCP server with Claude Code for every project on 
 
 ## Before you start
 
-- **Kadr is installed.** The installer puts `kadr-mcp.exe` in `%LOCALAPPDATA%\Programs\Kadr\` next to `Kadr.exe` and `kadr-server.exe`. In Kadr, **Settings → API & automation** shows the exact path and a ready-made command.
+- **Kadr is installed.** The installer puts `kadr-mcp.exe` in `%LOCALAPPDATA%\Programs\Kadr\` next to `Kadr.exe` and `kadr-server.exe`. In Kadr, **Settings → API & agents** shows the exact path and a ready-made command.
 - **Claude Code is installed** and `claude` runs in your terminal.
 - **Kadr does not have to be running.** If neither the editor nor a server answers, `kadr-mcp` starts the headless `kadr-server.exe` by itself (about 2 seconds). To *watch* the edits, open Kadr before the first call — see the note below.
 
@@ -283,7 +285,7 @@ In Claude Desktop open **Settings → Developer → Edit Config**. This opens `c
 
 ### 2. Add Kadr
 
-Paste this, with your own user name in the path (Kadr’s **Settings → API & automation** shows the exact snippet for your PC). In JSON every backslash is written twice.
+Paste this, with your own user name in the path (Kadr’s **Settings → API & agents** shows the exact snippet for your PC). In JSON every backslash is written twice.
 
 ```json
 {
@@ -319,7 +321,7 @@ Claude calls `project_list` and answers. Then try an edit and watch the editor:
 
 ## Another port or data folder
 
-By default the bridge talks to `127.0.0.1:7777` and reads the token from `%APPDATA%\Kadr`. For a separate engine, add an `env` block:
+By default the bridge finds the running Kadr through `%APPDATA%\Kadr\api-endpoint.json` (normally `127.0.0.1:7777`) and reads the token from `%APPDATA%\Kadr`. If you only moved Kadr’s API to another port in **Settings → API & agents**, change nothing — the bridge follows. For a separate engine, add an `env` block:
 
 ```json
 {
@@ -342,7 +344,7 @@ By default the bridge talks to `127.0.0.1:7777` and reads the token from `%APPDA
 | Symptom | Cause | Fix |
 | --- | --- | --- |
 | No Kadr tools in the chat | The config was not reloaded, or the JSON is invalid. | Quit Claude Desktop from the tray and start it again. Check the JSON (commas, doubled backslashes). |
-| “Server disconnected” or the server fails to start | Wrong path to `kadr-mcp.exe`. | Use the full path from Kadr’s **Settings → API & automation**. The server’s log is in `%APPDATA%\Claude\logs\` (`mcp-server-kadr.log`). |
+| “Server disconnected” or the server fails to start | Wrong path to `kadr-mcp.exe`. | Use the full path from Kadr’s **Settings → API & agents**. The server’s log is in `%APPDATA%\Claude\logs\` (`mcp-server-kadr.log`). |
 | `Kadr engine did not start … within 10 s` | `kadr-server.exe` is missing next to `kadr-mcp.exe`, or blocked. | Start Kadr yourself and ask again. |
 | Edits don’t appear in the open Kadr window | The bridge started a headless `kadr-server.exe` before Kadr was opened; it owns port 7777. | Quit `kadr-server.exe` in Task Manager, keep Kadr open, restart Claude Desktop. |
 | `unauthorized: missing or invalid API token` | An old `KADR_TOKEN` or a different `KADR_DATA_DIR` in `env`. | Remove them, or copy the token from `%APPDATA%\Kadr\api-token`. |
@@ -557,7 +559,7 @@ Read the `hint`: it says how to fix the call. Codes are listed in [REST API → 
 
 ## Engine discovery and auto-start
 
-The bridge connects to `KADR_ADDR` (default `127.0.0.1:7777`) with the token from `KADR_TOKEN` or the data folder. If nothing answers, it starts `kadr-server.exe` from its own folder and waits up to 10 seconds. That headless engine keeps running after the client exits, so later sessions start instantly; quit it in Task Manager before opening the editor if you want to watch edits live.
+The bridge finds the engine by itself, so its configuration needs no port and no token. Every running Kadr writes `%APPDATA%\Kadr\api-endpoint.json` (`url`, `pid`, `version`, `token_file`) and removes it on exit. The bridge resolves the address as `KADR_ADDR` → that endpoint file (when its process is alive) → the `api` section of `settings.json` → `127.0.0.1:7777`, and the token as `KADR_TOKEN` → the endpoint file’s `token_file` → `api-token` in the data folder. So when the user moves the API to another port (**Settings → API & agents** or `app.api.set`), connected agents follow without any change; a hard-coded `KADR_ADDR` in the client config is the only thing that pins an old address. If nothing answers, it starts `kadr-server.exe` from its own folder and waits up to 10 seconds. That headless engine keeps running after the client exits, so later sessions start instantly; quit it in Task Manager before opening the editor if you want to watch edits live.
 
 The tool list comes from the running engine, so it always matches the installed version. On `initialize` the server also sends short instructions: projects contain tracks, tracks contain segments, times are microseconds, read state first, use `kadr_batch` for multi-step edits, look at `preview_frame` after visual edits, and follow error hints.
 
@@ -567,7 +569,7 @@ The tool list comes from the running engine, so it always matches the installed 
 
 Source: https://gitkalenyuk.github.io/kadr/docs/ai/rest.html
 
-*Call any Kadr command over HTTP on 127.0.0.1:7777: token, response envelope, error codes and hints, batches and dry runs, resource aliases, WebSocket events and binary endpoints.*
+*Call any Kadr command over HTTP on your own PC (127.0.0.1:7777 by default, configurable): finding the address, token, response envelope, error codes and hints, batches and dry runs, resource aliases, WebSocket events and binary endpoints.*
 
 Every Kadr command is available over HTTP on your own PC. POST a JSON object of arguments to `/api/v1/commands/<name>` and you get back exactly what the editor’s buttons get.
 
@@ -577,11 +579,23 @@ Every Kadr command is available over HTTP on your own PC. POST a JSON object of 
 http://127.0.0.1:7777/api/v1
 ```
 
-The editor (`Kadr.exe`) and the headless `kadr-server.exe` both serve it. Set `KADR_ADDR` (for example `127.0.0.1:7790`) before starting Kadr to move it. Without a token you can call `GET /api/v1/health` → `{"ok":true,"result":{"status":"ok","version":"…"}}`, `GET /api/v1/openapi.json` and the HTML reference at `GET /docs`.
+The editor (`Kadr.exe`) and the headless `kadr-server.exe` both serve it. **7777 is only the default**: the user can move the API in **Settings → API & agents**, an agent with `app.api.set` (`{"port": 7790}` — the window re-binds at once), and `KADR_ADDR` (for example `127.0.0.1:7790`) overrides both for one process. Never hard-code the port in a script; find it like this:
+
+1. Read `%APPDATA%\Kadr\api-endpoint.json` (macOS `~/Library/Application Support/Kadr`, Linux `~/.config/Kadr`). Every running Kadr writes it and deletes it on exit: `{"url": "http://127.0.0.1:7777", "pid": 12345, "version": "1.0.0", "token_file": "…\\api-token", "started_at": "…", "mode": "editor"}`. Use `url` and the token in `token_file` when `pid` is alive.
+2. Otherwise `settings.json` → `api.host`/`api.port`, otherwise `127.0.0.1:7777`.
+3. Or simply run `kadrctl endpoint`, which does all of this and prints the result; `app.api.get` returns the same from inside.
+
+```powershell
+$ep  = Get-Content "$env:APPDATA\Kadr\api-endpoint.json" -Raw | ConvertFrom-Json
+$env:KADR_TOKEN = (Get-Content $ep.token_file -Raw).Trim()
+Invoke-RestMethod -Method Post -Uri "$($ep.url)/api/v1/commands/project.list" -Headers @{ Authorization = "Bearer $env:KADR_TOKEN" } -Body '{}'
+```
+
+The examples on this site use `http://127.0.0.1:7777`; replace it with your `url`. Without a token you can call `GET /api/v1/health` → `{"ok":true,"result":{"status":"ok","version":"…"}}`, `GET /api/v1/openapi.json` and the HTML reference at `GET /docs`.
 
 ## Authentication
 
-Everything else needs the API token, created on first run and stored in `%APPDATA%\Kadr\api-token` (Kadr shows the path in **Settings → API & automation**). Send it as a bearer token: `Authorization: Bearer <token>`.
+Everything else needs the API token, created on first run and stored in `%APPDATA%\Kadr\api-token` (Kadr shows the path in **Settings → API & agents**). Send it as a bearer token: `Authorization: Bearer <token>`.
 
 **PowerShell:**
 
@@ -842,6 +856,7 @@ Unlike `kadr-mcp`, `kadrctl` does **not** start the engine: Kadr or `kadr-server
 | `kadrctl describe <command>` | The full documentation of one command: description, UI path, hotkey, returns, and each `--parameter` with type. |
 | `kadrctl run <command> [--param value]…` | Runs a command and prints its result as indented JSON. |
 | `kadrctl batch <project_id> <calls.json> [--dry-run]` | Runs a JSON file of calls as one atomic, undoable edit. |
+| `kadrctl endpoint` | Shows which Kadr it talks to and tests it: `url`, `addr_source` (env, endpoint, settings or default), `token_source`, the token and endpoint files, `reachable` and `authorized`. Run it first when a connection fails. |
 | `kadrctl version` | Prints the kadrctl version. |
 
 ```text
@@ -995,12 +1010,13 @@ kadr run export.list | Format-Table job_id, state, progress, path
 
 | Variable | Default | Used by |
 | --- | --- | --- |
-| `KADR_ADDR` | `127.0.0.1:7777` | Where the engine listens and where `kadrctl`/`kadr-mcp` connect. |
+| `KADR_ADDR` | the running Kadr, else `127.0.0.1:7777` | Where the engine listens and where `kadrctl`/`kadr-mcp` connect. Overrides everything; without it clients use the live `api-endpoint.json`, then the port saved with `app.api.set`. |
 | `KADR_DATA_DIR` | `%APPDATA%\Kadr` | Projects, settings and the `api-token` file. |
 | `KADR_TOKEN` | contents of `api-token` | Overrides the token, for the engine and for clients. |
 | `KADR_FFMPEG_DIR` | — | A folder with `ffmpeg.exe` and `ffprobe.exe` for the engine. |
 | `KADR_PYTHON` | — | The `python.exe` that has faster-whisper (captions). |
 | `KADR_ELEVENLABS_API_KEY` | — | An ElevenLabs key for the engine instead of `tts.set_api_key`. |
+| `KADR_RENDER_MODE` | the saved setting (`auto`) | `auto`, `gpu` or `cpu` for this engine only, overriding `render.settings.set`. |
 
 ```powershell
 $env:KADR_DATA_DIR = "D:\kadr-automation"
@@ -4779,7 +4795,7 @@ Returns information about this Kadr installation — what the About section of S
 
 No parameters.
 
-**Returns:** {name, version, prerelease, go_version, os, arch, build{module, vcs.revision?, vcs.time?, vcs.modified?}, executable, data_dir, portable, ffmpeg{found, ffmpeg_path, ffprobe_path, version, source, error}, update_repo, update_channel, update_signing_key, website, releases_url, renderer?{kind gpu|cpu, backend, device, ...}}.
+**Returns:** {name, version, prerelease, go_version, os, arch, build{module, vcs.revision?, vcs.time?, vcs.modified?}, executable, data_dir, portable, ffmpeg{found, ffmpeg_path, ffprobe_path, version, source, error}, update_repo, update_channel, update_signing_key, website, releases_url (private repository), changelog_url (public release notes), renderer?{kind gpu|cpu, backend, device, ...}}.
 
 Example — Show version and environment:
 
@@ -5895,7 +5911,7 @@ Example — Stop an export:
 
 **Estimate export** · MCP tool `export_estimate` · `POST /api/v1/commands/export.estimate`
 
-Resolves export settings without exporting: final width/height, frame rate, frame count, video bitrate, duration, estimated file size and the output path export.start would use right now (unique " (n)" name applied). Takes exactly the same parameters as export.start, so an agent can check the result first and the export dialog shows "Estimated size" from it. The size is bitrate × duration for video/audio (real files are usually a bit smaller with simple content) and a heuristic for GIF. encoder is the FFmpeg encoder that will be used (e.g. h264_nvenc or libx264); it is empty until hardware detection has finished (it starts on the first call).
+Resolves export settings without exporting: final width/height, frame rate, frame count, video bitrate, duration, estimated file size and the output path export.start would use right now (unique " (n)" name applied). Takes exactly the same parameters as export.start, so an agent can check the result first and the export dialog shows "Estimated size" from it. The size is bitrate × duration for video/audio (real files are usually a bit smaller with simple content) and a heuristic for GIF. encoder is the FFmpeg encoder that will be used (e.g. h264_nvenc, hevc_amf, h264_qsv, h264_videotoolbox or libx264; the encoder of the GPU Kadr renders on is preferred); it is empty until hardware detection has finished (it starts on the first call).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5904,7 +5920,7 @@ Resolves export settings without exporting: final width/height, frame rate, fram
 | `audio_only` | boolean | no | `false` |  | Export only the soundtrack (the dialog's Audio checkbox without Video). Uses audio_format; no frames are rendered. |
 | `bitrate` | string | no | `"recommended"` | `lower`, `recommended`, `higher`, `custom` | Video quality preset. recommended ≈ YouTube upload bitrates (1080p30 H.264 = 10 Mbps, 4K30 = 40 Mbps); lower = 60 %, higher = 150 %; ×1.5 at 60 fps; HEVC uses 70 % of the H.264 value. custom uses bitrate_kbps. |
 | `bitrate_kbps` | integer (kilobits per second) | no |  | 200 … 200000 | Video bitrate when bitrate is custom (e.g. 8000 = 8 Mbps). Rejected with any other bitrate preset. |
-| `codec` | string | no | `"h264"` | `h264`, `hevc` | Video codec. h264 plays everywhere; hevc (H.265) gives smaller files at the same quality. A GPU encoder (NVENC, Quick Sync, AMF) is used automatically when it works on this machine, otherwise libx264/libx265. |
+| `codec` | string | no | `"h264"` | `h264`, `hevc` | Video codec. h264 plays everywhere; hevc (H.265) gives smaller files at the same quality. A GPU encoder (NVENC, AMF, Quick Sync, VideoToolbox) is used automatically when it works on this machine, otherwise libx264/libx265. |
 | `format` | string | no |  | `mp4`, `mov` | Video container: mp4 (default, most compatible) or mov (QuickTime). Taken from the path extension when omitted. Not used for GIF and audio-only exports. |
 | `fps` | number (frames per second) | no |  | 1 … 120 | Output frame rate. The dialog offers 24, 25, 30, 50 and 60. Defaults to the project frame rate. GIFs are capped at 15 fps. |
 | `gif` | boolean | no | `false` |  | Export an animated GIF instead of a video: at most 15 fps, longer side at most 720 px, optimised 256-colour palette, loops forever, no sound. |
@@ -5974,7 +5990,7 @@ Example — Show the exported file:
 
 **Export** · MCP tool `export_start` · `POST /api/v1/commands/export.start` · hotkey Ctrl+E · UI: Top bar/Export
 
-Starts exporting the project to a file in the background and returns immediately with a job_id — the Export button in the top bar. The project is snapshotted at this moment, so later edits do not change a running export. Every frame is rendered by the same compositor as the player and encoded with FFmpeg (H.264 or HEVC in MP4/MOV, yuv420p, BT.709, AAC 192 kbps stereo audio, +faststart for instant web playback). Set audio_only=true for an MP3/WAV/AAC/FLAC soundtrack, or gif=true for an animated GIF. Use range_start_us/range_end_us to export part of the timeline. Jobs run one at a time (others wait in state "queued"). Follow progress with export.status (poll every 1-2 s) or the export.progress / export.done / export.failed / export.cancelled events; stop with export.cancel. Call export.estimate first to preview size and path. Does not modify the project and is not undoable. It is a global command (project_id is passed explicitly) so it cannot be part of a batch or dry run. Fails with invalid_argument when the timeline is empty.
+Starts exporting the project to a file in the background and returns immediately with a job_id — the Export button in the top bar. The project is snapshotted at this moment, so later edits do not change a running export. Every frame is rendered by the same compositor as the player and encoded with FFmpeg (H.264 or HEVC in MP4/MOV, 4:2:0 8-bit, BT.709 limited range, AAC 192 kbps stereo audio, +faststart for instant web playback). GPU rendering: when a GPU can be used (render.settings.get; NVIDIA, AMD, Intel via Vulkan/D3D12, Apple via Metal) every frame is composited on the GPU and handed to the encoder as NV12 without any CPU conversion; the hardware encoder of the same GPU (NVENC, AMF, Quick Sync, VideoToolbox) is used when it works (on an RTX 3060 a 1080p H.264 export of a real project runs at about 250 frames per second, roughly 6x the CPU renderer). The render.* settings apply: render.settings.set mode=cpu forces the CPU renderer, mode=gpu fails the export instead of falling back, and vram_limit_mb/reserve_mb cap the video memory Kadr uses (frames in flight, decoders and caches are sized from the cap). If the GPU fails during the export (driver reset, device lost, out of video memory) the remaining frames are rendered on the CPU and the job finishes with a warning (export.status warnings; renderer.kind becomes "cpu"); a failing hardware encoder is replaced by the software one and an encoder that stops responding is restarted, also with a warning. The soundtrack is mixed while the frames render. Set audio_only=true for an MP3/WAV/AAC/FLAC soundtrack, or gif=true for an animated GIF. Use range_start_us/range_end_us to export part of the timeline. Jobs run one at a time by default (others wait in state "queued"; KADR_EXPORT_CONCURRENCY raises it). Follow progress with export.status (poll every 1-2 s) or the export.progress / export.done / export.failed / export.cancelled / export.warning events; stop with export.cancel. Call export.estimate first to preview size and path. Does not modify the project and is not undoable. It is a global command (project_id is passed explicitly) so it cannot be part of a batch or dry run. Fails with invalid_argument when the timeline is empty.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5983,7 +5999,7 @@ Starts exporting the project to a file in the background and returns immediately
 | `audio_only` | boolean | no | `false` |  | Export only the soundtrack (the dialog's Audio checkbox without Video). Uses audio_format; no frames are rendered. |
 | `bitrate` | string | no | `"recommended"` | `lower`, `recommended`, `higher`, `custom` | Video quality preset. recommended ≈ YouTube upload bitrates (1080p30 H.264 = 10 Mbps, 4K30 = 40 Mbps); lower = 60 %, higher = 150 %; ×1.5 at 60 fps; HEVC uses 70 % of the H.264 value. custom uses bitrate_kbps. |
 | `bitrate_kbps` | integer (kilobits per second) | no |  | 200 … 200000 | Video bitrate when bitrate is custom (e.g. 8000 = 8 Mbps). Rejected with any other bitrate preset. |
-| `codec` | string | no | `"h264"` | `h264`, `hevc` | Video codec. h264 plays everywhere; hevc (H.265) gives smaller files at the same quality. A GPU encoder (NVENC, Quick Sync, AMF) is used automatically when it works on this machine, otherwise libx264/libx265. |
+| `codec` | string | no | `"h264"` | `h264`, `hevc` | Video codec. h264 plays everywhere; hevc (H.265) gives smaller files at the same quality. A GPU encoder (NVENC, AMF, Quick Sync, VideoToolbox) is used automatically when it works on this machine, otherwise libx264/libx265. |
 | `format` | string | no |  | `mp4`, `mov` | Video container: mp4 (default, most compatible) or mov (QuickTime). Taken from the path extension when omitted. Not used for GIF and audio-only exports. |
 | `fps` | number (frames per second) | no |  | 1 … 120 | Output frame rate. The dialog offers 24, 25, 30, 50 and 60. Defaults to the project frame rate. GIFs are capped at 15 fps. |
 | `gif` | boolean | no | `false` |  | Export an animated GIF instead of a video: at most 15 fps, longer side at most 720 px, optimised 256-colour palette, loops forever, no sound. |
@@ -6029,13 +6045,13 @@ Example — Custom 6 Mbps 720p:
 
 **Export status** · MCP tool `export_status` · `POST /api/v1/commands/export.status`
 
-Returns the current state of one export job: state (queued, running, done, failed, cancelled), phase (audio, video, encoding, finalizing), progress 0..1, frames_done/frames_total, speed_fps (frames rendered per second), eta_s (seconds left, -1 while unknown), elapsed_s, output path, size_bytes once done, the encoder used and the error message on failure. Poll it every 1-2 seconds after export.start until state is terminal. Jobs are kept in memory only: after Kadr restarts the id is unknown (not_found), but finished files remain on disk.
+Returns the current state of one export job: state (queued, running, done, failed, cancelled), phase (starting, video, encoding, finalizing; audio only for audio-only exports), progress 0..1, frames_done/frames_total, speed_fps (frames encoded per second over the last few seconds), eta_s (seconds left from the frames left and that speed, -1 while unknown), elapsed_s, audio_progress (0..1, the soundtrack is mixed while the frames render), output path, size_bytes once done, the encoder used (e.g. h264_nvenc, hevc_amf, h264_videotoolbox or libx264), renderer {kind "gpu"|"cpu", backend (vulkan, d3d12, metal), device (adapter name), vendor, vram_total_mb, vram_cap_mb (the cap from render.settings), vram_used_mb (video memory Kadr uses now), reason (why the CPU renders)}, warnings (problems the job recovered from: the GPU failed mid-export and the CPU finished it, the hardware encoder failed and the software encoder restarted the job, effects without a GPU version) and the error message on failure. Poll it every 1-2 seconds after export.start until state is terminal. Jobs are kept in memory only: after Kadr restarts the id is unknown (not_found), but finished files remain on disk.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `job_id` | string | yes |  |  | Export job id returned by export.start (e.g. "exp_1a2b3c4d5e6f"). export.list shows all known jobs. |
 
-**Returns:** {job_id, project_id, project_name, state, phase, progress, frames_done, frames_total, speed_fps, eta_s, elapsed_s, path, size_bytes, encoder, error, settings, created_at, started_at, finished_at}.
+**Returns:** {job_id, project_id, project_name, state, phase, progress, frames_done, frames_total, speed_fps, eta_s, elapsed_s, path, size_bytes, encoder, renderer {kind, backend, device, vendor, vram_total_mb, vram_cap_mb, vram_used_mb, reason} (video/GIF jobs once rendering started), audio_progress, warnings[], error, settings, created_at, started_at, finished_at}.
 
 Example — Check progress:
 
@@ -9171,7 +9187,7 @@ Returns the updater state without contacting GitHub: state (idle | checking | up
 
 No parameters.
 
-**Returns:** {state, current, latest (update.check result or null), downloaded_bytes, total_bytes, progress 0..1, installer_path, error, settings{auto_check, channel, last_check, skipped_version, github_token_set, github_token_source}, portable, signing_key, repo, releases_url}.
+**Returns:** {state, current, latest (update.check result or null), downloaded_bytes, total_bytes, progress 0..1, installer_path, error, settings{auto_check, channel, last_check, skipped_version, github_token_set, github_token_source}, portable, signing_key, repo, releases_url (private repository), changelog_url (public release notes), website}.
 
 Example — Poll the updater:
 

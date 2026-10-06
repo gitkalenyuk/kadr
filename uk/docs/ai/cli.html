@@ -105,7 +105,7 @@
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><span aria-current="page">CLI (kadrctl)</span></li></ol></nav>
     
     <article class="prose">
-<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ-агентів</span><span class="pe-group">Інтерфейси</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>3 хв читання</span></p><h1>Командний рядок: kadrctl</h1></header><p class="lead"><code>kadrctl</code> запускає будь-яку команду Kadr із термінала. Він бере параметри кожної команди із запущеного рушія, перетворює значення на потрібні типи (зокрема час на кшталт <code>2.5s</code>) і друкує результат як JSON — зручно для швидких правок, скриптів і агентів, які мають лише оболонку.</p>
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ-агентів</span><span class="pe-group">Інтерфейси</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>4 хв читання</span></p><h1>Командний рядок: kadrctl</h1></header><p class="lead"><code>kadrctl</code> запускає будь-яку команду Kadr із термінала. Він бере параметри кожної команди із запущеного рушія, перетворює значення на потрібні типи (зокрема час на кшталт <code>2.5s</code>) і друкує результат як JSON — зручно для швидких правок, скриптів і агентів, які мають лише оболонку.</p>
 
 <h2 id="setup">Налаштування<a class="anchor" href="#setup" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p><code>kadrctl.exe</code> встановлюється поруч із <code>Kadr.exe</code> у <code>%LOCALAPPDATA%\Programs\Kadr\</code>. З опцією інсталятора <em>Додати kadrctl і kadr-mcp до PATH</em> (типово ввімкнена) він працює з будь-якого нового термінала: <code>kadrctl help</code>, <code>kadrctl version</code>.</p>
@@ -119,6 +119,7 @@
     <tr><td><code>kadrctl describe &lt;command&gt;</code></td><td>Повна документація однієї команди: опис, місце в інтерфейсі, гаряча клавіша, результат і кожен <code>--параметр</code> з типом.</td></tr>
     <tr><td><code>kadrctl run &lt;command&gt; [--param value]…</code></td><td>Виконує команду й друкує результат як відформатований JSON.</td></tr>
     <tr><td><code>kadrctl batch &lt;project_id&gt; &lt;calls.json&gt; [--dry-run]</code></td><td>Виконує JSON-файл викликів як одну атомарну правку, яку можна скасувати.</td></tr>
+    <tr><td><code>kadrctl endpoint</code></td><td>Показує, з яким Kadr він працює, і перевіряє зв’язок: <code>url</code>, <code>addr_source</code> (env, endpoint, settings або default), <code>token_source</code>, файли токена й ендпоінта, <code>reachable</code> і <code>authorized</code>. Запускайте першим, коли не вдається під’єднатися.</td></tr>
     <tr><td><code>kadrctl version</code></td><td>Друкує версію kadrctl.</td></tr>
   </tbody>
 </table></div>
@@ -246,12 +247,13 @@ kadr run export.list | Format-Table job_id, state, progress, path</code></pre><b
 <div class="table-scroll"><table>
   <thead><tr><th>Змінна</th><th>Типово</th><th>Хто використовує</th></tr></thead>
   <tbody>
-    <tr><td><code>KADR_ADDR</code></td><td><code>127.0.0.1:7777</code></td><td>Де слухає рушій і куди під’єднуються <code>kadrctl</code>/<code>kadr-mcp</code>.</td></tr>
+    <tr><td><code>KADR_ADDR</code></td><td>запущений Kadr, інакше <code>127.0.0.1:7777</code></td><td>Де слухає рушій і куди під’єднуються <code>kadrctl</code>/<code>kadr-mcp</code>. Має найвищий пріоритет; без неї клієнти беруть живий <code>api-endpoint.json</code>, потім порт, збережений через <a class="cmd-link" href="../../../uk/docs/ai/reference/app.html#app.api.set"><code>app.api.set</code></a>.</td></tr>
     <tr><td><code>KADR_DATA_DIR</code></td><td><code>%APPDATA%\Kadr</code></td><td>Проєкти, налаштування і файл <code>api-token</code>.</td></tr>
     <tr><td><code>KADR_TOKEN</code></td><td>вміст <code>api-token</code></td><td>Перевизначає токен — для рушія і для клієнтів.</td></tr>
     <tr><td><code>KADR_FFMPEG_DIR</code></td><td>—</td><td>Папка з <code>ffmpeg.exe</code> і <code>ffprobe.exe</code> для рушія.</td></tr>
     <tr><td><code>KADR_PYTHON</code></td><td>—</td><td><code>python.exe</code>, у якому встановлено faster-whisper (субтитри).</td></tr>
     <tr><td><code>KADR_ELEVENLABS_API_KEY</code></td><td>—</td><td>Ключ ElevenLabs для рушія замість <a class="cmd-link" href="../../../uk/docs/ai/reference/audio.html#tts.set_api_key"><code>tts.set_api_key</code></a>.</td></tr>
+    <tr><td><code>KADR_RENDER_MODE</code></td><td>збережене налаштування (<code>auto</code>)</td><td><code>auto</code>, <code>gpu</code> або <code>cpu</code> лише для цього рушія, замість <a class="cmd-link" href="../../../uk/docs/ai/reference/rendering.html#render.settings.set"><code>render.settings.set</code></a>.</td></tr>
   </tbody>
 </table></div>
 <div class="code-wrap"><pre class="code lang-powershell"><code><span class="tok-n">$env:KADR_DATA_DIR</span> = <span class="tok-s">&quot;D:\kadr-automation&quot;</span>
