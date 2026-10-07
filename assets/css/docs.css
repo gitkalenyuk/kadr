@@ -267,6 +267,8 @@ html[data-theme="light"] .soon-head { background: #111; }
 .cmd-badges kbd { font-size: 10.5px; padding: 0 5px; min-width: 0; }
 .b-undo { color: #7ff0bf !important; background: rgba(61, 220, 151, 0.1) !important; border-color: rgba(61, 220, 151, 0.3) !important; }
 html[data-theme="light"] .b-undo { color: #138a57 !important; }
+.b-risk { color: #ffb08a !important; background: rgba(255, 122, 69, 0.1) !important; border-color: rgba(255, 122, 69, 0.38) !important; cursor: help; }
+html[data-theme="light"] .b-risk { color: #b43c12 !important; }
 .b-ro { color: var(--text-3); }
 .b-ui { color: var(--text-2); }
 .b-mcp code { background: none !important; padding: 0 !important; color: #f0a07e !important; font-size: 11.5px !important; }

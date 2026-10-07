@@ -1,8 +1,8 @@
 # Kadr — complete documentation for AI agents
 
-> Kadr is a free, offline-first CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 249 commands with parameters, units and examples — while a human watches the edits live in the editor.
+> Kadr is a free, offline-first CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 254 commands with parameters, units and examples — while a human watches the edits live in the editor.
 
-Generated 2026-10-07 from https://gitkalenyuk.github.io/kadr/ for Kadr 1.0.0. Part 1 contains the 27 English AI docs pages; part 2 the specification of all 249 commands, generated from the engine's command registry (docs/openapi.json). A running Kadr serves the same specification at http://127.0.0.1:7777/api/v1/commands.
+Generated 2026-10-07 from https://gitkalenyuk.github.io/kadr/ for Kadr 1.0.0. Part 1 contains the 27 English AI docs pages; part 2 the specification of all 254 commands, generated from the engine's command registry (docs/openapi.json). A running Kadr serves the same specification at http://127.0.0.1:7777/api/v1/commands.
 
 ## Contents
 
@@ -43,7 +43,7 @@ Source: https://gitkalenyuk.github.io/kadr/docs/ai/index.html
 
 *What an AI agent can do in Kadr, how the editor is modelled, how to connect over MCP, REST or the CLI, how paid AI providers and the built-in assistant fit in, and how Kadr keeps your machine and money safe.*
 
-Kadr is a CapCut-style desktop video editor in which every button, slider and menu item is a documented *command*. An AI agent runs the same 249 commands over MCP, a local REST API or the `kadrctl` CLI — and a human sees every edit appear live in the editor window, with one shared undo history.
+Kadr is a CapCut-style desktop video editor in which every button, slider and menu item is a documented *command*. An AI agent runs the same 254 commands over MCP, a local REST API or the `kadrctl` CLI — and a human sees every edit appear live in the editor window, with one shared undo history.
 
 - [Quick start: Claude Code](https://gitkalenyuk.github.io/kadr/docs/ai/claude-code.html): One command connects Kadr; first prompts to try.
 - [Claude Desktop](https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html): A four-line config snippet.
@@ -187,6 +187,8 @@ claude mcp add --scope user kadr -- "$env:LOCALAPPDATA\Programs\Kadr\kadr-mcp.ex
 
 If you kept the installer option *Add kadrctl and kadr-mcp to PATH*, the short form works too: `claude mcp add --scope user kadr -- kadr-mcp`.
 
+Claude Code gets every command, including the few [that only you should run](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) (API keys, the key vault, the spending limit, provider settings). To keep those away from it, add `--hide-user-only` after the path — `claude mcp add --scope user kadr -- "%LOCALAPPDATA%\Programs\Kadr\kadr-mcp.exe" --hide-user-only` (in a `.mcp.json`: `"args": ["--hide-user-only"]`). Kadr’s built-in assistant never runs them either way.
+
 ## 2. Check the connection
 
 ```powershell
@@ -194,7 +196,7 @@ claude mcp list
 claude mcp get kadr
 ```
 
-`kadr` should be listed as connected. Inside a session, `/mcp` shows the server, its 178 tools (one per command plus `kadr_batch`) and lets you reconnect after a problem.
+`kadr` should be listed as connected. Inside a session, `/mcp` shows the server, its 255 tools (one per command plus `kadr_batch`; fewer with `--hide-user-only`, which leaves out the [user-only commands](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) such as keys and the spending limit) and lets you reconnect after a problem.
 
 ## 3. Pre-approve tools (optional)
 
@@ -324,6 +326,7 @@ Claude calls `project_list` and answers. Then try an edit and watch the editor:
 ## What Claude gets
 
 - One tool per Kadr command (`timeline_segment_split` for `timeline.segment.split`) with the full description, parameter units and examples, plus `kadr_batch` for atomic multi-step edits. See [MCP tools](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html).
+- That includes the few [commands that only you should run](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) (API keys, the key vault, the spending limit, provider settings). To keep them away from Claude, add `"args": ["--hide-user-only"]` to the `kadr` entry next to `"command"` and restart Claude Desktop. Kadr’s built-in assistant never runs them either way.
 - Server instructions that explain the basics: projects → tracks → segments, microseconds, read state first, batch edits, look at frames.
 - Pictures: `preview_frame` and `preview_contact_sheet` return image content, so Claude actually sees the result of its edit.
 
@@ -366,17 +369,17 @@ Source: https://gitkalenyuk.github.io/kadr/docs/ai/other-mcp-clients.html
 
 *Connect Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI or any other MCP client to Kadr, test the bridge by hand, and use agents without MCP.*
 
-Any client that can start a local stdio MCP server can drive Kadr. The server is a single executable with no arguments; everything else is optional.
+Any client that can start a local stdio MCP server can drive Kadr. The server is a single executable that needs no arguments; everything else is optional.
 
 ## The settings every client needs
 
 | Setting | Value |
 | --- | --- |
 | Transport | stdio |
-| Command | Full path to `kadr-mcp.exe` (or `kadr-mcp` when it is on `PATH`), no arguments |
+| Command | Full path to `kadr-mcp.exe` (or `kadr-mcp` when it is on `PATH`), no arguments; optionally `--hide-user-only` |
 | Environment | Optional: `KADR_ADDR`, `KADR_DATA_DIR`, `KADR_TOKEN` |
 | Protocol version | `2025-06-18` |
-| Tools | 178: one per command plus `kadr_batch`; read-only commands carry `readOnlyHint`, `project_delete` carries `destructiveHint` |
+| Tools | 255: one per command plus `kadr_batch`, including the [user-only commands](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) (keys, the vault, the spending limit, provider settings) unless the server is started with `--hide-user-only`; read-only commands carry `readOnlyHint`, commands that delete data or may overwrite a file (`project_delete`, `font_remove`…) carry `destructiveHint`; risky ones end their description with a `Risk:` line |
 
 When the engine is not running, `kadr-mcp` starts `kadr-server.exe` from its own folder and waits up to 10 seconds for it. It reads the API token from the Kadr data folder, so no secret goes into the client’s config.
 
@@ -436,6 +439,8 @@ command = 'C:\Users\you\AppData\Local\Programs\Kadr\kadr-mcp.exe'
 }
 ```
 
+Every client gets all commands, including the few [that only you should run](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) (API keys, the key vault, the spending limit, provider settings). To keep them away from a client, start the server with `--hide-user-only`: add `"args": ["--hide-user-only"]` next to `"command"` (Codex CLI: `args = ['--hide-user-only']`). Kadr’s built-in assistant never runs them either way.
+
 ## Test the bridge by hand
 
 MCP over stdio is one JSON-RPC message per line, so PowerShell can talk to the bridge directly — useful when a client only says “failed to start”:
@@ -467,7 +472,7 @@ Source: https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html
 
 *How Kadr’s commands appear as MCP tools: naming, annotations, kadr_batch for atomic edits, images from preview tools, errors and timeouts.*
 
-`kadr-mcp.exe` turns every Kadr command into an MCP tool with the command’s full documentation, and adds one extra tool, `kadr_batch`. Calls are forwarded to the running engine, so edits show up live in the editor and land in the same undo history.
+`kadr-mcp.exe` turns every Kadr command into an MCP tool with the command’s full documentation (also the few [that only you should run](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) — keys, the vault, the spending limit, provider settings — unless you hide them), and adds one extra tool, `kadr_batch`. Calls are forwarded to the running engine, so edits show up live in the editor and land in the same undo history.
 
 > **Tip:** Setting up a client? See [Claude Code](https://gitkalenyuk.github.io/kadr/docs/ai/claude-code.html), [Claude Desktop](https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html) or [other MCP clients](https://gitkalenyuk.github.io/kadr/docs/ai/other-mcp-clients.html). This page explains what the agent gets once connected.
 
@@ -487,11 +492,20 @@ In these docs the **MCP** tab of a code block shows the parameters of a `tools/c
 
 ## What each tool tells the model
 
-- **Description** — what the command does, how it behaves like CapCut, edge cases, then the UI location and hotkey, “Undoable with edit.undo.” for edits, and a `Returns:` line describing the result.
+- **Description** — what the command does, how it behaves like CapCut, edge cases, then the UI location and hotkey, “Undoable with edit.undo.” for edits, a `Risk:` line for commands that need the user’s OK first (`paid`, `delete`, `overwrite`, `system`, `secret` — see [the permission gate](https://gitkalenyuk.github.io/kadr/docs/ai/built-in-assistant.html#gate)), and a `Returns:` line describing the result.
 - **Input schema** — JSON Schema with types, enums, ranges, defaults and a description per parameter; units are spelled out (“Unit: microseconds”).
-- **Annotations** — `readOnlyHint` on queries such as `timeline_get`, `preview_frame` or `library_list`; `destructiveHint` on `project_delete`, so cautious clients confirm it.
+- **Annotations** — `readOnlyHint` on queries such as `timeline_get`, `preview_frame` or `library_list`; `destructiveHint` on commands that delete data or may overwrite a file (risk `delete` / `overwrite`, e.g. `project_delete`, `font_remove`), so cautious clients confirm them.
 
 Library ids (transitions, effects, filters, animations, fonts, stickers, caption styles, generated presets, sound effects…) are discovered with `library_list` and `library_get` rather than guessed.
+
+## Commands that only you should run
+
+A few commands manage things that are yours to decide: **API keys and key pools** (`*.keys.*`, `tts.set_api_key`, `assistant.cli.set_key`), the **key vault** (`secrets.status`, `secrets.export`, `secrets.import`), the **daily spending limit** (`spending.set_limit`), **provider settings** that decide where your keys are sent (`tts.provider.*`, `videogen.provider.*` except read-only listings such as `tts_providers`) and Kadr’s own **AI assistant** (`assistant.*`). The [command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html) marks them *User only*.
+
+- **Offered by default.** `kadr-mcp` lists them like every other command, as Kadr 1.0 did: the MCP client is one you set up yourself, and through `kadr-mcp` it has the same access to Kadr as `kadrctl`. Only connect clients you trust, and keep an eye on what the agent calls.
+- **Hide them** from a client you don’t want near your keys (an agent can be steered by text it reads: a web page, a document, a file’s metadata). Start the server as `kadr-mcp --hide-user-only` — in the client’s config: `"args": ["--hide-user-only"]`. They then leave the tool list, and a call to one (by tool name or dotted name, also inside `kadr_batch`) returns an error that tells the agent to ask you to do it in Kadr; nothing reaches the engine. A call that hands Kadr a credential (`api_key`, `token`, `github_token`, `password`…) is refused too, even for an open command such as `update_settings`. It is a flag only, never an environment variable. The `--allow-user-only` flag of earlier builds is still accepted and changes nothing (`--allow-user-only=false` hides like `--hide-user-only`).
+- **The built-in assistant never runs them**, whatever the flags: its [permission gate](https://gitkalenyuk.github.io/kadr/docs/ai/built-in-assistant.html#gate) hides and refuses them for every model and CLI agent.
+- When a key is missing, add it yourself in **Settings**; never paste keys into a chat. You can always run these commands yourself with `kadrctl` or the REST API.
 
 ## kadr_batch — several edits, one undo step
 
@@ -531,7 +545,7 @@ curl -s http://127.0.0.1:7777/api/v1/projects/prj_5c1e7a9d3b20/batch -H "Authori
 The result holds one entry per call, in order: `{"results": [ … ], "dry_run": false}`.
 
 - **No references between calls.** Arguments are fixed before the batch runs, so a call cannot use an id created by an earlier call in the same batch. Create things first, read their ids, then batch the follow-up edits.
-- **Project commands only.** Global commands (for example `export.start`, `project.create`, `library.list`) and `edit.undo`/`edit.redo` are rejected: `call 0: export.start is not a project command and cannot be batched` (call numbers start at 0).
+- **Project commands only.** Global commands (for example `export.start`, `project.create`, `library.list`) and `edit.undo`/`edit.redo` are rejected: `call 0: export.start is not a project command and cannot be batched` (call numbers start at 0). With `--hide-user-only`, [user-only commands](https://gitkalenyuk.github.io/kadr/docs/ai/mcp.html#user-only) are refused before the batch runs.
 - **Runtime errors** return the failing command’s own error (with its hint); the working copy is discarded.
 - **Side effects outside the project** (generated media files, speech files in the cache) are not rolled back by a failed batch or a dry run — they are only files.
 
@@ -709,9 +723,9 @@ Every time and duration is an integer number of microseconds, and those paramete
 
 | Request | Returns |
 | --- | --- |
-| `GET /api/v1/commands` | Every command spec: name, title, category, description, scope, params, returns, errors, examples, menu, undoable, read_only. `?category=Export` filters. |
+| `GET /api/v1/commands` | Every command spec: name, title, category, description, scope, params, returns, errors, examples, menu, undoable, read_only and `risk` (`paid`, `delete`, `overwrite`, `system` or `secret` when the user must agree first; omitted otherwise). `?category=Export` filters. |
 | `GET /api/v1/commands/{name}` | `{spec, input_schema}` — `input_schema` is a JSON Schema. |
-| `GET /api/v1/openapi.json` | OpenAPI 3.1 for the whole API (no token) — generate clients or tool definitions from it. |
+| `GET /api/v1/openapi.json` | OpenAPI 3.1 for the whole API (no token) — generate clients or tool definitions from it. Each command operation carries `x-scope`, `x-read-only`, `x-undoable`, `x-hotkey` (when it has one) and `x-risk` (risky commands only). |
 | `GET /docs` | The HTML command reference served by your running Kadr. |
 
 ## Batches and dry runs
@@ -831,6 +845,8 @@ Pictures and sound are served as files. They need the token too (header or `?tok
 | `/api/v1/fonts/{id}/preview?text=&h=&color=` | Transparent PNG of sample text in an installed font. |
 | `/api/v1/library/sound_effect/{id}/audio` | WAV preview of a sound effect. |
 | `/api/v1/exports/{job}/file` | The finished export file. |
+| `/api/v1/videogen/jobs/{id}/video` | A generated AI video (supports Range requests, so `<video>` can seek; `?download=1` saves it). Finished jobs carry the path as `result.url`. |
+| `/api/v1/videogen/jobs/{id}/thumbnail?h=&t_us=` | JPEG poster frame of a generated video (`result.thumbnail_url`). |
 
 ## Security model
 
@@ -1632,7 +1648,7 @@ Call `videogen.generate` with the same arguments plus `confirm_token`. It return
 
 ### 5. Follow the job
 
-Poll `videogen.job` every few seconds (or listen to `videogen.job` events) until `state` is `succeeded`, `failed` or `canceled`. Generation usually takes one to several minutes.
+Poll `videogen.job` every few seconds (or listen to `videogen.job` events) until `state` is `succeeded`, `failed` or `canceled`. Generation usually takes one to several minutes. While the provider is unreachable the job stays unfinished with `lost_contact_at` and `next_check_at` — Kadr keeps checking by itself; do not generate again (that would be paid again). A job that failed with `resumable: true` is picked up with `videogen.resume`, at no extra cost. A finished job's `result.url` plays the video over the REST API.
 
 ### 6. Check the result
 
@@ -1971,7 +1987,7 @@ Kadr has an AI assistant inside the editor (the **AI** button, `Ctrl`+`Shift`+`A
 |  | CLI agents (`cli:<agent>`) | API providers (`api:<provider>`) |
 | --- | --- | --- |
 | **Who** | Claude Code, OpenAI Codex, Gemini CLI, Antigravity, Cursor Agent, GitHub Copilot CLI, OpenCode, Qwen Code, Amp, Goose, Crush, Kimi Code, Aider, Cline, Factory Droid, Warp, or a custom CLI (`assistant.cli.custom`) | Anthropic, OpenAI, Google Gemini, OpenRouter, DeepSeek, xAI, Mistral, Groq, Together AI, Fireworks, Qwen (DashScope), Moonshot (Kimi), Zhipu GLM, Ollama and LM Studio (local), and custom endpoints (OpenAI-compatible, Anthropic, OpenAI Responses or Gemini dialect) |
-| **Kadr's tools** | Every command as an MCP tool, like `kadr-mcp` (dots → underscores), injected for that run only | Six meta-tools (below), so the prompt stays small and every command is reachable |
+| **Kadr's tools** | Five meta-tools (`kadr_find_commands`, `kadr_describe`, `kadr_run`, `kadr_batch`, `kadr_preview_frame`) served by a per-run MCP server; Claude Code gets every command as its own tool instead (dots → underscores, like `kadr-mcp`), because its tool search loads them on demand | Six meta-tools (below), so the prompt stays small and every command is reachable |
 | **Status** | `assistant.cli.status`: `not_installed` · `installed` · `needs_login` · `signed_in` (chat only, no MCP) · `ready` | `assistant.providers`: `no_key` · `ready` · `local` · `offline` (local server not running) · `error` |
 | **Setup** | `assistant.cli.install` (official install command, output as `assistant.cli.output` events), `assistant.cli.login` (the CLI's own sign-in), or a key via `assistant.cli.set_key` | Keys in the vault pool `("llm", provider)` with failover (`assistant.keys.add`); an OpenAI or Gemini key stored for voices or video is reused |
 
@@ -1992,12 +2008,12 @@ Its system prompt contains the same conventions as [Concepts](https://gitkalenyu
 
 - **Headless, in its own working folder** (by default `%TEMP%\kadr-agents\<agent>-<chat>`), kept stable per chat so the CLI's own session can be resumed on the next message.
 - **Kadr's MCP server is injected for that run only**, never into the user's global configuration: by a flag (Claude Code `--mcp-config` + `--strict-mcp-config`, Codex `-c mcp_servers.kadr.*`, Copilot `--additional-mcp-config`, Qwen `--mcp-config`), by an environment variable pointing at a temp file (Amp, Cline, OpenCode), or by a project-local file inside the working folder (Gemini CLI, Cursor, Antigravity, Kimi, Crush, Droid).
-- **Two transports.** *stdio* starts `kadr-mcp` next to Kadr. *gateway* is an MCP server inside Kadr on `127.0.0.1` with a random secret path; it asks the permission gate before every call, so approval cards work even for CLIs without a headless permission channel. Claude Code and Cline also map their own permission prompts (including shell and file actions) to approval cards.
+- **Two transports, one gate.** Every run starts its own MCP server inside Kadr (the *gateway*) on `127.0.0.1` with a random secret path; it asks the permission gate before every call, so approval cards work even for CLIs without a headless permission channel. *gateway* CLIs connect to it over HTTP; *stdio* CLIs start `kadr-mcp --gateway <url>`, a plain bridge to the same gateway that never calls the REST API itself (Kadr only uses a `kadr-mcp` that supports this mode), so no CLI agent reaches Kadr's tools around the gate. Claude Code and Cline also map their own permission prompts (including shell and file actions) to approval cards.
 - **Built-in shell, file and web tools are disabled or denied** by default with each CLI's own mechanism. The chat switch *Allow actions outside Kadr* enables them (still asked unless the chat is in full auto). CLIs that cannot be limited this way (Kimi Code, Warp) start only with that switch on.
 - **Keys** for a CLI come from the vault and reach it only through its environment — never in arguments, files or events. Every line of its output passes a redactor.
 - **Stop** ends the whole process tree (on Windows the agent runs in a Job object, so nothing is left behind).
 
-> **Note:** A CLI agent sees every Kadr command as a tool, which is a large tool list (much of it cached by the provider). For short requests the API backend's meta-tools are the cheaper path.
+> **Note:** **Tool list per agent.** Every command as its own tool is about 200 tools and roughly 400 KB of descriptions and schemas sent with each turn, more than some model stacks accept. So CLI agents get the five meta-tools by default (about 4 KB): they search the registry, read a command's documentation, and run commands. `kadr_run` and `kadr_preview_frame` are unwrapped before the permission gate, so approval cards name the real command. Claude Code keeps the full list. `assistant.settings.set` `{"cli_tools": {"codex": "full"}}` switches one agent (Settings → AI assistant → the agent → *Kadr tools*), and `""` restores its default. A custom agent chooses with `tools` in its spec.
 
 ## The permission gate
 
@@ -2012,9 +2028,9 @@ Every call the assistant makes — through a meta-tool, the gateway or a CLI's o
 | `overwrite` | an export or caption file over an existing file | asks | asks | runs |
 | `system` | updates, FFmpeg download, API address, render settings, installing CLIs | asks | asks | runs |
 | Outside Kadr | a CLI's shell, file or web tool | asks (if allowed at all) | asks | runs (if allowed) |
-| `secret` and blocked | `secrets.*`, `*.keys.*`, `tts.set_api_key`, `spending.set_limit`, any call with a key/token/password argument, the assistant's own non-read-only commands | **never runs** — the tool is hidden or refused |  |  |
+| `secret` and blocked | `secrets.*`, `*.keys.*`, `tts.set_api_key`, `tts.provider.add`, `spending.set_limit`, any call with a key/token/password argument, the assistant's own non-read-only commands | **never runs** — the tool is hidden or refused |  |  |
 
-The class comes from `risk` in the command spec (`paid`, `delete`, `overwrite`, `system`, `secret`; visible in `GET /api/v1/commands`) plus rules for commands that don't declare one. For paid calls the gate runs the matching `<namespace>.estimate` to show the cost and, once approved, injects its `confirm_token` into the call — an agent inside the assistant never handles tokens. “Always for this chat” remembers an approval per command (never for paid calls). Unanswered cards are denied after 10 minutes; a denied action must not be retried.
+The class comes from `risk` in the command spec (`paid`, `delete`, `overwrite`, `system`, `secret` — the same value external agents see as `risk` in `GET /api/v1/commands`, `x-risk` in OpenAPI and a `Risk:` line in every MCP tool description) plus rules for calls whose risk depends on the arguments (an export that would overwrite an existing file, a cloud voice, a call that carries a key). For paid calls the gate runs the matching `<namespace>.estimate` to show the cost and, once approved, injects its `confirm_token` into the call — an agent inside the assistant never handles tokens. “Always for this chat” remembers an approval per command (never for paid calls). Unanswered cards are denied after 10 minutes; a denied action must not be retried.
 
 ## Drive the assistant from code
 
@@ -2030,7 +2046,7 @@ curl -s http://127.0.0.1:7777/api/v1/commands/assistant.send -H "Authorization: 
 curl -s http://127.0.0.1:7777/api/v1/commands/assistant.approve -H "Authorization: Bearer $KADR_TOKEN" \
   -d '{"session_id":"ses_0a1b2c3d4e5f","request_id":"perm_1a2b3c4d","decision":"allow"}'
 # undo everything the chat did (one undo step)
-curl -s http://127.0.0.1:7777/api/v1/commands/assistant.revert -H "Authorization: Bearer $KADR_TOKEN" -d '{"session_id":"ses_0a1b2c3d4e5f"}'
+curl -s http://127.0.0.1:7777/api/v1/commands/assistant.revert -H "Authorization: Bearer $KADR_TOKEN" -d '{"project_id":"prj_1a2b3c4d5e6f","session_id":"ses_0a1b2c3d4e5f"}'
 ```
 
 **kadrctl (PowerShell):**
@@ -2039,7 +2055,7 @@ curl -s http://127.0.0.1:7777/api/v1/commands/assistant.revert -H "Authorization
 kadrctl run assistant.providers
 kadrctl run assistant.send --project_id prj_1a2b3c4d5e6f --provider api:anthropic --text "Add a title \"Day 1\" for the first 3 seconds" --wait
 kadrctl run assistant.approve --session_id ses_0a1b2c3d4e5f --request_id perm_1a2b3c4d --decision allow
-kadrctl run assistant.revert --session_id ses_0a1b2c3d4e5f
+kadrctl run assistant.revert --project_id prj_1a2b3c4d5e6f --session_id ses_0a1b2c3d4e5f
 ```
 
 - `assistant.send` returns at once with `session_id` and `run_id` (or, with `wait`, the final answer, usage and cost). Without `session_id` it starts a new chat; the first message saves the checkpoint for `assistant.revert`. Attachments: absolute paths, pasted data (`data_base64`), text, `material_id`, `segment_id` or `time_us`.
@@ -4613,9 +4629,9 @@ More about ids, the `preview` field and options in [Library, previews and fonts]
 
 Source: https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html
 
-*How the reference of all 249 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.*
+*How the reference of all 254 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.*
 
-The command reference documents all 249 commands in 33 categories — the same text an agent receives as MCP tool descriptions, generated from the engine’s own registry. Command descriptions are in English in both languages.
+The command reference documents all 254 commands in 33 categories — the same text an agent receives as MCP tool descriptions, generated from the engine’s own registry. Command descriptions are in English in both languages.
 
 [**Open the full command reference →**](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html)
 
@@ -4632,8 +4648,8 @@ The command reference documents all 249 commands in 33 categories — the same t
 
 | Category | Commands | What is inside |
 | --- | --- | --- |
-| [AI assistant](https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-assistant.html) | 28 | The built-in assistant: backends (CLI agents and API providers), chats, send, stop, approve, revert, keys, settings, installing and signing in CLI agents. |
-| [AI video](https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-video.html) | 16 | AI video generation: providers, models, keys, estimate with confirm token, generate, jobs, cancel, place into the timeline, custom providers. |
+| [AI assistant](https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-assistant.html) | 29 | The built-in assistant: backends (CLI agents and API providers), chats, send, stop, approve, revert, keys, settings, installing and signing in CLI agents. |
+| [AI video](https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-video.html) | 20 | AI video generation: providers, models, keys, estimate with confirm token, generate, jobs, cancel and resume, place into the timeline, custom providers. |
 | [Adjustment](https://gitkalenyuk.github.io/kadr/docs/ai/reference/adjustment.html) | 7 | Colour adjustments, HSL, curves and auto enhance on clips. |
 | [Animation](https://gitkalenyuk.github.io/kadr/docs/ai/reference/animation.html) | 2 | In, Out, Combo and Loop animations of clips, stickers and text. |
 | [App](https://gitkalenyuk.github.io/kadr/docs/ai/reference/app.html) | 3 | Version, paths and build information; the API address and port. |
@@ -4684,18 +4700,48 @@ The part before the first dot is the namespace — the subject the command acts 
 
 # Command specifications
 
-All 249 commands, grouped by category. Every command is available as `POST /api/v1/commands/<name>`, as the MCP tool `<name with dots replaced by underscores>` and as `kadrctl run <name> --param value`. Commands that edit one project take `project_id` and can be combined in a batch; global commands (projects list/create/duplicate/delete, library and `library.preview`, fonts, presets, export jobs, `captions.auto`, `transcript.transcribe`, tools, updates, `ui.toast`, `ui.library_tab`) cannot — a batch rejects them with an explicit error. Parameters ending in `_us` are integer microseconds.
+All 254 commands, grouped by category. Every command is available as `POST /api/v1/commands/<name>`, as the MCP tool `<name with dots replaced by underscores>` (the 52 commands marked **User only** — keys, the vault, the spending limit, provider settings, the assistant — are tools too unless kadr-mcp is started with `--hide-user-only`; Kadr's built-in assistant never runs them) and as `kadrctl run <name> --param value`. Commands that edit one project take `project_id` and can be combined in a batch; global commands (projects list/create/duplicate/delete, library and `library.preview`, fonts, presets, export jobs, `captions.auto`, `transcript.transcribe`, tools, updates, `ui.toast`, `ui.library_tab`) cannot — a batch rejects them with an explicit error. Parameters ending in `_us` are integer microseconds.
 
 ## AI assistant
 
-28 commands: `assistant.approve`, `assistant.cli.cancel`, `assistant.cli.custom`, `assistant.cli.install`, `assistant.cli.login`, `assistant.cli.set_key`, `assistant.cli.set_path`, `assistant.cli.status`, `assistant.delete`, `assistant.keys.add`, `assistant.keys.list`, `assistant.keys.remove`, `assistant.keys.test`, `assistant.keys.update`, `assistant.models`, `assistant.new`, `assistant.provider.add`, `assistant.provider.remove`, `assistant.provider.update`, `assistant.providers`, `assistant.revert`, `assistant.send`, `assistant.session`, `assistant.sessions`, `assistant.settings.get`, `assistant.settings.set`, `assistant.stop`, `assistant.test`.
+29 commands: `assistant.always_allow.revoke`, `assistant.approve`, `assistant.cli.cancel`, `assistant.cli.custom`, `assistant.cli.install`, `assistant.cli.login`, `assistant.cli.set_key`, `assistant.cli.set_path`, `assistant.cli.status`, `assistant.delete`, `assistant.keys.add`, `assistant.keys.list`, `assistant.keys.remove`, `assistant.keys.test`, `assistant.keys.update`, `assistant.models`, `assistant.new`, `assistant.provider.add`, `assistant.provider.remove`, `assistant.provider.update`, `assistant.providers`, `assistant.revert`, `assistant.send`, `assistant.session`, `assistant.sessions`, `assistant.settings.get`, `assistant.settings.set`, `assistant.stop`, `assistant.test`.
 Reference page: https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-assistant.html
+
+### assistant.always_allow.revoke
+
+**Stop always allowing in AI chat** · MCP tool `assistant_always_allow_revoke` · `POST /api/v1/commands/assistant.always_allow.revoke`
+
+Takes back "Always for this chat" (assistant.approve decision always): the named command, or every command when command is omitted, no longer runs without asking in this chat — the chat's permission mode decides again (ask_every asks before every change, ask_risky before risky ones). The current list is always_allow of assistant.session. Works while the chat is running (the next call is checked against the new list). A status event with state always_allow (message and the remaining commands) is stored in the transcript and published as assistant.status. Fails with not_found when the named command is not always allowed; clearing an empty list does nothing.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `session_id` | string | yes |  |  | Chat session id ("ses_…") from assistant.sessions, assistant.new or assistant.send. |
+| `command` | string | no |  |  | Command to ask about again (e.g. "project.delete"); omit to clear the whole list. |
+| `project_id` | string | no |  |  | Project the chat belongs to ("prj_…"). Omit for chats without a project; for an existing session it only narrows the search. |
+
+**Returns:** {removed: [commands that ask again], always_allow: [commands still always allowed]}.
+
+Example — Ask again before deleting projects:
+
+```json
+{"command":"project.delete","project_id":"prj_1a2b3c4d5e6f","session_id":"ses_0a1b2c3d4e5f"}
+```
+
+Example — Clear the whole list:
+
+```json
+{"project_id":"prj_1a2b3c4d5e6f","session_id":"ses_0a1b2c3d4e5f"}
+```
 
 ### assistant.approve
 
 **Answer AI approval** · MCP tool `assistant_approve` · `POST /api/v1/commands/assistant.approve`
 
-Answers an approval card of a running chat (assistant.approval_request event): allow runs the action, deny tells the assistant the user refused (it will not retry), always allows it and every later call of the same command in this chat without asking (not offered for paid generation, which is confirmed every time). For paid generation the approved call gets the estimate's confirm token automatically. Unanswered cards are denied after 10 minutes.
+Answers an approval card of a running chat (assistant.approval_request event): allow runs the action, deny tells the assistant the user refused (it will not retry), always allows it and every later call of the same command in this chat without asking (not offered for paid generation, which is confirmed every time; assistant.always_allow.revoke takes it back). The permission_resolved event says always=true then. For paid generation the approved call gets the estimate's confirm token automatically. Unanswered cards are denied after 10 minutes.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -4718,6 +4764,8 @@ Example — Allow:
 
 Stops an install or sign-in started with assistant.cli.install / assistant.cli.login (by job_id or agent id): the installer or login process is ended and assistant.cli.done reports canceled. Returns canceled=false when nothing was running.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `job_id` | string | yes |  |  | Job id returned by install/login (or the agent id). |
@@ -4734,7 +4782,11 @@ Example — Cancel:
 
 **Custom AI agent CLI** · MCP tool `assistant_cli_custom` · `POST /api/v1/commands/assistant.cli.custom`
 
-Adds, replaces or removes a user-defined CLI agent. spec describes how to run it: command, args (templates with {prompt}, {mcp_config}, {mcp_config_json}, {mcp_url}, {kadr_mcp}, {session}, {model}, {workdir}, {instructions}), resume_args, model_args, prompt_via (arg|stdin), output (stream-json for Claude-compatible JSON, jsonl, plain), transport (stdio|gateway), env (KEY=value), key_env (names filled from the vault), session_pattern. Custom agents are not limited to Kadr's tools, so chats using them need allow_outside. Saved in the assistant settings.
+Adds, replaces or removes a user-defined CLI agent. spec describes how to run it: command, args (templates with {prompt}, {mcp_config}, {mcp_config_json}, {mcp_url}, {kadr_mcp}, {session}, {model}, {workdir}, {instructions}), resume_args, model_args, prompt_via (arg|stdin), output (stream-json for Claude-compatible JSON, jsonl, plain), transport (stdio|gateway), tools (meta = five meta-tools, the default | full = one tool per command), env (KEY=value), key_env (names filled from the vault), session_pattern. Custom agents are not limited to Kadr's tools, so chats using them need allow_outside. Saved in the assistant settings.
+
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -4756,6 +4808,10 @@ Example — Add an agent that prints plain text:
 
 Installs a coding-agent CLI with its official install command (npm -g, winget, Homebrew, pip or the vendor's script — see install methods in assistant.cli.status). Runs in the background and returns a job_id; the installer's output streams as assistant.cli.output events {job_id, agent, job, line, stream} and the end as assistant.cli.done {job_id, agent, job, ok, error?, status}. wait=true blocks instead. assistant.cli.cancel stops it. Needs the tool the method requires (npm for most agents: install Node.js first).
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `agent` | string | yes |  |  | CLI agent id: claude, codex, gemini, antigravity, cursor, copilot, opencode, qwen, amp, goose, crush, kimi, aider, cline, droid, warp, or a custom id ("cli:" prefix allowed). |
@@ -4775,6 +4831,10 @@ Example — Install Codex:
 **Sign in AI agent CLI** · MCP tool `assistant_cli_login` · `POST /api/v1/commands/assistant.cli.login`
 
 Signs a CLI agent in ("Sign in" in the settings). Without api_key it runs the CLI's own sign-in: the provider's page opens in the browser (or a terminal window for CLIs that only sign in interactively) and Kadr polls until the agent reports it is signed in, the login ends or 5 minutes pass — in the background with a job_id, output lines (URLs, device codes) as assistant.cli.output and the end as assistant.cli.done {job_id, agent, ok, status}. With api_key the key is stored in the OS-encrypted vault for the agent's auth variable (env, default the agent's first auth key) and the new status is returned at once.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -4804,6 +4864,10 @@ Example — Use an API key for Gemini CLI:
 
 Stores an API key or token for a CLI agent (one of its key_specs, e.g. ANTHROPIC_API_KEY for Claude Code, OPENAI_API_KEY for Codex, GEMINI_API_KEY for Gemini CLI) in Kadr's OS-encrypted vault; it reaches the CLI only through its environment when Kadr starts it and is never shown again (status lists only the names of stored keys). An empty value removes the stored key. Plain settings of a spec (secret=false, e.g. a base URL) are stored the same way.
 
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `agent` | string | yes |  |  | CLI agent id: claude, codex, gemini, antigravity, cursor, copilot, opencode, qwen, amp, goose, crush, kimi, aider, cline, droid, warp, or a custom id ("cli:" prefix allowed). |
@@ -4824,6 +4888,10 @@ Example — Store a key:
 
 Pins the executable Kadr starts for a CLI agent (when detection picks the wrong one or the CLI lives in an unusual folder); "" goes back to automatic detection. The choice is saved in the assistant settings.
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `agent` | string | yes |  |  | CLI agent id: claude, codex, gemini, antigravity, cursor, copilot, opencode, qwen, amp, goose, crush, kimi, aider, cline, droid, warp, or a custom id ("cli:" prefix allowed). |
@@ -4842,6 +4910,8 @@ Example — Use a specific claude.exe:
 **AI agent CLIs status** · MCP tool `assistant_cli_status` · `POST /api/v1/commands/assistant.cli.status`
 
 Detects the coding-agent CLIs the assistant can drive (Claude Code, OpenAI Codex, Gemini CLI, Antigravity, Cursor Agent, GitHub Copilot CLI, OpenCode, Qwen Code, Amp, Goose, Crush, Kimi Code, Aider, Cline, Factory Droid, Warp, custom agents): searches PATH, the npm global folder and the usual install folders, runs --version and checks the sign-in. State per agent: not_installed, installed (sign-in unknown), needs_login, signed_in (cannot use Kadr's tools) or ready. Results are cached for 30 s; refresh=true checks again (e.g. after installing or signing in outside Kadr).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -4868,6 +4938,10 @@ Example — Re-check Claude Code:
 
 Deletes a chat and its folder (transcript, attachments copies, preview frames, checkpoint) from the project. The project itself is not changed and its undo history stays. A running chat must be stopped first.
 
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `session_id` | string | yes |  |  | Chat session id ("ses_…") from assistant.sessions, assistant.new or assistant.send. |
@@ -4886,6 +4960,10 @@ Example — Delete:
 **Add AI provider keys** · MCP tool `assistant_keys_add` · `POST /api/v1/commands/assistant.keys.add` · UI: Settings/AI assistant
 
 Stores API keys of an assistant API provider in the encrypted vault (Windows DPAPI / macOS Keychain) — Settings → AI assistant → provider → Keys. Many keys per provider are supported; they are used in order and the next one takes over on invalid / quota / payment / rate-limit errors. Pass one api_key (with an optional label), a batch in keys (one per line, "label: key" or NAME=value lines; blank lines, # comments and duplicates are skipped and reported by line without the secret) or a file (.txt/.env, .csv/.tsv, .json). New keys are tested with the provider's free list-models request unless test=false. Keys are never returned, only masked previews. Local servers (Ollama, LM Studio) need no key.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -4916,6 +4994,8 @@ Example — Paste several keys:
 
 Lists the API keys stored for the assistant's API providers (key pools in the OS-encrypted vault) in the order they are tried, with masked previews only (sk-…a1b2): label, status (unknown / ok / exhausted / invalid / rate_limited), whether it is usable now, last error (redacted), cooldown, remaining quota when reported, uses and failures. Calls fail over from key to key on invalid keys (401), exhausted credits (402 / insufficient_quota) and rate limits (429). shared_from says a provider uses another kind's pool (e.g. the OpenAI key stored for voices) because its own is empty. Without provider: every provider with keys.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | no |  |  | Only this API provider ("anthropic", "openai"…; "api:" prefix allowed). |
@@ -4939,6 +5019,10 @@ Example — Anthropic keys:
 **Remove AI provider keys** · MCP tool `assistant_keys_remove` · `POST /api/v1/commands/assistant.keys.remove` · UI: Settings/AI assistant
 
 Deletes stored keys of an assistant API provider from the encrypted vault: one key by key_id, or every key of the provider's own pool with all=true (keys shared from voices/video stay). Running chats keep working with the remaining keys.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -4966,6 +5050,8 @@ Example — Remove all:
 
 Tests the keys of an assistant API provider with the provider's free list-models request (no tokens are used) and updates each key's status: a working key becomes ok (also reviving a key marked invalid), a rejected one invalid, an out-of-credit one exhausted. Tests one key (key_id) or every key of the provider.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | API provider id ("api:" prefix allowed). |
@@ -4984,6 +5070,10 @@ Example — Test all:
 **Edit AI provider key** · MCP tool `assistant_keys_update` · `POST /api/v1/commands/assistant.keys.update` · UI: Settings/AI assistant
 
 Changes one stored key of an assistant API provider without revealing it: label, disabled (skip the key without deleting it), position in the failover order (0 = tried first) or reset_status (forget invalid / exhausted / rate-limited marks and the cooldown so the key is tried again).
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5007,6 +5097,8 @@ Example — Try a key first:
 **AI assistant models** · MCP tool `assistant_models` · `POST /api/v1/commands/assistant.models`
 
 Lists the models of one assistant backend. For API providers it returns the curated list (ids verified from the provider's docs, vision/reasoning flags, context size, list prices per million tokens) and, with live=true or for local servers (Ollama, LM Studio), the models the provider's own list endpoint reports (a free call using the stored key). For CLI agents it returns "default" plus the model names the agent accepts. Any model id the provider knows can be used with assistant.send even when it is not listed.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5033,6 +5125,8 @@ Example — Models loaded in Ollama:
 
 Creates an empty chat for a project ("New chat" in the assistant panel) with a provider, model and permission mode (defaults from assistant.settings.get). Sending a message without session_id also creates a chat, so this is only needed to show an empty chat first. The project checkpoint for "Revert session" is taken when the first message is sent.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `allow_outside` | boolean | no |  |  | Let CLI agents use their own shell/file/web tools (still confirmed unless full_auto). Off by default. |
@@ -5055,6 +5149,8 @@ Example — New chat with Claude Code:
 **Add custom AI endpoint** · MCP tool `assistant_provider_add` · `POST /api/v1/commands/assistant.provider.add`
 
 Adds (or replaces) a custom API endpoint for the assistant: any OpenAI-compatible server (vLLM, llama.cpp server, LiteLLM, a company proxy, another vendor) or an endpoint speaking the Anthropic, OpenAI Responses or Gemini dialect. Give the base URL (for openai_chat the part before /chat/completions, e.g. https://llm.example.com/v1), the model ids it serves and how the key is sent; keys go to the vault with assistant.keys.add. Saved in the assistant settings; appears in assistant.providers as api:<id>.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5084,6 +5180,10 @@ Example — Local vLLM:
 
 Removes a custom API endpoint added with assistant.provider.add (built-in providers cannot be removed). Its keys stay in the vault until removed with assistant.keys.remove all=true; chats that used it need another provider.
 
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `id` | string | yes |  |  | Id of the custom endpoint ("api:" prefix allowed). |
@@ -5101,6 +5201,8 @@ Example — Remove:
 **Edit AI endpoint** · MCP tool `assistant_provider_update` · `POST /api/v1/commands/assistant.provider.update`
 
 Changes an API provider of the assistant; only the parameters you pass change. Built-in providers accept region (e.g. DashScope intl / cn / us, Moonshot global / cn, Zhipu intl / cn) and base_url (a proxy, another port or host — "" restores the default). Custom endpoints (assistant.provider.add) also accept name, dialect, models, auth, auth_header, key_optional, vision, stream_usage and send_reasoning. Saved in the assistant settings.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5137,6 +5239,8 @@ Example — Ollama on another PC:
 
 Lists every backend the built-in AI assistant can use, for the provider/model picker and the settings: CLI agents installed on this PC (Claude Code, Codex, Gemini CLI, … with state not_installed / installed / needs_login / signed_in / ready, version, install methods, sign-in and key specs, capabilities) and direct API providers (Anthropic, OpenAI, Gemini, OpenRouter, DeepSeek, xAI, Mistral, Groq, Together, Fireworks, Qwen/DashScope, Moonshot, Zhipu, Ollama and LM Studio on this PC, custom endpoints) with state ready / no_key / local / offline / error, key counts (never the keys), base URL, docs and the curated model list with vision/reasoning flags and list prices (USD per million tokens, as of the catalogue date). Local servers are probed (2 s). live=true also reads each keyed provider's live model list (free API calls).
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `kind` | string | no |  | `api`, `cli` | Only API providers or only CLI agents (default both). |
@@ -5162,6 +5266,8 @@ Example — Only API providers with live models:
 
 Undoes everything a chat did to the project ("Revert session"): the project is restored exactly as it was at the chat's checkpoint (taken when its first message was sent), as ONE undo step — Ctrl+Z (edit.undo) brings the chat's work back. When the project was also changed by someone else since the checkpoint (the user in the editor, another agent), it fails with conflict unless force=true, because restoring the checkpoint discards those changes too. Files the chat created on disk (exports, generated media) are not deleted. Not possible while the chat is running.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
@@ -5181,6 +5287,8 @@ Example — Revert:
 **Send to AI assistant** · MCP tool `assistant_send` · `POST /api/v1/commands/assistant.send`
 
 Sends a message to the built-in AI assistant, which then edits the project itself: it reads the timeline, runs Kadr commands (edits are undoable; risky actions wait for approval cards answered with assistant.approve), looks at preview frames and answers. Returns at once with session_id and run_id; the turn streams on the bus as assistant.* events (assistant.message.delta, assistant.tool_call, assistant.tool_result, assistant.approval_request, assistant.status, assistant.usage, assistant.error, assistant.done) — or pass wait=true to block until it finishes. Without session_id a new chat is created. provider/model/mode default to the chat's, then the settings. Attachments: files by absolute path (images are sent to vision models, videos as a few frames, text/Word documents inlined, PDFs natively where supported), pasted data (data_base64 + name), pasted text, media items (material_id), timeline clips (segment_id: description + frame) and project frames (time_us); copies are kept in the chat folder. The first message of a chat saves a checkpoint for assistant.revert. Fails with conflict while the chat is still working.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5219,14 +5327,16 @@ Example — Continue a chat and wait:
 
 **Open AI chat** · MCP tool `assistant_session` · `POST /api/v1/commands/assistant.session`
 
-Returns one chat with its full transcript as unified events (the same events the live bus carries: user, text, thinking, tool_call, tool_result with preview-frame URLs, permission_request / permission_resolved, usage, error, done, status), so a client replays it through the same reducer it uses for live events. Also returns the open approval cards (pending) of a running turn, the permission mode and the revert checkpoint (edits made by the chat).
+Returns one chat with its full transcript as unified events (the same events the live bus carries: user, text, thinking, tool_call, tool_result with preview-frame URLs, permission_request / permission_resolved, usage, error, done, status), so a client replays it through the same reducer it uses for live events. Also returns the open approval cards (pending) of a running turn, the permission mode, the commands the user allowed for the rest of the chat (always_allow; assistant.always_allow.revoke takes them back) and the revert checkpoint (edits made by the chat).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `session_id` | string | yes |  |  | Chat session id ("ses_…") from assistant.sessions, assistant.new or assistant.send. |
 | `project_id` | string | no |  |  | Project the chat belongs to ("prj_…"). Omit for chats without a project; for an existing session it only narrows the search. |
 
-**Returns:** {id, project_id, title, provider, model, mode, allow_outside, created, updated, message_count, action_count, cost_usd, reverted, running, edits, checkpoint?, pending[], events[]}.
+**Returns:** {id, project_id, title, provider, model, mode, allow_outside, created, updated, message_count, action_count, cost_usd, reverted, running, edits, checkpoint?, pending[], always_allow?[], events[]}.
 
 Example — Open a chat:
 
@@ -5238,7 +5348,9 @@ Example — Open a chat:
 
 **AI chats of a project** · MCP tool `assistant_sessions` · `POST /api/v1/commands/assistant.sessions`
 
-Lists the assistant chats stored with a project (newest first): title (from the first message), provider and model, created/updated times, message and action counts, cost in USD when known, edits it can revert, whether it was reverted and whether it is running now. Chats live in the project folder (assistant/sessions/), are never exported and are deleted with the project. Without project_id it lists the chats that have no project.
+Lists the assistant chats stored with a project (newest first): title (from the first message), provider and model, created/updated times, message and action counts, cost in USD when known, edits it can revert, whether it was reverted and whether it is running now. Chats live in the project folder (assistant/sessions/), are never exported and are deleted with the project. Without project_id it lists the chats that have no project. When chat_retention_days is set (assistant.settings.set), chats not updated for that long are deleted first (running chats are kept) and are not listed.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5256,11 +5368,13 @@ Example — Chats of a project:
 
 **AI assistant settings** · MCP tool `assistant_settings_get` · `POST /api/v1/commands/assistant.settings.get`
 
-Returns the assistant's settings: the default provider and model (resolved: when none was chosen, Claude Code if it is ready, else the first API provider with a key), the permission mode (ask_risky / ask_every / full_auto), the allow-outside-actions switch, reasoning effort, the tool-loop step limit, output and context token budgets, the per-provider region/base URL overrides, custom API endpoints and custom CLI agents. API keys are never part of the settings (they are in the OS-encrypted vault, see assistant.keys.list).
+Returns the assistant's settings: the default provider and model (resolved: when none was chosen, Claude Code if it is ready, else the first API provider with a key), the permission mode (ask_risky / ask_every / full_auto), the allow-outside-actions switch, reasoning effort, the tool-loop step limit, output and context token budgets, chat-history retention in days (0 = keep forever), the per-provider region/base URL overrides, custom API endpoints and custom CLI agents, pinned agent executables and the Kadr tool list chosen per CLI agent (cli_tools). API keys are never part of the settings (they are in the OS-encrypted vault, see assistant.keys.list).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 No parameters.
 
-**Returns:** {provider, model, mode, allow_outside, effort?, max_steps, max_output_tokens, context_tokens, tool_result_chars, models{provider: last model}, providers{id: {region?, base_url?}}, custom_providers[], custom_cli{}, cli_paths{}}.
+**Returns:** {provider, model, mode, allow_outside, effort?, max_steps, max_output_tokens, context_tokens, tool_result_chars, chat_retention_days, models{provider: last model}, providers{id: {region?, base_url?}}, custom_providers[], custom_cli{}, cli_paths{}, cli_tools{agent: meta|full}}.
 
 Example — Read:
 
@@ -5272,11 +5386,15 @@ Example — Read:
 
 **Change AI assistant settings** · MCP tool `assistant_settings_set` · `POST /api/v1/commands/assistant.settings.set`
 
-Changes the assistant's defaults; only the parameters you pass change. provider/model are the defaults for new chats (a chat keeps its own provider unless assistant.send names another). mode is the default permission mode: ask_risky runs edits at once (they are undoable) and asks before paid generation, deleting files or projects, overwriting files and actions outside Kadr; ask_every asks before every change; full_auto never asks except for paid generation (always confirmed). providers sets non-secret per-provider options, e.g. {"ollama": {"base_url": "http://192.168.1.20:11434/v1"}, "dashscope": {"region": "cn"}} (an empty object resets one). Publishes assistant.settings.
+Changes the assistant's defaults; only the parameters you pass change. provider/model are the defaults for new chats (a chat keeps its own provider unless assistant.send names another). mode is the default permission mode: ask_risky runs edits at once (they are undoable) and asks before paid generation, deleting files or projects, overwriting files and actions outside Kadr; ask_every asks before every change; full_auto never asks except for paid generation (always confirmed). providers sets non-secret per-provider options, e.g. {"ollama": {"base_url": "http://192.168.1.20:11434/v1"}, "dashscope": {"region": "cn"}} (an empty object resets one). chat_retention_days deletes chats not updated for that many days (0 = keep forever): they are removed from disk when a project's chats are listed (assistant.sessions) or a new chat starts there; running chats are kept. cli_tools picks how a CLI agent sees Kadr: "meta" (five meta-tools that search, describe and run every command — small prompts, fits agents with tool-count limits; the default of every agent but Claude Code) or "full" (one MCP tool per command, ~200 tools sent with every turn; Claude Code's default, its tool search loads them on demand); "" resets an agent. Publishes assistant.settings.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `allow_outside` | boolean | no |  |  | Let CLI agents use their own shell/file/web tools (still confirmed unless full_auto). Off by default. |
+| `chat_retention_days` | integer | no |  | 0 … 3650 | Delete chats not updated for this many days (e.g. 7, 30, 90); 0 keeps them forever (default). |
+| `cli_tools` | object | no |  |  | Kadr tool list per CLI agent {agent: "meta" \| "full" \| ""}: meta = five meta-tools (find, describe, run, batch, preview frame; a few KB per turn — the default of every agent but Claude Code), full = one tool per command (~200 tools); "" = the agent's default. |
 | `context_tokens` | integer | no |  | 8000 … 2000000 | History budget before older turns are summarised (default 120000; also capped at 70 % of the model's context). |
 | `effort` | string | no |  |  | Reasoning effort for API models that support it: low, medium, high, xhigh, max (Gemini: minimal..high); "" = model default. |
 | `max_output_tokens` | integer | no |  | 0 … 200000 | Output token cap per model call; 0 = provider default (Anthropic 16k/32k). |
@@ -5307,11 +5425,25 @@ Example — Ollama on another PC:
 {"providers":{"ollama":{"base_url":"http://192.168.1.20:11434/v1"}}}
 ```
 
+Example — Keep chats for 30 days:
+
+```json
+{"chat_retention_days":30}
+```
+
+Example — Give Codex every command as its own tool:
+
+```json
+{"cli_tools":{"codex":"full"}}
+```
+
 ### assistant.stop
 
 **Stop AI assistant** · MCP tool `assistant_stop` · `POST /api/v1/commands/assistant.stop`
 
 Stops the running turn of a chat (the Stop button): the model stream or the CLI agent process tree is ended, pending approval cards are closed as stopped and the run finishes with a done event (stopped=true). Edits already made stay (undo them with edit.undo or assistant.revert). Returns stopped=false when the chat was not running.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5330,6 +5462,8 @@ Example — Stop:
 **Test AI assistant provider** · MCP tool `assistant_test` · `POST /api/v1/commands/assistant.test`
 
 Checks that an assistant backend works. API providers: the key pool is tested with the provider's free list-models call (local servers: that they answer) and, with prompt=true, one tiny real request ("Reply with OK", a few tokens — billed by the provider). CLI agents: detection and sign-in status, and with prompt=true one tiny headless run through Kadr's runner (uses the agent's plan or key). Returns ok, the state, how long it took and the reply.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The built-in AI assistant's settings, chats, sign-ins and keys belong to the user (the AI panel in Kadr's title bar); other AI agents do not see or drive it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5353,7 +5487,7 @@ Example — Tiny real prompt with Claude Code:
 
 ## AI video
 
-16 commands: `videogen.cancel`, `videogen.estimate`, `videogen.generate`, `videogen.job`, `videogen.jobs`, `videogen.keys.add`, `videogen.keys.list`, `videogen.keys.remove`, `videogen.keys.test`, `videogen.models`, `videogen.place`, `videogen.provider.add`, `videogen.provider.remove`, `videogen.provider.test`, `videogen.provider.update`, `videogen.providers`.
+20 commands: `videogen.cancel`, `videogen.estimate`, `videogen.generate`, `videogen.job`, `videogen.job.delete`, `videogen.jobs`, `videogen.jobs.clear`, `videogen.keys.add`, `videogen.keys.list`, `videogen.keys.remove`, `videogen.keys.test`, `videogen.keys.update`, `videogen.models`, `videogen.place`, `videogen.provider.add`, `videogen.provider.remove`, `videogen.provider.test`, `videogen.provider.update`, `videogen.providers`, `videogen.resume`.
 Reference page: https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-video.html
 
 ### videogen.cancel
@@ -5378,7 +5512,7 @@ Example — Cancel a job:
 
 **Estimate AI video cost** · MCP tool `videogen_estimate` · `POST /api/v1/commands/videogen.estimate` · UI: Generate/Estimate
 
-Plans a video generation without running it: resolves provider/model, fills duration from the target range and aspect ratio from the canvas (auto_params), checks references and capabilities, picks the endpoint (text, image, first+last frame, references, video edit) and estimates the cost from the provider's published prices (dated; known=false when the provider bills credits or has no public price). Returns a confirm_token that videogen.generate requires for paid generations: show the estimate to the user, ask, and pass the token only after they agree (it is bound to these exact arguments and price, and expires in 15 min). Also reports today's spending against the daily limit, whether a key is configured, and cached=true when an identical request already has a result (generate then reuses it for free unless new_take). Same arguments as videogen.generate.
+Plans a video generation without running it: resolves provider/model, fills duration from the target range and aspect ratio from the canvas (auto_params), checks references and capabilities, picks the endpoint (text, image, first+last frame, references, video edit) and estimates the cost from the provider's published prices (dated; known=false when the provider bills credits or has no public price). Returns a confirm_token that videogen.generate requires for paid generations: show the estimate to the user, ask, and pass the token only after they agree (it is bound to these exact arguments and price, and expires in 15 min). Also reports today's spending against the daily limit (limit.over = generate would be refused by the overall or per-provider daily limit, with the estimate converted into the limit currency), whether a key is configured, and cached=true when an identical request already has a result (generate then reuses it for free unless new_take). Same arguments as videogen.generate.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5399,9 +5533,9 @@ Plans a video generation without running it: resolves provider/model, fills dura
 | `segment_id` | string | no |  |  | Replace this video clip: its range becomes the target range and the result swaps its media (effects and position kept). |
 | `start_us` | integer (microseconds) | no |  | 0 … ∞ | Start of the timeline range to fill (a gap), with duration_us. |
 | `track_id` | string | no |  |  | Track of the range (main_video or video_overlay). Omit to use the main track when the range is free there, else an overlay track. |
-| `use_neighbors` | boolean | no |  |  | Use the last frame of the clip before the range as first_frame and the first frame of the clip after it as last_frame (when the model supports them and they are not given). Default false. |
+| `use_neighbors` | boolean | no |  |  | Use the last frame of the clip before the range as first_frame and the first frame of the clip after it as last_frame (when the model supports them and they are not given). A last frame is only used together with a first frame (a warning says when the clip after was skipped), except for models that take an end frame alone. Default false. |
 
-**Returns:** {provider, provider_name, model, model_name, task (t2v|i2v|flf|ref|v2v), op, params, auto_params, references: [{role, param, source}], estimate: {known, amount, currency, as_of, source, breakdown, note}, estimate_text, billable, confirm_token, configured, key_hint, cached, cached_job_id, limit: {daily, currency, spent_today, remaining}, warnings}.
+**Returns:** {provider, provider_name, model, model_name, task (t2v|i2v|flf|ref|v2v), op, params, auto_params, references: [{role, param, source}], estimate: {known, amount, currency, as_of, source, breakdown, note}, estimate_text, billable, confirm_token, configured, key_hint, cached, cached_job_id, limit: {daily, currency, spent_today, remaining, amount (this estimate in the limit currency; null when unknown or without an exchange rate), over (generate would refuse: daily or per-provider limit), over_scope, over_message, provider_daily?, provider_spent_today?}, warnings}.
 
 Example — Price a shot for a 4 s gap:
 
@@ -5419,7 +5553,9 @@ Example — Bridge two clips with first+last frame:
 
 **Generate AI video** · MCP tool `videogen_generate` · `POST /api/v1/commands/videogen.generate` · UI: Generate/Generate
 
-Starts an AI video generation job and returns at once (job_id); the job runs in the background: references are extracted (current frame, clip frames with FFmpeg) and uploaded, the provider is called with key failover, progress is published as videogen.job events, the video is downloaded to Kadr's results cache and — with a range or segment_id — placed into the timeline as one undo step. PAID: when the operation is billable, confirm_token from videogen.estimate is REQUIRED (the user must have agreed to the shown cost) and the daily spending limit is enforced. Agent workflow to fill a gap: videogen.providers (configured_only) → videogen.models {provider} → timeline.get (find the gap) → videogen.estimate {provider, model, prompt, project_id, start_us, duration_us, use_neighbors?} → ask the user → videogen.generate with the same arguments + confirm_token → poll videogen.job until state succeeded/failed (or wait for events). Identical earlier requests reuse their result for free (new_take forces a new generation). Failures carry the provider's reason and a hint; retry with retry_of and changed arguments.
+Starts an AI video generation job and returns at once (job_id); the job runs in the background: references are extracted (current frame, clip frames with FFmpeg) and uploaded, the provider is called with key failover, progress is published as videogen.job events, the video is downloaded to Kadr's results cache and — with a range or segment_id — placed into the timeline as one undo step. PAID: when the operation is billable, confirm_token from videogen.estimate is REQUIRED (the user must have agreed to the shown cost) and the daily spending limit is enforced. Agent workflow to fill a gap: videogen.providers (configured_only) → videogen.models {provider} → timeline.get (find the gap) → videogen.estimate {provider, model, prompt, project_id, start_us, duration_us, use_neighbors?} → ask the user → videogen.generate with the same arguments + confirm_token → poll videogen.job until state succeeded/failed (or wait for events); a succeeded job already carries placed (or place_error when the range could not be used), so do not place it again. Identical earlier requests reuse their result for free (new_take forces a new generation). Failures carry the provider's reason and a hint; retry with retry_of and changed arguments.
+
+**Risk: paid** — spends money at a cloud provider; show the user the estimated cost and run it only after they agree (estimate → confirm_token).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5441,9 +5577,9 @@ Starts an AI video generation job and returns at once (job_id); the job runs in 
 | `segment_id` | string | no |  |  | Replace this video clip: its range becomes the target range and the result swaps its media (effects and position kept). |
 | `start_us` | integer (microseconds) | no |  | 0 … ∞ | Start of the timeline range to fill (a gap), with duration_us. |
 | `track_id` | string | no |  |  | Track of the range (main_video or video_overlay). Omit to use the main track when the range is free there, else an overlay track. |
-| `use_neighbors` | boolean | no |  |  | Use the last frame of the clip before the range as first_frame and the first frame of the clip after it as last_frame (when the model supports them and they are not given). Default false. |
+| `use_neighbors` | boolean | no |  |  | Use the last frame of the clip before the range as first_frame and the first frame of the clip after it as last_frame (when the model supports them and they are not given). A last frame is only used together with a first frame (a warning says when the clip after was skipped), except for models that take an end frame alone. Default false. |
 
-**Returns:** Job: {id, state (preparing|submitting|queued|running|downloading|succeeded|failed|canceled), progress 0..1 (-1 unknown), message, provider, model, task, params, auto_params, references, estimate, charged, currency, cached_from, placement, placed {material_id, segment_id, track_id, start_us, duration_us, speed, fit}, result {path, duration_us, width, height, has_audio} when done, error {code, message, hint} on failure, created_at}.
+**Returns:** Job: {id, state (preparing|submitting|queued|running|downloading|succeeded|failed|canceled), progress 0..1 (-1 unknown), message, provider, model, task, params, auto_params, references, estimate, charged, currency, cached_from, placement, placed {material_id, segment_id, track_id, start_us, duration_us, speed, fit}, result {path, duration_us, width, height, has_audio, url, thumbnail_url} when done (url/thumbnail_url: API paths that play the video and serve a poster frame), error {code, message, hint} on failure, lost_contact_at/next_check_at while the provider is unreachable (Kadr keeps checking; see videogen.resume), resumable when a failure on Kadr's side can be picked up with videogen.resume, created_at}.
 
 Example — Fill a gap (after estimate):
 
@@ -5467,7 +5603,7 @@ Example — Re-run with a new prompt:
 
 **AI video job** · MCP tool `videogen_job` · `POST /api/v1/commands/videogen.job` · UI: Generate/History
 
-Returns one generation job: state, progress (0..1, -1 when the provider does not report it), provider status message, error with hint, cost charged, references used, the result file (path, duration, size) and the placement. Poll it (every few seconds) after videogen.generate until state is succeeded, failed or canceled.
+Returns one generation job: state, progress (0..1, -1 when the provider does not report it), provider status message, error with hint, cost charged, references used, the result file (path, duration, size, url = API path that plays it) and the placement. Poll it (every few seconds) after videogen.generate until state is succeeded, failed or canceled. While the provider is unreachable the job stays unfinished with lost_contact_at and next_check_at (Kadr keeps checking, nothing is charged again); a failed job with resumable=true can be picked up with videogen.resume.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5479,6 +5615,34 @@ Example — Check a job:
 
 ```json
 {"job_id":"vg_1a2b3c4d5e6f"}
+```
+
+### videogen.job.delete
+
+**Delete AI video job** · MCP tool `videogen_job_delete` · `POST /api/v1/commands/videogen.job.delete` · UI: Generate/Delete job
+
+Deletes finished generation jobs from the history (the Generate panel's Jobs list) and, by default, their result videos from Kadr's results cache (<DataDir>/videogen/results) with their poster frames — to free disk space after many takes. Copies already placed on a timeline or imported into Media live in the project folder (<project>/ai-video) and are never touched, so projects keep playing; the spending ledger keeps its entries. A result file another remaining job still uses (the free reuse of an identical request) is kept. Queued or running jobs are refused (cancel them with videogen.cancel first). A failed job with resumable=true may still finish at the provider: after deleting it Kadr can no longer fetch that paid result. All or nothing: an unknown or unfinished id fails the call before anything is removed. Cannot be undone.
+
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `delete_files` | boolean | no | `true` |  | Also delete the result videos from Kadr's results cache (default true); false keeps the files on disk (listed in kept_files). |
+| `job_id` | string | no |  |  | Id of the finished job to delete ("vg_…"). |
+| `job_ids` | string[] | no |  |  | Several finished job ids to delete in one call (with or instead of job_id). |
+
+**Returns:** {deleted: [job ids], count, freed_bytes (disk space freed; a result still hard-linked into a project folder frees nothing), files_deleted, kept_files: [{path, reason}], pending_files (files open elsewhere, e.g. a preview still playing — deleted within seconds), failed: [{id, error}] when a job file could not be removed}.
+
+Example — Delete a take:
+
+```json
+{"job_id":"vg_1a2b3c4d5e6f"}
+```
+
+Example — Remove two jobs but keep their videos:
+
+```json
+{"delete_files":false,"job_ids":["vg_1a2b3c4d5e6f","vg_6f5e4d3c2b1a"]}
 ```
 
 ### videogen.jobs
@@ -5508,18 +5672,60 @@ Example — This project's history:
 {"project_id":"prj_8f3a1c2d4e5f"}
 ```
 
+### videogen.jobs.clear
+
+**Clear finished AI video jobs** · MCP tool `videogen_jobs_clear` · `POST /api/v1/commands/videogen.jobs.clear` · UI: Generate/Clear finished
+
+Clears the Generate panel's job history in one go ("Clear finished"): deletes every finished job matching the filter — by default all succeeded, failed and canceled jobs of every project (project_id limits it to one project, state to one kind, older_than_days keeps recent ones) — with their result videos in Kadr's results cache, exactly like videogen.job.delete. Unfinished jobs are never touched; failed jobs with resumable=true (the provider may still deliver a paid video) are skipped unless include_resumable. dry_run only reports what would go (count, freed_bytes) — show that to the user before deleting. Copies placed in projects / Media and the spending ledger are kept. Cannot be undone.
+
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `delete_files` | boolean | no | `true` |  | Also delete the result videos from Kadr's results cache (default true); false only empties the history. |
+| `dry_run` | boolean | no |  |  | Report what would be deleted (deleted ids, count, freed_bytes) without deleting anything. |
+| `include_resumable` | boolean | no |  |  | Also delete failed jobs with resumable=true (their paid result could still be fetched with videogen.resume). |
+| `older_than_days` | integer | no |  | 0 … 3650 | Only jobs that finished more than this many days ago (0 or omitted = any age). |
+| `project_id` | string | no |  |  | Only jobs started for this project (omit for every project). |
+| `state` | string | no | `"finished"` | `finished`, `succeeded`, `failed`, `canceled`, `stopped` | Which finished jobs: finished (all, default), succeeded, failed, canceled, or stopped (failed + canceled). |
+
+**Returns:** {deleted: [job ids], count, freed_bytes, files_deleted, kept_files: [{path, reason}], pending_files, skipped_resumable, dry_run, failed: [{id, error}]} — see videogen.job.delete.
+
+Example — Preview clearing this project's jobs:
+
+```json
+{"dry_run":true,"project_id":"prj_8f3a1c2d4e5f"}
+```
+
+Example — Clear failed and canceled jobs:
+
+```json
+{"state":"stopped"}
+```
+
+Example — Clear jobs older than 30 days:
+
+```json
+{"older_than_days":30}
+```
+
 ### videogen.keys.add
 
 **Add video provider keys** · MCP tool `videogen_keys_add` · `POST /api/v1/commands/videogen.keys.add` · UI: Settings/Video generation/Keys
 
 Stores API keys for a video provider in Kadr's OS-encrypted vault (pool kind "video") — Settings → Video generation → Keys. Paste many at once (one per line, "label: key" or tab-separated, # comments ignored) or import a file (.txt/.env/.csv/.json; a Google service-account .json for Vertex AI). Keys are used in order with automatic failover: on 401/invalid the key is marked invalid, on quota/credits (402) exhausted, on 429 rate_limited, and the next key is tried; a running job always uses the key that started it. Composite keys go in one entry: Kling "ACCESS_KEY:SECRET_KEY", Higgsfield "KEY_ID:KEY_SECRET", Tencent "SecretId:SecretKey". The result never contains the secrets (masked previews only); duplicates are skipped.
 
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from videogen.providers, e.g. "fal". |
+| `api_key` | string | no |  |  | One key stored exactly as given (never split into lines; same as tts.keys.add / assistant.keys.add); label names it. |
 | `file` | string | no |  |  | Absolute path of a file with keys (.txt, .env, .csv, .tsv, .json, service-account .json). |
 | `keys` | string | no |  |  | One or more keys, one per line ("label: key" allowed). |
-| `label` | string | no |  |  | Label for a single key given in keys (e.g. "work account"). |
+| `label` | string | no |  |  | Label for a single key given in api_key or keys (e.g. "work account"). |
 
 **Returns:** {provider, added: [{id, label, preview, status}], duplicates, existing, rejected: [{line, reason, preview}], keys: {count, usable, statuses}}.
 
@@ -5540,6 +5746,8 @@ Example — Import a Vertex service account:
 **List video provider keys** · MCP tool `videogen_keys_list` · `POST /api/v1/commands/videogen.keys.list` · UI: Settings/Video generation/Keys
 
 Lists the stored keys of video providers in failover order with masked previews ("sk_…a1b2"), label, status (ok, exhausted, invalid, rate_limited, unknown), last error, cooldown, remaining quota when the provider reports it, use and failure counts. Never returns a secret.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5565,6 +5773,10 @@ Example — Kling keys:
 
 Deletes keys of a video provider from the vault: one key by key_id (from videogen.keys.list) or all of them with all=true. Jobs still running with a removed key can no longer be polled.
 
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from videogen.providers, e.g. "fal". |
@@ -5585,6 +5797,8 @@ Example — Remove one key:
 
 Tests each key of a provider (or one key_id) with a free request and updates its status (a working key that was marked invalid becomes ok again). Providers without a free endpoint report tested=false. Never spends money.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from videogen.providers, e.g. "fal". |
@@ -5596,6 +5810,45 @@ Example — Test all Runway keys:
 
 ```json
 {"provider":"runway"}
+```
+
+### videogen.keys.update
+
+**Edit video provider key** · MCP tool `videogen_keys_update` · `POST /api/v1/commands/videogen.keys.update` · UI: Settings/Video generation/Keys
+
+Changes one stored key of a video provider without revealing it — Settings → Video generation → Keys: label, disabled (a disabled key is skipped by failover), position (0 = tried first; keys are used in order), reset_status (forget an invalid/exhausted/rate-limited mark and its cooldown so the key is tried again). Jobs already running keep the key that started them. App setting, not undoable; never returns the secret.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `key_id` | string | yes |  |  | Key id from videogen.keys.list. |
+| `provider` | string | yes |  |  | Provider id from videogen.providers, e.g. "fal". |
+| `disabled` | boolean | no |  |  | true = skip this key in failover, false = use it again. |
+| `label` | string | no |  |  | New label ("" clears it). |
+| `position` | integer | no |  | 0 … ∞ | New 0-based position in the failover order (0 = tried first). |
+| `reset_status` | boolean | no |  |  | Clear the key's status, last error and cooldown. |
+
+**Returns:** {provider, key: {id, label, preview, status, disabled, usable …}, keys: [all keys in failover order]}.
+
+Example — Try this key first:
+
+```json
+{"key_id":"k_0a1b2c3d4e","position":0,"provider":"kling"}
+```
+
+Example — Pause a key:
+
+```json
+{"disabled":true,"key_id":"k_0a1b2c3d4e","provider":"fal"}
+```
+
+Example — Forget an exhausted mark after topping up:
+
+```json
+{"key_id":"k_0a1b2c3d4e","provider":"runway","reset_status":true}
 ```
 
 ### videogen.models
@@ -5613,7 +5866,7 @@ Lists video models with everything needed to build a request: capabilities (text
 | `limit` | integer | no |  | 1 … 5000 | Return at most this many models (default 500; aggregator catalogs hold hundreds). |
 | `offset` | integer | no |  | 0 … ∞ | Skip this many matching models first (paging with limit). |
 | `provider` | string | no |  |  | Only this provider's models (id from videogen.providers). |
-| `query` | string | no |  |  | Filter by text in the model id, name, family or description. |
+| `query` | string | no |  |  | Filter by text in the model id, name, family, description or provider name. Spaces and punctuation are ignored ("OmniFlash" finds "Omni Flash", "kling3" finds "Kling 3.0"); several words match in any order ("veo fal"). |
 
 **Returns:** {models: [{provider, provider_name, configured, id, name, family, description, capabilities, tasks, params: [{name, label, type, doc, default, enum, min, max, unit, group, role, accept, max_items}], pricing, price_hint, default, featured, deprecated, experimental, notes}], total, truncated}.
 
@@ -5681,6 +5934,10 @@ Example — Just import:
 
 Adds a custom AI video provider — Settings → Video generation → Custom. Three ways: (1) simple fields for the usual async API (base_url, auth_style, submit_url + submit_body template, job_id_path, poll_url with {job_id}, status_path, video_path, optional progress/error/cancel/result) or mode "sync" when the submit response already holds the video; (2) clone a built-in preset and change its base_url (self-hosted proxies, regional endpoints); (3) a full preset object with every request template. Placeholders: {prompt} {model} {duration} {aspect_ratio} {resolution} {seed} {negative_prompt} {generate_audio} {first_frame} {last_frame} {reference_images} {source_video} {extra_json}; filters like {duration:int}, defaults {fps|24}. Local reference files are sent as data URLs (upload_mode). Keys go in afterwards with videogen.keys.add. The preset is validated and every problem is reported.
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `auth_header` | string | no |  |  | Header name for auth_style header, e.g. "x-api-key" or "Authorization". |
@@ -5742,6 +5999,10 @@ Example — fal-compatible proxy:
 
 Removes a custom AI video provider and its settings — Settings → Video generation → Custom → Remove. Built-in presets cannot be removed (remove their keys instead). Its keys stay in the vault unless remove_keys is true. Jobs that used the provider stay in the history; unfinished ones can no longer be followed.
 
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from videogen.providers, e.g. "fal". |
@@ -5761,6 +6022,8 @@ Example — Remove a custom provider:
 
 Checks that a provider is reachable and its first usable key (or key_id) is accepted, with a free request (list models / account info) — never a paid generation. tested=false means the provider has no free endpoint to check with; the key is then verified on first use. Also reports missing settings. The key's status in the vault is updated (an invalid key is marked).
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from videogen.providers, e.g. "fal". |
@@ -5779,6 +6042,10 @@ Example — Is my Runway key OK?:
 **Update video provider** · MCP tool `videogen_provider_update` · `POST /api/v1/commands/videogen.provider.update` · UI: Settings/Video generation
 
 Changes a provider's settings — Settings → Video generation. For every provider: settings (non-secret values such as the Vertex project_id and region, a regional base_url for Kling/MiniMax/DashScope/BytePlus/SiliconFlow), make_default (used when a request names no provider) and default_model. For custom providers also the simple fields of videogen.provider.add or a full replacement preset. Keys are managed with videogen.keys.*. Omitted parameters keep their value; a setting set to null returns to its default.
+
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -5852,7 +6119,7 @@ Lists the AI video generation providers Kadr can use — Settings → Video gene
 | --- | --- | --- | --- | --- | --- |
 | `configured_only` | boolean | no |  |  | Only providers that can generate now (key + settings). |
 | `include_retired` | boolean | no |  |  | Also list providers whose vendor shut the API down. |
-| `query` | string | no |  |  | Filter by text in the id, name, description, model families or tags. |
+| `query` | string | no |  |  | Filter by text in the id, name, description, model families or tags (spaces and punctuation are ignored: "omniflash" finds "Omni Flash"). |
 | `with_preset` | boolean | no |  |  | Include each provider's full preset definition (request templates, models, pricing). |
 
 **Returns:** {providers: [{id, name, description, builtin, custom, aggregator, experimental, retired, configured, needs_key, key_hint, keys {count, usable, statuses}, settings [{name, type, doc, value}], missing_settings, default_model, models, featured_models, families, capabilities, docs_url, keys_url, pricing_url, verified_from_docs, verified_at, notes, is_default}], default: {provider, model}|null}.
@@ -5873,6 +6140,24 @@ Example — Who offers Seedance?:
 
 ```json
 {"query":"seedance"}
+```
+
+### videogen.resume
+
+**Resume AI video job** · MCP tool `videogen_resume` · `POST /api/v1/commands/videogen.resume` · UI: Generate/Resume
+
+Follows a generation job the provider already accepted again, without submitting or paying for it again. Kadr keeps paid jobs through outages by itself (network down, laptop asleep, provider 5xx/429): the job stays queued/running with lost_contact_at, next_check_at and a "lost contact … checking again" message, and is checked with a growing pause (30 s up to 10 min) for up to 24 h after submission; unfinished jobs also resume automatically when Kadr starts. Call videogen.resume to check such a job right now, or to pick up a job that failed on Kadr's side (resumable=true: still unreachable after that deadline, its key or custom provider was missing, the download or disk failed) once the cause is fixed — the charge was kept for it because the provider may still bill it. Jobs the provider reported as failed, canceled or finished jobs, and jobs that never reached the provider are refused with a hint (use videogen.generate with retry_of for a new, paid take).
+
+| Parameter | Type | Required | Default | Allowed values / range | Description |
+| --- | --- | --- | --- | --- | --- |
+| `job_id` | string | yes |  |  | Job id ("vg_…") of a job waiting out an outage or failed with resumable=true. |
+
+**Returns:** Job (see videogen.generate) — queued/running/downloading again with a "checking with … again" message; follow it with videogen.job or videogen.job events.
+
+Example — Check a job that lost contact again:
+
+```json
+{"job_id":"vg_1a2b3c4d5e6f"}
 ```
 
 ## Adjustment
@@ -6205,6 +6490,8 @@ Example — Where is the API?:
 
 Changes the port (and optionally the host) of the local API and saves it in settings.json "api" — Settings → API → Port. The editor window moves the API immediately, without a restart: it binds the new port first (if that fails nothing changes and the error says why), then stops the old listener after this response is sent, rewrites <data folder>/api-endpoint.json and publishes app.api.changed. A headless kadr-server also moves live. kadrctl and kadr-mcp follow automatically because they read api-endpoint.json; scripts with a hard-coded address must use the returned url. The token does not change. Ports below 1024 are refused. host 127.0.0.1 (default) or localhost keep the API private to this computer; 0.0.0.0 exposes it to the network (token still required) and needs allow_remote=true. When KADR_ADDR is set it overrides the setting for this process: the value is saved but takes effect only when KADR_ADDR is removed (see warning). Calling it with the current values changes nothing. App setting, not a project edit: not undoable.
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `allow_remote` | boolean | no |  |  | Confirms exposing the API to other computers when host is 0.0.0.0. Anyone on the network who has the token can then control Kadr. |
@@ -6445,7 +6732,7 @@ Prices a speech before it is made and returns the confirm_token that tts.speak /
 | `rate` | number | no | `1` | 0.5 … 2 | Speaking speed multiplier: 1 = the voice's normal speed, 0.5 = half as fast, 2 = twice as fast (clamped to what the provider supports). |
 | `segment_id` | string | no |  |  | Text segment whose content tts.from_text will speak. |
 | `text` | string | no |  |  | The text that will be spoken (or use project_id + segment_id). |
-| `voice` | string | no |  |  | Voice to use: an id from tts.voices (e.g. "sapi:Microsoft Zira Desktop", "espeak:en-us", "elevenlabs:21m00Tcm4TlvDq8ikWAM", "azure:uk-UA-PolinaNeural"), a voice name, a language code ("en-US", "uk", "de" — picks a voice of that language) or part of a name ("zira"). With provider set, any voice id of that provider (also unlisted/cloned ones) (cloning models take their reference recording in params.reference). Omit for the default voice (the default provider's voice, else an English system voice). |
+| `voice` | string | no |  |  | Voice to use: an id from tts.voices (e.g. "sapi:Microsoft Zira Desktop", "espeak:en-us", "elevenlabs:21m00Tcm4TlvDq8ikWAM", "azure:uk-UA-PolinaNeural"), a voice name, a language code ("en-US", "uk", "de" — picks a voice of that language; with a multilingual cloud model that has none, its default voice speaks the language) or part of a name ("zira"). With provider set, any voice id of that provider (also unlisted/cloned ones) (cloning models take their reference recording in params.reference). Omit for the default voice (the default provider's voice, else an English system voice). |
 
 **Returns:** {provider, provider_name, model, voice, voice_name, characters, requests, seconds, paid, cost: {known, amount, currency, as_of, source, breakdown}, cost_text ("≈ $0.0040 (prices as of 2026-10-07)" | "free" | "cost unknown"), cached, requires_confirmation, confirm_token?, quota?, note?}.
 
@@ -6467,6 +6754,8 @@ Example — Price reading a text clip:
 
 Reads a text segment aloud (CapCut's Text → Text to speech): speaks the segment's content with a local or cloud voice (same provider/model/params/confirm_token rules as tts.speak — paid providers need tts.estimate {project_id, segment_id} first) and places the speech as an audio clip starting exactly at the text's start, on the first free audio track. The text and the speech are linked (shared link_group) so they move together. Running it again on the same text REPLACES its previous speech (handy after editing the words or changing the voice). sync_duration=true is CapCut's "sync text and speech": the text segment is stretched or shortened to the length of the speech (never overlapping the next clip on its track — then clamped=true). Fails with invalid_argument for non-text or empty segments, conflict for locked tracks, not_available without a speech engine.
 
+**Risk: paid** — spends money at a cloud provider; show the user the estimated cost and run it only after they agree (estimate → confirm_token).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
@@ -6478,7 +6767,7 @@ Reads a text segment aloud (CapCut's Text → Text to speech): speaks the segmen
 | `provider` | string | no |  |  | Voice provider id from tts.providers: a local engine (sapi, espeak, say) or a cloud/self-hosted one (elevenlabs, openai, azure, google, edge, kokoro, a custom id…). Omit to infer it from the voice id or use the default provider. |
 | `rate` | number | no | `1` | 0.5 … 2 | Speaking speed multiplier: 1 = the voice's normal speed, 0.5 = half as fast, 2 = twice as fast (clamped to what the provider supports). |
 | `sync_duration` | boolean | no | `false` |  | When true, set the text segment's duration to the length of the speech. |
-| `voice` | string | no |  |  | Voice to use: an id from tts.voices (e.g. "sapi:Microsoft Zira Desktop", "espeak:en-us", "elevenlabs:21m00Tcm4TlvDq8ikWAM", "azure:uk-UA-PolinaNeural"), a voice name, a language code ("en-US", "uk", "de" — picks a voice of that language) or part of a name ("zira"). With provider set, any voice id of that provider (also unlisted/cloned ones) (cloning models take their reference recording in params.reference). Omit for the default voice (the default provider's voice, else an English system voice). |
+| `voice` | string | no |  |  | Voice to use: an id from tts.voices (e.g. "sapi:Microsoft Zira Desktop", "espeak:en-us", "elevenlabs:21m00Tcm4TlvDq8ikWAM", "azure:uk-UA-PolinaNeural"), a voice name, a language code ("en-US", "uk", "de" — picks a voice of that language; with a multilingual cloud model that has none, its default voice speaks the language) or part of a name ("zira"). With provider set, any voice id of that provider (also unlisted/cloned ones) (cloning models take their reference recording in params.reference). Omit for the default voice (the default provider's voice, else an English system voice). |
 
 **Returns:** {segment_id (the new audio clip), track_id, material_id, start_us, duration_us, voice, provider, path, cached, model?, cloud?, cost?, text_segment_id, text_duration_us, synced, clamped, link_group, replaced_segment_ids[]}.
 
@@ -6499,6 +6788,10 @@ Example — Read and fit the text to the speech:
 **Add voice provider keys** · MCP tool `tts_keys_add` · `POST /api/v1/commands/tts.keys.add` · UI: Settings/Voices
 
 Stores API keys of a voice provider in the encrypted vault (Windows DPAPI / macOS Keychain) — Settings → Voices → provider → Keys. Many keys per provider are supported (e.g. ten ElevenLabs accounts): they are used in order and on quota / invalid / payment / rate-limit errors the next key takes over automatically. Pass one api_key, a batch (one key per line, "label: key" or NAME=value lines; blank lines, # comments and duplicates are skipped) or a file (.txt, .env, .csv, .json). Composite keys use the provider's key_format (AWS "ACCESS_KEY_ID:SECRET", iFlytek "APPID:APIKey:APISecret"). New keys are tested with a free request (test=false skips it) and providers needing a key become enabled. Keys are never returned — only masked previews like "sk_…a1b2". App setting, not undoable.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -6535,6 +6828,8 @@ Example — Import a file:
 
 Lists the stored keys of voice providers with masked previews only ("sk_…a1b2") — Settings → Voices → Keys: order (= failover order), label, status (ok, exhausted, invalid, rate_limited, unknown), whether it is usable now, last error (redacted), cooldown, uses/failures and the remaining quota when the provider reports it (ElevenLabs characters, Narakeet seconds). refresh_quota=true re-reads quotas (free requests). shared_from tells that a provider uses another kind's pool (e.g. the OpenAI key of the AI assistant) because its own is empty.
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | no |  |  | Only this provider (default: every voice provider that has keys). |
@@ -6559,6 +6854,10 @@ Example — ElevenLabs keys with fresh quota:
 **Remove voice provider keys** · MCP tool `tts_keys_remove` · `POST /api/v1/commands/tts.keys.remove` · UI: Settings/Voices
 
 Deletes stored keys of a voice provider from the encrypted vault — Settings → Voices → Keys → Remove: one key by key_id, or every key of the provider with all=true. Only keys of the provider's own voice pool are removed (shared assistant/video keys stay). App setting, not undoable.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -6586,6 +6885,8 @@ Example — Remove all OpenAI voice keys:
 
 Tests the stored keys of a voice provider with free requests (never a paid synthesis) and updates their status — Settings → Voices → Keys → Test: a working key becomes ok (an invalid one is revived), a rejected one invalid, an empty account exhausted, and the remaining quota is re-read where the provider reports it (ElevenLabs characters and reset time).
 
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from tts.providers. |
@@ -6604,6 +6905,10 @@ Example — Test all ElevenLabs keys:
 **Edit voice provider key** · MCP tool `tts_keys_update` · `POST /api/v1/commands/tts.keys.update` · UI: Settings/Voices
 
 Changes one stored key of a voice provider without revealing it — Settings → Voices → Keys: label, disabled (a disabled key is skipped by failover), position (0 = tried first; keys are used in order), reset_status (forget an invalid/exhausted/rate-limited mark so the key is tried again). App setting, not undoable.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -6653,6 +6958,10 @@ Example — ElevenLabs models:
 
 Adds a custom text-to-speech provider — Settings → Voices → Add provider. Modes: "openai_compatible" (simple: base_url of any server speaking OpenAI's POST /audio/speech — Kokoro, LocalAI, vLLM, a proxy — plus models and voices lists, key optional with key_optional/local); "template" (any HTTP API: request {method, url, query, headers, body (JSON with placeholders {text} {voice} {model} {speed} {lang} {text_xml} {request_id} and any params), body_type, response: {type: bytes | base64 | url | sse | ndjson, path (JSON path of the audio, e.g. "data.audio"), check}}, optional async {poll: {url: "/jobs/{job_id}"}, status, states, output: {type: url, path}} for submit→poll APIs (the submit response must extract fields.job_id), auth {style: bearer | header | query | basic | sigv4 …, header, prefix}, voices_request (a list operation)); "preset" (a full provider preset JSON, schema of internal/providers); from_preset copies a built-in preset to customise it. An api_key given here is stored encrypted in the provider's key pool. The provider is validated and saved in the data folder (no secrets in it). Test it with tts.provider.test.
 
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `api_key` | string | no |  |  | Optional key stored encrypted in the new provider's pool (never returned). |
@@ -6701,6 +7010,10 @@ Example — Copy ElevenLabs to change its settings:
 
 Removes a custom voice provider (its definition and settings; its keys too unless remove_keys=false) — Settings → Voices → provider → Remove. For a built-in provider it resets the user's choices (enabled, default model/voice, settings, auto-confirm) and removes its keys only with remove_keys=true. Speech already on the timeline is not affected. App setting, not undoable.
 
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from tts.providers. |
@@ -6726,6 +7039,10 @@ Example — Forget Azure settings and keys:
 
 Checks that a voice provider works — Settings → Voices → Test: tests every key (or key_id) with a free request (voice/model list, account or quota endpoint — never a paid synthesis), updates each key's status (ok / invalid / exhausted / rate_limited, last error) and the remaining quota (ElevenLabs characters), and reloads the voice list (keyless providers: Edge read-aloud, local servers). With sample_text it also synthesises a short sample into the data folder so the user can listen (paid providers need confirm_token from tts.estimate {provider, voice, model, text: sample_text}). Local engines are re-detected.
 
+**Risk: paid** — spends money at a cloud provider; show the user the estimated cost and run it only after they agree (estimate → confirm_token).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Provider id from tts.providers. |
@@ -6735,7 +7052,7 @@ Checks that a voice provider works — Settings → Voices → Test: tests every
 | `sample_text` | string | no |  |  | Also synthesise this short text (≤ 200 characters) and return the file path. |
 | `voice` | string | no |  |  | Voice for the sample (default: the provider's default voice). |
 
-**Returns:** {provider, ok, ready, reason?, keys: [{id, label, preview, status, usable, last_error, quota, ok, error}], voices, live, voices_error?, sample?: {path, duration_us, voice, model, cost?}}.
+**Returns:** {provider, ok, ready, reason?, keys: [{id, label, preview, status, usable, last_error, quota, ok, error}], voices, live, voices_error?, sample?: {path, url (GET it with the API token to play the WAV), duration_us, voice, model, cost?}}.
 
 Example — Check all ElevenLabs keys and quota:
 
@@ -6754,6 +7071,10 @@ Example — Hear a free Edge voice:
 **Configure voice provider** · MCP tool `tts_provider_update` · `POST /api/v1/commands/tts.provider.update` · UI: Settings/Voices
 
 Changes how a voice provider is used — Settings → Voices → provider: enabled (keyless providers such as the free Edge read-aloud and local servers stay off until enabled; providers with keys are on automatically), default_model, default_voice, settings values (Azure region, Polly region, base_url of a self-hosted server, MiniMax host…; null removes one), auto_confirm_under (amount in the provider's currency below which paid speech needs no cost confirmation; 0 = always ask), make_default (use this provider when tts.speak gets no voice/provider). For custom providers also name, description, base_url, models, voices, request, async, voices_request, auth, vars or a whole preset. Never touches keys (tts.keys.*). App setting, not undoable.
+
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Provider settings decide where the stored API keys are sent and what is spent (endpoint, sign-in, headers, default model, auto-confirm amount), so only the user changes or tests them in Kadr's Settings. Pick the provider and model per call instead (the provider/model arguments of tts.speak or videogen.generate).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -6835,6 +7156,10 @@ Example — Providers with Ukrainian voices:
 
 Kadr 1.0 shortcut kept for compatibility: stores (or clears) the API key of a cloud voice provider so tts.voices / tts.speak / tts.from_text can use its voices next to the local engines (e.g. provider "elevenlabs": voice ids look like "elevenlabs:<voice_id>"). The key goes into the provider's encrypted key pool as the FIRST key (other keys stay as failover); clear=true removes ALL keys of that provider's voice pool. The key is never returned, never written to projects and only sent to the provider's own API; text you synthesise is sent to the provider. The voice list is refreshed and the result reports whether the key works. For several keys and their status use tts.keys.add / tts.keys.list.
 
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: API keys and passwords are managed only by the user in Kadr's Settings; AI agents never see, add, test or change them.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `provider` | string | yes |  |  | Cloud voice provider id ("elevenlabs", "openai", "azure" … see tts.providers). |
@@ -6855,6 +7180,8 @@ Example — Use ElevenLabs voices:
 
 Speaks text and adds the speech to the timeline as a new audio clip (CapCut's Text to speech → Add to timeline). The speech is rendered by the selected engine — a local one (Windows SAPI, eSpeak NG, macOS say) or a cloud/self-hosted provider (ElevenLabs, OpenAI, Azure, Google, Edge, Kokoro… — see tts.providers, tts.voices, tts.models; long text is split for providers with short limits and joined), trimmed of leading/trailing silence, loudness-normalised to about -16 LUFS (peaks <= -1.5 dBTP, so voice-overs from every engine sound equally loud) and saved as a 48 kHz WAV in the project's cache (cache/tts/); the file is imported as a material named "Speech: <text>" and placed at at_us on the first free audio track (a new audio track when all are busy, or on track_id). The same text, voice and rate reuse the cached file. Up to 5000 characters per call; for narration split long scripts into sentences or paragraphs. PAID cloud providers need the user's consent: call tts.estimate first, show the cost and pass its confirm_token (invalid_argument field confirm_token otherwise); the charge is recorded in the spending ledger and the daily limit applies (spending.get). Fails with not_available when no engine/provider is usable (the hint explains what to install or configure) and not_found for an unknown voice.
 
+**Risk: paid** — spends money at a cloud provider; show the user the estimated cost and run it only after they agree (estimate → confirm_token).
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
@@ -6867,7 +7194,7 @@ Speaks text and adds the speech to the timeline as a new audio clip (CapCut's Te
 | `provider` | string | no |  |  | Voice provider id from tts.providers: a local engine (sapi, espeak, say) or a cloud/self-hosted one (elevenlabs, openai, azure, google, edge, kokoro, a custom id…). Omit to infer it from the voice id or use the default provider. |
 | `rate` | number | no | `1` | 0.5 … 2 | Speaking speed multiplier: 1 = the voice's normal speed, 0.5 = half as fast, 2 = twice as fast (clamped to what the provider supports). |
 | `track_id` | string | no |  |  | Audio track to put the clip on; when it is busy at that time a new audio track is created next to it. Omit to use the first free audio track. |
-| `voice` | string | no |  |  | Voice to use: an id from tts.voices (e.g. "sapi:Microsoft Zira Desktop", "espeak:en-us", "elevenlabs:21m00Tcm4TlvDq8ikWAM", "azure:uk-UA-PolinaNeural"), a voice name, a language code ("en-US", "uk", "de" — picks a voice of that language) or part of a name ("zira"). With provider set, any voice id of that provider (also unlisted/cloned ones) (cloning models take their reference recording in params.reference). Omit for the default voice (the default provider's voice, else an English system voice). |
+| `voice` | string | no |  |  | Voice to use: an id from tts.voices (e.g. "sapi:Microsoft Zira Desktop", "espeak:en-us", "elevenlabs:21m00Tcm4TlvDq8ikWAM", "azure:uk-UA-PolinaNeural"), a voice name, a language code ("en-US", "uk", "de" — picks a voice of that language; with a multilingual cloud model that has none, its default voice speaks the language) or part of a name ("zira"). With provider set, any voice id of that provider (also unlisted/cloned ones) (cloning models take their reference recording in params.reference). Omit for the default voice (the default provider's voice, else an English system voice). |
 
 **Returns:** {segment_id, track_id, material_id, start_us, duration_us, voice (voice id used), provider, path, cached, model?, cloud?, cost?}.
 
@@ -8087,6 +8414,8 @@ Example — Install Caveat and wait until it is ready:
 
 Deletes a font family that was installed with font.install or font.import (library.list kind=font category=Downloaded) from the Kadr data folder. Built-in, bundled and operating-system fonts cannot be removed here (conflict). Texts that use the removed font fall back to Go Sans until it is installed again (font.install restores catalogue fonts with the same id). Publishes fonts.changed.
 
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `font_id` | string | yes |  |  | Font id of a downloaded/imported family, e.g. "montserrat". |
@@ -8810,6 +9139,8 @@ Example — Apply a saved caption look to a text clip:
 
 Removes a preset from the user's kit (My kit → card → Delete). Clips that already use the look keep it — presets are copied into clips when applied, never linked. This cannot be undone with edit.undo because the kit is not part of a project.
 
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `preset_id` | string | yes |  |  | ID of a saved preset ("pst_…"). Get it from presets.list. |
@@ -8947,13 +9278,15 @@ Example — Vertical video for TikTok:
 
 **Delete project** · MCP tool `project_delete` · `POST /api/v1/commands/project.delete` · UI: Home/Project menu/Delete
 
-Permanently deletes a project and its undo history. Imported media files on disk are NOT deleted. This cannot be undone. Same as Delete in the Home screen context menu.
+Permanently deletes a project, its folder and its undo history. This cannot be undone. Same as Delete in the Home screen context menu. Imported media files on disk are NOT deleted; files inside the project's own folder (AI-generated videos, speech, generated media, mattes, caches) are. Before that, any other project that still uses one of those files (a copy made by an older version, media imported from this project's folder) gets its own copy in its own folder and its paths — undo history included — are repointed, so no other project loses media; kept_files / kept_for in the result report it.
+
+**Risk: delete** — deletes data from disk and cannot be undone with edit.undo; confirm with the user first.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `project_id` | string | yes |  |  | ID of the project to operate on (e.g. "prj_8f3a..."). Get it from project.list or project.create. |
 
-**Returns:** {deleted: true, project_id}.
+**Returns:** {deleted: true, project_id, kept_files?, kept_for?}: kept_files = files handed to the projects listed in kept_for (omitted when none).
 
 Example — Delete:
 
@@ -8965,7 +9298,7 @@ Example — Delete:
 
 **Duplicate project** · MCP tool `project_duplicate` · `POST /api/v1/commands/project.duplicate` · UI: Home/Project menu/Duplicate
 
-Creates an independent copy of a project with a new id. The copy is named "<name> copy" unless a name is given. Media files are referenced, not copied. Same as Duplicate in the Home screen context menu.
+Creates an independent copy of a project with a new id. The copy is named "<name> copy" unless a name is given. Same as Duplicate in the Home screen context menu. Imported media files stay where they are and are referenced, not copied. Files that live inside the project's own folder — AI-generated videos (ai-video/), speech (cache/tts/), generated media, background-removal mattes, proxies — are given to the copy (hard-linked when the disk allows it, so no extra space is used; copied otherwise) and the copy's paths point to them, so deleting either project never breaks the other and paid results never have to be made again.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -9127,6 +9460,8 @@ Example — Current render settings:
 
 Changes how Kadr renders and how much video memory it may use (Settings → Rendering) and saves it in settings.json "render". Only the given fields change. mode: auto (default; GPU when available, else CPU), gpu (refused when no usable GPU exists), cpu (always the CPU renderer). adapter: an index or name from render.devices (or a part of a name such as "RTX 3060"; numbers are indexes), "" = the recommended high-performance one. vram_limit_mb: how much VRAM Kadr may use, 0 = automatic (all of it minus reserve_mb); at least 256 and not more than the adapter's total VRAM (a round size like 12288 on a card the driver reports as 12115 MB is taken as "all of it"). reserve_mb: VRAM always left free for the system (default 512). The effective cap is min(vram_limit_mb or total, total − reserve_mb, OS budget): choosing 12288 on a 12 GB card leaves 512 MB for Windows and uses at most 11776 MB. Applies to the next frame or export, no restart; an export already running keeps its renderer. Picking a software adapter (device_type "cpu", e.g. Microsoft Basic Render Driver) is allowed for testing but returns a warning: it is many times slower than mode "cpu". App setting, not a project edit: not undoable. Calling it without changes returns the current settings with changed=false.
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `adapter` | string | no |  |  | GPU to use: index or name from render.devices (a part such as "RTX 3060" is enough; a plain number is an index); "" = the recommended adapter. Omit to keep. |
@@ -9171,6 +9506,10 @@ Reference page: https://gitkalenyuk.github.io/kadr/docs/ai/reference/settings.ht
 
 Writes every stored secret — all API key pools (with labels, order and enabled state) and other provider secrets — to one password-protected backup file, so they can be moved to another computer or user (the OS encryption of the vault cannot travel) — Settings → Secrets → Export. The file is AES-256-GCM encrypted with a key derived from the password by PBKDF2-HMAC-SHA256 (600 000 iterations); without the password it is useless. Only run this when the user explicitly asks for a backup: anyone with the file and the password gets every key. The result reports counts only, never a key. Keys that cannot be decrypted on this computer are skipped (skipped > 0). An existing file is not replaced unless overwrite=true. App setting, not undoable.
 
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The key vault (status, export and import of every stored key) is managed only by the user in Kadr's Settings; AI agents never read, export or import it.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `password` | string | yes |  |  | Password protecting the file, at least 8 characters. It is not stored anywhere; it is needed to import. |
@@ -9190,6 +9529,10 @@ Example — Back up all API keys:
 **Import secrets** · MCP tool `secrets_import` · `POST /api/v1/commands/secrets.import` · UI: Settings/Secrets/Import
 
 Reads a backup written by secrets.export and stores its secrets in this computer's encrypted vault — Settings → Secrets → Import. mode "merge" (default) appends keys missing from each provider's pool (a key already present is counted in keys_duplicate and skipped; imported keys go to the end of the failover order with status unknown) and adds or overwrites other secrets; mode "replace" first deletes every secret stored here, then imports — use it only when the user asks to restore exactly the backup. A wrong password or a damaged file changes nothing (invalid_argument). Returns counts and the affected pools, never a key. App setting, not undoable.
+
+**Risk: secret** — handles credentials; only the user runs it (agents never send, read or change keys and passwords).
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The key vault (status, export and import of every stored key) is managed only by the user in Kadr's Settings; AI agents never read, export or import it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -9216,6 +9559,8 @@ Example — Replace everything with the backup:
 **Secret vault status** · MCP tool `secrets_status` · `POST /api/v1/commands/secrets.status` · UI: Settings/Secrets
 
 Describes where Kadr keeps API keys and how they are protected — Settings → Secrets. backend is "dpapi" (Windows Data Protection API: only this Windows user on this computer can decrypt), "keychain" (macOS login Keychain, service "Kadr") or "file" (Linux/other: a 0600 file, NOT encrypted — warning explains it). Lists every key pool (kind tts | video | llm …, provider id) with masked keys ("sk_…a1b2"), each key's status (ok, exhausted, invalid, rate_limited, unknown), last error, cooldown and remaining quota when the provider reports it, and how many keys are usable now. Never returns a secret value. Use the owning module's commands (tts.keys.*, videogen.keys.*, assistant settings) to add or remove keys; secrets.export / secrets.import back everything up.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: The key vault (status, export and import of every stored key) is managed only by the user in Kadr's Settings; AI agents never read, export or import it.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -9265,6 +9610,8 @@ Example — Last 30 days, no individual charges:
 **Set spending limit** · MCP tool `spending_set_limit` · `POST /api/v1/commands/spending.set_limit` · UI: Settings/Spending
 
 Sets the daily spending limit for paid AI providers — Settings → Spending. Before a paid generation or cloud voice call Kadr reserves its estimated cost; if today's spending plus running jobs plus that estimate would exceed the limit, the call is refused (conflict error with a hint) instead of spending. daily is the limit for all providers together (0 removes it); provider + provider_daily set a separate limit for one provider id (the preset id, e.g. "fal", "elevenlabs", "runway"; 0 removes it). Calls whose cost is unknown are not blocked by the limit — the UI and the assistant still ask before running them. Omitted parameters keep their value. App setting, not undoable.
+
+**User only** — the built-in AI assistant never runs it; kadr-mcp offers it unless started with `--hide-user-only`. Reason given when refused: Only the user changes the daily spending limit (Kadr's Settings → Spending).
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -10636,6 +10983,8 @@ Example — Cancel the download:
 
 Downloads FFmpeg for Kadr — the first-run "Download now" button. Fetches the BtbN GPL build of FFmpeg 7.1 for Windows x64 (about 100 MB) from GitHub, verifies its SHA-256 against the checksums.sha256 file of the same release (a mismatch deletes the download and fails), then extracts ONLY ffmpeg.exe and ffprobe.exe into %LOCALAPPDATA%\Kadr\tools\ffmpeg\bin where Kadr finds them immediately (no restart). Runs in the background and returns at once unless wait=true; progress arrives as tools.progress events (state downloading → verifying → extracting → done | failed | cancelled), or poll tools.status; stop it with tools.cancel. When FFmpeg is already available (PATH, next to Kadr, chosen folder) nothing is downloaded and already_installed=true, unless force=true. FFmpeg is licensed under the GPL (https://ffmpeg.org/legal.html). Only supported on Windows x64 (not_available elsewhere).
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `force` | boolean | no | `false` |  | Download Kadr's own copy even when an FFmpeg is already found (e.g. a broken or very old one on PATH). |
@@ -10661,6 +11010,8 @@ Example — Download and wait until installed:
 **Use my FFmpeg** · MCP tool `tools_set_ffmpeg_dir` · `POST /api/v1/commands/tools.set_ffmpeg_dir` · UI: First run/I have FFmpeg
 
 Points Kadr at an FFmpeg that is already on this computer — "I have FFmpeg — choose folder". The folder (or its bin subfolder) must contain both ffmpeg.exe and ffprobe.exe and ffmpeg must run ("-version"); it is saved as ffmpeg_dir in settings.json, used from now on (no restart) and on every start, and takes precedence over the copy next to Kadr, the downloaded copy and PATH. clear=true forgets the folder.
+
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -11051,6 +11402,8 @@ Example — Look for pre-releases too:
 
 Downloads the installer of the newest version found by update.check (runs a check first when none was done in this session) into %TEMP%\Kadr-update\ and verifies its exact size and SHA-256 against the signed latest.json; a file that does not match is deleted and the update is refused. Runs in the background and returns immediately (state "downloading") unless wait=true; progress arrives as update.progress events, completion as update.ready, errors as update.failed. An installer already downloaded and verified is reused. Does not install anything — call update.install afterwards. Refused with not_available for portable builds, development builds without a signing key and releases without a Windows installer (open release_url instead), and with conflict when Kadr is already up to date.
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `wait` | boolean | no | `false` |  | Block until the download finished and was verified (can take minutes for ~100 MB) instead of returning at once. |
@@ -11075,6 +11428,8 @@ Example — Download and wait until verified:
 
 Installs the newest version and restarts Kadr — the "Download & install" button. Downloads and verifies the installer first if update.download has not finished (SHA-256 + size from the Ed25519-signed latest.json, checked again right before running), then starts it detached with /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS /RELAUNCH and closes the desktop app about a second later. The installer upgrades in place, keeps all projects and settings, closes running Kadr processes (Kadr.exe, kadr-server.exe, kadr-mcp.exe) and starts Kadr again when done, so API clients lose their connection for a minute. UNSAVED WORK: projects are saved after every command, but running exports are cancelled. Requires confirm=true as a safety check. In the headless server nothing quits by itself: the result asks to exit. Refused for portable builds and builds without a signing key (not_available).
 
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
+
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
 | `confirm` | boolean | yes |  |  | Must be true: confirms that Kadr may close (running exports stop) and the installer may run. |
@@ -11091,7 +11446,9 @@ Example — Install the downloaded update and restart:
 
 **Update settings** · MCP tool `update_settings` · `POST /api/v1/commands/update.settings` · UI: Settings/Updates
 
-Reads or changes the updater preferences stored in <data dir>/settings.json (key "update"). Without arguments it only returns them. auto_check (default on) makes Kadr check GitHub in the background after startup, at most once every 24 hours, never blocking the editor (a private channel without access stays silent); channel picks stable releases or also beta pre-releases. Regular builds such as 1.0.0 use the stable channel; builds that are themselves pre-releases default to beta. github_token stores the GitHub access token the vendor gave you for the private release channel (a fine-grained token with read-only Contents access to the release repository, or a classic token with repo scope); it is saved as update.github_token in settings.json, used only for requests to the GitHub API, and NEVER returned — results only show github_token_set and github_token_source (env = the KADR_UPDATE_TOKEN environment variable, which wins over the saved one; settings). Pass "" to remove it. Changing settings does not check by itself — call update.check afterwards.
+Reads or changes the updater preferences stored in <data dir>/settings.json (key "update"). Without arguments it only returns them. auto_check (default on) makes Kadr check GitHub in the background after startup, at most once every 24 hours, never blocking the editor (a private channel without access stays silent); channel picks stable releases or also beta pre-releases. Regular builds such as 1.0.0 use the stable channel; builds that are themselves pre-releases default to beta. github_token stores the GitHub access token the vendor gave you for the private release channel (a fine-grained token with read-only Contents access to the release repository, or a classic token with repo scope); it is stored encrypted in Kadr's secret vault (Windows DPAPI, macOS Keychain; Linux: a 0600 file — namespace "update", name "github_token", never in settings.json; a token an older version left in settings.json is moved into the vault on start), used only for requests to the GitHub API, and NEVER returned — results only show github_token_set and github_token_source (env = the KADR_UPDATE_TOKEN environment variable, which wins over the saved one; settings = saved with this command). Pass "" to remove it. AI agents never pass github_token (the built-in assistant refuses calls that carry credentials). Changing settings does not check by itself — call update.check afterwards.
+
+**Risk: system** — changes the Kadr installation or this computer's setup; confirm with the user first.
 
 | Parameter | Type | Required | Default | Allowed values / range | Description |
 | --- | --- | --- | --- | --- | --- |
