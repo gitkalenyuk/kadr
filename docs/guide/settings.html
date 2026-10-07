@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Settings &amp; updates — Kadr</title>
-<meta name="description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, the API port for AI agents, portable mode and uninstalling.">
+<meta name="description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, voices, AI video generation, the AI assistant, the daily spending limit and your encrypted keys, the API port for AI agents, portable mode and uninstalling.">
 <link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/settings.html">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="uk_UA">
 <meta property="og:title" content="Settings &amp; updates — Kadr">
-<meta property="og:description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, the API port for AI agents, portable mode and uninstalling.">
+<meta property="og:description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, voices, AI video generation, the AI assistant, the daily spending limit and your encrypted keys, the API port for AI agents, portable mode and uninstalling.">
 <meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/guide/settings.html">
 <meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Settings &amp; updates — Kadr">
-<meta name="twitter:description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, the API port for AI agents, portable mode and uninstalling.">
+<meta name="twitter:description" content="Kadr settings explained: automatic updates (with an update token), GPU rendering and the video memory limit, FFmpeg setup, voices, AI video generation, the AI assistant, the daily spending limit and your encrypted keys, the API port for AI agents, portable mode and uninstalling.">
 <meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
 <link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/css/base.css">
@@ -96,7 +96,7 @@
     <div class="side-group"><ul><li><a href="../../docs/guide/index.html"><span>Overview</span></a></li></ul></div>
     <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/guide/getting-started.html"><span>Getting started</span></a></li><li><a href="../../docs/guide/interface.html"><span>Interface tour</span></a></li><li><a href="../../docs/guide/projects.html"><span>Projects</span></a></li></ul></div>
     <div class="side-group"><p class="side-title">Editing</p><ul><li><a href="../../docs/guide/import-media.html"><span>Import media</span></a></li><li><a href="../../docs/guide/timeline.html"><span>Timeline editing</span></a></li><li><a href="../../docs/guide/player.html"><span>Player &amp; preview</span></a></li></ul></div>
-    <div class="side-group"><p class="side-title">Creating</p><ul><li><a href="../../docs/guide/text.html"><span>Text &amp; titles</span></a></li><li><a href="../../docs/guide/fonts.html"><span>Fonts</span></a></li><li><a href="../../docs/guide/captions.html"><span>Captions &amp; transcript</span></a></li><li><a href="../../docs/guide/effects.html"><span>Effects &amp; colour</span></a></li><li><a href="../../docs/guide/audio.html"><span>Audio</span></a></li><li><a href="../../docs/guide/stickers.html"><span>Stickers &amp; generated media</span></a></li><li><a href="../../docs/guide/ai-tools.html"><span>AI tools</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Creating</p><ul><li><a href="../../docs/guide/text.html"><span>Text &amp; titles</span></a></li><li><a href="../../docs/guide/fonts.html"><span>Fonts</span></a></li><li><a href="../../docs/guide/captions.html"><span>Captions &amp; transcript</span></a></li><li><a href="../../docs/guide/effects.html"><span>Effects &amp; colour</span></a></li><li><a href="../../docs/guide/audio.html"><span>Audio</span></a></li><li><a href="../../docs/guide/voices.html"><span>Voices</span></a></li><li><a href="../../docs/guide/stickers.html"><span>Stickers &amp; generated media</span></a></li><li><a href="../../docs/guide/video-generation.html"><span>AI video</span></a></li><li><a href="../../docs/guide/ai-tools.html"><span>AI tools</span></a></li><li><a href="../../docs/guide/assistant.html"><span>AI assistant</span></a></li></ul></div>
     <div class="side-group"><p class="side-title">Finishing</p><ul><li><a href="../../docs/guide/export.html"><span>Export</span></a></li></ul></div>
     <div class="side-group"><p class="side-title">Help</p><ul><li><a href="../../docs/guide/shortcuts.html"><span>Keyboard shortcuts</span></a></li><li><a href="../../docs/guide/settings.html" aria-current="page"><span>Settings &amp; updates</span></a></li><li><a href="../../docs/guide/troubleshooting.html"><span>Troubleshooting &amp; FAQ</span></a></li></ul></div>
   </nav>
@@ -106,14 +106,14 @@
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/guide/index.html">User guide</a></li><li><span aria-current="page">Settings &amp; updates</span></li></ol></nav>
     
     <article class="prose">
-<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Help</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 min read</span></p><h1>Settings &amp; updates</h1></header><p class="lead">Kadr has very few settings — most choices live where you use them. The Settings window covers updates, rendering on your graphics card, FFmpeg, voices, the API for AI agents and information about your installation.</p>
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Help</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>8 min read</span></p><h1>Settings &amp; updates</h1></header><p class="lead">Kadr has very few settings — most choices live where you use them. The Settings window covers updates, rendering on your graphics card, FFmpeg, voices, AI video generation, the AI assistant, spending and keys, the API for AI agents and information about your installation.</p>
 
 <h2 id="open">Open Settings<a class="anchor" href="#open" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <ul>
   <li>On the home screen: <strong>Settings</strong> at the bottom left.</li>
   <li>In the editor: <strong>Menu → Settings…</strong>, or <strong>Menu → Check for updates…</strong> to jump straight to updates.</li>
 </ul>
-<p>The window has six sections: <strong>About</strong>, <strong>Updates</strong>, <strong>Rendering</strong>, <strong>FFmpeg</strong>, <strong>Voices</strong> and <strong>API &amp; agents</strong>.</p>
+<p>The window has nine sections: <strong>About</strong>, <strong>Updates</strong>, <strong>Rendering</strong>, <strong>FFmpeg</strong>, <strong>Voices</strong>, <strong>Video generation</strong>, <strong>AI assistant</strong>, <strong>Spending</strong> and <strong>API &amp; agents</strong>.</p>
 
 <h2 id="about">About<a class="anchor" href="#about" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>Shows your Kadr <strong>Version</strong> (with a <em>Pre-release</em> or <em>Portable</em> label when that applies), the build, the platform and the FFmpeg version. Two lines are especially useful:</p>
@@ -160,7 +160,28 @@
 <p>When FFmpeg is found, the status line shows its version and where it came from: <em>Downloaded by Kadr</em>, <em>Folder you chose</em>, <em>Next to Kadr</em> or <em>System PATH</em>. FFmpeg is free software under the GPL licence; it is a separate program, not part of Kadr.</p>
 
 <h2 id="voices">Voices<a class="anchor" href="#voices" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
-<p>Voices for text-to-speech: the voices installed on your computer, voices Kadr can download, and the optional ElevenLabs key for cloud voices. See <a href="../../docs/guide/audio.html">Audio</a>.</p>
+<p>Voices for text to speech. At the top, the built-in engines (Windows voices, eSpeak NG) with their voice counts and the default voice. Below, <strong>Cloud &amp; self-hosted providers</strong>: add ElevenLabs, OpenAI, Azure, Google and 35 more services or your own speech server, store their keys, pick models and voices, and decide when Kadr asks before paying. Everything is explained in <a href="../../docs/guide/voices.html">Voices</a>; how to make a voice-over is in <a href="../../docs/guide/audio.html#tts">Audio</a>.</p>
+
+<h2 id="video-generation">Video generation<a class="anchor" href="#video-generation" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>The providers for AI video generation (Google Veo, Kling, Seedance, Wan, Runway, fal.ai, Replicate and many more): their keys, settings such as a region or a Google Cloud project, the default model and provider, and custom providers. Kadr always asks before a paid generation. See <a href="../../docs/guide/video-generation.html">AI video generation</a>.</p>
+
+<h2 id="assistant">AI assistant<a class="anchor" href="#assistant" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>What powers the built-in assistant: <strong>Agents on this computer</strong> (Claude Code, Codex, Gemini CLI and others, with <strong>Install</strong>, <strong>Sign in</strong> and <strong>Test</strong>) and <strong>API providers</strong> (Anthropic, OpenAI, Gemini, OpenRouter, local Ollama and LM Studio…). Here you also choose the default backend and model, the default <strong>Permissions</strong> mode, how long <strong>Chat history</strong> is kept and a few limits for long chats. See <a href="../../docs/guide/assistant.html">AI assistant</a>.</p>
+
+<h2 id="spending">Spending<a class="anchor" href="#spending" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Cloud voices, AI video and the assistant's API providers cost money at the provider. This section shows what Kadr estimates you spent <strong>today</strong>, your <strong>daily limit</strong> and what is <strong>left today</strong>, today's spending by provider and a <strong>History</strong> of every paid request for the last 7, 30 or 90 days.</p>
+<ul>
+  <li><strong>Daily limit</strong> — the most Kadr may spend per day on all paid AI providers together (in dollars or another currency; empty = no limit). It resets at local midnight.</li>
+  <li><strong>Per provider</strong> — an extra limit for one provider, for example 2 USD a day for fal.ai.</li>
+</ul>
+<p>Before a paid request Kadr reserves its estimated cost; if today's spending plus running jobs plus that estimate would go over a limit, the request is refused and nothing is spent. Amounts are estimates from the providers' published prices (or the cost the provider reports); your bill comes from the provider.</p>
+
+<h3 id="secrets">Keys &amp; secrets<a class="anchor" href="#secrets" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3>
+<p>All API keys are kept in one encrypted vault on this computer. <strong>Protection</strong> shows how: on Windows the keys are encrypted for your user account (Windows Data Protection), on a Mac they are in the login Keychain; <strong>Location</strong> shows the file. Keys never appear in projects, exports or logs.</p>
+<ul>
+  <li><strong>Export</strong> writes every key (with labels and order) into one file protected by a password you choose — for moving to another computer or a backup. Anyone with the file and the password gets your keys, so keep both safe.</li>
+  <li><strong>Import</strong> reads such a file: <strong>Merge with my keys</strong> adds the keys you don't have yet; <strong>Replace everything</strong> first removes the keys stored here.</li>
+</ul>
 
 <h2 id="api">API &amp; agents<a class="anchor" href="#api" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
 <p>Everything you click in Kadr can also be done by scripts and AI assistants (Claude Code, Codex, Cursor, Claude Desktop…). This section shows the local <strong>API address</strong> (by default <code>http://127.0.0.1:7777</code>) with its state (<em>Listening</em>), a link to the built-in <strong>Documentation</strong>, the <strong>Token file</strong> that protects the API, the <strong>Endpoint file</strong>, and under <strong>Connect an AI agent</strong> ready-to-copy setup for each agent with the right paths. You don't need any of this to edit videos — but if you're curious, read the <a href="../../docs/ai/index.html">AI documentation</a>.</p>
@@ -189,7 +210,7 @@
     </article>
     <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/guide/shortcuts.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Keyboard shortcuts</b></a><a class="pager-next" href="../../docs/guide/troubleshooting.html" rel="next"><span>Next</span><b>Troubleshooting &amp; FAQ<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
   </main>
-  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#open">Open Settings</a></li><li class="lvl-2"><a href="#about">About</a></li><li class="lvl-2"><a href="#updates">Updates</a></li><li class="lvl-3"><a href="#update-read">Read what's new</a></li><li class="lvl-3"><a href="#update-download">Download</a></li><li class="lvl-3"><a href="#update-install">Install</a></li><li class="lvl-2"><a href="#rendering">Rendering</a></li><li class="lvl-2"><a href="#ffmpeg">FFmpeg</a></li><li class="lvl-2"><a href="#voices">Voices</a></li><li class="lvl-2"><a href="#api">API &amp; agents</a></li><li class="lvl-2"><a href="#portable">Portable mode</a></li><li class="lvl-2"><a href="#uninstall">Uninstall</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#open">Open Settings</a></li><li class="lvl-2"><a href="#about">About</a></li><li class="lvl-2"><a href="#updates">Updates</a></li><li class="lvl-3"><a href="#update-read">Read what's new</a></li><li class="lvl-3"><a href="#update-download">Download</a></li><li class="lvl-3"><a href="#update-install">Install</a></li><li class="lvl-2"><a href="#rendering">Rendering</a></li><li class="lvl-2"><a href="#ffmpeg">FFmpeg</a></li><li class="lvl-2"><a href="#voices">Voices</a></li><li class="lvl-2"><a href="#video-generation">Video generation</a></li><li class="lvl-2"><a href="#assistant">AI assistant</a></li><li class="lvl-2"><a href="#spending">Spending</a></li><li class="lvl-3"><a href="#secrets">Keys &amp; secrets</a></li><li class="lvl-2"><a href="#api">API &amp; agents</a></li><li class="lvl-2"><a href="#portable">Portable mode</a></li><li class="lvl-2"><a href="#uninstall">Uninstall</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
 </div>
 <footer class="footer">
   <div class="footer-glow" aria-hidden="true"></div>

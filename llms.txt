@@ -1,6 +1,6 @@
 # Kadr
 
-> Kadr is a free, offline CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 188 commands with parameters, units and examples — while a human watches the edits live in the editor.
+> Kadr is a free, offline-first CapCut-style desktop video editor in which every action is a documented command. AI agents drive it through MCP (`kadr-mcp`), a local REST API (`http://127.0.0.1:7777/api/v1`) or the `kadrctl` CLI — 249 commands with parameters, units and examples — while a human watches the edits live in the editor.
 
 Key facts for agents:
 
@@ -10,11 +10,14 @@ Key facts for agents:
 - Model: project (`prj_…`) → tracks (`trk_…`, compositing order, one magnetic `main_video` track) → segments (`seg_…`, timeline range + source range) → materials (`mat_…`). Transitions live on the left clip; keyframe times are relative to the segment; positions are canvas fractions with +Y down; `volume_db` is dB but `volume` keyframes are linear.
 - Work loop: read state (`timeline_get`), batch related edits, look at `preview_frame` / `preview_contact_sheet` (returned as images over MCP), follow error hints, poll long jobs (`captions_status` with `wait_s`, `export_status`).
 - Library: discover ids with `library_list` (kind + category/query; 221 transitions, 195 effects, 227 filters, 310 clip animations, 175 text templates, 114 word-art effects, 137 text animations, 55 caption styles, 394 stickers, 98 generated-media presets) and look before choosing with `library_preview` (a PNG contact sheet of how the item plays, returned as an image over MCP). Items that move carry `preview` {url, frames, fps, width, height} (JPEG sprite strip).
+- Paid AI providers (optional): cloud voices (`tts_*`, 39 cloud/self-hosted providers besides the offline engines) and AI video generation (`videogen_*`, 37 providers). Every paid call needs `confirm_token` from `tts_estimate` / `videogen_estimate` — show the price to the user and pass the token only after they agree (it is bound to the exact arguments, valid 15 min). A daily spending limit refuses calls beyond it (`spending_get`). Identical earlier results are reused for free. Video jobs are async: poll `videogen_job`; with `start_us`+`duration_us` or `segment_id` the result is placed into the timeline as one undo step.
+- Keys are never visible to agents: they live in an OS-encrypted vault (pools per provider with failover); no result, event or error contains one. Ask the user to add keys in Settings → Voices / Video generation / AI assistant; never put keys in prompts.
+- Kadr also has a built-in AI assistant (`assistant_send`, events `assistant.*`, `assistant_approve`, `assistant_revert`) that runs CLI agents (Claude Code, Codex, Gemini CLI…) with a per-run MCP server or LLM APIs with six meta-tools; commands carry a `risk` class (paid, delete, overwrite, system, secret) in `GET /api/v1/commands` that its permission gate uses.
 - Fonts: `library_list` kind=font lists installed fonts; `font_catalog` lists 146 free OFL families (offline); `font_install` {id} downloads one, after which its id works in `text_update` {font}; `font_import` {path} adds a local .ttf/.otf. An uninstalled font id fails with not_found.
 
 ## Start
 
-- [Kadr for AI agents](https://gitkalenyuk.github.io/kadr/docs/ai/index.html): What an AI agent can do in Kadr, how the editor is modelled, how to connect over MCP, REST or the CLI, and how Kadr keeps your machine safe.
+- [Kadr for AI agents](https://gitkalenyuk.github.io/kadr/docs/ai/index.html): What an AI agent can do in Kadr, how the editor is modelled, how to connect over MCP, REST or the CLI, how paid AI providers and the built-in assistant fit in, and how Kadr keeps your machine and money safe.
 - [Quick start: Claude Code](https://gitkalenyuk.github.io/kadr/docs/ai/claude-code.html): Connect Claude Code to Kadr with one command, check the connection, pre-approve tools and try your first prompts.
 - [Claude Desktop](https://gitkalenyuk.github.io/kadr/docs/ai/claude-desktop.html): Add Kadr to Claude Desktop with a short claude_desktop_config.json entry, restart, and let Claude edit while you watch.
 - [Other MCP clients](https://gitkalenyuk.github.io/kadr/docs/ai/other-mcp-clients.html): Connect Cursor, VS Code, Windsurf, Codex CLI, Gemini CLI or any other MCP client to Kadr, test the bridge by hand, and use agents without MCP.
@@ -30,8 +33,10 @@ Key facts for agents:
 - [Concepts](https://gitkalenyuk.github.io/kadr/docs/ai/concepts.html): The rules an agent needs: projects, tracks, segments and materials, microsecond time, compositing order, the magnetic main track, linked clips, transitions, keyframes and easing, coordinates, volume units, ids and undo.
 - [Library, previews and fonts](https://gitkalenyuk.github.io/kadr/docs/ai/library.html): How an agent finds transitions, effects, filters, animations, text looks, stickers and generated media in Kadr's library, looks at them with library.preview before choosing, installs free fonts and uses the word-art fields of TextStyle.
 - [Working visibly with a human watching](https://gitkalenyuk.github.io/kadr/docs/ai/working-visibly.html): Let a person follow an agent’s work in the Kadr window: open the project, select the clip being edited, switch library tabs, move the playhead and narrate with notifications.
+- [Voices, AI video and money](https://gitkalenyuk.github.io/kadr/docs/ai/paid-providers.html): How an agent uses Kadr's cloud voices and AI video generation safely: find what is configured, never touch keys, price every paid call with an estimate, ask the user, pass the confirm token, follow the job, place the result and respect the daily spending limit.
 - [Verifying results](https://gitkalenyuk.github.io/kadr/docs/ai/verifying.html): Check an edit the way an editor would: read the timeline, look at frames and contact sheets, measure layouts and loudness, then confirm the exported file itself.
 - [Best practices and pitfalls](https://gitkalenyuk.github.io/kadr/docs/ai/best-practices.html): How agents get reliable results in Kadr: read before writing, batch atomic edits, follow error hints, handle long jobs and missing components, and avoid the classic timeline traps.
+- [The built-in AI assistant](https://gitkalenyuk.github.io/kadr/docs/ai/built-in-assistant.html): How Kadr's built-in assistant works and how to drive it from code: CLI agents launched with a per-run MCP server, the API agent loop with six meta-tools, the permission gate built from command risk classes, approval cards, events, revert, and what agents may never do.
 
 ## Recipes
 
@@ -50,12 +55,14 @@ Key facts for agents:
 
 ## Command reference
 
-- [Introduction to the command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html): How the reference of all 183 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.
-- [All commands](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html): the 188 commands by category, with parameters, units, defaults, returns and examples.
+- [Introduction to the command reference](https://gitkalenyuk.github.io/kadr/docs/ai/reference-intro.html): How the reference of all 249 Kadr commands is organised: categories, what each entry contains, how to read command names, and the same data as API, OpenAPI and llms-full.txt.
+- [All commands](https://gitkalenyuk.github.io/kadr/docs/ai/reference/index.html): the 249 commands by category, with parameters, units, defaults, returns and examples.
+- [AI assistant](https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-assistant.html): assistant.approve, assistant.cli.cancel, assistant.cli.custom, assistant.cli.install, assistant.cli.login, assistant.cli.set_key, assistant.cli.set_path, assistant.cli.status, assistant.delete, assistant.keys.add, assistant.keys.list, assistant.keys.remove, assistant.keys.test, assistant.keys.update, assistant.models, assistant.new, assistant.provider.add, assistant.provider.remove, assistant.provider.update, assistant.providers, assistant.revert, assistant.send, assistant.session, assistant.sessions, assistant.settings.get, assistant.settings.set, assistant.stop, assistant.test
+- [AI video](https://gitkalenyuk.github.io/kadr/docs/ai/reference/ai-video.html): videogen.cancel, videogen.estimate, videogen.generate, videogen.job, videogen.jobs, videogen.keys.add, videogen.keys.list, videogen.keys.remove, videogen.keys.test, videogen.models, videogen.place, videogen.provider.add, videogen.provider.remove, videogen.provider.test, videogen.provider.update, videogen.providers
 - [Adjustment](https://gitkalenyuk.github.io/kadr/docs/ai/reference/adjustment.html): adjustment.auto_enhance, segment.reset_adjust, segment.reset_curves, segment.reset_hsl, segment.set_adjust, segment.set_curves, segment.set_hsl
 - [Animation](https://gitkalenyuk.github.io/kadr/docs/ai/reference/animation.html): animation.remove, animation.set
 - [App](https://gitkalenyuk.github.io/kadr/docs/ai/reference/app.html): app.api.get, app.api.set, app.version
-- [Audio](https://gitkalenyuk.github.io/kadr/docs/ai/reference/audio.html): audio.detect_beats, audio.extract, audio.loudness, audio.restore, audio.separate, audio.voice_effects, sfx.add, sfx.list, tts.from_text, tts.set_api_key, tts.speak, tts.voices
+- [Audio](https://gitkalenyuk.github.io/kadr/docs/ai/reference/audio.html): audio.detect_beats, audio.extract, audio.loudness, audio.restore, audio.separate, audio.voice_effects, sfx.add, sfx.list, tts.estimate, tts.from_text, tts.keys.add, tts.keys.list, tts.keys.remove, tts.keys.test, tts.keys.update, tts.models, tts.provider.add, tts.provider.remove, tts.provider.test, tts.provider.update, tts.providers, tts.set_api_key, tts.speak, tts.voices
 - [Audio properties](https://gitkalenyuk.github.io/kadr/docs/ai/reference/audio-properties.html): segment.set_audio, segment.set_fade, segment.set_volume
 - [Captions](https://gitkalenyuk.github.io/kadr/docs/ai/reference/captions.html): captions.add, captions.asr_status, captions.auto, captions.cancel, captions.delete, captions.export, captions.from_transcript, captions.import, captions.list, captions.merge, captions.relayout, captions.set_style, captions.shift, captions.split, captions.status, captions.update
 - [Edit](https://gitkalenyuk.github.io/kadr/docs/ai/reference/edit.html): clipboard.copy, clipboard.cut, clipboard.paste, edit.history, edit.redo, edit.undo
@@ -70,6 +77,7 @@ Key facts for agents:
 - [Presets](https://gitkalenyuk.github.io/kadr/docs/ai/reference/presets.html): presets.apply, presets.delete, presets.get, presets.list, presets.rename, presets.save
 - [Projects](https://gitkalenyuk.github.io/kadr/docs/ai/reference/projects.html): project.create, project.delete, project.duplicate, project.get, project.list, project.rename, project.set_canvas, project.set_cover
 - [Rendering](https://gitkalenyuk.github.io/kadr/docs/ai/reference/rendering.html): render.devices, render.settings.get, render.settings.set
+- [Settings](https://gitkalenyuk.github.io/kadr/docs/ai/reference/settings.html): secrets.export, secrets.import, secrets.status, spending.get, spending.set_limit
 - [Smart tools](https://gitkalenyuk.github.io/kadr/docs/ai/reference/smart-tools.html): ai.auto_reframe, ai.cancel, ai.capabilities, ai.detect_scenes, ai.jobs, ai.remove_background, ai.remove_silence, ai.split_scenes
 - [Speed](https://gitkalenyuk.github.io/kadr/docs/ai/reference/speed.html): segment.set_speed, segment.set_speed_curve
 - [Stickers](https://gitkalenyuk.github.io/kadr/docs/ai/reference/stickers.html): sticker.add

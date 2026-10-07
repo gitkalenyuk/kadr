@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" class="no-js" data-alt-en="../../docs/guide/voices.html" data-alt-uk="../../uk/docs/guide/voices.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Voices: cloud and local text to speech — Kadr</title>
+<meta name="description" content="Use voices from ElevenLabs, OpenAI, Azure, Google and 35 more services next to the offline Windows voices: add a provider, paste one key or ten, pick a model and a voice, see the price before you pay, or connect your own speech server.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/docs/guide/voices.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/voices.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/voices.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/voices.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="manifest" href="../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:title" content="Voices: cloud and local text to speech — Kadr">
+<meta property="og:description" content="Use voices from ElevenLabs, OpenAI, Azure, Google and 35 more services next to the offline Windows voices: add a provider, paste one key or ten, pick a model and a voice, see the price before you pay, or connect your own speech server.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/docs/guide/voices.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Voices: cloud and local text to speech — Kadr">
+<meta name="twitter:description" content="Use voices from ElevenLabs, OpenAI, Azure, Google and 35 more services next to the offline Windows voices: add a provider, paste one key or ten, pick a model and a voice, see the price before you pay, or connect your own speech server.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og.jpg">
+<link rel="preload" href="../../assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-voices" data-root="../../" data-lang-root="" id="top">
+<a class="skip-link" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../" aria-label="Kadr home"><img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a class="nav-docs" href="../../docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Docs</span></a>
+      <a href="../../docs/guide/" aria-current="page">For humans</a>
+      <a href="../../docs/ai/">For AI</a>
+      <a href="../../docs/ai/reference/">Commands</a>
+      <a href="../../changelog.html">Changelog</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Switch between dark and light theme"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang="en"><a href="../../docs/guide/voices.html" hreflang="en" lang="en" data-set-lang="en" title="English" aria-current="true">EN</a><a href="../../uk/docs/guide/voices.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr on GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Get started</span><span class="sr-only">Get started with Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Docs menu</button><span class="side-where">Voices</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Documentation">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Close menu"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Documentation"><a href="../../docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</a><a href="../../docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>For AI</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Search the docs"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search docs</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Documentation">
+    <div class="side-group"><ul><li><a href="../../docs/guide/index.html"><span>Overview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Start</p><ul><li><a href="../../docs/guide/getting-started.html"><span>Getting started</span></a></li><li><a href="../../docs/guide/interface.html"><span>Interface tour</span></a></li><li><a href="../../docs/guide/projects.html"><span>Projects</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Editing</p><ul><li><a href="../../docs/guide/import-media.html"><span>Import media</span></a></li><li><a href="../../docs/guide/timeline.html"><span>Timeline editing</span></a></li><li><a href="../../docs/guide/player.html"><span>Player &amp; preview</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Creating</p><ul><li><a href="../../docs/guide/text.html"><span>Text &amp; titles</span></a></li><li><a href="../../docs/guide/fonts.html"><span>Fonts</span></a></li><li><a href="../../docs/guide/captions.html"><span>Captions &amp; transcript</span></a></li><li><a href="../../docs/guide/effects.html"><span>Effects &amp; colour</span></a></li><li><a href="../../docs/guide/audio.html"><span>Audio</span></a></li><li><a href="../../docs/guide/voices.html" aria-current="page"><span>Voices</span></a></li><li><a href="../../docs/guide/stickers.html"><span>Stickers &amp; generated media</span></a></li><li><a href="../../docs/guide/video-generation.html"><span>AI video</span></a></li><li><a href="../../docs/guide/ai-tools.html"><span>AI tools</span></a></li><li><a href="../../docs/guide/assistant.html"><span>AI assistant</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Finishing</p><ul><li><a href="../../docs/guide/export.html"><span>Export</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Help</p><ul><li><a href="../../docs/guide/shortcuts.html"><span>Keyboard shortcuts</span></a></li><li><a href="../../docs/guide/settings.html"><span>Settings &amp; updates</span></a></li><li><a href="../../docs/guide/troubleshooting.html"><span>Troubleshooting &amp; FAQ</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../docs/index.html">Docs</a></li><li><a href="../../docs/guide/index.html">User guide</a></li><li><span aria-current="page">Voices</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>For humans</span><span class="pe-group">Creating</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 min read</span></p><h1>Voices: cloud and local text to speech</h1></header><p class="lead">Text to speech in Kadr works offline out of the box with the voices of your computer. If you want more natural voices, you can connect almost any speech service — ElevenLabs, OpenAI, Azure, Google and 35 more — or a speech server running on your own PC. Kadr keeps your keys encrypted, switches to the next key when one runs out, and tells you the price before a paid voice speaks.</p>
+
+<div class="callout note"><p>You don't need any of this to make a voice-over: the Windows voices and eSpeak NG are free and never send anything online. How to add speech to a video is explained in <a href="../../docs/guide/audio.html#tts">Audio → Text to speech</a>; this page is about <em>where the voices come from</em>.</p></div>
+
+<h2 id="kinds">Four kinds of voices<a class="anchor" href="#kinds" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Kind</th><th>Examples</th><th>Costs</th><th>Leaves your PC?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Built-in</strong></td><td>Windows voices (SAPI), eSpeak NG (about 130 languages, Ukrainian included), macOS voices</td><td>Free</td><td>No</td></tr>
+    <tr><td><strong>Self-hosted</strong></td><td>Kokoro, Piper, Chatterbox, XTTS, AllTalk, Coqui, LocalAI — free speech servers you run yourself</td><td>Free</td><td>Only to your own server</td></tr>
+    <tr><td><strong>Free cloud</strong></td><td>Microsoft Edge “Read aloud” voices (unofficial, experimental, off until you switch it on)</td><td>Free</td><td>Yes — the text goes to Microsoft</td></tr>
+    <tr><td><strong>Paid cloud</strong></td><td>ElevenLabs, OpenAI, Azure AI Speech, Google Cloud, Gemini, Amazon Polly, Cartesia, Deepgram, MiniMax, Fish Audio, Murf, Speechify, Inworld, Rime, Resemble, WellSaid, Smallest.ai, Unreal Speech, Narakeet, LOVO, Hume, Alibaba Qwen-TTS, ByteDance Doubao, iFlytek, Yandex — and voice models on fal.ai, Replicate, Together AI and Groq</td><td>You pay the service</td><td>Yes — the text goes to that service</td></tr>
+  </tbody>
+</table></div>
+<p>Providers with Ukrainian voices are marked <strong>UA</strong> in the list (for example ElevenLabs, OpenAI, Azure, Google, Cartesia, MiniMax, Narakeet, Edge, Piper and eSpeak NG).</p>
+
+<h2 id="add">Add a provider<a class="anchor" href="#add" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ol class="steps">
+  <li><h3 id="add-open">Open the Voices settings<a class="anchor" href="#add-open" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Open <strong>Settings → Voices</strong> (Home → Settings, or <strong>Menu → Settings…</strong> in the editor). At the top are the built-in engines with their voice counts; below, under <strong>Cloud &amp; self-hosted providers</strong>, the providers you use.</p></li>
+  <li><h3 id="add-pick">Pick a provider<a class="anchor" href="#add-pick" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Click <strong>Add a provider</strong>. The gallery lists every supported service with its price hint; search by name or filter by category. Each card says whether the provider was checked against its official documentation or is <em>experimental</em>.</p></li>
+  <li><h3 id="add-key">Paste your API key<a class="anchor" href="#add-key" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Get a key from the provider's website (each card has a link to its keys page) and paste it. Kadr encrypts it right away. Self-hosted servers and Edge need no key — switch them on instead.</p></li>
+  <li><h3 id="add-test">Test it<a class="anchor" href="#add-test" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Click <strong>Test</strong>. This is a free check — it reads the voice list or the account, never makes paid speech — and shows whether the key works, how many voices it unlocked and, where the service reports it, how much quota is left (ElevenLabs characters, for example).</p></li>
+  <li><h3 id="add-defaults">Choose the model and the voice<a class="anchor" href="#add-defaults" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Pick a <strong>Default model</strong> (for ElevenLabs, for example, <code>eleven_multilingual_v2</code>, <code>eleven_v3</code> or a fast Flash model) and a <strong>Default voice</strong>. Some services need one more setting, such as the <strong>Region</strong> of Azure or Amazon Polly. <strong>Base URL</strong> lets you point a provider at a proxy or a server on another PC. Switch on <strong>Default</strong> if Kadr should use this provider whenever you don't choose one.</p></li>
+</ol>
+<p>The voices of every ready provider now appear in <strong>Audio → Text to speech</strong> and in the inspector under <strong>Text → Speech</strong>, grouped by provider. Click the refresh arrow next to <strong>Voice</strong> if a new provider's voices don't show up yet.</p>
+
+<h2 id="keys">Several keys for one provider<a class="anchor" href="#keys" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>You can store as many keys per provider as you like — say, ten ElevenLabs accounts. Kadr uses them <strong>in order</strong>: when a key is rejected, runs out of credit or hits a rate limit, the next key takes over automatically and the failed one is marked.</p>
+<ul>
+  <li><strong>Add key</strong> — one key with an optional label (“Main”, “Backup”).</li>
+  <li><strong>Paste many</strong> — one key per line. Lines like <code>Main: sk_…</code> set a label; empty lines, <code># comments</code> and duplicates are skipped.</li>
+  <li><strong>Import file…</strong> — <code>.txt</code>, <code>.env</code>, <code>.csv</code> or <code>.json</code> with one key per line or entry.</li>
+</ul>
+<p>The <strong>API keys</strong> list shows every key masked (<code>sk_…a1b2</code>) with its status:</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Status</th><th>Meaning</th><th>What Kadr does</th></tr></thead>
+  <tbody>
+    <tr><td><strong>OK</strong></td><td>The last request with this key worked</td><td>Uses it</td></tr>
+    <tr><td><strong>Exhausted</strong></td><td>Out of quota or credit</td><td>Skips it until the quota resets (or for an hour), then tries again</td></tr>
+    <tr><td><strong>Rate-limited</strong></td><td>Too many requests right now</td><td>Waits the time the service asks for and uses the next key meanwhile</td></tr>
+    <tr><td><strong>Invalid</strong></td><td>The service rejected the key</td><td>Skips it until you test it again or click <strong>Forget the error</strong></td></tr>
+    <tr><td><strong>Not tested</strong></td><td>Not used yet</td><td>Tries it in its turn</td></tr>
+    <tr><td><strong>Disabled</strong></td><td>You switched the key off (the eye button)</td><td>Keeps it stored but never uses it</td></tr>
+  </tbody>
+</table></div>
+<p>The arrows change the order, the pencil renames a key, the circular arrow forgets an error, the eye skips a key without deleting it, the refresh button tests one key (free), the gauge re-reads the remaining quota and the bin removes a key. Keys are never shown again after you save them — not even to you.</p>
+
+<h2 id="costs">Prices and confirmation<a class="anchor" href="#costs" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Paid services charge per character (or per second of audio). Kadr knows each service's published prices, dated (“≈ $0.08 per 1000 characters, prices as of 2026-10-07”), and estimates every speech before it is made. Subscription plans such as ElevenLabs are billed from your plan's character quota instead — the key list shows what is left.</p>
+<ul>
+  <li><strong>Kadr asks before paid speech.</strong> You see the estimated price and confirm. To skip the question for small amounts, set <strong>Ask before paying</strong> for that provider to an amount (for example 0.05): speech that costs less is made without asking.</li>
+  <li><strong>The same text is free the second time.</strong> Speech you already made for the project (same text, voice and speed) is reused from the cache.</li>
+  <li><strong>Daily spending limit.</strong> In <strong>Settings → Spending</strong> you can set how much Kadr may spend per day on all paid AI services together, or per provider. A request that would go over the limit is refused instead of spending. See <a href="../../docs/guide/settings.html#spending">Spending</a>.</li>
+</ul>
+<div class="callout warn"><p>Prices are estimates from the providers' public price lists. Your actual bill comes from the provider and can differ (discounts, plans, taxes, price changes).</p></div>
+
+<h2 id="custom">Connect your own speech server or another service<a class="anchor" href="#custom" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>If your service isn't in the gallery, choose <strong>Custom provider</strong> in <strong>Add a provider</strong>. Three modes:</p>
+<ul>
+  <li><strong>OpenAI-compatible</strong> — the simplest. For any server that understands OpenAI's speech request (Kokoro-FastAPI, LocalAI, vLLM, a company proxy…): enter its <strong>Base URL</strong>, the model and voice names, and a key if it needs one. Mark it as running on this PC or your network to skip the price question.</li>
+  <li><strong>HTTP template</strong> — for any other web API. Enter the method, URL and headers and write the JSON body with placeholders such as <code>{text}</code>, <code>{voice}</code>, <code>{model}</code>, <code>{speed}</code> and <code>{lang}</code>. Then say where the audio is in the answer: the raw audio bytes, a base64 field (JSON path such as <code>data.audio</code>), a URL to download, or a job to poll until it is done (job id path, poll URL with <code>{job_id}</code>, status path with done and failed values, result path).</li>
+  <li><strong>Copy a built-in provider</strong> and change what you need, for example its address.</li>
+</ul>
+<p>Click <strong>Test</strong> to check it. Custom providers are saved in Kadr's data folder; their keys go into the encrypted vault like all others.</p>
+
+<h2 id="privacy">Privacy and security<a class="anchor" href="#privacy" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>With a cloud voice, the text you speak is sent to that service. Built-in voices never leave your computer; self-hosted ones go only to your server.</li>
+  <li>Keys are encrypted by Windows for your user account (on a Mac: stored in the login Keychain). They are never written into projects, exports, logs or messages, and AI assistants cannot read them.</li>
+  <li>Moving to another computer? <strong>Settings → Spending → Keys &amp; secrets → Export</strong> writes all keys into one password-protected file; <strong>Import</strong> reads it on the other PC. See <a href="../../docs/guide/settings.html#secrets">Keys &amp; secrets</a>.</li>
+  <li>An ElevenLabs key you saved in Kadr 1.0 is moved into the encrypted vault automatically the first time this version starts.</li>
+</ul>
+
+<h2 id="not-included">Services that are not offered<a class="anchor" href="#not-included" aria-label="Link to this section"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>PlayHT and LMNT have shut down their APIs, and Neets.ai could not be reached reliably, so they are not in the list. Hume Octave is included but marked experimental: Hume plans to end that API in November 2026.</p>
+
+    </article>
+    <nav class="pager" aria-label="Previous / Next"><a class="pager-prev" href="../../docs/guide/audio.html" rel="prev"><span>Previous</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Audio</b></a><a class="pager-next" href="../../docs/guide/stickers.html" rel="next"><span>Next</span><b>Stickers &amp; generated media<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="On this page"><p class="side-title">On this page</p><ul><li class="lvl-2"><a href="#kinds">Four kinds of voices</a></li><li class="lvl-2"><a href="#add">Add a provider</a></li><li class="lvl-3"><a href="#add-open">Open the Voices settings</a></li><li class="lvl-3"><a href="#add-pick">Pick a provider</a></li><li class="lvl-3"><a href="#add-key">Paste your API key</a></li><li class="lvl-3"><a href="#add-test">Test it</a></li><li class="lvl-3"><a href="#add-defaults">Choose the model and the voice</a></li><li class="lvl-2"><a href="#keys">Several keys for one provider</a></li><li class="lvl-2"><a href="#costs">Prices and confirmation</a></li><li class="lvl-2"><a href="#custom">Connect your own speech server or another service</a></li><li class="lvl-2"><a href="#privacy">Privacy and security</a></li><li class="lvl-2"><a href="#not-included">Services that are not offered</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>The video editor your AI can drive. Free for Windows 10 &amp; 11 — macOS is coming.</p>
+        <p class="footer-langs"><a href="../.././" hreflang="en" lang="en" data-set-lang="en" aria-current="true">English</a><span aria-hidden="true">·</span><a href="../../uk/" hreflang="uk" lang="uk" data-set-lang="uk">Українська</a></p>
+      </div>
+      <div><h2>Product</h2><ul><li><a href="../../#availability">Availability</a></li><li><a href="../../#features">Features</a></li><li><a href="../../changelog.html">Changelog</a></li><li><a href="../../#requirements">Requirements</a></li></ul></div>
+      <div><h2>Docs</h2><ul><li><a href="../../docs/guide/index.html">User guide</a></li><li><a href="../../docs/ai/index.html">AI documentation</a></li><li><a href="../../docs/ai/reference/index.html">Command reference</a></li><li><a href="../../docs/ai/mcp.html">Connect Claude (MCP)</a></li><li><a href="../../llms.txt">llms.txt for AI</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../docs/guide/troubleshooting.html">FAQ</a></li><li><a href="../../privacy.html">Privacy</a></li><li><a href="../../licenses.html">Licences</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Freeware for Windows · macOS coming soon.</span><span>Not affiliated with ByteDance or CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Search guides, AI docs and commands…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Results"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · try “split”, “captions”, “4k”</p>
+  </div>
+</div>
+<script src="../../assets/js/site.js" defer></script>
+<script src="../../assets/js/docs.js" defer></script>
+</body>
+</html>

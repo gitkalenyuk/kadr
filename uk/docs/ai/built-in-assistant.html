@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/ai/built-in-assistant.html" data-alt-uk="../../../uk/docs/ai/built-in-assistant.html" data-section="ai">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Вбудований ШІ-асистент — Kadr</title>
+<meta name="description" content="Як працює вбудований асистент Kadr і як керувати ним із коду: CLI-агенти із MCP-сервером на один запуск, цикл агента через API з шістьма метаінструментами, фільтр дозволів на основі класів ризику команд, картки схвалення, події, відкат і те, чого агентам не можна ніколи.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/built-in-assistant.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/ai/built-in-assistant.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/ai/built-in-assistant.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/ai/built-in-assistant.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Вбудований ШІ-асистент — Kadr">
+<meta property="og:description" content="Як працює вбудований асистент Kadr і як керувати ним із коду: CLI-агенти із MCP-сервером на один запуск, цикл агента через API з шістьма метаінструментами, фільтр дозволів на основі класів ризику команд, картки схвалення, події, відкат і те, чого агентам не можна ніколи.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/ai/built-in-assistant.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Вбудований ШІ-асистент — Kadr">
+<meta name="twitter:description" content="Як працює вбудований асистент Kadr і як керувати ним із коду: CLI-агенти із MCP-сервером на один запуск, цикл агента через API з шістьма метаінструментами, фільтр дозволів на основі класів ризику команд, картки схвалення, події, відкат і те, чого агентам не можна ніколи.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-ai page-built-in-assistant" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/">Для людей</a>
+      <a href="../../../uk/docs/ai/" aria-current="page">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/ai/built-in-assistant.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/ai/built-in-assistant.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Почати</span><span class="sr-only">Почати роботу з Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">Вбудований асистент</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai" aria-current="true"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/ai/index.html"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/ai/claude-code.html"><span>Claude Code</span></a></li><li><a href="../../../uk/docs/ai/claude-desktop.html"><span>Claude Desktop</span></a></li><li><a href="../../../uk/docs/ai/other-mcp-clients.html"><span>Інші MCP-клієнти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Інтерфейси</p><ul><li><a href="../../../uk/docs/ai/mcp.html"><span>Інструменти MCP</span></a></li><li><a href="../../../uk/docs/ai/rest.html"><span>REST API</span></a></li><li><a href="../../../uk/docs/ai/cli.html"><span>CLI (kadrctl)</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Посібники</p><ul><li><a href="../../../uk/docs/ai/concepts.html"><span>Концепції</span></a></li><li><a href="../../../uk/docs/ai/library.html"><span>Бібліотека й шрифти</span></a></li><li><a href="../../../uk/docs/ai/working-visibly.html"><span>Робота на очах</span></a></li><li><a href="../../../uk/docs/ai/paid-providers.html"><span>Голоси, ШІ-відео й гроші</span></a></li><li><a href="../../../uk/docs/ai/verifying.html"><span>Перевірка результату</span></a></li><li><a href="../../../uk/docs/ai/best-practices.html"><span>Найкращі практики</span></a></li><li><a href="../../../uk/docs/ai/built-in-assistant.html" aria-current="page"><span>Вбудований асистент</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Рецепти</p><ul><li><a href="../../../uk/docs/ai/recipes.html"><span>Усі рецепти</span></a></li><li><a href="../../../uk/docs/ai/vertical-tiktok.html"><span>Вертикальний TikTok</span></a></li><li><a href="../../../uk/docs/ai/beat-cut-music-video.html"><span>Монтаж під біт</span></a></li><li><a href="../../../uk/docs/ai/talking-head-cleanup.html"><span>Очищення «говорющої голови»</span></a></li><li><a href="../../../uk/docs/ai/photo-slideshow.html"><span>Слайдшоу з фото</span></a></li><li><a href="../../../uk/docs/ai/podcast-audiogram.html"><span>Аудіограма подкасту</span></a></li><li><a href="../../../uk/docs/ai/product-promo.html"><span>Промо продукту</span></a></li><li><a href="../../../uk/docs/ai/batch-export-variants.html"><span>Три формати</span></a></li><li><a href="../../../uk/docs/ai/ai-review-loop.html"><span>Цикл перевірки</span></a></li><li><a href="../../../uk/docs/ai/translate-and-reburn-captions.html"><span>Переклад субтитрів</span></a></li><li><a href="../../../uk/docs/ai/documentary-archive-footage.html"><span>Документалка з архіву</span></a></li><li><a href="../../../uk/docs/ai/preview-before-applying.html"><span>Вибір «на око»</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідник команд</p><ul><li><a href="../../../uk/docs/ai/reference-intro.html"><span>Вступ</span></a></li><li><a href="../../../uk/docs/ai/reference/index.html"><span>Усі команди</span><span class="count">249</span></a></li><li><a href="../../../uk/docs/ai/reference/ai-assistant.html"><span>ШІ-асистент</span><span class="count">28</span></a></li><li><a href="../../../uk/docs/ai/reference/ai-video.html"><span>ШІ-відео</span><span class="count">16</span></a></li><li><a href="../../../uk/docs/ai/reference/adjustment.html"><span>Корекція</span><span class="count">7</span></a></li><li><a href="../../../uk/docs/ai/reference/animation.html"><span>Анімація</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/app.html"><span>Застосунок</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/audio.html"><span>Аудіо</span><span class="count">24</span></a></li><li><a href="../../../uk/docs/ai/reference/audio-properties.html"><span>Властивості аудіо</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/captions.html"><span>Субтитри</span><span class="count">16</span></a></li><li><a href="../../../uk/docs/ai/reference/edit.html"><span>Редагування</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/effects.html"><span>Ефекти</span><span class="count">5</span></a></li><li><a href="../../../uk/docs/ai/reference/export.html"><span>Експорт</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/filters.html"><span>Фільтри</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/fonts.html"><span>Шрифти</span><span class="count">5</span></a></li><li><a href="../../../uk/docs/ai/reference/keyframes.html"><span>Ключові кадри</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/library.html"><span>Бібліотека</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/media.html"><span>Медіа</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/playback.html"><span>Відтворення</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/presets.html"><span>Пресети</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/projects.html"><span>Проєкти</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/rendering.html"><span>Рендеринг</span><span class="count">3</span></a></li><li><a href="../../../uk/docs/ai/reference/settings.html"><span>Налаштування</span><span class="count">5</span></a></li><li><a href="../../../uk/docs/ai/reference/smart-tools.html"><span>Розумні інструменти</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/speed.html"><span>Швидкість</span><span class="count">2</span></a></li><li><a href="../../../uk/docs/ai/reference/stickers.html"><span>Стікери</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/text.html"><span>Текст</span><span class="count">8</span></a></li><li><a href="../../../uk/docs/ai/reference/timeline.html"><span>Таймлайн</span><span class="count">23</span></a></li><li><a href="../../../uk/docs/ai/reference/tools.html"><span>Інструменти</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/transcript.html"><span>Транскрипт</span><span class="count">7</span></a></li><li><a href="../../../uk/docs/ai/reference/transitions.html"><span>Переходи</span><span class="count">4</span></a></li><li><a href="../../../uk/docs/ai/reference/updates.html"><span>Оновлення</span><span class="count">6</span></a></li><li><a href="../../../uk/docs/ai/reference/video.html"><span>Відео</span><span class="count">1</span></a></li><li><a href="../../../uk/docs/ai/reference/video-properties.html"><span>Властивості відео</span><span class="count">9</span></a></li><li><a href="../../../uk/docs/ai/reference/window.html"><span>Вікно</span><span class="count">4</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><span aria-current="page">Вбудований асистент</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ-агентів</span><span class="pe-group">Посібники</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>5 хв читання</span></p><h1>Вбудований ШІ-асистент</h1></header><p class="lead">У редакторі Kadr є ШІ-асистент (кнопка <strong>AI</strong>, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd>). Він керує Kadr через той самий реєстр команд, що й будь-який інший агент, з двома видами бекендів: CLI-агенти для програмування, встановлені на ПК, і вбудований цикл агента через LLM API. Ця сторінка пояснює, як він працює, — знадобиться, якщо вас запустив він, якщо ви керуєте ним через API або додаєте команди, з якими він має поводитися обережно. Як ним користуються люди — у <a href="../../../uk/docs/guide/assistant.html">посібнику</a>.</p>
+
+<h2 id="backends">Два бекенди<a class="anchor" href="#backends" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th></th><th>CLI-агенти (<code>cli:&lt;agent&gt;</code>)</th><th>API-провайдери (<code>api:&lt;provider&gt;</code>)</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Хто</strong></td><td>Claude Code, OpenAI Codex, Gemini CLI, Antigravity, Cursor Agent, GitHub Copilot CLI, OpenCode, Qwen Code, Amp, Goose, Crush, Kimi Code, Aider, Cline, Factory Droid, Warp або власний CLI (<a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.cli.custom"><code>assistant.cli.custom</code></a>)</td><td>Anthropic, OpenAI, Google Gemini, OpenRouter, DeepSeek, xAI, Mistral, Groq, Together AI, Fireworks, Qwen (DashScope), Moonshot (Kimi), Zhipu GLM, Ollama і LM Studio (локально) та власні точки доступу (OpenAI-сумісні, Anthropic, OpenAI Responses чи Gemini)</td></tr>
+    <tr><td><strong>Інструменти Kadr</strong></td><td>Кожна команда як MCP-інструмент, як у <code>kadr-mcp</code> (крапки → підкреслення), підключені лише на цей запуск</td><td>Шість метаінструментів (нижче), щоб промпт лишався малим, а кожна команда — досяжною</td></tr>
+    <tr><td><strong>Стан</strong></td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.cli.status"><code>assistant.cli.status</code></a>: <code>not_installed</code> · <code>installed</code> · <code>needs_login</code> · <code>signed_in</code> (лише чат, без MCP) · <code>ready</code></td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.providers"><code>assistant.providers</code></a>: <code>no_key</code> · <code>ready</code> · <code>local</code> · <code>offline</code> (локальний сервер не запущено) · <code>error</code></td></tr>
+    <tr><td><strong>Налаштування</strong></td><td><a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.cli.install"><code>assistant.cli.install</code></a> (офіційна команда встановлення, вивід як події <code>assistant.cli.output</code>), <a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.cli.login"><code>assistant.cli.login</code></a> (власний вхід CLI) або ключ через <a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.cli.set_key"><code>assistant.cli.set_key</code></a></td><td>Ключі в пулі сховища <code>("llm", provider)</code> з перемиканням (<a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.keys.add"><code>assistant.keys.add</code></a>); ключ OpenAI чи Gemini, збережений для голосів або відео, використовується повторно</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="meta-tools">Метаінструменти API-бекенда<a class="anchor" href="#meta-tools" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Інструмент</th><th>Що робить</th></tr></thead>
+  <tbody>
+    <tr><td><code>kadr_find_commands</code></td><td>Шукає в реєстрі за ключовими словами чи категорією (без аргументів — список категорій); повертає назви з однорядковими описами.</td></tr>
+    <tr><td><code>kadr_describe</code></td><td>Повна документація команди: параметри, одиниці, діапазони, приклади — той самий текст, що в <a href="../../../uk/docs/ai/reference-intro.html">довіднику команд</a>.</td></tr>
+    <tr><td><code>kadr_run</code></td><td>Виконує одну команду; результат або помилка з підказкою. <code>project_id</code> підставляється з чату.</td></tr>
+    <tr><td><code>kadr_batch</code></td><td>Виконує кілька команд проєкту як один атомарний крок скасування.</td></tr>
+    <tr><td><code>kadr_preview_frame</code></td><td>Рендерить кадр і повертає його як зображення моделям із зором (інакше — лише метадані); у чаті видно мініатюру.</td></tr>
+    <tr><td><code>kadr_ui_toast</code></td><td>Коротка нотатка про хід роботи у вікні редактора.</td></tr>
+  </tbody>
+</table></div>
+<p>Системний промпт містить ті самі домовленості, що й <a href="../../../uk/docs/ai/concepts.html">Концепції</a>, плюс поточний контекст: проєкт, курсор відтворення, виділення, режим дозволів і сьогоднішню дату. Довгі чати підсумовуються автоматично; старі результати інструментів скорочуються, а в контексті лишаються лише кілька останніх зображень.</p>
+
+<h2 id="cli-runs">Як запускається CLI-агент<a class="anchor" href="#cli-runs" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li><strong>Без інтерфейсу, у власній робочій папці</strong> (типово <code>%TEMP%\kadr-agents\&lt;agent&gt;-&lt;chat&gt;</code>), сталій для чату, щоб власний сеанс CLI можна було продовжити наступним повідомленням.</li>
+  <li><strong>MCP-сервер Kadr підключається лише на цей запуск</strong>, ніколи — у глобальні налаштування користувача: прапорцем (Claude Code <code>--mcp-config</code> + <code>--strict-mcp-config</code>, Codex <code>-c mcp_servers.kadr.*</code>, Copilot <code>--additional-mcp-config</code>, Qwen <code>--mcp-config</code>), змінною середовища з тимчасовим файлом (Amp, Cline, OpenCode) або локальним файлом проєкту в робочій папці (Gemini CLI, Cursor, Antigravity, Kimi, Crush, Droid).</li>
+  <li><strong>Два транспорти.</strong> <em>stdio</em> запускає <code>kadr-mcp</code> поруч із Kadr. <em>gateway</em> — MCP-сервер усередині Kadr на <code>127.0.0.1</code> з випадковим секретним шляхом; він питає фільтр дозволів перед кожним викликом, тож картки схвалення працюють навіть для CLI без власного механізму дозволів у фоновому режимі. Claude Code і Cline ще й перетворюють власні запити дозволу (зокрема дії оболонки й файлів) на картки схвалення.</li>
+  <li><strong>Вбудовані інструменти оболонки, файлів і вебу вимкнені або заборонені</strong> типово — власним механізмом кожного CLI. Перемикач чату <em>Allow actions outside Kadr</em> їх вмикає (з запитанням, якщо чат не в режимі full auto). CLI, які так обмежити неможливо (Kimi Code, Warp), запускаються лише з цим перемикачем.</li>
+  <li><strong>Ключі</strong> для CLI беруться зі сховища й передаються лише через його змінні середовища — ніколи в аргументах, файлах чи подіях. Кожен рядок виводу проходить через фільтр, що маскує секрети.</li>
+  <li><strong>Stop</strong> завершує все дерево процесів (у Windows агент працює в Job-об’єкті, тож нічого не лишається).</li>
+</ul>
+<div class="callout note"><p>CLI-агент бачить кожну команду Kadr як інструмент — це великий список інструментів (провайдер здебільшого його кешує). Для коротких запитів дешевший шлях — метаінструменти API-бекенда.</p></div>
+
+<h2 id="gate">Фільтр дозволів<a class="anchor" href="#gate" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Кожен виклик асистента — через метаінструмент, gateway чи власний запит дозволу CLI — класифікується до виконання. Режим чату визначає, що потребує картки схвалення:</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Клас</th><th>Приклади</th><th><code>ask_risky</code> (типово)</th><th><code>ask_every</code></th><th><code>full_auto</code></th></tr></thead>
+  <tbody>
+    <tr><td>Читання</td><td><code>timeline.get</code>, <code>preview.frame</code>, <code>*.list</code></td><td>виконується</td><td>виконується</td><td>виконується</td></tr>
+    <tr><td>Зміна зі скасуванням</td><td><code>timeline.segment.split</code>, <code>text.add</code></td><td>виконується</td><td>питає</td><td>виконується</td></tr>
+    <tr><td><code>paid</code></td><td><code>videogen.generate</code>, <code>tts.speak</code> платним голосом</td><td>питає, з ціною</td><td>питає</td><td><strong>питає</strong></td></tr>
+    <tr><td><code>delete</code></td><td><code>project.delete</code>, видалення шрифтів, пресетів чи провайдерів</td><td>питає</td><td>питає</td><td>виконується</td></tr>
+    <tr><td><code>overwrite</code></td><td>експорт чи файл субтитрів поверх наявного файлу</td><td>питає</td><td>питає</td><td>виконується</td></tr>
+    <tr><td><code>system</code></td><td>оновлення, завантаження FFmpeg, адреса API, налаштування рендеру, встановлення CLI</td><td>питає</td><td>питає</td><td>виконується</td></tr>
+    <tr><td>Поза Kadr</td><td>оболонка, файли чи веб CLI-агента</td><td>питає (якщо взагалі дозволено)</td><td>питає</td><td>виконується (якщо дозволено)</td></tr>
+    <tr><td><code>secret</code> і заблоковане</td><td><code>secrets.*</code>, <code>*.keys.*</code>, <code>tts.set_api_key</code>, <code>spending.set_limit</code>, будь-який виклик з аргументом-ключем, токеном чи паролем, власні команди асистента, що щось змінюють</td><td colspan="3"><strong>ніколи не виконується</strong> — інструмент прихований або відхилений</td></tr>
+  </tbody>
+</table></div>
+<p>Клас береться з поля <code>risk</code> у специфікації команди (<code>paid</code>, <code>delete</code>, <code>overwrite</code>, <code>system</code>, <code>secret</code>; видно в <code>GET /api/v1/commands</code>) плюс правила для команд, які його не оголошують. Для платних викликів фільтр запускає відповідну <code>&lt;namespace&gt;.estimate</code>, щоб показати вартість, і після схвалення сам підставляє її <code>confirm_token</code> — агент усередині асистента ніколи не має справи з токенами. «Always for this chat» запам’ятовує схвалення для команди (ніколи для платних). Картки без відповіді відхиляються через 10 хвилин; відхилену дію не можна повторювати.</p>
+
+<h2 id="api">Керування асистентом із коду<a class="anchor" href="#api" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="code-tabs"><div class="ct-bar" role="tablist" aria-label="Приклади коду"><button type="button" role="tab" id="ct1097-0" aria-controls="ct1097-0p" aria-selected="true" data-tab="curl">curl</button><button type="button" role="tab" id="ct1097-1" aria-controls="ct1097-1p" aria-selected="false" tabindex="-1" data-tab="kadrctl">kadrctl</button></div><div class="ct-panel on" role="tabpanel" id="ct1097-0p" aria-labelledby="ct1097-0" data-tab="curl" data-label="curl"><div class="code-wrap"><pre class="code lang-curl"><code><span class="tok-c"># що може його «живити»</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/assistant.providers</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-c"># надіслати повідомлення й дочекатися всього ходу</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/assistant.send</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> \
+  <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;project_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;prj_1a2b3c4d5e6f&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;provider&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;api:anthropic&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;text&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;Add a title \&quot;Day 1\&quot; for the first 3 seconds&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;wait&quot;</span><span class="tok-o">:</span><span class="tok-n">true</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-c"># відповісти на картку схвалення (з події assistant.approval_request)</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/assistant.approve</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> \
+  <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;session_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;ses_0a1b2c3d4e5f&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;request_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;perm_1a2b3c4d&quot;</span><span class="tok-o">,</span><span class="tok-p">&quot;decision&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;allow&quot;</span><span class="tok-o">}</span><span class="tok-s">'</span>
+<span class="tok-c"># скасувати все, що зробив чат (один крок скасування)</span>
+<span class="tok-k">curl</span> <span class="tok-p">-s</span> <span class="tok-f">http://127.0.0.1:7777/api/v1/commands/assistant.revert</span> <span class="tok-p">-H</span> <span class="tok-s">&quot;Authorization: Bearer $KADR_TOKEN&quot;</span> <span class="tok-p">-d</span> <span class="tok-s">'</span><span class="tok-o">{</span><span class="tok-p">&quot;session_id&quot;</span><span class="tok-o">:</span><span class="tok-s">&quot;ses_0a1b2c3d4e5f&quot;</span><span class="tok-o">}</span><span class="tok-s">'</span></code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div><div class="ct-panel" role="tabpanel" id="ct1097-1p" aria-labelledby="ct1097-1" data-tab="kadrctl" data-label="kadrctl"><div class="code-wrap"><pre class="code lang-kadrctl"><code><span class="tok-k">kadrctl</span> run assistant.providers
+<span class="tok-k">kadrctl</span> run assistant.send <span class="tok-p">--project_id</span> prj_1a2b3c4d5e6f <span class="tok-p">--provider</span> api:anthropic <span class="tok-p">--text</span> <span class="tok-s">&quot;Add a title \&quot;Day 1\&quot; for the first 3 seconds&quot;</span> <span class="tok-p">--wait</span>
+<span class="tok-k">kadrctl</span> run assistant.approve <span class="tok-p">--session_id</span> ses_0a1b2c3d4e5f <span class="tok-p">--request_id</span> perm_1a2b3c4d <span class="tok-p">--decision</span> allow
+<span class="tok-k">kadrctl</span> run assistant.revert <span class="tok-p">--session_id</span> ses_0a1b2c3d4e5f</code></pre><button class="copy-btn" type="button" aria-label="Копіювати код"><svg aria-hidden="true"><use href="#i-copy"/></svg><span>Копіювати</span></button></div></div></div>
+<ul>
+  <li><a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.send"><code>assistant.send</code></a> одразу повертає <code>session_id</code> і <code>run_id</code> (або, з <code>wait</code>, фінальну відповідь, використання токенів і вартість). Без <code>session_id</code> починає новий чат; перше повідомлення зберігає контрольну точку для <a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.revert"><code>assistant.revert</code></a>. Вкладення: абсолютні шляхи, вставлені дані (<code>data_base64</code>), текст, <code>material_id</code>, <code>segment_id</code> чи <code>time_us</code>.</li>
+  <li>Живі події у WebSocket (<code>/api/v1/events</code>): <code>assistant.message.delta</code>, <code>assistant.message</code>, <code>assistant.thinking</code>, <code>assistant.tool_call</code>, <code>assistant.tool_result</code>, <code>assistant.approval_request</code>, <code>assistant.approval_resolved</code>, <code>assistant.usage</code>, <code>assistant.status</code>, <code>assistant.error</code>, <code>assistant.done</code>. <a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.session"><code>assistant.session</code></a> повертає збережений чат тими самими подіями, тож один редуктор відображає обидва випадки.</li>
+  <li><a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.stop"><code>assistant.stop</code></a> завершує хід; <a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.revert"><code>assistant.revert</code></a> падає з <code>conflict</code>, якщо проєкт хтось змінив після контрольної точки, — хіба що <code>force: true</code>; спершу спитайте користувача.</li>
+  <li>Зміни асистента мають джерело <code>assistant</code> в історії скасування й у подіях <code>project.changed</code>.</li>
+  <li>Чати зберігаються в папці проєкту (<code>assistant/sessions/</code>), ніколи не експортуються й видаляються разом із проєктом; <a class="cmd-link" href="../../../uk/docs/ai/reference/ai-assistant.html#assistant.sessions"><code>assistant.sessions</code></a> показує їх із вартістю й кількістю змін.</li>
+</ul>
+
+<h2 id="adding-commands">Якщо ви додаєте команди в Kadr<a class="anchor" href="#adding-commands" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Задайте <code>Risk</code> у новій <code>command.Spec</code>, якщо команда витрачає гроші (<code>paid</code>, і додайте <code>&lt;namespace&gt;.estimate</code>, що повертає <code>confirm_token</code>), видаляє з диска (<code>delete</code>), може перезаписати файл поза проєктом (<code>overwrite</code>), змінює інсталяцію чи машину (<code>system</code>) або приймає облікові дані (<code>secret</code>). Звичайним змінам зі скасуванням нічого не треба: асистент у типовому режимі виконує їх вільно, і їх можна відкотити.</p>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/ai/best-practices.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Найкращі практики</b></a><a class="pager-next" href="../../../uk/docs/ai/recipes.html" rel="next"><span>Далі</span><b>Усі рецепти<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#backends">Два бекенди</a></li><li class="lvl-2"><a href="#meta-tools">Метаінструменти API-бекенда</a></li><li class="lvl-2"><a href="#cli-runs">Як запускається CLI-агент</a></li><li class="lvl-2"><a href="#gate">Фільтр дозволів</a></li><li class="lvl-2"><a href="#api">Керування асистентом із коду</a></li><li class="lvl-2"><a href="#adding-commands">Якщо ви додаєте команди в Kadr</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#availability">Доступність</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>

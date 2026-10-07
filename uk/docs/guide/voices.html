@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="uk" class="no-js" data-alt-en="../../../docs/guide/voices.html" data-alt-uk="../../../uk/docs/guide/voices.html" data-section="guide">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Голоси: хмарне й локальне озвучення тексту — Kadr</title>
+<meta name="description" content="Голоси ElevenLabs, OpenAI, Azure, Google та ще 35 сервісів поруч з офлайн-голосами Windows: як додати провайдера, вставити один ключ або десять, обрати модель і голос, побачити ціну до оплати чи підключити власний сервер мовлення.">
+<link rel="canonical" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/voices.html">
+<link rel="alternate" hreflang="en" href="https://gitkalenyuk.github.io/kadr/docs/guide/voices.html">
+<link rel="alternate" hreflang="uk" href="https://gitkalenyuk.github.io/kadr/uk/docs/guide/voices.html">
+<link rel="alternate" hreflang="x-default" href="https://gitkalenyuk.github.io/kadr/docs/guide/voices.html">
+<meta name="theme-color" content="#07070a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../../../favicon.ico" sizes="48x48">
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<link rel="manifest" href="../../../site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Kadr">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Голоси: хмарне й локальне озвучення тексту — Kadr">
+<meta property="og:description" content="Голоси ElevenLabs, OpenAI, Azure, Google та ще 35 сервісів поруч з офлайн-голосами Windows: як додати провайдера, вставити один ключ або десять, обрати модель і голос, побачити ціну до оплати чи підключити власний сервер мовлення.">
+<meta property="og:url" content="https://gitkalenyuk.github.io/kadr/uk/docs/guide/voices.html">
+<meta property="og:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Голоси: хмарне й локальне озвучення тексту — Kadr">
+<meta name="twitter:description" content="Голоси ElevenLabs, OpenAI, Azure, Google та ще 35 сервісів поруч з офлайн-голосами Windows: як додати провайдера, вставити один ключ або десять, обрати модель і голос, побачити ціну до оплати чи підключити власний сервер мовлення.">
+<meta name="twitter:image" content="https://gitkalenyuk.github.io/kadr/assets/img/og-uk.jpg">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/docs.css">
+<script>document.documentElement.classList.replace('no-js','js');try{var s=localStorage,d=document.documentElement;var th=s.getItem('kadr-theme');if(th)d.dataset.theme=th;var w=s.getItem('kadr-lang'),r=document.referrer;if(w&&w!==d.lang&&!(r&&r.indexOf(location.origin)===0)&&!/[?&]stay\b/.test(location.search)){var a=d.getAttribute('data-alt-'+w);if(a)location.replace(a+location.hash)}}catch(e){}</script>
+</head>
+<body class="docs sec-guide page-voices" data-root="../../../" data-lang-root="uk/" id="top">
+<a class="skip-link" href="#content">Перейти до змісту</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrow-l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+<symbol id="i-github" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5zM19 15.5c.2 2 1.2 3 3.2 3.2-2 .2-3 1.2-3.2 3.2-.2-2-1.2-3-3.2-3.2 2-.2 3-1.2 3.2-3.2z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6M9 13h.01M15 13h.01M9 17h6"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-braces" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 5.2 10.4 4v7.6H2.5zM11.6 3.8 21.5 2.4v9.2h-9.9zM2.5 12.6h7.9v7.6l-7.9-1.1zM11.6 12.6h9.9v9.2l-9.9-1.4z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+</defs></svg>
+<header class="nav is-solid" id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../../../uk/" aria-label="Kadr — головна"><img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Головне меню">
+      <a class="nav-docs" href="../../../uk/docs/"><svg aria-hidden="true"><use href="#i-book"/></svg><span>Документація</span></a>
+      <a href="../../../uk/docs/guide/" aria-current="page">Для людей</a>
+      <a href="../../../uk/docs/ai/">Для ШІ</a>
+      <a href="../../../uk/docs/ai/reference/">Команди</a>
+      <a href="../../../uk/changelog.html">Зміни</a>
+    </nav>
+    <div class="nav-right">
+      <button class="nav-icon nav-search" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><kbd class="nav-kbd">Ctrl K</kbd></button>
+      <button class="nav-icon theme-toggle" type="button" id="theme-toggle" aria-label="Перемкнути темну чи світлу тему"><svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+      <div class="lang-switch" role="group" aria-label="Мова" data-lang="uk"><a href="../../../docs/guide/voices.html" hreflang="en" lang="en" data-set-lang="en" title="English">EN</a><a href="../../../uk/docs/guide/voices.html" hreflang="uk" lang="uk" data-set-lang="uk" title="Українська" aria-current="true">УК</a><span class="ls-thumb" aria-hidden="true"></span></div>
+      <a class="nav-icon nav-gh" href="https://github.com/gitkalenyuk/kadr" aria-label="Kadr на GitHub"><svg aria-hidden="true"><use href="#i-github"/></svg></a>
+      <a class="btn btn-primary btn-sm nav-dl" href="../../../uk/docs/guide/getting-started.html"><svg aria-hidden="true"><use href="#i-book"/></svg><span class="label-long">Почати</span><span class="sr-only">Почати роботу з Kadr</span></a>
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="docs-shell wrap-wide">
+  <div class="side-bar-mobile"><button class="side-toggle" type="button" id="side-toggle" aria-controls="docs-side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg>Меню документації</button><span class="side-where">Голоси</span></div>
+  <aside class="docs-side" id="docs-side" aria-label="Документація">
+  <div class="side-head">
+    <button class="side-close" type="button" id="side-close" aria-label="Закрити меню"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="side-switch" role="group" aria-label="Документація"><a href="../../../uk/docs/guide/index.html" class="ss-guide" aria-current="true"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</a><a href="../../../uk/docs/ai/index.html" class="ss-ai"><svg aria-hidden="true"><use href="#i-bot"/></svg>Для ШІ</a><span class="ss-thumb" aria-hidden="true"></span></div>
+    <button class="search-trigger" type="button" data-search-open aria-label="Пошук у документації"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Пошук</span><kbd>/</kbd></button>
+  </div>
+  <nav class="side-nav" aria-label="Документація">
+    <div class="side-group"><ul><li><a href="../../../uk/docs/guide/index.html"><span>Огляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Початок</p><ul><li><a href="../../../uk/docs/guide/getting-started.html"><span>Початок роботи</span></a></li><li><a href="../../../uk/docs/guide/interface.html"><span>Огляд інтерфейсу</span></a></li><li><a href="../../../uk/docs/guide/projects.html"><span>Проєкти</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Монтаж</p><ul><li><a href="../../../uk/docs/guide/import-media.html"><span>Імпорт медіа</span></a></li><li><a href="../../../uk/docs/guide/timeline.html"><span>Монтаж на таймлайні</span></a></li><li><a href="../../../uk/docs/guide/player.html"><span>Плеєр і перегляд</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Творчість</p><ul><li><a href="../../../uk/docs/guide/text.html"><span>Текст і заголовки</span></a></li><li><a href="../../../uk/docs/guide/fonts.html"><span>Шрифти</span></a></li><li><a href="../../../uk/docs/guide/captions.html"><span>Субтитри й транскрипт</span></a></li><li><a href="../../../uk/docs/guide/effects.html"><span>Ефекти й колір</span></a></li><li><a href="../../../uk/docs/guide/audio.html"><span>Аудіо</span></a></li><li><a href="../../../uk/docs/guide/voices.html" aria-current="page"><span>Голоси</span></a></li><li><a href="../../../uk/docs/guide/stickers.html"><span>Стікери й генеровані медіа</span></a></li><li><a href="../../../uk/docs/guide/video-generation.html"><span>ШІ-відео</span></a></li><li><a href="../../../uk/docs/guide/ai-tools.html"><span>ШІ-інструменти</span></a></li><li><a href="../../../uk/docs/guide/assistant.html"><span>ШІ-асистент</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Завершення</p><ul><li><a href="../../../uk/docs/guide/export.html"><span>Експорт</span></a></li></ul></div>
+    <div class="side-group"><p class="side-title">Довідка</p><ul><li><a href="../../../uk/docs/guide/shortcuts.html"><span>Гарячі клавіші</span></a></li><li><a href="../../../uk/docs/guide/settings.html"><span>Налаштування й оновлення</span></a></li><li><a href="../../../uk/docs/guide/troubleshooting.html"><span>Проблеми та запитання</span></a></li></ul></div>
+  </nav>
+</aside>
+  <div class="side-scrim" id="side-scrim" hidden></div>
+  <main class="docs-main" id="content">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../../../uk/docs/index.html">Документація</a></li><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><span aria-current="page">Голоси</span></li></ol></nav>
+    
+    <article class="prose">
+<header class="page-head"><p class="page-eyebrow"><span class="pe-sec pe-guide"><svg aria-hidden="true"><use href="#i-user"/></svg>Для людей</span><span class="pe-group">Творчість</span><span class="pe-time"><svg aria-hidden="true"><use href="#i-clock"/></svg>6 хв читання</span></p><h1>Голоси: хмарне й локальне озвучення тексту</h1></header><p class="lead">Озвучення тексту в Kadr одразу працює офлайн — голосами вашого комп’ютера. Якщо хочеться природніших голосів, можна підключити майже будь-який сервіс мовлення — ElevenLabs, OpenAI, Azure, Google та ще 35 — або сервер мовлення на власному ПК. Kadr зберігає ключі зашифрованими, перемикається на наступний ключ, коли попередній вичерпано, і показує ціну, перш ніж платний голос заговорить.</p>
+
+<div class="callout note"><p>Для закадрового голосу все це не обов’язкове: голоси Windows та eSpeak NG безкоштовні й нічого не надсилають в інтернет. Як додати озвучення до відео, описано в розділі <a href="../../../uk/docs/guide/audio.html#tts">Аудіо → Озвучення тексту</a>; ця сторінка — про те, <em>звідки беруться голоси</em>.</p></div>
+
+<h2 id="kinds">Чотири види голосів<a class="anchor" href="#kinds" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>Вид</th><th>Приклади</th><th>Вартість</th><th>Чи залишає ПК?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Вбудовані</strong></td><td>Голоси Windows (SAPI), eSpeak NG (близько 130 мов, зокрема українська), голоси macOS</td><td>Безкоштовно</td><td>Ні</td></tr>
+    <tr><td><strong>Власний сервер</strong></td><td>Kokoro, Piper, Chatterbox, XTTS, AllTalk, Coqui, LocalAI — безкоштовні сервери мовлення, які ви запускаєте самі</td><td>Безкоштовно</td><td>Лише на ваш сервер</td></tr>
+    <tr><td><strong>Безкоштовна хмара</strong></td><td>Голоси Microsoft Edge «Read aloud» (неофіційно, експериментально, вимкнено, доки ви не ввімкнете)</td><td>Безкоштовно</td><td>Так — текст іде до Microsoft</td></tr>
+    <tr><td><strong>Платна хмара</strong></td><td>ElevenLabs, OpenAI, Azure AI Speech, Google Cloud, Gemini, Amazon Polly, Cartesia, Deepgram, MiniMax, Fish Audio, Murf, Speechify, Inworld, Rime, Resemble, WellSaid, Smallest.ai, Unreal Speech, Narakeet, LOVO, Hume, Alibaba Qwen-TTS, ByteDance Doubao, iFlytek, Yandex — а також голосові моделі на fal.ai, Replicate, Together AI і Groq</td><td>Платите сервісу</td><td>Так — текст іде до цього сервісу</td></tr>
+  </tbody>
+</table></div>
+<p>Провайдери з українськими голосами позначені у списку міткою <strong>UA</strong> (наприклад ElevenLabs, OpenAI, Azure, Google, Cartesia, MiniMax, Narakeet, Edge, Piper і eSpeak NG).</p>
+
+<h2 id="add">Як додати провайдера<a class="anchor" href="#add" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ol class="steps">
+  <li><h3 id="add-open">Відкрийте налаштування голосів<a class="anchor" href="#add-open" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Відкрийте <strong>Settings → Voices</strong> (на головному екрані — Settings, у редакторі — <strong>Menu → Settings…</strong>). Угорі — вбудовані рушії з кількістю голосів; нижче, у блоці <strong>Cloud &amp; self-hosted providers</strong>, — провайдери, якими ви користуєтеся.</p></li>
+  <li><h3 id="add-pick">Оберіть провайдера<a class="anchor" href="#add-pick" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Натисніть <strong>Add a provider</strong>. Галерея показує всі підтримувані сервіси з орієнтовною ціною; шукайте за назвою або фільтруйте за категорією. На кожній картці видно, чи провайдера звірено з офіційною документацією, чи він <em>experimental</em> (експериментальний).</p></li>
+  <li><h3 id="add-key">Вставте API-ключ<a class="anchor" href="#add-key" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Отримайте ключ на сайті провайдера (на кожній картці є посилання на сторінку ключів) і вставте його. Kadr одразу його шифрує. Власним серверам і Edge ключ не потрібен — їх достатньо ввімкнути.</p></li>
+  <li><h3 id="add-test">Перевірте<a class="anchor" href="#add-test" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Натисніть <strong>Test</strong>. Це безкоштовна перевірка — вона читає список голосів або дані облікового запису й ніколи не замовляє платне озвучення — і показує, чи працює ключ, скільки голосів він відкрив і, якщо сервіс це повідомляє, скільки квоти лишилося (наприклад символів ElevenLabs).</p></li>
+  <li><h3 id="add-defaults">Оберіть модель і голос<a class="anchor" href="#add-defaults" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h3><p>Виберіть <strong>Default model</strong> (для ElevenLabs, наприклад, <code>eleven_multilingual_v2</code>, <code>eleven_v3</code> або швидку модель Flash) і <strong>Default voice</strong>. Деяким сервісам потрібне ще одне налаштування, наприклад <strong>Region</strong> для Azure чи Amazon Polly. <strong>Base URL</strong> дає змогу спрямувати провайдера через проксі або на сервер на іншому ПК. Увімкніть <strong>Default</strong>, якщо Kadr має брати цього провайдера, коли ви нічого не обрали.</p></li>
+</ol>
+<p>Тепер голоси кожного готового провайдера з’являються в <strong>Audio → Text to speech</strong> і в інспекторі на вкладці <strong>Text → Speech</strong>, згруповані за провайдерами. Якщо голосів нового провайдера ще не видно, натисніть стрілку оновлення поруч із <strong>Voice</strong>.</p>
+
+<h2 id="keys">Кілька ключів для одного провайдера<a class="anchor" href="#keys" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Для кожного провайдера можна зберегти скільки завгодно ключів — скажімо, десять облікових записів ElevenLabs. Kadr використовує їх <strong>по черзі</strong>: коли ключ відхилено, на ньому скінчилися кредити або спрацювало обмеження частоти запитів, автоматично береться наступний, а проблемний позначається.</p>
+<ul>
+  <li><strong>Add key</strong> — один ключ із необов’язковою міткою («Основний», «Запасний»).</li>
+  <li><strong>Paste many</strong> — по ключу в рядку. Рядки на кшталт <code>Main: sk_…</code> задають мітку; порожні рядки, <code># коментарі</code> і дублікати пропускаються.</li>
+  <li><strong>Import file…</strong> — файл <code>.txt</code>, <code>.env</code>, <code>.csv</code> або <code>.json</code> з одним ключем на рядок чи запис.</li>
+</ul>
+<p>Список <strong>API keys</strong> показує кожен ключ замаскованим (<code>sk_…a1b2</code>) і з його станом:</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Стан</th><th>Що означає</th><th>Що робить Kadr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>OK</strong></td><td>Останній запит із цим ключем пройшов</td><td>Використовує його</td></tr>
+    <tr><td><strong>Exhausted</strong></td><td>Скінчилися квота або кредити</td><td>Пропускає, доки квота не оновиться (або годину), потім пробує знову</td></tr>
+    <tr><td><strong>Rate-limited</strong></td><td>Забагато запитів просто зараз</td><td>Чекає стільки, скільки просить сервіс, а тим часом бере наступний ключ</td></tr>
+    <tr><td><strong>Invalid</strong></td><td>Сервіс відхилив ключ</td><td>Пропускає, доки ви не перевірите його знову або не скинете помилку</td></tr>
+    <tr><td><strong>Not tested</strong></td><td>Ще не використовувався</td><td>Пробує, коли настане його черга</td></tr>
+    <tr><td><strong>Disabled</strong></td><td>Ви вимкнули ключ (кнопка з оком)</td><td>Зберігає, але не використовує</td></tr>
+  </tbody>
+</table></div>
+<p>Стрілки змінюють порядок, олівець перейменовує ключ, кругла стрілка скидає помилку, око вимикає ключ без видалення, кнопка оновлення безкоштовно перевіряє один ключ, індикатор заново читає залишок квоти, а кошик видаляє ключ. Після збереження ключі більше ніколи не показуються — навіть вам.</p>
+
+<h2 id="costs">Ціни й підтвердження<a class="anchor" href="#costs" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Платні сервіси беруть гроші за символи (або за секунди звуку). Kadr знає опубліковані ціни кожного сервісу з датою («≈ $0.08 за 1000 символів, ціни станом на 2026-10-07») і оцінює кожне озвучення, перш ніж його створити. Передплати на кшталт ElevenLabs списуються з квоти символів вашого плану — список ключів показує, скільки лишилося.</p>
+<ul>
+  <li><strong>Kadr питає перед платним озвученням.</strong> Ви бачите орієнтовну ціну й підтверджуєте. Щоб не питати про дрібні суми, задайте для провайдера <strong>Ask before paying</strong> — суму, наприклад 0.05: озвучення, дешевше за неї, створюється без запитання.</li>
+  <li><strong>Повторно той самий текст — безкоштовно.</strong> Озвучення, яке ви вже створили в проєкті (той самий текст, голос і швидкість), береться з кешу.</li>
+  <li><strong>Денний ліміт витрат.</strong> У <strong>Settings → Spending</strong> можна задати, скільки Kadr може витратити за день на всі платні ШІ-сервіси разом або на окремого провайдера. Запит, що перевищив би ліміт, відхиляється, і гроші не витрачаються. Див. <a href="../../../uk/docs/guide/settings.html#spending">Spending</a>.</li>
+</ul>
+<div class="callout warn"><p>Ціни — це оцінки за публічними прайсами провайдерів. Реальний рахунок виставляє провайдер, і він може відрізнятися (знижки, плани, податки, зміни цін).</p></div>
+
+<h2 id="custom">Власний сервер мовлення або інший сервіс<a class="anchor" href="#custom" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>Якщо вашого сервісу немає в галереї, оберіть <strong>Custom provider</strong> в <strong>Add a provider</strong>. Три режими:</p>
+<ul>
+  <li><strong>OpenAI-compatible</strong> — найпростіший. Для будь-якого сервера, що розуміє запит мовлення OpenAI (Kokoro-FastAPI, LocalAI, vLLM, корпоративний проксі…): введіть його <strong>Base URL</strong>, назви моделі й голосів і ключ, якщо він потрібен. Позначте, що сервер працює на цьому ПК або у вашій мережі, — тоді Kadr не питатиме про ціну.</li>
+  <li><strong>HTTP template</strong> — для будь-якого іншого веб-API. Вкажіть метод, URL і заголовки та напишіть JSON-тіло із заповнювачами <code>{text}</code>, <code>{voice}</code>, <code>{model}</code>, <code>{speed}</code> і <code>{lang}</code>. Потім скажіть, де у відповіді звук: сирі байти аудіо, поле base64 (JSON-шлях на кшталт <code>data.audio</code>), URL для завантаження або завдання, яке треба опитувати до завершення (шлях до id завдання, URL опитування з <code>{job_id}</code>, шлях до статусу зі значеннями «готово» й «помилка», шлях до результату).</li>
+  <li><strong>Копія вбудованого провайдера</strong>, у якій ви змінюєте потрібне, наприклад адресу.</li>
+</ul>
+<p>Натисніть <strong>Test</strong>, щоб перевірити. Власні провайдери зберігаються в папці даних Kadr; їхні ключі потрапляють у зашифроване сховище, як і всі інші.</p>
+
+<h2 id="privacy">Приватність і безпека<a class="anchor" href="#privacy" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<ul>
+  <li>З хмарним голосом текст, який ви озвучуєте, надсилається цьому сервісу. Вбудовані голоси ніколи не залишають ваш комп’ютер; власний сервер отримує текст лише сам.</li>
+  <li>Ключі шифрує Windows для вашого облікового запису (на Mac — зберігаються в Keychain). Вони ніколи не потрапляють у проєкти, експорт, журнали чи повідомлення, і ШІ-асистенти не можуть їх прочитати.</li>
+  <li>Переїжджаєте на інший комп’ютер? <strong>Settings → Spending → Keys &amp; secrets → Export</strong> записує всі ключі в один файл під паролем; <strong>Import</strong> читає його на іншому ПК. Див. <a href="../../../uk/docs/guide/settings.html#secrets">Ключі й секрети</a>.</li>
+  <li>Ключ ElevenLabs, збережений у Kadr 1.0, автоматично переноситься в зашифроване сховище під час першого запуску цієї версії.</li>
+</ul>
+
+<h2 id="not-included">Сервіси, яких немає<a class="anchor" href="#not-included" aria-label="Посилання на цей розділ"><svg aria-hidden="true"><use href="#i-link"/></svg></a></h2>
+<p>PlayHT і LMNT закрили свої API, а Neets.ai не вдалося надійно перевірити, тому їх немає у списку. Hume Octave є, але позначений як експериментальний: Hume планує закрити цей API в листопаді 2026 року.</p>
+
+    </article>
+    <nav class="pager" aria-label="Назад / Далі"><a class="pager-prev" href="../../../uk/docs/guide/audio.html" rel="prev"><span>Назад</span><b><svg aria-hidden="true"><use href="#i-arrow-l"/></svg>Аудіо</b></a><a class="pager-next" href="../../../uk/docs/guide/stickers.html" rel="next"><span>Далі</span><b>Стікери й генеровані медіа<svg aria-hidden="true"><use href="#i-arrow"/></svg></b></a></nav>
+  </main>
+  <aside class="docs-toc" aria-label="На цій сторінці"><p class="side-title">На цій сторінці</p><ul><li class="lvl-2"><a href="#kinds">Чотири види голосів</a></li><li class="lvl-2"><a href="#add">Як додати провайдера</a></li><li class="lvl-3"><a href="#add-open">Відкрийте налаштування голосів</a></li><li class="lvl-3"><a href="#add-pick">Оберіть провайдера</a></li><li class="lvl-3"><a href="#add-key">Вставте API-ключ</a></li><li class="lvl-3"><a href="#add-test">Перевірте</a></li><li class="lvl-3"><a href="#add-defaults">Оберіть модель і голос</a></li><li class="lvl-2"><a href="#keys">Кілька ключів для одного провайдера</a></li><li class="lvl-2"><a href="#costs">Ціни й підтвердження</a></li><li class="lvl-2"><a href="#custom">Власний сервер мовлення або інший сервіс</a></li><li class="lvl-2"><a href="#privacy">Приватність і безпека</a></li><li class="lvl-2"><a href="#not-included">Сервіси, яких немає</a></li></ul><a class="toc-top" href="#top"><svg aria-hidden="true"><use href="#i-up"/></svg>Догори</a></aside>
+</div>
+<footer class="footer">
+  <div class="footer-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../../../assets/img/logo.svg" alt="Kadr" width="118" height="28" loading="lazy">
+        <p>Відеоредактор, яким може керувати ваш ШІ. Безкоштовно для Windows 10 і 11 — macOS на підході.</p>
+        <p class="footer-langs"><a href="../../.././" hreflang="en" lang="en" data-set-lang="en">English</a><span aria-hidden="true">·</span><a href="../../../uk/" hreflang="uk" lang="uk" data-set-lang="uk" aria-current="true">Українська</a></p>
+      </div>
+      <div><h2>Продукт</h2><ul><li><a href="../../../uk/#availability">Доступність</a></li><li><a href="../../../uk/#features">Можливості</a></li><li><a href="../../../uk/changelog.html">Історія змін</a></li><li><a href="../../../uk/#requirements">Вимоги</a></li></ul></div>
+      <div><h2>Документація</h2><ul><li><a href="../../../uk/docs/guide/index.html">Посібник користувача</a></li><li><a href="../../../uk/docs/ai/index.html">Документація для ШІ</a></li><li><a href="../../../uk/docs/ai/reference/index.html">Довідник команд</a></li><li><a href="../../../uk/docs/ai/mcp.html">Підключити Claude (MCP)</a></li><li><a href="../../../llms.txt">llms.txt для ШІ</a></li></ul></div>
+      <div><h2>Kadr</h2><ul><li><a href="../../../uk/docs/guide/troubleshooting.html">Питання й відповіді</a></li><li><a href="../../../uk/privacy.html">Приватність</a></li><li><a href="../../../uk/licenses.html">Ліцензії</a></li><li><a href="https://github.com/gitkalenyuk/kadr">GitHub</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Kadr. Безкоштовна програма для Windows · macOS незабаром.</span><span>Не пов’язано з ByteDance чи CapCut.</span></div>
+  </div>
+</footer>
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="Пошук" hidden>
+  <div class="search-box">
+    <div class="search-input"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" type="search" placeholder="Шукайте в посібнику, документації для ШІ та командах…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="search-results" aria-describedby="search-help"><kbd>Esc</kbd></div>
+    <div class="search-results" id="search-results" role="listbox" aria-label="Результати"></div>
+    <p class="search-help" id="search-help"><kbd>↑</kbd><kbd>↓</kbd> навігація · <kbd>Enter</kbd> — відкрити · спробуйте «split», «субтитри», «4k»</p>
+  </div>
+</div>
+<script src="../../../assets/js/site.js" defer></script>
+<script src="../../../assets/js/docs.js" defer></script>
+</body>
+</html>
